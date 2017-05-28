@@ -94,13 +94,6 @@ class Wear
         "Black", "Gray", "Red", "Orange", "Yellow", "Green", "Blue", "Dark blue", "Purple", "Pink"
     };
 
-    /**
-     * @param insertName the insert name (used in game text) to set
-     */
-    public void setInsertName(String insertName)
-    {
-        this.insertName = insertName;
-    }
     private final String name;
     private String insertName;
     private final float pressure;
@@ -120,13 +113,21 @@ class Wear
      * 3 minutes
      * @param type
      */
-    public Wear(String name, String insertName, float pressure, float absorption, float dryingOverTime)
+    Wear(String name, String insertName, float pressure, float absorption, float dryingOverTime)
     {
         this.name = name;
         this.insertName = insertName;
         this.pressure = pressure;
         this.absorption = absorption;
         this.dryingOverTime = dryingOverTime;
+    }
+    
+    /**
+     * @param insertName the insert name (used in game text) to set
+     */
+    public void setInsertName(String insertName)
+    {
+        this.insertName = insertName;
     }
 
     /**
@@ -194,6 +195,15 @@ public class ALongHourAndAHalf extends JFrame
     private final static int MAX_LINES = 9;
 
     public static Random generator = new Random();
+    static String nameParam;
+    static Gender gndrParam;
+    static boolean diffParam;
+    static float incParam;
+    static int bladderParam;
+    static String underParam;
+    static String outerParam;
+    static String underColorParam;
+    static String outerColorParam;
 
     @SuppressWarnings("ResultOfObjectAllocationIgnored")
     private static void reset(boolean newValues)
@@ -383,15 +393,6 @@ public class ALongHourAndAHalf extends JFrame
     private final JLabel lblSphPower;
     private final JLabel lblDryness;
     
-    static String nameParam;
-    static Gender gndrParam;
-    static boolean diffParam;
-    static float incParam;
-    static int bladderParam;
-    static String underParam;
-    static String outerParam;
-    static String underColorParam;
-    static String outerColorParam;
     /**
      * Launch the application.
      *
@@ -426,7 +427,7 @@ public class ALongHourAndAHalf extends JFrame
         if (hardcore)
         {
             maxBladder = 100;
-            name = name + " [Hardcore]";
+            name += " [Hardcore]";
         }
 
         //Assigning the boy's name
@@ -2016,6 +2017,60 @@ public class ALongHourAndAHalf extends JFrame
                 nextStage = END_GAME;
                 break;
 
+            case WHERE_TO_GO:
+                setLinesAsDialogue(4);
+                setText("Lesson is over, and you're running to the restroom as fast as you can.",
+                       "Trying to get into the restroom,",
+                       "You find with fear that restroom is locked for some reason.",
+                       "Damnit... Seems that I have to pee somewhere else...");
+                lblChoice.setText("Where to go?");
+                listScroller.setVisible(true);
+                lblChoice.setVisible(true);
+
+                actionList.clear();
+                actionList.add("Mall (5 minutes)");
+                actionList.add("Bus stop (1 minute)");
+                actionList.add("Directly to home (15 minutes)");
+                
+                if (!listChoice.isSelectionEmpty())
+                {
+                    nextStage = GameStage.WHERE_TO_GO_CHOSE;
+                    break;
+                }
+            break;
+               
+            case WHERE_TO_GO_CHOSE:
+                lblChoice.setVisible(false);
+                listScroller.setVisible(false);
+
+//                actionName = (String) listChoice.getSelectedValue();
+//                if (actionName.equals("[Unavailable]"))
+//                {
+//                    listChoice.clearSelection();
+//                    setText("You've spent a few minutes doing nothing.");
+//                    break;
+//                }
+
+                actionNum = listChoice.getSelectedIndex();
+
+                lblChoice.setVisible(false);
+                listScroller.setVisible(false);
+
+                listChoice.clearSelection();
+
+                switch (actionNum)
+                {
+                    case 0:
+                        nextStage = GOING_TO_MALL;
+                        break;
+                    case 1:
+                        nextStage = GOING_TO_BUS_STOP;
+                        break;
+                    case 2:
+                        nextStage = GOING_TO_HOME;
+                        break;
+                }
+                
             default:
                 setText("Error parsing button. Next text is unavailable, text #" + nextStage);
                 break;
@@ -2344,29 +2399,36 @@ public class ALongHourAndAHalf extends JFrame
 
     enum GameStage
     {
-        LEAVE_BED,
-        LEAVE_HOME,
-        GO_TO_CLASS,
-        WALK_IN,
-        SIT_DOWN,
-        ASK_ACTION,
-        CHOSE_ACTION,
-        ASK_TO_PEE,
-        CALLED_ON,
-        CAUGHT,
-        USE_BOTTLE,
-        ASK_CHEAT,
-        CHOSE_CHEAT,
-        CLASS_OVER,
-        AFTER_CLASS,
-        ACCIDENT,
+        LEAVE_BED, //Home
+        LEAVE_HOME, //Home
+        GO_TO_CLASS, //Home -> school
+        WALK_IN, //School
+        SIT_DOWN, //School
+        ASK_ACTION, //School, waiting for player to select an action
+        CHOSE_ACTION, //TODO: Rework
+        ASK_TO_PEE, //School, asking a teacher to pee
+        CALLED_ON, //School, teacher asked character a question
+        CAUGHT, //School, classmates have spotted that character has to pee (hardcore only)
+        USE_BOTTLE, //School, cheat, peeing in a bottle
+        ASK_CHEAT, //School, waiting for player to select a cheat 
+        CHOSE_CHEAT, //TODO: Rework
+        CLASS_OVER, //School, class over
+        AFTER_CLASS, //School, writing lines if character has failed to ask teacher to go to the restroom for three times
+        ACCIDENT, //School, leaking
+        ACCIDENT_STREET, //Street, leaking
+        ACCIDENT_BUS, //Bus, leaking
+        ACCIDENT_HOME, //Home, leaking
         GIVE_UP,
-        WET,
-        POST_WET,
+        WET, //School, wetting
+        WET_STREET, //Street, wetting
+        WET_BUS, //Bus, wetting
+        WET_HOME, //Home, wetting
+        POST_WET, //School, being made fun of
+        POST_BUS, //Bus, passangers around can't understand how did character pee in a bus
+        POST_STREET, //Street, 
         GAME_OVER,
-        END_GAME,
-        SURPRISE,
-        SURPRISE_2,
+        SURPRISE, //Hidden gameplay after passing through the class in the hardcore mode
+        SURPRISE_2, 
         SURPRISE_ACCIDENT,
         SURPRISE_DIALOGUE,
         SURPRISE_CHOSE,
@@ -2374,7 +2436,18 @@ public class ALongHourAndAHalf extends JFrame
         PERSUADE,
         SURPRISE_WET_VOLUNTARY,
         SURPRISE_WET_VOLUNTARY2,
-        SURPRISE_WET_PRESSURE
+        SURPRISE_WET_PRESSURE, //End of the hidden gameplay stages 
+        WHERE_TO_GO, //Asking the player where to go after the lessons if all restrooms are locked
+        GOING_TO_MALL, //Street, going to the mall to find a restroom (5 minutes)
+        GOING_TO_BUS_STOP, //Street, going to the bus stop (1 minute, then waiting for a bus for 3 - 20 minutes)
+        GOING_TO_HOME, //Street, going to home on foot (15 minutes)
+        HOME, //Made it to home
+        HOME_LOST_KEYS, //Forgot keys at school (chance 12%)
+        BACK_TO_SCHOOL, //Going back to school on foot (15 minutes)
+        BACK_TO_SCHOOL_BUS_STOP, //Waiting for a bus to school (3 - 15 minutes)
+        IN_BUS, //In a bus (3 minutes, 5% chance to get stuck in traffic (5 - 25 minutes)
+        END_GAME, //Good ending, showing score
+        WHERE_TO_GO_CHOSE
     }
 
     enum Gender
