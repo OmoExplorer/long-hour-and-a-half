@@ -88,19 +88,16 @@ import static omo.ALongHourAndAHalf.generator;
  */
 class Wear
 {
-
+    /**
+     * Отмечено как устаревшее из-за проблем с падежами в русском языке. Вместо этого метка одежды красится в цвет, соответствующий цвету одежды.
+     * @deprecated
+     */
+    @Deprecated
     static String[] colorList = 
     {
         "Black", "Gray", "Red", "Orange", "Yellow", "Green", "Blue", "Dark blue", "Purple", "Pink"
     };
 
-    /**
-     * @param insertName the insert name (used in game text) to set
-     */
-    public void setInsertName(String insertName)
-    {
-        this.insertName = insertName;
-    }
     private final String name;
     private String insertName;
     private final float pressure;
@@ -120,13 +117,21 @@ class Wear
      * 3 minutes
      * @param type
      */
-    public Wear(String name, String insertName, float pressure, float absorption, float dryingOverTime)
+    Wear(String name, String insertName, float pressure, float absorption, float dryingOverTime)
     {
         this.name = name;
         this.insertName = insertName;
         this.pressure = pressure;
         this.absorption = absorption;
         this.dryingOverTime = dryingOverTime;
+    }
+    
+    /**
+     * @param insertName the insert name (used in game text) to set
+     */
+    public void setInsertName(String insertName)
+    {
+        this.insertName = insertName;
     }
 
     /**
@@ -186,6 +191,7 @@ class Wear
     }
 }
 
+//TODO: Разобраться с падежами
 @SuppressWarnings("serial")
 public class ALongHourAndAHalf extends JFrame
 {
@@ -194,6 +200,15 @@ public class ALongHourAndAHalf extends JFrame
     private final static int MAX_LINES = 9;
 
     public static Random generator = new Random();
+    static String nameParam;
+    static Gender gndrParam;
+    static boolean diffParam;
+    static float incParam;
+    static int bladderParam;
+    static String underParam;
+    static String outerParam;
+    static String underColorParam;
+    static String outerColorParam;
 
     @SuppressWarnings("ResultOfObjectAllocationIgnored")
     private static void reset(boolean newValues)
@@ -227,74 +242,73 @@ public class ALongHourAndAHalf extends JFrame
     Wear[] underwearList
             =
             {
-                new Wear("Random", "THIS IS A BUG", 0, 0, 0),
-                new Wear("No underwear", "THIS IS A BUG", 0, 0, 1),
-                new Wear("Strings", "panties", 1, 2, 1),
-                new Wear("Tanga panties", "panties", 1.5F, 3, 1),
-                new Wear("Regular panties", "panties", 2, 4, 1),
-                new Wear("\"Boy shorts\" panties", "panties", 4, 7, 1),
-                new Wear("String bikini", "bikini panties", 1, 1, 2),
-                new Wear("Regular bikini", "bikini panties", 2, 2, 2),
-                new Wear("Swimsuit", "swimsuit", 4, 2.5F, 2.5F),
-                new Wear("Light diaper", "diaper", 4.5F, 10, 0),
-                new Wear("Normal diaper", "diaper", 9, 20, 0),
-                new Wear("Heavy diaper", "diaper", 18, 30, 0),
-                new Wear("Light pad", "pad", 1, 8, 0.25F),
-                new Wear("Normal pad", "pad", 1.5F, 12, 0.25F),
-                new Wear("Big pad", "pad", 2, 16, 0.25F),
-                new Wear("Pants", "pants", 2.5F, 5, 1),
-                new Wear("Shorts-alike pants", "pants", 3.75F, 7.5F, 1),
-                new Wear("Anti-gravity pants", "pants", 0, 4, 1),
-                new Wear("Super-absorbing diaper", "diaper", 18, 200, 0)
+                new Wear("Случайно", "ЭТО ОШИБКА", 0, 0, 0),
+                new Wear("Без нижней одежды", "ЭТО ОШИБКА", 0, 0, 1),
+                new Wear("Стринги", "стринги", 1, 2, 1),
+                new Wear("Трусики \"Танга\"", "трусики", 1.5F, 3, 1),
+                new Wear("Обычные трусики", "трусики", 2, 4, 1),
+                new Wear("Трусики с закрытыми бёдрами", "трусики", 4, 7, 1),
+                new Wear("Бикини-стринги", "трусики бикини", 1, 1, 2),
+                new Wear("Обычные бикини", "трусики бикини", 2, 2, 2),
+                new Wear("Купальник", "купальник", 4, 2.5F, 2.5F),
+                new Wear("Лёгкий подгузник", "подгузник", 4.5F, 10, 0),
+                new Wear("Средний подгузник", "подгузник", 9, 20, 0),
+                new Wear("Большой подгузник", "подгузник", 18, 30, 0),
+                new Wear("Лёгкая прокладка", "прокладка", 1, 8, 0.25F),
+                new Wear("Обычная прокладка", "прокладка", 1.5F, 12, 0.25F),
+                new Wear("Большая прокладка", "прокладка", 2, 16, 0.25F),
+                new Wear("Трусы", "трусы", 2.5F, 5, 1),
+                new Wear("Трусы с закрытыми бёдрами", "трусы", 3.75F, 7.5F, 1),
+                new Wear("Анти-гравитационные трусы", "трусы", 0, 4, 1),
+                new Wear("Гипервпитывающий подгузник", "подгузник", 18, 200, 0)
             };
 
     Wear[] outerwearList
             =
             {
-                new Wear("Random", "THIS IS A BUG", 0, 0, 0),
-                new Wear("No outerwear", "THIS IS A BUG", 0, 0, 1),
-                new Wear("Long jeans", "jeans", 7, 12, 1.2F),
-                new Wear("Knee-length jeans", "jeans", 6, 10, 1.2F),
-                new Wear("Short jeans", "shorts", 5, 8.5F, 1.2F),
-                new Wear("Very short jeans", "shorts", 4, 7, 1.2F),
-                new Wear("Long trousers", "trousers", 9, 15.75F, 1.4F),
-                new Wear("Knee-length trousers", "trousers", 8, 14, 1.4F),
-                new Wear("Short trousers", "shorts", 7, 12.25F, 1.4F),
-                new Wear("Very short trousers", "shorts", 6, 10.5F, 1.4F),
-                new Wear("Long skirt", "skirt", 5, 6, 1.7F),
-                new Wear("Knee-length skirt", "skirt", 4, 4.8F, 1.7F),
-                new Wear("Short skirt", "skirt", 3, 3.6F, 1.7F),
-                new Wear("Mini skirt", "skirt", 2, 2.4F, 1.7F),
-                new Wear("Micro skirt", "skirt", 1, 1.2F, 1.7F),
-                new Wear("Long skirt and tights", "skirt and tights", 6, 7.5F, 1.6F),
-                new Wear("Knee-length skirt and tights", "skirt and tights", 5, 8.75F, 1.6F),
-                new Wear("Short skirt and tights", "skirt and tights", 4, 7, 1.6F),
-                new Wear("Mini skirt and tights", "skirt and tights", 3, 5.25F, 1.6F),
-                new Wear("Micro skirt and tights", "skirt and tights", 2, 3.5F, 1.6F),
-                new Wear("Leggings", "leggings", 10, 11, 1.8F),
-                new Wear("Short male jeans", "jeans", 5, 8.5F, 1.2F),
-                new Wear("Normal male jeans", "jeans", 7, 12, 1.2F),
-                new Wear("Male trousers", "trousers", 9, 15.75F, 1.4F)
+                new Wear("Случайно", "ЭТО ОШИБКА", 0, 0, 0),
+                new Wear("Без верхней одежды", "ЭТО ОШИБКА", 0, 0, 1),
+                new Wear("Обычные джинсы", "джинсы", 7, 12, 1.2F),
+                new Wear("Джинсы по колено", "джинсы", 6, 10, 1.2F),
+                new Wear("Джинсовые шорты", "шорты", 5, 8.5F, 1.2F),
+                new Wear("Джинсовые мини-шорты", "мини-шорты", 4, 7, 1.2F),
+                new Wear("Обычные брюки", "брюки", 9, 15.75F, 1.4F),
+                new Wear("Брюки по колено", "брюки", 8, 14, 1.4F),
+                new Wear("Шорты", "шорты", 7, 12.25F, 1.4F),
+                new Wear("Мини-шорты", "мини-шорты", 6, 10.5F, 1.4F),
+                new Wear("Длинная юбка", "юбка", 5, 6, 1.7F),
+                new Wear("Обычная юбка", "юбка", 4, 4.8F, 1.7F),
+                new Wear("Короткая юбка", "юбка", 3, 3.6F, 1.7F),
+                new Wear("Мини-юбка", "мини-юбка", 2, 2.4F, 1.7F),
+                new Wear("Микро-юбка", "микро-юбка", 1, 1.2F, 1.7F),
+                new Wear("Длинная юбка с колготками", "юбка с колготками", 6, 7.5F, 1.6F),
+                new Wear("Обычная юбка с колготками", "юбка с колготками", 5, 8.75F, 1.6F),
+                new Wear("Короткая юбка с колготками", "юбка с колготками", 4, 7, 1.6F),
+                new Wear("Мини-юбка с колготками", "мини-юбка с колготками", 3, 5.25F, 1.6F),
+                new Wear("Микро-юбка с колготками", "микро-юбка с колготками", 2, 3.5F, 1.6F),
+                new Wear("Леггинсы", "леггинсы", 10, 11, 1.8F),
+                new Wear("Мужские джинсовые шорты", "шорты", 5, 8.5F, 1.2F),
+                new Wear("Мужские джинсы", "джинсы", 7, 12, 1.2F),
+                new Wear("Мужские брюки", "брюки", 9, 15.75F, 1.4F)
             };
 
     String[] cheatList
             =
             {
-                "Go to the corner", "Stay after class", "Pee in a bottle", "End class right now",
-                "Calm the teacher down", "Raise your hand", "Make your pee disappear regularly",
-                "Set your incontinence level", "Toggle hardcore mode", "Set bladder fulness"
+                "Встать в угол", "Остаться после урока", "Пописать в бутылку", "Завершить урок",
+                "Успокоить учителя", "Поднять руку", "Периодически опустошать мочевой пузырь",
+                "Установить уровень инконтиненции", "Включить/выключить сложный режим", "Установить заполненность мочевого пузыря"
             };
 
     String names[]
             =
             {
-                "Mark",
-                "Mike",
-                "Jim",
-                "Alex",
-                "Ben",
-                "Bill",
-                "Dan"
+                "Данил",
+                "Алёша",
+                "Олег",
+                "Андрей",
+                "Дима",
+                "Матвей"
             };
     String boyName = names[generator.nextInt(names.length)];
 
@@ -383,15 +397,6 @@ public class ALongHourAndAHalf extends JFrame
     private final JLabel lblSphPower;
     private final JLabel lblDryness;
     
-    static String nameParam;
-    static Gender gndrParam;
-    static boolean diffParam;
-    static float incParam;
-    static int bladderParam;
-    static String underParam;
-    static String outerParam;
-    static String underColorParam;
-    static String outerColorParam;
     /**
      * Launch the application.
      *
@@ -426,17 +431,17 @@ public class ALongHourAndAHalf extends JFrame
         if (hardcore)
         {
             maxBladder = 100;
-            name = name + " [Hardcore]";
+            name += " [Сложный режим]";
         }
 
         //Assigning the boy's name
         boyName = names[generator.nextInt(names.length)];
 
         //If random undies were chosen...
-        if (under.equals("Random"))
+        if (under.equals("Случайно"))
         {
             undies = underwearList[generator.nextInt(underwearList.length)];
-            while(undies.getName().equals("Random"))
+            while(undies.getName().equals("Случайно"))
             //...selecting random undies from the undies array.
                 undies = underwearList[generator.nextInt(underwearList.length)];
             //If random undies weren't chosen...
@@ -457,13 +462,13 @@ public class ALongHourAndAHalf extends JFrame
         //If the selected undies weren't found
         if (undies == null)
         {
-            JOptionPane.showMessageDialog(null, "Incorrect underwear selected. Setting random instead.", "Incorrect underwear", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Выбрана некорректная нижняя одежда. Будет выбрана случайная.", "Некорректная нижняя одежда", JOptionPane.WARNING_MESSAGE);
             undies = underwearList[generator.nextInt(underwearList.length)];
         }
 
         //Assigning color
-        if(!undies.getName().equals("No underwear"))
-            if(!undiesColor.equals("Random"))
+        if(!undies.getName().equals("Без нижней одежды"))
+            if(!undiesColor.equals("Случайно"))
                 undies.setColor(undiesColor);
             else
                 undies.setColor(Wear.colorList[generator.nextInt(Wear.colorList.length)]);
@@ -471,10 +476,10 @@ public class ALongHourAndAHalf extends JFrame
             undies.setColor("");
         
         //Same with the lower clothes
-        if (outer.equals("Random"))
+        if (outer.equals("Случайно"))
         {
             lower = outerwearList[generator.nextInt(outerwearList.length)];
-            while(lower.getName().equals("Random"))
+            while(lower.getName().equals("Случайно"))
                 lower = outerwearList[generator.nextInt(outerwearList.length)];
         } else
         {
@@ -489,13 +494,13 @@ public class ALongHourAndAHalf extends JFrame
         }
         if (lower == null)
         {
-            JOptionPane.showMessageDialog(null, "Incorrect outerwear selected. Setting random instead.", "Incorrect outerwear", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Выбрана некорректная верхняя одежда. Будет выбрана случайная.", "Некорректная верхняя одежда", JOptionPane.WARNING_MESSAGE);
             lower = outerwearList[generator.nextInt(outerwearList.length)];
         }
         
         //Assigning color
-        if(!lower.getName().equals("No outerwear"))
-            if(!lowerColor.equals("Random"))
+        if(!lower.getName().equals("Без верхней одежды"))
+            if(!lowerColor.equals("Случайно"))
                 lower.setColor(lowerColor);
             else
                 lower.setColor(Wear.colorList[generator.nextInt(Wear.colorList.length)]);
@@ -508,10 +513,10 @@ public class ALongHourAndAHalf extends JFrame
         
         if (isMale())
         {
-            underwearList[1].setInsertName("penis");
+            underwearList[1].setInsertName("член");
         } else
         {
-            underwearList[1].setInsertName("crotch");
+            underwearList[1].setInsertName("промежность");
         }
         
         outerParam = lower.getName();
@@ -521,7 +526,7 @@ public class ALongHourAndAHalf extends JFrame
         
         //Game window setup
         setResizable(false);
-        setTitle("A Long Hour and a Half");
+        setTitle("Долгие полтора часа");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 640, 540);
         setLocationRelativeTo(null);
@@ -542,8 +547,8 @@ public class ALongHourAndAHalf extends JFrame
         textPanel.add(textLabel);
         
         //"Next" button setup
-        btnNext = new JButton("Next");
-        btnNext.setToolTipText("Hold down for the time warp");
+        btnNext = new JButton("Дальше");
+//        btnNext.setToolTipText("Hold down for the time warp");
         btnNext.addMouseListener(new MouseAdapter()
         {
             @Override
@@ -557,7 +562,7 @@ public class ALongHourAndAHalf extends JFrame
         contentPane.add(btnNext);
 
         //"Quit" button setup
-        btnQuit = new JButton("Quit");
+        btnQuit = new JButton("Выход");
         btnQuit.addMouseListener(new MouseAdapter()
         {
             @Override
@@ -570,7 +575,7 @@ public class ALongHourAndAHalf extends JFrame
         contentPane.add(btnQuit);
         
         //"Reset" button setup
-        btnReset = new JButton("Reset");
+        btnReset = new JButton("Сброс");
         btnReset.addMouseListener(new MouseAdapter()
         {
             @Override
@@ -584,7 +589,7 @@ public class ALongHourAndAHalf extends JFrame
         contentPane.add(btnReset);
         
         //"New game" button setup
-        btnNewGame = new JButton("New game");
+        btnNewGame = new JButton("Новая игра");
         btnNewGame.addMouseListener(new MouseAdapter()
         {
             @Override
@@ -604,59 +609,60 @@ public class ALongHourAndAHalf extends JFrame
         contentPane.add(lblName);
 
         //Bladder label setup
-        lblBladder = new JLabel("Bladder: " + bladder + "%");
-        lblBladder.setToolTipText("<html>Normal game:<br>100% = need to hold<br>130% = peeing(game over)<br><br>Hardcore:<br>80% = need to hold<br>100% = peeing(game over)</html>");
+        lblBladder = new JLabel("Мочевой пузырь: " + bladder + "%");
+        lblBladder.setToolTipText("<html>Обычный режим:<br>100% = сложно терпеть<br>130% = максимум<br><br>Сложный режим:<br>80% = сложно терпеть<br>100% = максимум</html>");
         lblBladder.setFont(new Font("Tahoma", Font.PLAIN, 15));
         lblBladder.setBounds(20, 210, 200, 32);
         contentPane.add(lblBladder);
 
         //Embarassment label setup
-        lblEmbarassment = new JLabel("Embarassment: " + embarassment);
+        lblEmbarassment = new JLabel("Смущение: " + embarassment);
         lblEmbarassment.setFont(new Font("Tahoma", Font.PLAIN, 15));
         lblEmbarassment.setBounds(20, 240, 200, 32);
         contentPane.add(lblEmbarassment);
 
         //Belly label setup
-        lblBelly = new JLabel("Belly: " + belly + "%");
+        lblBelly = new JLabel("Вода в животе: " + belly + "%");
         lblBelly.setFont(new Font("Tahoma", Font.PLAIN, 15));
         lblBelly.setBounds(20, 270, 200, 32);
         contentPane.add(lblBelly);
 
         //Incontinence label setup
-        lblIncon = new JLabel("Incontinence: " + inc + "x");
+        lblIncon = new JLabel("Инконтиненция: " + inc + "x");
         lblIncon.setFont(new Font("Tahoma", Font.PLAIN, 15));
         lblIncon.setBounds(20, 300, 200, 32);
         contentPane.add(lblIncon);
 
         //Time label setup
-        lblMinutes = new JLabel("Minutes: " + min + " of 90");
+        lblMinutes = new JLabel("Время: " + min + " минут(ы) из 90");
         lblMinutes.setFont(new Font("Tahoma", Font.PLAIN, 15));
         lblMinutes.setBounds(20, 330, 200, 32);
         lblMinutes.setVisible(false);
         contentPane.add(lblMinutes);
         
         //Sphincter power label setup
-        lblSphPower = new JLabel("Pee holding ability: " + sphincterPower + "%");
+        lblSphPower = new JLabel("Способность терпеть: " + sphincterPower + "%");
         lblSphPower.setFont(new Font("Tahoma", Font.PLAIN, 15));
         lblSphPower.setBounds(20, 360, 200, 32);
         lblSphPower.setVisible(false);
         contentPane.add(lblSphPower);
         
         //Clothing dryness label setup
-        lblDryness = new JLabel("Clothes dryness: " + dryness);
+        lblDryness = new JLabel("Сухость одежды: " + dryness);
+        lblBladder.setToolTipText("-20 = конец игры");
         lblDryness.setFont(new Font("Tahoma", Font.PLAIN, 15));
         lblDryness.setBounds(20, 390, 200, 32);
         lblDryness.setVisible(false);
         contentPane.add(lblDryness);
         
         //Undies label setup
-        lblUndies = new JLabel("Undies: " + undies.getColor() + " " + undies.getName().toLowerCase());
+        lblUndies = new JLabel("Нижняя одежда: " + undies.getColor() + " " + undies.getName().toLowerCase());
         lblUndies.setFont(new Font("Tahoma", Font.PLAIN, 15));
         lblUndies.setBounds(20, 420, 400, 32);
         contentPane.add(lblUndies);
         
         //Lower label setup
-        lblLower = new JLabel("Lower: " + lower.getColor() + " " + lower.getName().toLowerCase());
+        lblLower = new JLabel("Верхняя одежда: " + lower.getColor() + " " + lower.getName().toLowerCase());
         lblLower.setFont(new Font("Tahoma", Font.PLAIN, 15));
         lblLower.setBounds(20, 450, 400, 32);
         contentPane.add(lblLower);
@@ -725,21 +731,21 @@ public class ALongHourAndAHalf extends JFrame
                 {
                     if (isFemale())
                     {
-                        name = "Mrs. Nobody";
+                        name = "Миссис Никто";
                     } else
                     {
-                        name = "Mr. Nobody";
+                        name = "Мистер Никто";
                     }
                 }
 
-                score("Bladder at start - " + bladder + "%", '+', Math.round(bladder));
+                score("Заполненность мочевого пузыря в начале игры - " + bladder + "%", '+', Math.round(bladder));
 
                 //Incontinence rounding
                 BigDecimal bd = new BigDecimal(incon);
                 bd = bd.setScale(1, RoundingMode.HALF_UP);
                 incon = bd.floatValue();
 
-                score("Incontinence - " + incon + "x", '*', incon);
+                score("Инконтиненция - " + incon + "x", '*', incon);
 
                 /*
                     Hardcore, it will be harder to hold pee:
@@ -753,41 +759,67 @@ public class ALongHourAndAHalf extends JFrame
                 }
 
                 setLinesAsDialogue(1);
-                if (!lower.getName().equals("No outerwear"))
-                    if (!undies.getName().equals("No underwear"))
+                if (!lower.getName().equals("Без верхней одежды"))
+                    if (!undies.getName().equals("Без нижней одежды"))
                         //Both lower clothes and undies
-                        setText("Wh-what? D-did I forget to set my alarm?!",
-                                "You cry, tumbling out of bed and feeling an instant jolt from your bladder.",
-                                "You hurriedly slip on some " + undies.insert() + " and " + lower.insert() + ",",
-                                "not even worrying about what covers your chest.");
+                        if(isFemale())
+                            setText("Ч-что? Я-я забыла завести будильник?!",
+                                    "С крайне плохим настроением ты выпрыгиваешь из постели и сразу же начинаешь собираться.",
+                                    "Второпясь надеваешь " + undies.insert()/*винительный падеж*/ + " и " + lower.insert() + ",",
+                                    "даже не заботясь о том, что надеть на тело.");
+                        else
+                            setText("Ч-что? Я-я забыл завести будильник?!",
+                                    "С крайне плохим настроением ты выпрыгиваешь из постели и сразу же начинаешь собираться.",
+                                    "Второпясь надеваешь " + undies.insert()/*винительный падеж*/ + " и " + lower.insert() + ",",
+                                    "даже не заботясь о том, что надеть на тело.");
                     else
                         //Lower clothes only
-                        setText("Wh-what? D-did I forget to set my alarm?!",
-                                "You cry, tumbling out of bed and feeling an instant jolt from your bladder.",
-                                "You hurriedly slip on some " + lower.insert() + ", quick to cover your " + undies.insert() + ",",
-                                "not even worrying about what covers your chest.");
+                        if(isFemale())
+                            setText("Ч-что? Я-я забыла завести будильник?!",
+                                    "С крайне плохим настроением ты выпрыгиваешь из постели и сразу же начинаешь собираться.",
+                                    "Второпясь надеваешь " + lower.insert() + ",",
+                                    "даже не заботясь о том, что надеть на тело.");
+                        else
+                            setText("Ч-что? Я-я забыл завести будильник?!",
+                                    "С крайне плохим настроением ты выпрыгиваешь из постели и сразу же начинаешь собираться.",
+                                    "Второпясь надеваешь " + lower.insert() + ",",
+                                    "даже не заботясь о том, что надеть на тело.");
                 else
-                    if (!undies.getName().equals("No underwear"))
+                    if (!undies.getName().equals("Без нижней одежды"))
                         //Undies only
-                        setText("Wh-what? D-did I forget to set my alarm?!",
-                                "You cry, tumbling out of bed and feeling an instant jolt from your bladder.",
-                                "You hurriedly slip on " + undies.insert() + ",",
-                                "not even worrying about what covers your chest and legs.");
+                        if(isFemale())
+                            setText("Ч-что? Я-я забыла завести будильник?!",
+                                    "С крайне плохим настроением ты выпрыгиваешь из постели и сразу же начинаешь собираться.",
+                                    "Второпясь надеваешь " + lower.insert() + ", каким-то образом забыв надеть верхнюю одежду,",
+                                    "даже не заботясь о том, что надеть на тело.");
+                        else
+                            setText("Ч-что? Я-я забыл завести будильник?!",
+                                    "С крайне плохим настроением ты выпрыгиваешь из постели и сразу же начинаешь собираться.",
+                                    "Второпясь надеваешь " + lower.insert() + ", каким-то образом забыв надеть верхнюю одежду,",
+                                    "даже не заботясь о том, что надеть на тело.");
                     else
                         //No clothes at all
-                        setText("Wh-what? D-did I forget to set my alarm?!",
-                                "You cry, tumbling out of bed and feeling an instant jolt from your bladder.",
-                                "You are running downstairs fully naked.");
+                        if(isFemale())
+                            setText("Ч-что? Я-я забыла завести будильник?!",
+                                    "С крайне плохим настроением ты выпрыгиваешь из постели и сразу же начинаешь собираться,",
+                                    "И решаешь пойти в школу... Полностью голышом.");
+                        else
+                            setText("Ч-что? Я-я забыл завести будильник?!",
+                                    "С крайне плохим настроением ты выпрыгиваешь из постели и сразу же начинаешь собираться,",
+                                    "И решаешь пойти в школу... Полностью голышом.");
                 offsetBladder(.5);
                 nextStage = LEAVE_HOME;
                 break;
 
             case LEAVE_HOME:
-                setText("Just looking at the clock again in disbelief adds a redder tint to your cheeks.",
-                        "",
-                        "Paying much less attention to your daily routine, you quickly run down the stairs, get a small glass of orange juice and chug it.",
-                        "",
-                        "The cold drink brings a chill down your spine as you collect your things and rush out the door to school.");
+                if(isFemale())
+                    setText("Взглянув на часы, ты никак не можешь понять, почему же ты забыла завести вчера будильник.",
+                            "",
+                            "Не обращая внимания на ежедневную суету, ты залпом выпиваешь стакан сока и выбегаешь на улицу.");
+                else
+                    setText("Взглянув на часы, ты никак не можешь понять, почему же ты забыл завести вчера будильник.",
+                            "",
+                            "Не обращая внимания на ежедневную суету, ты залпом выпиваешь стакан сока и выбегаешь на улицу.");
                 offsetBladder(.5);
                 offsetEmbarassment(3);
                 offsetBelly(10);
@@ -799,129 +831,134 @@ public class ALongHourAndAHalf extends JFrame
                 lblSphPower.setVisible(true);
                 lblDryness.setVisible(true);
 
-                if (!lower.getName().equals("No outerwear"))
-                    if (lower.insert().equals("skirt"))
-                        setText("You rush into class, your " + lower.insert() + " blowing in the wind.",
+                if (!lower.getName().equals("Без верхней одежды"))
+                    if (lower.insert().endsWith("юбка"))
+                        setText("Ты вбегаешь в класс так быстро, что твоя " + lower.insert() + " вздувается ветром.",
                                 "",
-                                "Normally, you'd be worried your " + undies.insert() + " would be seen, but you can't worry about it right now.",
-                                "You make it to your seat without a minute to spare.");
+                                "Если бы не второпях, ты бы пожалела о том, что кто-то смог бы увидеть твои " + undies.insert() + "под юбкой.",
+                                "Не привлекая особого внимания, садишься на своё место.");
                     else
-                        setText("You rush into class and sit down to your seat without a minute to spare.");
+                        setText("Быстро вбегая в класс и",
+                                "не привлекая особого внимания, ты садишься на своё место.");
                 else
-                    if (!undies.getName().equals("No underwear"))
-                        setText("You rush into class; your classmates are looking at your " + undies.insert() + ".",
-                                "You can't understand how you forgot put on any lower clothing,",
-                                "and you're worried that your " + undies.insert() + " might be seen.",
-                                "You make it to your seat without a minute to spare.");
+                    if (!undies.getName().equals("Без нижней одежды"))
+                        setText("Ты вбегаешь в класс, и твои одноклассники сразу же с крайним удивлением обратили внимание на твои " + undies.insert() + ".",
+                                "Ты садишься на место под взгядами всего класса.");
                     else
                         if (isFemale())
-                            setText("You rush into class; your classmates are looking at your pussy and boobs.",
-                                    "Guys are going mad and doing nothing except looking at you.",
-                                    "You can't understand how you dared to come to school naked.",
-                                    "You make it to your seat without a minute to spare.");
+                        {
+                            setLinesAsDialogue(3,4);
+                            setText("Ты вбегаешь в класс, и твои одноклассники, особенно мальчики, сразу же с крайним удивлением обратили внимание на твои женские прелести.",
+                                    "По классу слышен смущенный говор твоих однокласскиков.",
+                                    "Чего?",
+                                    "С ума сойти!!",
+                                    "Ты садишься на место под взгядами всего класса.");
+                        }
                         else
-                            setText("You rush into class; your classmates are looking at your penis.",
-                                    "Girls are really going mad and doing nothing except looking at you.",
-                                    "You can't understand how you dared to come to school naked.",
-                                    "You make it to your seat without a minute to spare.");
+                            setLinesAsDialogue(3,4);
+                            setText("Ты вбегаешь в класс, и твои одноклассники, особенно девочки, сразу же с крайним удивлением обратили внимание на твои мужские прелести.",
+                                    "По классу слышен смущенный говор твоих однокласскиков.",
+                                    "Чего?",
+                                    "С ума сойти!!",
+                                    "Ты садишься на место под взгядами всего класса.");
 
                 offsetEmbarassment(2);
                 nextStage = WALK_IN;
                 break;
 
             case WALK_IN:
-                if (lower.insert().equals("skirt") || lower.insert().equals("skirt and tights") || lower.insert().equals("skirt and tights"))
+                if (lower.insert().endsWith("юбка") || lower.insert().equals("юбка с колготками") || lower.insert().equals("мини-шорты") || lower.insert().equals("микро-шолты"))
                 {
                     setLinesAsDialogue(1, 3);
-                    setText("Next time you run into class, " + name + ",",
-                            "your teacher says,",
-                            "make sure you're wearing something less... revealing!",
-                            "A chuckle passes over the classroom, and you can't help but feel a",
-                            "tad bit embarrassed about your rush into class.");
+                    setText("В следующий раз, " + name + ",",
+                            "говорит учитель,",
+                            "надевай что-нибудь менее... вызывающее!");
                     offsetEmbarassment(5);
                 } else
-                    if (lower.getName().equals("No outerwear"))
+                    if (lower.getName().equals("Без верхней одежды"))
                     {
                         setLinesAsDialogue(1);
-                        setText("WHAT!? YOU CAME TO SCHOOL NAKED!?",
-                                "your teacher says.",
-                                "",
-                                "A chuckle passes over the classroom, and you can't help but feel a tad bit embarrassed",
-                                "about your rush into class.");
+                        if(isFemale())
+                            setText("ЧЕГО!? ТЫ ПРИШЛА В ШКОЛУ ГОЛОЙ!?",
+                                    "не может поверить своим глазам учитель.",
+                                    "Как и твои одноклассники.");
+                        else
+                            setText("ЧЕГО!? ТЫ ПРИШЁЛ В ШКОЛУ ГОЛЫМ!?",
+                                    "не может поверить своим глазам учитель.",
+                                    "Как и твои одноклассники.");
                         offsetEmbarassment(25);
                     } else
                     {
                         setLinesAsDialogue(1, 3);
-                        setText("Sit down, " + name + ". You're running late.",
-                                "your teacher says,",
-                                "And next time, don't make so much noise entering the classroom!",
-                                "A chuckle passes over the classroom, and you can't help but feel a tad bit embarrassed",
-                                "about your rush into class.");
+                        setText("Садись на место, " + name + ". Ты опоздала.",
+                                "говорит учитель,",
+                                "И больше не вламывайся в класс!");
                     }
                 nextStage = SIT_DOWN;
                 break;
 
             case SIT_DOWN:
-                setText("Subconsciously rubbing your thighs together, you feel the uncomfortable feeling of",
-                        "your bladder filling as the liquids you drank earlier start to make their way down.");
+                setText("Невольно сжимая ноги, ты чуствуешь этот дискомфорт",
+                        "создаваемый жидкостью, идущей в мочевой пузырь.");
                 passTime();
                 nextStage = ASK_ACTION;
-                score("Embarassment at start - " + incon + " pts", '+', embarassment);
+                score("Смущение в начале игры - " + incon + " очк.", '+', embarassment);
                 break;
 
             case ASK_ACTION:
                 if (generator.nextInt(20) == 5)
                 {
-                    setText("Suddenly, you hear the teacher call your name.");
+                    setText("Внезапно учитель окликает тебя.");
                     nextStage = CALLED_ON;
                     break;
                 }
 
                 //Bladder: 0-20
                 if (bladder<=20)
-                    setText("Feeling bored about the day, and not really caring about the class too much,",
-                            "you look to the clock, watching the minutes tick by.");
+                    setText("Совершенно не вдаваясь в урок,",
+                            "ты сидишь и скучаешь, поглядывая на часы.");
                 //Bladder: 20-40
                 if (bladder>20 && bladder<=40)
-                    setText("Having to pee a little bit,",
-                            "you look to the clock, watching the minutes tick by and wishing the lesson to get over faster.");
+                    setText("Чуствуя слабые позывы пописать,",
+                            "ты смотришь на часы, про себя умоляя время идти быстрее.");
                 //Bladder: 40-60
                 if (bladder>40 && bladder<=60)
-                    setText("Clearly having to pee,",
-                            "you inpatiently wait for the lesson end.");
+                    setText("Отчётливо желая посетить уборную,",
+                            "ты нетерпеливо ждёшь конца урока, закинув ногу на ногу, чтобы ослабить нужду.");
                 //Bladder: 60-80
                 if (bladder>60 && bladder<=80)
                 {
-                    setLinesAsDialogue(2);
-                    setText("You feel the rather strong pressure in your bladder, and you need to pee very much.",
-                            "Maybe I should ask teacher to go to the restroom? It hurts a bit...");
+                    setLinesAsDialogue(3);
+                    setText("Ты чуствуешь, как твой мочевой пузырь буквально надувается как воздушный шарик.",
+                            "Ты уже очень сильно хжелаешь пописать.",
+                            "Может быть попросить учителя выйти? Терпеть уже очень неприятно...");
                 }
                 //Bladder: 80-100
                 if (bladder>80 && bladder<=100)
                 {
-                    setLinesAsDialogue(1,3);
-                    setText("Keeping all that urine inside will become impossible very soon.",
-                            "You feel the terrible pain and pressure in your bladder, and you need to pee as bad as never.",
-                            "Ouch, it hurts a lot... I must do something about it now, or else...");
+                    setLinesAsDialogue(3);
+                    setText("Держать в себе всю мочу очень скоро станет невозможным.",
+                            "Чувствуя тупую боль в мочевом пузыре, ты хочешь писать как никогда раньше.",
+                            "Ай!.. Нужно срочно что-то делать, иначе...");
                 }
                 //Bladder: 100-130
                 if (bladder>100 && bladder<=130)
                 {
                     setLinesAsDialogue(1,3);
                     if(isFemale())
-                        setText("This is really extreme...",
-                                "You know that you can't keep it any longer and you may wet yourself in any moment and oh,",
-                                "You can clearly see your bladder as it bulging.",
-                                "Ahhh... I cant hold it anymore!!!",
-                                "Even holding your crotch doesn't seems to help you to keep it.");
+                        setText("Это какой-то кошмар... пусть уж это будет сном...",
+                                "Ты не знаешь, сможешь ли ты продержаться до конца урока и о ужас,",
+                                "Мочевой пузырь выпирает уже выше пупка.",
+                                "Ааааа... Я не могу больше терпеть!!!",
+                                "Даже палец, перекрывающий уретру, уже не помогает облегчать твои страдания.");
                     else
-                        setText("This is really extreme...",
-                                "You know that you can't keep it any longer and you may wet yourself in any moment and oh,",
-                                "You can clearly see your bladder as it bulging.",
-                                "Ahhh... I cant hold it anymore!!!",
-                                "Even squeezing your penis doesn't seems to help you to keep it.");
+                        setText("Это какой-то кошмар... пусть уж это будет сном...",
+                                "Ты не знаешь, сможешь ли ты продержаться до конца урока и о ужас,",
+                                "Мочевой пузырь выпирает уже выше пупка.",
+                                "Ааааа... Я не могу больше терпеть!!!",
+                                "Даже эрекция уже не помогает облегчать твои страдания.");
                 }
-                lblChoice.setText("What now?");
+                lblChoice.setText("Что дальше?");
                 listScroller.setVisible(true);
                 lblChoice.setVisible(true);
 
@@ -929,47 +966,47 @@ public class ALongHourAndAHalf extends JFrame
                 switch (timesPeeDenied)
                 {
                     case 0:
-                        actionList.add("Ask the teacher to go pee");
+                        actionList.add("Попросить учителя выйти");
                         break;
                     case 1:
-                        actionList.add("Ask the teacher to go pee again");
+                        actionList.add("Попросить учителя выйти ещё раз");
                         break;
                     case 2:
-                        actionList.add("Try to ask the teacher again");
+                        actionList.add("Попросить учителя выйти ещё раз");
                         break;
                     case 3:
-                        actionList.add("Take a chance and ask the teacher (RISKY)");
+                        actionList.add("Рискнуть и попроситься ещё раз (опасно)");
                         break;
                     default:
-                        actionList.add("[Unavailable]");
+                        actionList.add("[Недоступно]");
                 }
 
                 if (!cornered)
                 {
                     if (isFemale())
                     {
-                        actionList.add("Press on your crotch");
+                        actionList.add("Надавить на промежность");
                     } else
                     {
-                        actionList.add("Squeeze your penis");
+                        actionList.add("Сжать член");
                     }
                 } else
                 {
-                    actionList.add("[Unavailable]");
+                    actionList.add("[Недоступно]");
                 }
 
-                actionList.add("Rub thighs");
+                actionList.add("Сжать ноги");
 
                 if (bladder >= 100)
                 {
-                    actionList.add("Give up and pee yourself");
+                    actionList.add("Сдаться и описаться");
                 } else
                 {
-                    actionList.add("[Unavailable]");
+                    actionList.add("[Недоступно]");
                 }
 
-                actionList.add("Just wait");
-                actionList.add("Cheat (will reset your score)");
+                actionList.add("Просто ждать");
+                actionList.add("Использовать читы (аннулирует очки)");
 
                 listChoice.setListData(actionList.toArray());
                 nextStage = CHOSE_ACTION;
@@ -986,10 +1023,13 @@ public class ALongHourAndAHalf extends JFrame
                 listScroller.setVisible(false);
 
                 String actionName = (String) listChoice.getSelectedValue();
-                if (actionName.equals("[Unavailable]"))
+                if (actionName.equals("[Недоступно]"))
                 {
                     listChoice.clearSelection();
-                    setText("You've spent a few minutes doing nothing.");
+                    if(isFemale())
+                        setText("Ты прождала пару минут, ничего не делая.");
+                    else
+                        setText("Ты прождал пару минут, ничего не делая.");
                     break;
                 }
 
@@ -999,7 +1039,6 @@ public class ALongHourAndAHalf extends JFrame
                 listScroller.setVisible(false);
 
                 listChoice.clearSelection();
-                btnNext.setText("Next");
 
                 switch (actionNum)
                 {
@@ -1009,9 +1048,9 @@ public class ALongHourAndAHalf extends JFrame
                     case 0:
                         nextStage = ASK_TO_PEE;
                         setLinesAsDialogue(2, 3);
-                        setText("You think to yourself:",
-                                "I don't think I can hold it until class ends.",
-                                "I don't have a choice, I have to ask the teacher.");
+                        setText("Ты размышляешь:",
+                                "Я не думаю, что я вытерплю до конца урока.",
+                                "Нужно попробовать попроситься в туалет.");
                         break;
 
                     /*
@@ -1027,9 +1066,9 @@ public class ALongHourAndAHalf extends JFrame
                      * Future effectiveness: 4
                      */
                     case 1:
-                        setText("You don't think anyone will see you doing it,",
-                                "so you take your hand and hold yourself down there.",
-                                "It feels a little better for now.");
+                        setText("Надеясь, что это никто не заметит",
+                                "ты сжимаешь свою ладонб между ног.",
+                                "Стало немного легче.");
 
                         rechargeSphPower(20);
                         offsetTime(3);
@@ -1053,9 +1092,9 @@ public class ALongHourAndAHalf extends JFrame
                      * Future effectiveness: 4
                      */
                     case 2:
-                        setText("You need to go, and it hurts, but you just",
-                                "can't bring yourself to risk getting caught with your hand between",
-                                "your legs. You rub your thighs hard but it doesn't really help.");
+                        setText("Хоть ты и хочешь писать,",
+                                "ты не можешь себе позволить, чтобы кто-нибудь увидел тебя",
+                                "с рукой между ног. Ты поджимаешь ноги, но это не сильно помогает.");
 
                         rechargeSphPower(2);
                         offsetTime(3);
@@ -1068,9 +1107,9 @@ public class ALongHourAndAHalf extends JFrame
 
                     //Give up
                     case 3:
-                        setText("You're absolutely desperate to pee, and you think you'll",
-                                "end up peeing yourself anyway, so it's probably best to admit",
-                                "defeat and get rid of the painful ache in your bladder.");
+                        setText("Тебе очень сильно нужно пописать,",
+                                "но предполагая, что ты всё равно описаешься, ты решаешь сдаться",
+                                "и избавиться от этой ужасной боли в мочевом пузыре.");
                         nextStage = GIVE_UP;
                         break;
 
@@ -1086,7 +1125,7 @@ public class ALongHourAndAHalf extends JFrame
                         int time;
                         try
                         {
-                            time = Integer.parseInt(JOptionPane.showInputDialog("How much to wait?"));
+                            time = Integer.parseInt(JOptionPane.showInputDialog("Сколько ждать?"));
                             if (time < 1)
                             {
                                 throw new NumberFormatException();
@@ -1111,14 +1150,17 @@ public class ALongHourAndAHalf extends JFrame
 
                     //Cheat
                     case 5:
-                        setText("You've got to go so bad.",
-                                "There must be something you can do, right?");
+                        setText("Приспичило довольно сильно.",
+                                "Но ведь всегда есть выход, не правда ли?");
                         cheatsUsed = true;
                         nextStage = ASK_CHEAT;
                         break;
 
                     default:
-                        setText("You sat a few minutes doing nothing.");
+                        if(isFemale())
+                            setText("Ты просидела несколько минут, ничего не делая.");
+                        else
+                            setText("Ты просидел несколько минут, ничего не делая.");
                         nextStage = ASK_ACTION;
                         break;
                 }
@@ -1130,20 +1172,44 @@ public class ALongHourAndAHalf extends JFrame
                     case 0:
                         if (generator.nextInt(100) <= 40 & !hardcore)
                         {
-                            setText("Yes, you may.,",
-                                    "says the teacher. You run to the restroom. Thank god, one cabin is free!",
-                                    "You enter it, pulled down your " + lower.insert() + " and " + undies.insert() + ",",
-                                    "wearily flop down on the toilet and start peeing.");
+                            setLinesAsDialogue(1,2);
+                            if(!lower.getName().equals("Без верхней одежды"))
+                                if(!undies.getName().equals("Без нижней одежды"))
+                                    setText("Можно выйти?",
+                                            "Да, конечно,",
+                                            "разрешил учитель. Забежав в туалет,",
+                                            "Ты стягиваешь " + lower.insert() + " и " + undies.insert(),
+                                            "и начинаешь писать.");
+                                else
+                                    setText("Можно выйти?",
+                                            "Да, конечно,",
+                                            "разрешил учитель. Забежав в туалет,",
+                                            "Ты стягиваешь " + lower.insert(),
+                                            "и начинаешь писать.");
+                            else
+                                if(!undies.getName().equals("Без нижней одежды"))
+                                    setText("Можно выйти?",
+                                            "Да, конечно,",
+                                            "разрешил учитель. Забежав в туалет,",
+                                            "Ты стягиваешь " + undies.insert(),
+                                            "и начинаешь писать.");
+                                else
+                                    setText("Можно выйти?",
+                                            "Да, конечно,",
+                                            "разрешил учитель. Забежав в туалет,",
+                                            "Ты заходишь в кабинку",
+                                            "и начинаешь писать.");
 //                            score *= 0.2;
-//                            scoreText = scoreText.concat("\nRestroom usage during the lesson: -80% of points");
-                            score("Restroom usage during the lesson", '/', 1.25F);
+//                            scoreText = scoreText.concat("\nИспользование туалета во время урока: -80% of points");
+                            score("Использование туалета во время урока", '/', 1.25F);
                             emptyBladder();
                             nextStage = ASK_ACTION;
                         } else
                         {
-                            setText("You ask the teacher if you can go out to the restroom.",
-                                    "No, you can't go out. Director prohibited it.,",
-                                    "says the teacher.");
+                            setLinesAsDialogue(1);
+                            setText("Можно выйти?",
+                                    "Нет, директор запретил ученикам выходить во время урока.",
+                                    "ответил учитель.");
                             timesPeeDenied++;
                         }
                         break;
@@ -1151,21 +1217,48 @@ public class ALongHourAndAHalf extends JFrame
                     case 1:
                         if (generator.nextInt(100) <= 10 & !hardcore)
                         {
-                            setText("You ask the teacher again if you can go out to the restroom.",
-                                    "Yes, you may.,",
-                                    "says the teacher. You run to the restroom. Thank god, one cabin is free!",
-                                    "You enter it, pulled down your " + lower.insert() + " and " + undies.insert() + ",",
-                                    "wearily flop down on the toilet and start peeing.");
+                            setLinesAsDialogue(1,2);
+                            if(!lower.getName().equals("Без верхней одежды"))
+                                if(!undies.getName().equals("Без нижней одежды"))
+                                    setText("Можно выйти?",
+                                            "Ладно, выйди",
+                                            "разрешил учитель. Забежав в туалет,",
+                                            "Ты стягиваешь " + lower.insert() + " и " + undies.insert(),
+                                            "и начинаешь писать.");
+                                else
+                                    setText("Можно выйти?",
+                                            "Ладно, выйди,",
+                                            "разрешил учитель. Забежав в туалет,",
+                                            "Ты стягиваешь " + lower.insert(),
+                                            "и начинаешь писать.");
+                            else
+                                if(!undies.getName().equals("Без нижней одежды"))
+                                    setText("Можно выйти?",
+                                            "Ладно, выйди,",
+                                            "разрешил учитель. Забежав в туалет,",
+                                            "Ты стягиваешь " + undies.insert(),
+                                            "и начинаешь писать.");
+                                else
+                                    setText("Можно выйти?",
+                                            "Ладно, выйди,",
+                                            "разрешил учитель. Забежав в туалет,",
+                                            "Ты заходишь в кабинку",
+                                            "и начинаешь писать.");
 //                            score *= 0.22;
-//                            scoreText = scoreText.concat("\nRestroom usage during the lesson: -78% of points");
-                            score("Restroom usage during the lesson", '/', 1.25F);
+//                            scoreText = scoreText.concat("\nИспользование туалета во время урока: -78% of points");
+                            score("", '/', 1.25F);
                             emptyBladder();
                             nextStage = ASK_ACTION;
                         } else
                         {
-                            setText("You ask the teacher again if you can go out to the restroom.",
-                                    "No, you can't! I already told you that the director prohibited it.,",
-                                    "says the teacher.");
+                            if(isFemale())
+                                setText("Можно выйти?",
+                                        "Нет! "+ name +", чего ты такая непонятливая? Было сказано, директор не разрешает!",
+                                        "отказал учитель.");
+                            else
+                                setText("Можно выйти?",
+                                        "Нет! "+ name +", чего ты такой непонятливый? Было сказано, директор не разрешает!",
+                                        "отказал учитель.");
                             timesPeeDenied++;
                         }
                         break;
@@ -1173,21 +1266,72 @@ public class ALongHourAndAHalf extends JFrame
                     case 2:
                         if (generator.nextInt(100) <= 30 & !hardcore)
                         {
-                            setText("You ask the teacher if you can go out to the restroom.",
-                                    "OK, you may. You are so annoying, " + name + "!,",
-                                    "says the teacher. You run to the restroom. Thank god, one cabin is free!",
-                                    "You enter it, pulled down your " + lower.insert() + " and " + undies.insert() + ",",
-                                    "wearily flop down on the toilet and start peeing.");
+                            setLinesAsDialogue(1,2);
+                            if(!lower.getName().equals("Без верхней одежды"))
+                                if(!undies.getName().equals("Без нижней одежды"))
+                                    if(isFemale())
+                                        setText("Можно выйти, пожалуйста?",
+                                                "Хорошо, хорошо. Ты такая надоедливая, "+name+"!",
+                                                "разрешил учитель. Забежав в туалет,",
+                                                "Ты стягиваешь " + lower.insert() + " и " + undies.insert(),
+                                                "и начинаешь писать.");
+                                    else
+                                        setText("Можно выйти, пожалуйста?",
+                                                "Хорошо, хорошо. Ты такой надоедливый, "+name+"!",
+                                                "разрешил учитель. Забежав в туалет,",
+                                                "Ты стягиваешь " + lower.insert() + " и " + undies.insert(),
+                                                "и начинаешь писать.");
+                                else
+                                    if(isFemale())
+                                        setText("Можно выйти, пожалуйста?",
+                                                "Хорошо, хорошо. Ты такая надоедливая, "+name+"!",
+                                                "разрешил учитель. Забежав в туалет,",
+                                                "Ты стягиваешь " + lower.insert(),
+                                                "и начинаешь писать.");
+                                    else
+                                        setText("Можно выйти, пожалуйста?",
+                                                "Хорошо, хорошо. Ты такой надоедливый, "+name+"!",
+                                                "разрешил учитель. Забежав в туалет,",
+                                                "Ты стягиваешь " + lower.insert(),
+                                                "и начинаешь писать.");
+                            else
+                                if(!undies.getName().equals("Без нижней одежды"))
+                                    if(isFemale())
+                                        setText("Можно выйти, пожалуйста?",
+                                                "Хорошо, хорошо. Ты такая надоедливая, "+name+"!",
+                                                "разрешил учитель. Забежав в туалет,",
+                                                "Ты стягиваешь " + undies.insert(),
+                                                "и начинаешь писать.");
+                                    else
+                                        setText("Можно выйти, пожалуйста?",
+                                                "Хорошо, хорошо. Ты такой надоедливый, "+name+"!",
+                                                "разрешил учитель. Забежав в туалет,",
+                                                "Ты стягиваешь " + undies.insert(),
+                                                "и начинаешь писать.");
+                                else
+                                    if(isFemale())
+                                        setText("Можно выйти, пожалуйста?",
+                                                "Хорошо, хорошо. Ты такая надоедливая, "+name+"!",
+                                                "разрешил учитель. Забежав в туалет,",
+                                                "Ты заходишь в кабинку",
+                                                "и начинаешь писать.");
+                                    else
+                                        setText("Можно выйти, пожалуйста?",
+                                                "Хорошо, хорошо. Ты такой надоедливый, "+name+"!",
+                                                "разрешил учитель. Забежав в туалет,",
+                                                "Ты заходишь в кабинку",
+                                                "и начинаешь писать.");
 //                            score *= 0.23;
-//                            scoreText = scoreText.concat("\nRestroom usage during the lesson: -77% of points");
-                            score("Restroom usage during the lesson", '/', 1.25F);
+//                            scoreText = scoreText.concat("\nИспользование туалета во время урока: -77% of points");
+                            score("Использование туалета во время урока", '/', 1.25F);
                             emptyBladder();
                             nextStage = ASK_ACTION;
                         } else
                         {
-                            setText("You ask the teacher once more if you can go out to the restroom.",
-                                    "No, you can't! Stop asking me or there will be consequences!,",
-                                    "says the teacher.");
+                            setLinesAsDialogue(1,2,3);
+                            setText("Можно выйти, пожалуйста?",
+                                    "Нет, "+name+"! Кому сказано!",
+                                    "Прекрати проситься, или я тебя накажу!");
                             timesPeeDenied++;
                         }
                         break;
@@ -1195,22 +1339,72 @@ public class ALongHourAndAHalf extends JFrame
                     case 3:
                         if (generator.nextInt(100) <= 7 & !hardcore)
                         {
-                            setText("Desperately, you ask the teacher if you can go out to the restroom.",
-                                    "OK, you may. You are so annoying, " + name + "!,",
-                                    "says the teacher. You run to the restroom. Thank god, one cabin is free!",
-                                    "You enter it, pulled down your " + lower.insert() + " and " + undies.insert() + ",",
-                                    "wearily flop down on the toilet and start peeing.");
+                            setLinesAsDialogue(1,2);
+                            if(!lower.getName().equals("Без верхней одежды"))
+                                if(!undies.getName().equals("Без нижней одежды"))
+                                    if(isFemale())
+                                        setText("Можно выйти, пожалуйста? Мне очень нужно!! Прошу!",
+                                                "Ладно! Иди уже! Ты такая надоедливая, "+name+"!",
+                                                "разрешил учитель. Забежав в туалет,",
+                                                "Ты стягиваешь " + lower.insert() + " и " + undies.insert(),
+                                                "и начинаешь писать.");
+                                    else
+                                        setText("Можно выйти, пожалуйста? Мне очень нужно!! Прошу!",
+                                                "Ладно! Иди уже! Ты такой надоедливый, "+name+"!",
+                                                "разрешил учитель. Забежав в туалет,",
+                                                "Ты стягиваешь " + lower.insert() + " и " + undies.insert(),
+                                                "и начинаешь писать.");
+                                else
+                                    if(isFemale())
+                                        setText("Можно выйти, пожалуйста? Мне очень нужно!! Прошу!",
+                                                "Ладно! Иди уже! Ты такая надоедливая, "+name+"!",
+                                                "разрешил учитель. Забежав в туалет,",
+                                                "Ты стягиваешь " + lower.insert(),
+                                                "и начинаешь писать.");
+                                    else
+                                        setText("Можно выйти, пожалуйста? Мне очень нужно!! Прошу!",
+                                                "Ладно! Иди уже! Ты такой надоедливый, "+name+"!",
+                                                "разрешил учитель. Забежав в туалет,",
+                                                "Ты стягиваешь " + lower.insert(),
+                                                "и начинаешь писать.");
+                            else
+                                if(!undies.getName().equals("Без нижней одежды"))
+                                    if(isFemale())
+                                        setText("Можно выйти, пожалуйста? Мне очень нужно!! Прошу!",
+                                                "Ладно! Иди уже! Ты такая надоедливая, "+name+"!",
+                                                "разрешил учитель. Забежав в туалет,",
+                                                "Ты стягиваешь " + undies.insert(),
+                                                "и начинаешь писать.");
+                                    else
+                                        setText("Можно выйти, пожалуйста? Мне очень нужно!! Прошу!",
+                                                "Ладно! Иди уже! Ты такой надоедливый, "+name+"!",
+                                                "разрешил учитель. Забежав в туалет,",
+                                                "Ты стягиваешь " + undies.insert(),
+                                                "и начинаешь писать.");
+                                else
+                                    if(isFemale())
+                                        setText("Можно выйти, пожалуйста? Мне очень нужно!! Прошу!",
+                                                "Ладно! Иди уже! Ты такая надоедливая, "+name+"!",
+                                                "разрешил учитель. Забежав в туалет,",
+                                                "Ты заходишь в кабинку",
+                                                "и начинаешь писать.");
+                                    else
+                                        setText("Можно выйти, пожалуйста? Мне очень нужно!! Прошу!",
+                                                "Ладно! Иди уже! Ты такой надоедливый, "+name+"!",
+                                                "разрешил учитель. Забежав в туалет,",
+                                                "Ты заходишь в кабинку",
+                                                "и начинаешь писать.");
 //                            score *= 0.3;
-//                            scoreText = scoreText.concat("\nRestroom usage during the lesson: -70% of points");
-                            score("Restroom usage during the lesson", '/', 1.25F);
+//                            scoreText = scoreText.concat("\nИспользование туалета во время урока: -70% of points");
+                            score("Использование туалета во время урока", '/', 1.25F);
                             emptyBladder();
                             nextStage = ASK_ACTION;
                         } else
                             if (generator.nextBoolean())
                             {
-                                setText("Desperately, you ask the teacher if you can go out to the restroom.",
-                                        "NO!! NO!! NOO!!! YOU CAN'T GO OUT!!! STAY IN THAT CORNER!!!,",
-                                        "says the teacher.");
+                                setText("Можно выйти, пожалуйста? Мне очень нужно!! Прошу!",
+                                        "НЕТ, НЕТ, НЕТ!!! НЕЛЬЗЯ!!! В УГОЛ!!",
+                                        "разозлился учитель.");
                                 cornered = true;
 //                            score += 1.3 * (90 - min / 3);
 //                            scoreText = scoreText.concat("\nStayed on corner " + (90 - min) + " minutes: +" + 1.3 * (90 - min / 3) + " score");
@@ -1218,14 +1412,17 @@ public class ALongHourAndAHalf extends JFrame
                                 offsetEmbarassment(5);
                             } else
                             {
-                                setText("Desperately, you ask the teacher if you can go out to the restroom.",
-                                        "NO!! NO!! NOO!!! YOU CAN'T GO OUT!!! YOU WILL WRITE LINES AFTER THE LESSON!!!,",
-                                        "says the teacher.");
+                                setText("Можно выйти, пожалуйста? Мне очень нужно!! Прошу!",
+                                        "НЕТ, НЕТ, НЕТ!!! НЕЛЬЗЯ!!! ОСТАЁШЬСЯ ПОСЛЕ УРОКОВ!!",
+                                        "разозлился учитель.");
                                 offsetEmbarassment(5);
                                 stay = true;
 //                            scoreText = scoreText.concat("\nWrote lines after the lesson: +60% score");
 //                            score *= 1.6;
-                                score("Wrote lines after the lesson", '*', 1.6F);
+                                if(isFemale())
+                                    score("Осталась после урока", '*', 1.6F);
+                                else
+                                    score("Остался после урока", '*', 1.6F);
                             }
                         timesPeeDenied++;
 
@@ -1235,9 +1432,8 @@ public class ALongHourAndAHalf extends JFrame
                 break;
 
             case ASK_CHEAT:
-                lblChoice.setText("Select a cheat:");
+                lblChoice.setText("Выберите чит:");
                 listChoice.setListData(cheatList);
-                btnNext.setText("Choose");
                 lblChoice.setVisible(true);
                 listScroller.setVisible(true);
                 nextStage = CHOSE_CHEAT;
@@ -1256,33 +1452,31 @@ public class ALongHourAndAHalf extends JFrame
                 switch (listChoice.getSelectedIndex())
                 {
                     case 0:
-                        setText("You walk to the front corner of the classroom.");
+                        setText("Ты проходишь в угол класса.");
                         cornered = true;
                         nextStage = ASK_ACTION;
                         break;
 
                     case 1:
-                        setText("You decide to stay after class.");
+                        setText("Ты решаешь остаться после уроков.");
                         stay = true;
                         nextStage = ASK_ACTION;
                         break;
 
                     case 2:
-                        setText("You see something out of the corner of your eye,",
-                                "just within your reach.");
+                        setText("Ты заметил что-то рядом с тобой.");
                         nextStage = USE_BOTTLE;
                         break;
 
                     case 3:
                         setLinesAsDialogue(2);
-                        setText("A voice comes over the loudspeaker:",
-                                "All classes are now dismissed for no reason at all! Bye!",
-                                "Looks like your luck changed for the better.");
+                        setText("Из громкоговорителей раздался голос:",
+                                "Все уроки отменены без причины!");
                         min = 89;
                         break;
 
                     case 4:
-                        setText("The teacher feels sorry for you. Try asking to pee.");
+                        setText("Учитель, похоже, пожалел тебя. Попробуй попроситься выйти.");
                         timesPeeDenied = 0;
                         stay = false;
                         cornered = false;
@@ -1290,37 +1484,37 @@ public class ALongHourAndAHalf extends JFrame
                         break;
 
                     case 5:
-                        setText("You decide to raise your hand.");
+                        setText("Ты поднял руку.");
                         nextStage = CALLED_ON;
                         break;
 
                     case 6:
-                        setText("Suddenly, you feel like you're peeing...",
-                                "but you don't feel any wetness. It's not something you'd",
-                                "want to question, right?");
+                        setText("Внезапно, ты чуствуешь, что ты писаешь...",
+                                "но не чувствуешь никакой влаги.",
+                                "Что это может быть?");
                         drain = true;
                         nextStage = ASK_ACTION;
                         break;
 
                     case 7:
-                        setText("A friend in the desk next to you hands you a pill",
-                                "and you take it.");
-                        incon = Float.parseFloat(JOptionPane.showInputDialog("How incontinent are you now?"));
-                        lblIncon.setText("Incontinence: " + incon + "x");
+                        setText("Сосед по парте дал тебе какую-то таблетку,",
+                                "и ты её проглотил.");
+                        incon = Float.parseFloat(JOptionPane.showInputDialog("Введите уровень инконтиненции:"));
+                        lblIncon.setText("Инконтиненция: " + incon + "x");
                         nextStage = ASK_ACTION;
                         break;
 
                     case 8:
-                        setText("The teacher suddenly looks like they've had enough",
-                                "of people having to pee.");
+                        setText("Кажется, учителю",
+                                "надоели люди, просящиеся в туалет.");
                         hardcore = !hardcore;
                         nextStage = ASK_ACTION;
                         break;
                         
                     case 9:
-                        setText("Suddenly you felt something going on in your bladder.");
-                        incon = Float.parseFloat(JOptionPane.showInputDialog("How your bladder is full now?"));
-                        lblIncon.setText("Bladder: " + bladder + "%");
+                        setText("В твоём мочевом пузыре что-то происходит.");
+                        incon = Float.parseFloat(JOptionPane.showInputDialog("Введите заполненность мочевого пузыря:"));
+                        lblIncon.setText("Мочевой пузырь: " + bladder + "%");
                         nextStage = ASK_ACTION;
                         break;
                 }
@@ -1329,28 +1523,30 @@ public class ALongHourAndAHalf extends JFrame
             case USE_BOTTLE:
                 emptyBladder();
                 setLinesAsDialogue(3);
-                setText("Luckily for you, you happen to have brought an empty bottle to pee in.",
-                        "As quietly as you can, you put it in position and let go into it.",
-                        "Ahhhhh...",
-                        "You can't help but show a face of pure relief as your pee trickles down into it.");
+                setText("Этим чем-то оказалась бутылка.",
+                        "Как можно тише, ты начинаешь писать в бутыку",
+                        "Аааааах...",
+                        "Ты испытываешь истинное наслаждение от опустошения мочевого пузыря");
                 nextStage = ASK_ACTION;
                 break;
 
             case CALLED_ON:
                 lblChoice.setVisible(false);
                 listScroller.setVisible(false);
-                btnNext.setText("Next");
 
                 setLinesAsDialogue(1);
-                setText("" + name + ", why don't you come up to the board and solve this problem?,",
-                        "says the teacher. Of course, you don't have a clue how to solve it.",
-                        "You make your way to the front of the room and act lost, knowing you'll be stuck",
-                        "up there for a while as the teacher explains it.",
-                        "Well, you can't dare to hold yourself now...");
+                setText(name + ", почему бы тебе не выйти к доске и не ответить,",
+                        "спросил учитель. Естественно, ты не знаешь, как ответить.",
+                        "Ты проходишь к доске и пробуешь вспомнить хоть что-нибудь, и знаешь, что застренешь здесь",
+                        "на несколько минут, пока учитель не растолкует материал.",
+                        "Что ж, у доски терпеть сложнее...");
                 
 //                score += 5;
 //                scoreText = scoreText.concat("\nCalled on the lesson: +5 points");
-                score("Called on the lesson", '+', 5);
+                if(isFemale())
+                    score("Вызвана на уроке", '+', 5);
+                else
+                    score("Вызван на уроке", '+', 5);
                 nextStage = ASK_ACTION;
                 passTime((byte) 5);
                 break;
@@ -1379,8 +1575,8 @@ public class ALongHourAndAHalf extends JFrame
                     break;
                 } else
                 {
-                    if (!lower.getName().equals("No outerwear"))
-                        if (!undies.getName().equals("No underwear"))
+                    if (!lower.getName().equals("Без верхней одежды"))
+                        if (!undies.getName().equals("Без нижней одежды"))
                             setText("Lesson is over, and you're running to the restroom as fast as you can.",
                                     "Thank god, one cabin is free!",
                                     "You enter it, pulled down your " + lower.insert() + " and " + undies.insert() + ",",
@@ -1391,7 +1587,7 @@ public class ALongHourAndAHalf extends JFrame
                                     "You enter it, pulled down your " + lower.insert() + ",",
                                     "wearily flop down on the toilet and start peeing.");
                     else
-                        if (!undies.getName().equals("No underwear"))
+                        if (!undies.getName().equals("Без нижней одежды"))
                             setText("Lesson is over, and you're running to the restroom as fast as you can.",
                                     "Thank god, one cabin is free!",
                                     "You enter it, pulled down your " + undies.insert() + ",",
@@ -1456,9 +1652,9 @@ public class ALongHourAndAHalf extends JFrame
 
             case GIVE_UP:
                 offsetEmbarassment(80);
-                if (!lower.getName().equals("No outerwear"))
+                if (!lower.getName().equals("Без верхней одежды"))
                 {
-                    if (!undies.getName().equals("No underwear"))
+                    if (!undies.getName().equals("Без нижней одежды"))
                     {
                         setText("You get tired of holding all the urine in your aching bladder,",
                                 "and you decide to give up and pee in your " + undies.insert() + ".");
@@ -1468,7 +1664,7 @@ public class ALongHourAndAHalf extends JFrame
                                 "and you decided to pee in your " + lower.insert() + ".");
                     }
                 } else
-                    if (!undies.getName().equals("No underwear"))
+                    if (!undies.getName().equals("Без нижней одежды"))
                     {
                         setText("You get tired of holding all the urine in your aching bladder,",
                                 "and you decide to give up and pee in your " + undies.insert() + ".");
@@ -1483,9 +1679,9 @@ public class ALongHourAndAHalf extends JFrame
             case WET:
                 emptyBladder();
                 embarassment=100;
-                if (!lower.getName().equals("No outerwear"))
+                if (!lower.getName().equals("Без верхней одежды"))
                 {
-                    if (!undies.getName().equals("No underwear"))
+                    if (!undies.getName().equals("Без нижней одежды"))
                     {
                         setText("Before you can move an inch, pee quickly soaks through your " + undies.insert() + ",",
                                 "floods your " + lower.insert() + ", and streaks down your legs.",
@@ -1496,7 +1692,7 @@ public class ALongHourAndAHalf extends JFrame
                                 "A large puddle quickly forms, and you can't stop tears from falling down your cheeks.");
                     }
                 } else
-                    if (!undies.getName().equals("No underwear"))
+                    if (!undies.getName().equals("Без нижней одежды"))
                     {
                         setText("Before you can move an inch, pee quickly soaks through your " + undies.insert() + ", and streaks down your legs.",
                                 "A large puddle quickly forms, and you can't stop tears from falling down your cheeks.");
@@ -1517,14 +1713,14 @@ public class ALongHourAndAHalf extends JFrame
                 setLinesAsDialogue(2);
                 if (!stay)
                 {
-                    if (lower.getName().equals("No outerwear"))
+                    if (lower.getName().equals("Без верхней одежды"))
                     {
-                        if (isFemale() && undies.getName().equals("No underwear"))
+                        if (isFemale() && undies.getName().equals("Без нижней одежды"))
                         {
                             setText("People around you are laughing loudly.",
                                     name + " peed herself! Ahaha!!!");
                         } else
-                            if (isMale() && undies.getName().equals("No underwear"))
+                            if (isMale() && undies.getName().equals("Без нижней одежды"))
                             {
                                 setText("People around you are laughing loudly.",
                                         name + " peed himself! Ahaha!!!");
@@ -1553,8 +1749,8 @@ public class ALongHourAndAHalf extends JFrame
                 break;
 
             case GAME_OVER:
-                if (lower.getName().equals("No outerwear"))
-                    if (undies.getName().equals("No underwear"))
+                if (lower.getName().equals("Без верхней одежды"))
+                    if (undies.getName().equals("Без нижней одежды"))
                         setText("No matter how hard you tried... It doesn't seem to matter, even to think about it...",
                                 "No, nobody would be as sadistic as that, especially to themselves...",
                                 "Game over!");
@@ -1565,7 +1761,7 @@ public class ALongHourAndAHalf extends JFrame
                                 "No, nobody would be as sadistic as that, especially to themselves...",
                                 "Game over!");
                 else
-                    if (undies.getName().equals("No underwear"))
+                    if (undies.getName().equals("Без нижней одежды"))
                         setText("No matter how hard you tried... It doesn't seem to matter, even to think about it...",
                                 "Your " + lower.insert() + " clinging to your skin, a sign of your failure...",//TODO: Add "is/are" depending on lower clothes type
                                 "...unless, of course, you meant for this to happen?",
@@ -1742,7 +1938,7 @@ public class ALongHourAndAHalf extends JFrame
                 decaySphPower();
 
                 actionName = (String) listChoice.getSelectedValue();
-                if (actionName.equals("[Unavailable]"))
+                if (actionName.equals("[Недоступно]"))
                 {
                     setText("You will wet yourself right now,",
                             boyName + " says.",
@@ -1777,8 +1973,8 @@ public class ALongHourAndAHalf extends JFrame
 //                    score += 40;
 //                    scoreText = scoreText.concat("\nSuccessful hit on " + boyName + "'s groin: +40 points");
                     score("Successful hit on " + boyName + "'s groin", '+', 40F);
-                    if (!lower.getName().equals("No outerwear"))
-                        if (!undies.getName().equals("No underwear"))
+                    if (!lower.getName().equals("Без верхней одежды"))
+                        if (!undies.getName().equals("Без нижней одежды"))
                             setText("You hit " + boyName + "'s groin.",
                                     "Ouch!.. You, little bitch...",
                                     "Then he left the restroom quickly.",
@@ -1793,7 +1989,7 @@ public class ALongHourAndAHalf extends JFrame
                                     "opened the cabin door, entered it, pulled down your " + lower.insert() + ",",
                                     "wearily flop down on the toilet and start peeing.");
                     else
-                        if (!undies.getName().equals("No underwear"))
+                        if (!undies.getName().equals("Без нижней одежды"))
                             setText("You hit " + boyName + "'s groin.",
                                     "Ouch!.. You, little bitch...",
                                     "Then he left the restroom quickly.",
@@ -1811,7 +2007,7 @@ public class ALongHourAndAHalf extends JFrame
                     Gender-dependent text block template
 
                     if(!lower.equals("no lower"))
-                        if(!undies.equals("crotch")|!undies.equals("penis"))
+                        if(!undies.equals("промежность")|!undies.equals("член"))
                             Undies: yes
                             Lower: yes
                             setText("Lesson is over, and you're running to the restroom as fast as you can.",
@@ -1826,7 +2022,7 @@ public class ALongHourAndAHalf extends JFrame
                                     "You enter it, pulled down your " + lower + ",",
                                     "wearily flop down on the toilet and start peeing.");
                     else
-                        if(!undies.equals("crotch")|!undies.equals("penis"))
+                        if(!undies.equals("промежность")|!undies.equals("член"))
                             Undies: yes
                             Lower: no
                             setText("Lesson is over, and you're running to the restroom as fast as you can.",
@@ -1859,8 +2055,8 @@ public class ALongHourAndAHalf extends JFrame
                         if (generator.nextInt(100) <= 10)
                         {
                             setLinesAsDialogue(1);
-                            if (!lower.getName().equals("No outerwear"))
-                                if (!undies.getName().equals("No underwear"))
+                            if (!lower.getName().equals("Без верхней одежды"))
+                                if (!undies.getName().equals("Без нижней одежды"))
                                     setText("Ok, you may, but let me watch how do you pee.",
                                             "says " + boyName + ". You enter the cabin,",
                                             "pulled down your " + lower.insert() + " and " + undies.insert() + ",",
@@ -1871,7 +2067,7 @@ public class ALongHourAndAHalf extends JFrame
                                             "pulled down your " + lower.insert() + ",",
                                             "stood over the toilet and start peeing under the " + boyName + " spectation.");
                             else
-                                if (!undies.getName().equals("No underwear"))
+                                if (!undies.getName().equals("Без нижней одежды"))
                                     setText("Ok, you may, but let me watch how do you pee.",
                                             "says " + boyName + ". You enter the cabin,",
                                             "pulled down your " + undies + ",",
@@ -1898,9 +2094,9 @@ public class ALongHourAndAHalf extends JFrame
                     case 1:
                         if (generator.nextInt(100) <= 5)
                         {
-                            if (!lower.getName().equals("No outerwear"))
+                            if (!lower.getName().equals("Без верхней одежды"))
                             {
-                                if (!undies.getName().equals("No underwear"))
+                                if (!undies.getName().equals("Без нижней одежды"))
                                 {
                                     setText("Ok, you may, but let me watch how do you pee.",
                                             "says " + boyName + ". You enter the cabin,",
@@ -1914,7 +2110,7 @@ public class ALongHourAndAHalf extends JFrame
                                             "stood over the toilet and start peeing under the " + boyName + " spectation.");
                                 }
                             } else
-                                if (!undies.getName().equals("No underwear"))
+                                if (!undies.getName().equals("Без нижней одежды"))
                                 {
                                     setText("Ok, you may, but let me watch how do you pee.",
                                             "says " + boyName + ". You enter the cabin,",
@@ -1944,8 +2140,8 @@ public class ALongHourAndAHalf extends JFrame
                     case 2:
                         if (generator.nextInt(100) <= 2)
                         {
-                            if (!lower.getName().equals("No outerwear"))
-                                if (!undies.getName().equals("No underwear"))
+                            if (!lower.getName().equals("Без верхней одежды"))
+                                if (!undies.getName().equals("Без нижней одежды"))
                                     setText("Ok, you may, but let me watch how do you pee.",
                                             "says " + boyName + ". You enter the cabin,",
                                             "pulled down your " + lower.insert() + " and " + undies.insert() + ",",
@@ -1958,7 +2154,7 @@ public class ALongHourAndAHalf extends JFrame
                                             "stood over the toilet and start peeing under the " + boyName + " spectation.");
 
                             else
-                                if (!undies.getName().equals("No underwear"))
+                                if (!undies.getName().equals("Без нижней одежды"))
 
                                     setText("Ok, you may, but let me watch how do you pee.",
                                             "says " + boyName + ". You enter the cabin,",
@@ -2016,6 +2212,60 @@ public class ALongHourAndAHalf extends JFrame
                 nextStage = END_GAME;
                 break;
 
+            case WHERE_TO_GO:
+                setLinesAsDialogue(4);
+                setText("Lesson is over, and you're running to the restroom as fast as you can.",
+                       "Trying to get into the restroom,",
+                       "You find with fear that restroom is locked for some reason.",
+                       "Damnit... Seems that I have to pee somewhere else...");
+                lblChoice.setText("Where to go?");
+                listScroller.setVisible(true);
+                lblChoice.setVisible(true);
+
+                actionList.clear();
+                actionList.add("Mall (5 minutes)");
+                actionList.add("Bus stop (1 minute)");
+                actionList.add("Directly to home (15 minutes)");
+                
+                if (!listChoice.isSelectionEmpty())
+                {
+                    nextStage = GameStage.WHERE_TO_GO_CHOSE;
+                    break;
+                }
+            break;
+               
+            case WHERE_TO_GO_CHOSE:
+                lblChoice.setVisible(false);
+                listScroller.setVisible(false);
+
+//                actionName = (String) listChoice.getSelectedValue();
+//                if (actionName.equals("[Недоступно]"))
+//                {
+//                    listChoice.clearSelection();
+//                    setText("You've spent a few minutes doing nothing.");
+//                    break;
+//                }
+
+                actionNum = listChoice.getSelectedIndex();
+
+                lblChoice.setVisible(false);
+                listScroller.setVisible(false);
+
+                listChoice.clearSelection();
+
+                switch (actionNum)
+                {
+                    case 0:
+                        nextStage = GOING_TO_MALL;
+                        break;
+                    case 1:
+                        nextStage = GOING_TO_BUS_STOP;
+                        break;
+                    case 2:
+                        nextStage = GOING_TO_HOME;
+                        break;
+                }
+                
             default:
                 setText("Error parsing button. Next text is unavailable, text #" + nextStage);
                 break;
@@ -2203,24 +2453,24 @@ public class ALongHourAndAHalf extends JFrame
             if (dryness > 0)
             {
                 //Naked
-                if (lower.getName().equals("No outerwear") && undies.getName().equals("No underwear"))
+                if (lower.getName().equals("Без верхней одежды") && undies.getName().equals("Без нижней одежды"))
                     setText("You feel as the urine is passing outside...",
                             "You're about to pee! You must stop it!");
                 else
                     //Outerwear
-                    if (!lower.getName().equals("No outerwear"))
+                    if (!lower.getName().equals("Без верхней одежды"))
                         setText("You see the wet spot on your " + lower.insert() + "!",
                                 "You're about to pee! You must stop it!");
                     else
                         //Underwear
-                        if (!undies.getName().equals("No underwear"))
+                        if (!undies.getName().equals("Без нижней одежды"))
                             setText("You see the wet spot on your " + undies.insert() + "!",
                                     "You're about to pee! You must stop it!");
             }
 
             if (dryness < -20)
             {
-                if (lower.getName().equals("No outerwear") && undies.getName().equals("No underwear"))
+                if (lower.getName().equals("Без верхней одежды") && undies.getName().equals("Без нижней одежды"))
                     if (cornered)
                     {
                         setText("You see the puddle on the floor under you! You're peeing!",
@@ -2235,14 +2485,14 @@ public class ALongHourAndAHalf extends JFrame
                         handleNextClicked();
                     }
                 else
-                    if (!lower.getName().equals("No outerwear"))
+                    if (!lower.getName().equals("Без верхней одежды"))
                     {
                         setText("You see the wet spot on your " + lower.insert() + "!",
                                 "It's too big...");
                         nextStage = ACCIDENT;
                         handleNextClicked();
                     } else
-                        if (!undies.getName().equals("No underwear"))
+                        if (!undies.getName().equals("Без нижней одежды"))
                         {
                             setText("You see the wet spot on your " + undies.insert() + "!",
                                     "It's too big...");
@@ -2344,29 +2594,36 @@ public class ALongHourAndAHalf extends JFrame
 
     enum GameStage
     {
-        LEAVE_BED,
-        LEAVE_HOME,
-        GO_TO_CLASS,
-        WALK_IN,
-        SIT_DOWN,
-        ASK_ACTION,
-        CHOSE_ACTION,
-        ASK_TO_PEE,
-        CALLED_ON,
-        CAUGHT,
-        USE_BOTTLE,
-        ASK_CHEAT,
-        CHOSE_CHEAT,
-        CLASS_OVER,
-        AFTER_CLASS,
-        ACCIDENT,
+        LEAVE_BED, //Home
+        LEAVE_HOME, //Home
+        GO_TO_CLASS, //Home -> school
+        WALK_IN, //School
+        SIT_DOWN, //School
+        ASK_ACTION, //School, waiting for player to select an action
+        CHOSE_ACTION, //TODO: Rework
+        ASK_TO_PEE, //School, asking a teacher to pee
+        CALLED_ON, //School, teacher asked character a question
+        CAUGHT, //School, classmates have spotted that character has to pee (hardcore only)
+        USE_BOTTLE, //School, cheat, peeing in a bottle
+        ASK_CHEAT, //School, waiting for player to select a cheat 
+        CHOSE_CHEAT, //TODO: Rework
+        CLASS_OVER, //School, class over
+        AFTER_CLASS, //School, writing lines if character has failed to ask teacher to go to the restroom for three times
+        ACCIDENT, //School, leaking
+        ACCIDENT_STREET, //Street, leaking
+        ACCIDENT_BUS, //Bus, leaking
+        ACCIDENT_HOME, //Home, leaking
         GIVE_UP,
-        WET,
-        POST_WET,
+        WET, //School, wetting
+        WET_STREET, //Street, wetting
+        WET_BUS, //Bus, wetting
+        WET_HOME, //Home, wetting
+        POST_WET, //School, being made fun of
+        POST_BUS, //Bus, passangers around can't understand how did character pee in a bus
+        POST_STREET, //Street, 
         GAME_OVER,
-        END_GAME,
-        SURPRISE,
-        SURPRISE_2,
+        SURPRISE, //Hidden gameplay after passing through the class in the hardcore mode
+        SURPRISE_2, 
         SURPRISE_ACCIDENT,
         SURPRISE_DIALOGUE,
         SURPRISE_CHOSE,
@@ -2374,7 +2631,18 @@ public class ALongHourAndAHalf extends JFrame
         PERSUADE,
         SURPRISE_WET_VOLUNTARY,
         SURPRISE_WET_VOLUNTARY2,
-        SURPRISE_WET_PRESSURE
+        SURPRISE_WET_PRESSURE, //End of the hidden gameplay stages 
+        WHERE_TO_GO, //Asking the player where to go after the lessons if all restrooms are locked
+        GOING_TO_MALL, //Street, going to the mall to find a restroom (5 minutes)
+        GOING_TO_BUS_STOP, //Street, going to the bus stop (1 minute, then waiting for a bus for 3 - 20 minutes)
+        GOING_TO_HOME, //Street, going to home on foot (15 minutes)
+        HOME, //Made it to home
+        HOME_LOST_KEYS, //Forgot keys at school (chance 12%)
+        BACK_TO_SCHOOL, //Going back to school on foot (15 minutes)
+        BACK_TO_SCHOOL_BUS_STOP, //Waiting for a bus to school (3 - 15 minutes)
+        IN_BUS, //In a bus (3 minutes, 5% chance to get stuck in traffic (5 - 25 minutes)
+        END_GAME, //Good ending, showing score
+        WHERE_TO_GO_CHOSE
     }
 
     enum Gender
