@@ -1717,28 +1717,41 @@ public class ALongHourAndAHalf extends JFrame
             case GAME_OVER:
                 if (lower.getName().equals("Без верхней одежды"))
                     if (undies.getName().equals("Без нижней одежды"))
-                        setText("No matter how hard you tried... It doesn't seem to matter, even to think about it...",
-                                "No, nobody would be as sadistic as that, especially to themselves...",
-                                "Game over!");
+                        if(isFemale())
+                            setText("Не важно, как ты старалась вытерпеть... Теперь то уже не важно...",
+                                    "Уже ничто не важно...",
+                                    "Игра окончена!");
+                        else
+                            setText("Не важно, как ты старался вытерпеть... Теперь то уже не важно...",
+                                    "Уже ничто не важно...",
+                                    "Игра окончена!");
                     else
-                        setText("No matter how hard you tried... It doesn't seem to matter, even to think about it...",
-                                "Your " + undies.insert() + " are clinging to your skin, a sign of your failure...",
-                                "...unless, of course, you meant for this to happen?",
-                                "No, nobody would be as sadistic as that, especially to themselves...",
-                                "Game over!");
+                        if(isFemale())
+                            setText("Не важно, как ты старалась вытерпеть... Теперь то уже не важно...",
+                                    "Уже ничто не важно... Твои " + undies.insert() + " прилипают к коже, как знак этого провала...",
+                                    "Игра окончена!");
+                        else
+                            setText("Не важно, как ты старался вытерпеть... Теперь то уже не важно...",
+                                    "Уже ничто не важно... Твои " + undies.insert() + " прилипают к коже, как знак этого провала...",
+                                    "Игра окончена!");
                 else
                     if (undies.getName().equals("Без нижней одежды"))
-                        setText("No matter how hard you tried... It doesn't seem to matter, even to think about it...",
-                                "Your " + lower.insert() + " clinging to your skin, a sign of your failure...",//TODO: Add "is/are" depending on lower clothes type
-                                "...unless, of course, you meant for this to happen?",
-                                "No, nobody would be as sadistic as that, especially to themselves...",
-                                "Game over!");
+                        if(isFemale())
+                            setText("Не важно, как ты старалась вытерпеть... Теперь то уже не важно...",
+                                    "Уже ничто не важно... Твои " + lower.insert() + " прилипают к коже, как знак этого провала...",
+                                    "Игра окончена!");
+                        else
+                            setText("Не важно, как ты старался вытерпеть... Теперь то уже не важно...",
+                                    "Уже ничто не важно... Твои " + lower.insert() + " прилипают к коже, как знак этого провала...",
+                                    "Игра окончена!");
                     else
-                        setText("No matter how hard you tried... It doesn't seem to matter, even to think about it...",
-                                "Your " + lower.insert() + " and " + undies.insert() + " are both clinging to your skin, a sign of your failure...",
-                                "...unless, of course, you meant for this to happen?",
-                                "No, nobody would be as sadistic as that, especially to themselves...",
-                                "Game over!");
+                        setText("Не важно, как ты старалась вытерпеть... Теперь то уже не важно...",
+                                    "Уже ничто не важно... Твои " + undies.insert() + " и " + lower.insert() + " прилипают к коже, как знак этого провала...",
+                                    "Игра окончена!");
+                        else
+                            setText("Не важно, как ты старался вытерпеть... Теперь то уже не важно...",
+                                    "Уже ничто не важно... Твои " + undies.insert() + " и " + lower.insert() + " прилипают к коже, как знак этого провала...",
+                                    "Игра окончена!");
                 btnNext.setVisible(false);
                 break;
 
@@ -1746,9 +1759,9 @@ public class ALongHourAndAHalf extends JFrame
                 if (cheatsUsed)
                 {
                     score = 0;
-                    scoreText = "\nYou've used the cheats, so you've got no score.";
+                    scoreText = "\nИз-за использования читов очки обнулились.";
                 }
-                String scoreText2 = "Your score: " + score + "\n" + scoreText;
+                String scoreText2 = "Очки: " + score + "\n" + scoreText;
 
                 JOptionPane.showMessageDialog(this, scoreText2);
                 System.exit(0);
@@ -1758,58 +1771,63 @@ public class ALongHourAndAHalf extends JFrame
                 switch (timesCaught)
                 {
                     case 0:
-                        setText("It looks like a classmate has spotted that you've got to go badly.",
-                                "Damn, he may spread that fact...");
+                        setText("Похоже, один одноклассник заметил, что тебе сильно нужно в туалет.",
+                                "Чёрт, он может рассказать другим...");
                         offsetEmbarassment(3);
                         classmatesAwareness += 5;
 //                        score += 3;
 //                        scoreText = scoreText.concat("\nCaught holding pee: +3 points");
-                        score("Caught holding pee", '+', 3);
+                        score("Одноклассники заметили, что тебе нужно в туалет", '+', 3);
                         timesCaught++;
                         break;
                     case 1:
                         setLinesAsDialogue(3);
-                        setText("You'he heard a suspicious whisper behind you.",
-                                "Listening to whisper, you've found out that they're talking that you need to go.",
-                                "If I hold it until the lesson end, I will beat them.");
+                        if(isFemale())
+                            setText("Ты услышала подозрительный шёпот с парты позади.",
+                                    "Прислушавшись, ты поняла, что они обсуждают твоё терпение.",
+                                    "Если я дотерплю, я их изобью на перемене.");
+                        else
+                            setText("Ты услышал подозрительный шёпот с парты позади.",
+                                    "Прислушавшись, ты понял, что они обсуждают твоё терпение.",
+                                    "Если я дотерплю, я их изобью на перемене.");
                         offsetEmbarassment(8);
                         classmatesAwareness += 5;
 //                        score += 8;
 //                        scoreText = scoreText.concat("\nCaught holding pee: +8 points");
-                        score("Caught holding pee", '+', 8);
+                        score("Одноклассники заметили, что тебе нужно в туалет", '+', 8);
                         timesCaught++;
                         break;
                     case 2:
                         if (isFemale())
                         {
                             setLinesAsDialogue(2);
-                            setText("The most handsome boy in your class, " + boyName + ", is calling you:",
-                                    "Hey there, don't wet yourself!",
-                                    "Oh no, he knows it...");
+                            setText("Самый красивый парень в классе, " + boyName + ", говорит тебе:",
+                                    "Эй, ты тут нам не описайся!",
+                                    "О чёрт, только не он...");
                         } else
                         {
                             setLinesAsDialogue(2, 3);
-                            setText("The most nasty boy in your class, " + boyName + ", is calling you:",
-                                    "Hey there, don't wet yourself! Ahahahaa!",
-                                    "\"Shut up...\"",
-                                    ", you think to yourself.");
+                            setText("Самый уродливый мальчик в классе, " + boyName + ", говорит тебе:",
+                                    "Эй, ты тут нам не описайся! Хахаха!",
+                                    "\"Заткнись...\"",
+                                    ", думаешь ты про себя.");
                         }
                         offsetEmbarassment(12);
                         classmatesAwareness += 5;
 //                        score += 12;
 //                        scoreText = scoreText.concat("\nCaught holding pee: +12 points");
-                        score("Caught holding pee", '+', 12);
+                        score("Одноклассники заметили, что тебе нужно в туалет", '+', 12);
                         timesCaught++;
                         break;
                     default:
-                        setText("The chuckles are continiously passing over the classroom.",
-                                "Everyone are watching over you.",
-                                "Oh god... So embarassed...");
+                        setText("По классу периодически издаются смешки и...",
+                                "все смотрят на тебя.",
+                                "О нет... Теперь все знают...");
                         offsetEmbarassment(20);
                         classmatesAwareness += 5;
 //                        score += 20;
 //                        scoreText = scoreText.concat("\nCaught holding pee: +20 points");
-                        score("Caught holding pee", '+', 20);
+                        score("Одноклассники заметили, что тебе нужно в туалет", '+', 20);
                 }
                 nextStage = ASK_ACTION;
                 break;
@@ -1822,10 +1840,10 @@ public class ALongHourAndAHalf extends JFrame
             case SURPRISE:
 //                score += 70;
 //                scoreText = scoreText.concat("\nGot the \"surprise\" by " + boyName + ": +70 points");
-                score("Got the \"surprise\" by " + boyName, '+', 70);
-                setText("Lesson is finally over, and you're running to the restroom as fast as you can.",
-                        "But... You see " + boyName + " staying in front of the restroom.",
-                        "Suddenly, he takes you, don't letting you to escape.");
+                score("\"сюрприз\" от " + boyName, '+', 70);
+                setText("Наконец то урок закончился, и ты бежишь в туалет со всех ног.",
+                        "Но... Ты видишь " + boyName + ", стоящего около туалета.",
+                        "Внезапно он хватает тебя, не давая сбежать.");
                 offsetEmbarassment(10);
                 if (testWet())
                 {
@@ -1837,10 +1855,10 @@ public class ALongHourAndAHalf extends JFrame
 
             case SURPRISE_2:
                 setLinesAsDialogue(1);
-                setText("What do you want from me?!",
-                        "He has brought you on his hands in the restroom and put you on the windowsill.",
-                        boyName + " has locked the restroom door (seems he has stolen the key), then he put his palm on your belly and said:",
-                        "I want you to wet yourself.");
+                setText("Что тебе нужно?!",
+                        "Он перенёс тебя на руках и положил на подоконник.",
+                        boyName + " запер дверь (похоже, он украл ключи), затем положил ладонь на твой живот и сказал:",
+                        "Я хочу, чтобы ты описалась.");
                 offsetEmbarassment(10);
                 if (testWet())
                 {
@@ -1852,33 +1870,33 @@ public class ALongHourAndAHalf extends JFrame
 
             case SURPRISE_DIALOGUE:
                 setLinesAsDialogue(1);
-                setText("No, please, don't do it, no...",
-                        "I want to see you wet...",
-                        "He slightly pressed your belly, you shook from the terrible pain",
-                        "in your bladder and subconsciously rubbed your crotch. You have to do something!");
+                setText("Нет, пожалуйста, не надо, нет...",
+                        "Я хочу видеть, как ты писаешься...",
+                        "Он легонько нажал на живот и ты содрогнулась от вспышки боли",
+                        "в мочевом пузыре и невольно схватилась за промежность. Нужно что-то делать!");
                 offsetEmbarassment(10);
                 if (testWet())
                 {
                     nextStage = SURPRISE_ACCIDENT;
                     break;
                 }
-                lblChoice.setText("Don't let him to do it!");
+                lblChoice.setText("Не дай ему этого сделать!");
                 actionList.clear();
 
-                actionList.add("Hit him");
+                actionList.add("Ударить его");
                 switch (timesPeeDenied)
                 {
                     case 0:
-                        actionList.add("Try to persuade him to let you pee");
+                        actionList.add("Попробовать уговорить его пописать");
                         break;
                     case 1:
-                        actionList.add("Try to persuade him to let you pee again");
+                        actionList.add("Попробовать уговорить его пописать ещё раз");
                         break;
                     case 2:
-                        actionList.add("Take a chance and try to persuade him (RISKY)");
+                        actionList.add("Попробовать уговорить его пописать ещё раз (опасно)");
                         break;
                 }
-                actionList.add("Pee yourself");
+                actionList.add("Описаться");
 
                 listChoice.setListData(actionList.toArray());
                 lblChoice.setVisible(true);
@@ -1890,9 +1908,9 @@ public class ALongHourAndAHalf extends JFrame
                 nextStage = SURPRISE_DIALOGUE;
                 if (listChoice.isSelectionEmpty())
                 {
-                    setText("You will wet yourself right now,",
-                            boyName + " says.",
-                            "Then " + boyName + " pressed your bladder...");
+                    setText("Ты пописаешь здесь и сейчас...,",
+                            "сказал " + boyName + ".",
+                            "Затем он нажал прямо на мочевой пузырь...");
                     nextStage = SURPRISE_WET_PRESSURE;
                 }
                 lblChoice.setVisible(false);
@@ -1906,9 +1924,9 @@ public class ALongHourAndAHalf extends JFrame
                 actionName = (String) listChoice.getSelectedValue();
                 if (actionName.equals("[Недоступно]"))
                 {
-                    setText("You will wet yourself right now,",
-                            boyName + " says.",
-                            "Then " + boyName + " pressed your bladder...");
+                    setText("Ты пописаешь здесь и сейчас...,",
+                            "сказал " + boyName + ".",
+                            "Затем он нажал прямо на мочевой пузырь...");
                     nextStage = SURPRISE_WET_PRESSURE;
                 }
 
@@ -1919,15 +1937,15 @@ public class ALongHourAndAHalf extends JFrame
 
                 switch (actionName)
                 {
-                    case "Hit him":
+                    case "Ударить его":
                         nextStage = HIT;
                         break;
-                    case "Try to persuade him to let you pee":
-                    case "Try to persuade him to let you pee again":
-                    case "Take a chance and try to persuade him (RISKY)":
+                    case "Попробовать уговорить его пописать":
+                    case "Попробовать уговорить его пописать ещё раз":
+                    case "Попробовать уговорить его пописать ещё раз (опасно)":
                         nextStage = PERSUADE;
                         break;
-                    case "Pee yourself":
+                    case "Описаться":
                         nextStage = SURPRISE_WET_VOLUNTARY;
                 }
 
@@ -1938,37 +1956,36 @@ public class ALongHourAndAHalf extends JFrame
                     nextStage = GameStage.END_GAME;
 //                    score += 40;
 //                    scoreText = scoreText.concat("\nSuccessful hit on " + boyName + "'s groin: +40 points");
-                    score("Successful hit on " + boyName + "'s groin", '+', 40F);
+                    score("Успешный удар в пах " + boyName, '+', 40F);
                     if (!lower.getName().equals("Без верхней одежды"))
                         if (!undies.getName().equals("Без нижней одежды"))
-                            setText("You hit " + boyName + "'s groin.",
-                                    "Ouch!.. You, little bitch...",
-                                    "Then he left the restroom quickly.",
-                                    "You got off from the windowsill while holding your crotch,",
-                                    "opened the cabin door, entered it, pulled down your " + lower.insert() + " and " + undies.insert() + ",",
-                                    "и начинаешь писать.");
+                            setText("Ты ударила " + boyName + " в пах.",
+                                    "Ай! Ты, маленькая сучка...",
+                                    "Затем он быстро убрался из туалета.",
+                                    "Ты слезла с подоконника, держа палец в своей щёлке,",
+                                    "вошла в кабинку, стянула " + lower.insert() + " и " + undies.insert(),
+                                    "и начала писать.");
                         else
-                            setText("You hit " + boyName + "'s groin.",
-                                    "Ouch!.. You, little bitch...",
-                                    "Then he left the restroom quickly.",
-                                    "You got off from the windowsill while holding your crotch,",
-                                    "opened the cabin door, entered it, pulled down your " + lower.insert() + ",",
-                                    "и начинаешь писать.");
+                            setText("Ты ударила " + boyName + " в пах.",
+                                    "Ай! Ты, маленькая сучка...",
+                                    "Затем он быстро убрался из туалета.",
+                                    "Ты слезла с подоконника, держа палец в своей щёлке,",
+                                    "вошла в кабинку, стянула " + lower.insert(),
+                                    "и начала писать.");
                     else
                         if (!undies.getName().equals("Без нижней одежды"))
-                            setText("You hit " + boyName + "'s groin.",
-                                    "Ouch!.. You, little bitch...",
-                                    "Then he left the restroom quickly.",
-                                    "You got off from the windowsill while holding your crotch,",
-                                    "opened the cabin door, entered it, pulled down your " + undies.insert() + ",",
-                                    "и начинаешь писать.");
+                            setText("Ты ударила " + boyName + " в пах.",
+                                    "Ай! Ты, маленькая сучка...",
+                                    "Затем он быстро убрался из туалета.",
+                                    "Ты слезла с подоконника, держа палец в своей щёлке,",
+                                    "вошла в кабинку, стянула " + undies.insert(),
+                                    "и начала писать.");
                         else
-                            setText("You hit " + boyName + "'s groin.",
-                                    "Ouch!.. You, little bitch...",
-                                    "Then he left the restroom quickly.",
-                                    "You got off from the windowsill while holding your crotch,",
-                                    "opened the cabin door, entered it,",
-                                    "и начинаешь писать.");
+                            setText("Ты ударила " + boyName + " в пах.",
+                                    "Ай! Ты, маленькая сучка...",
+                                    "Затем он быстро убрался из туалета.",
+                                    "Ты слезла с подоконника, держа палец в своей щёлке,",
+                                    "вошла в кабинку и начала писать.");
                     /*
                     Gender-dependent text block template
 
@@ -2007,10 +2024,10 @@ public class ALongHourAndAHalf extends JFrame
                 {
                     nextStage = GameStage.SURPRISE_WET_PRESSURE;
                     setLinesAsDialogue(2, 3);
-                    setText("You hit " + boyName + "'s hand. Damn, you'd to hit his groin...",
-                            "You're braver than I expected;",
-                            "now let's check the strength of your bladder!",
-                            boyName + " pressed your bladder violently...");
+                    setText("Ты ударила руку " + boyName + "Чёрт, надо было бить в пах...",
+                            "Ты смелее, чем я думал;",
+                            "а теперь давай проверим твой мочевой пузырь!",
+                            boyName + " надавил на мочевой пузырь со всех сил...");
                 }
                 break;
 
@@ -2023,35 +2040,35 @@ public class ALongHourAndAHalf extends JFrame
                             setLinesAsDialogue(1);
                             if (!lower.getName().equals("Без верхней одежды"))
                                 if (!undies.getName().equals("Без нижней одежды"))
-                                    setText("Ok, you may, but let me watch how do you pee.",
-                                            "says " + boyName + ". You enter the cabin,",
-                                            "pulled down your " + lower.insert() + " and " + undies.insert() + ",",
-                                            "stood over the toilet and start peeing under the " + boyName + " spectation.");
+                                    setText("Хорошо, пописай, но дай мне посмотреть.",
+                                            "разрешил " + boyName + ". Ты вошла в кабинку,",
+                                            "стянула " + lower.insert() + " и " + undies.insert() + ",",
+                                            "и начала писать под наблюдением " + boyName + ".");
                                 else
-                                    setText("Ok, you may, but let me watch how do you pee.",
-                                            "says " + boyName + ". You enter the cabin,",
-                                            "pulled down your " + lower.insert() + ",",
-                                            "stood over the toilet and start peeing under the " + boyName + " spectation.");
+                                    setText("Хорошо, пописай, но дай мне посмотреть.",
+                                            "разрешил " + boyName + ". Ты вошла в кабинку,",
+                                            "стянула " + lower.insert(),
+                                            "и начала писать под наблюдением " + boyName + ".");
                             else
                                 if (!undies.getName().equals("Без нижней одежды"))
-                                    setText("Ok, you may, but let me watch how do you pee.",
-                                            "says " + boyName + ". You enter the cabin,",
-                                            "pulled down your " + undies + ",",
-                                            "stood over the toilet and start peeing under the " + boyName + " spectation.");
+                                    setText("Хорошо, пописай, но дай мне посмотреть.",
+                                            "разрешил " + boyName + ". Ты вошла в кабинку,",
+                                            "стянула " + undies,
+                                            "и начала писать под наблюдением " + boyName + ".");
                                 else
-                                    setText("Ok, you may, but let me watch how do you pee.",
-                                            "says " + boyName + ". You enter the cabin,",
-                                            "stood over the toilet and start peeing under the " + boyName + " spectation.");
+                                    setText("Хорошо, пописай, но дай мне посмотреть.",
+                                            "разрешил " + boyName + ". Ты вошла в кабинку",
+                                            "и начала писать под наблюдением " + boyName + ".");
 //                            score += 40;
 //                            scoreText = scoreText.concat("\nPersuaded " + boyName + " to pee: +40 points");
-                            score("Persuaded " + boyName + " to pee", '+', 40);
+                            score("Уговорила " + boyName + " пописать", '+', 40);
                             emptyBladder();
                             nextStage = END_GAME;
                         } else
                         {
-                            setText("You ask " + boyName + " if you can pee.",
-                                    "No, you can't pee in a cabin. I want you to wet yourself.,",
-                                    boyName + " says.");
+                            setText("Ты спросила " + boyName + ", можешь ли ты пописать.",
+                                    "Нет, не можешь. Я хочу, чтобы ты пописала здесь.",
+                                    "отказал " + boyName);
                             timesPeeDenied++;
                             nextStage = SURPRISE_DIALOGUE;
                         }
@@ -2060,44 +2077,38 @@ public class ALongHourAndAHalf extends JFrame
                     case 1:
                         if (generator.nextInt(100) <= 5)
                         {
+                            setLinesAsDialogue(1);
                             if (!lower.getName().equals("Без верхней одежды"))
-                            {
                                 if (!undies.getName().equals("Без нижней одежды"))
-                                {
-                                    setText("Ok, you may, but let me watch how do you pee.",
-                                            "says " + boyName + ". You enter the cabin,",
-                                            "pulled down your " + lower.insert() + " and " + undies.insert() + ",",
-                                            "stood over the toilet and start peeing under the " + boyName + " spectation.");
-                                } else
-                                {
-                                    setText("Ok, you may, but let me watch how do you pee.",
-                                            "says " + boyName + ". You enter the cabin,",
-                                            "pulled down your " + lower.insert() + ",",
-                                            "stood over the toilet and start peeing under the " + boyName + " spectation.");
-                                }
-                            } else
+                                    setText("Хорошо, пописай, но дай мне посмотреть.",
+                                            "разрешил " + boyName + ". Ты вошла в кабинку,",
+                                            "стянула " + lower.insert() + " и " + undies.insert() + ",",
+                                            "и начала писать под наблюдением " + boyName + ".");
+                                else
+                                    setText("Хорошо, пописай, но дай мне посмотреть.",
+                                            "разрешил " + boyName + ". Ты вошла в кабинку,",
+                                            "стянула " + lower.insert(),
+                                            "и начала писать под наблюдением " + boyName + ".");
+                            else
                                 if (!undies.getName().equals("Без нижней одежды"))
-                                {
-                                    setText("Ok, you may, but let me watch how do you pee.",
-                                            "says " + boyName + ". You enter the cabin,",
-                                            "pulled down your " + undies + ",",
-                                            "stood over the toilet and start peeing under the " + boyName + " spectation.");
-                                } else
-                                {
-                                    setText("Ok, you may, but let me watch how do you pee.",
-                                            "says " + boyName + ". You enter the cabin,",
-                                            "stood over the toilet and start peeing under the " + boyName + " spectation.");
-                                }
+                                    setText("Хорошо, пописай, но дай мне посмотреть.",
+                                            "разрешил " + boyName + ". Ты вошла в кабинку,",
+                                            "стянула " + undies,
+                                            "и начала писать под наблюдением " + boyName + ".");
+                                else
+                                    setText("Хорошо, пописай, но дай мне посмотреть.",
+                                            "разрешил " + boyName + ". Ты вошла в кабинку",
+                                            "и начала писать под наблюдением " + boyName + ".");
 //                            score += 60;
 //                            scoreText = scoreText.concat("\nPersuaded " + boyName + " to pee: +60 points");
-                            score("Persuaded " + boyName + " to pee", '+', 60);
+                            score("Уговорила " + boyName + " пописать", '+', 60);
                             emptyBladder();
                             nextStage = END_GAME;
                         } else
                         {
-                            setText("You ask " + boyName + " if you can pee again.",
-                                    "No, you can't pee in a cabin. I want you to wet yourself. Let's do it.,",
-                                    boyName + " says.");
+                            setText("Ты спросила " + boyName + ", можешь ли ты пописать, опять.",
+                                    "Нет, не можешь. Давай ты описаешься.",
+                                    "отказал " + boyName);
                             timesPeeDenied++;
                             nextStage = SURPRISE_DIALOGUE;
                         }
@@ -2106,43 +2117,40 @@ public class ALongHourAndAHalf extends JFrame
                     case 2:
                         if (generator.nextInt(100) <= 2)
                         {
+                            setLinesAsDialogue(1);
                             if (!lower.getName().equals("Без верхней одежды"))
                                 if (!undies.getName().equals("Без нижней одежды"))
-                                    setText("Ok, you may, but let me watch how do you pee.",
-                                            "says " + boyName + ". You enter the cabin,",
-                                            "pulled down your " + lower.insert() + " and " + undies.insert() + ",",
-                                            "stood over the toilet and start peeing under the " + boyName + " spectation.");
+                                    setText("Хорошо, пописай, но дай мне посмотреть.",
+                                            "разрешил " + boyName + ". Ты вошла в кабинку,",
+                                            "стянула " + lower.insert() + " и " + undies.insert() + ",",
+                                            "и начала писать под наблюдением " + boyName + ".");
                                 else
-
-                                    setText("Ok, you may, but let me watch how do you pee.",
-                                            "says " + boyName + ". You enter the cabin,",
-                                            "pulled down your " + lower.insert() + ",",
-                                            "stood over the toilet and start peeing under the " + boyName + " spectation.");
-
+                                    setText("Хорошо, пописай, но дай мне посмотреть.",
+                                            "разрешил " + boyName + ". Ты вошла в кабинку,",
+                                            "стянула " + lower.insert(),
+                                            "и начала писать под наблюдением " + boyName + ".");
                             else
                                 if (!undies.getName().equals("Без нижней одежды"))
-
-                                    setText("Ok, you may, but let me watch how do you pee.",
-                                            "says " + boyName + ". You enter the cabin,",
-                                            "pulled down your " + undies.insert() + ",",
-                                            "stood over the toilet and start peeing under the " + boyName + " spectation.");
+                                    setText("Хорошо, пописай, но дай мне посмотреть.",
+                                            "разрешил " + boyName + ". Ты вошла в кабинку,",
+                                            "стянула " + undies,
+                                            "и начала писать под наблюдением " + boyName + ".");
                                 else
-
-                                    setText("Ok, you may, but let me watch how do you pee.",
-                                            "says " + boyName + ". You enter the cabin,",
-                                            "stood over the toilet and start peeing under the " + boyName + " spectation.");
+                                    setText("Хорошо, пописай, но дай мне посмотреть.",
+                                            "разрешил " + boyName + ". Ты вошла в кабинку",
+                                            "и начала писать под наблюдением " + boyName + ".");
 
 //                            score += 80;
 //                            scoreText = scoreText.concat("\nPersuaded " + boyName + " to pee: +80 points");
-                            score("Persuaded " + boyName + " to pee", '+', 80);
+                            score("Уговорила " + boyName + " пописать", '+', 80);
                             emptyBladder();
                             nextStage = END_GAME;
                         } else
                         {
-                            setText("You ask " + boyName + " if you can pee again desperately.",
-                                    "No, you can't pee in a cabin. You will wet yourself right now,",
-                                    boyName + " says.",
-                                    "Then " + boyName + " pressed your bladder...");
+                            setText("В нетерпении ты умоляешь " + boyName + " разрешить тебе пописать.",
+                                    "Нет. Зачем тебе это, если ты сделаешь это прямо сейчас?",
+                                    "сказал " + boyName,
+                                    "Затем он нажал прямо на мочевой пузырь...");
                             nextStage = SURPRISE_WET_PRESSURE;
                         }
                         break;
@@ -2151,86 +2159,80 @@ public class ALongHourAndAHalf extends JFrame
 
             case SURPRISE_WET_VOLUNTARY:
                 setLinesAsDialogue(1, 3);
-                setText("Alright, as you say.,",
-                        "you say to " + boyName,
-                        "Whatever I can't hold it anymore.");
+                setText("Ладно, как скажешь.",
+                        "ты говоришь " + boyName,
+                        "Всё равно я больше не могу терпеть.");
                 emptyBladder();
                 nextStage = SURPRISE_WET_VOLUNTARY2;
                 break;
 
             case SURPRISE_WET_VOLUNTARY2:
-                setText("You're feeling the warm, scalding pee stream",
-                        "filling your " + undies.insert() + " and wetting your " + lower.insert() + ".",
-                        "You're closing your eyes and easing your sphincter off.",
-                        "You feel as the pee stream becaming much stronger.");
+                if (!lower.getName().equals("Без верхней одежды"))
+                    if (!undies.getName().equals("Без нижней одежды"))
+                        setText("Ты почуствовала тёплую, обжигающую струю мочи,",
+                                "заливающую твои " + undies.insert() + " и " + lower.insert() + ".",
+                                "Ты закрываешь свои глаза и полностью расслабляешься,",
+                                "и чувствуешь, как струя стала намного сильнее.");
+                    else
+                        setText("Ты почуствовала тёплую, обжигающую струю мочи,",
+                                "заливающую твои " + lower.insert() + ".",
+                                "Ты закрываешь свои глаза и полностью расслабляешься,",
+                                "и чувствуешь, как струя стала намного сильнее.");
+                else
+                    if (!undies.getName().equals("Без нижней одежды"))
+                        setText("Ты почуствовала тёплую, обжигающую струю мочи,",
+                                "заливающую твои " + undies.insert() + ".",
+                                "Ты закрываешь свои глаза и полностью расслабляешься,",
+                                "и чувствуешь, как струя стала намного сильнее.");
+                    else
+                        setText("Ты почуствовала тёплую, обжигающую струю мочи,",
+                                "обливающую твои ноги.",
+                                "Ты закрываешь свои глаза и полностью расслабляешься,",
+                                "и чувствуешь, как струя стала намного сильнее.");
                 emptyBladder();
                 nextStage = END_GAME;
                 break;
 
             case SURPRISE_WET_PRESSURE:
-                setText("Ouch... The sudden pain flash is passing through your bladder...",
-                        "You're trying to hold the pee back, but you can't.",
-                        "You're feeling the warm, scalding pee stream",
-                        "filling your " + undies.insert() + " and wetting your " + lower.insert() + ".",
-                        "You're closing your eyes and easing your sphincter off.",
-                        "You feel as the pee stream becaming much stronger.");
+                setText("Ай... Внезапная нестерпимая вспышка ужасной боли пронзила мочевой пузырь...",
+                        "Ты пытаешься вытерпеть, но физически не можешь.",
+                        "Ты почуствовала тёплую, обжигающую струю мочи,",
+                        "заливающую твои " + undies.insert() + " и " + lower.insert() + ".",
+                        "Ты закрываешь свои глаза и полностью расслабляешься.",
+                        "Ты чувствуешь, как струя стала намного сильнее.");
+                if (!lower.getName().equals("Без верхней одежды"))
+                    if (!undies.getName().equals("Без нижней одежды"))
+                        setText("Ай... Внезапная нестерпимая вспышка ужасной боли пронзила мочевой пузырь...",
+                                "Ты пытаешься вытерпеть, но физически не можешь.",
+                                "Ты почуствовала тёплую, обжигающую струю мочи,",
+                                "заливающую твои " + undies.insert() + " и " + lower.insert() + ".",
+                                "Ты закрываешь свои глаза и полностью расслабляешься,",
+                                "и чувствуешь, как струя стала намного сильнее.");
+                    else
+                        setText("Ай... Внезапная нестерпимая вспышка ужасной боли пронзила мочевой пузырь...",
+                                "Ты пытаешься вытерпеть, но физически не можешь.",
+                                "Ты почуствовала тёплую, обжигающую струю мочи,",
+                                "заливающую твои " + lower.insert() + ".",
+                                "Ты закрываешь свои глаза и полностью расслабляешься,",
+                                "и чувствуешь, как струя стала намного сильнее.");
+                else
+                    if (!undies.getName().equals("Без нижней одежды"))
+                        setText("Ай... Внезапная нестерпимая вспышка ужасной боли пронзила мочевой пузырь...",
+                                "Ты пытаешься вытерпеть, но физически не можешь.",
+                                "Ты почуствовала тёплую, обжигающую струю мочи,",
+                                "заливающую твои " + undies.insert() + ".",
+                                "Ты закрываешь свои глаза и полностью расслабляешься,",
+                                "и чувствуешь, как струя стала намного сильнее.");
+                    else
+                        setText("Ай... Внезапная нестерпимая вспышка ужасной боли пронзила мочевой пузырь...",
+                                "Ты пытаешься вытерпеть, но физически не можешь.",
+                                "Ты почуствовала тёплую, обжигающую струю мочи,",
+                                "обливающую твои ноги.",
+                                "Ты закрываешь свои глаза и полностью расслабляешься,",
+                                "и чувствуешь, как струя стала намного сильнее.");
                 emptyBladder();
                 nextStage = END_GAME;
                 break;
-
-            case WHERE_TO_GO:
-                setLinesAsDialogue(4);
-                setText("Lesson is over, and you're running to the restroom as fast as you can.",
-                       "Trying to get into the restroom,",
-                       "You find with fear that restroom is locked for some reason.",
-                       "Damnit... Seems that I have to pee somewhere else...");
-                lblChoice.setText("Where to go?");
-                listScroller.setVisible(true);
-                lblChoice.setVisible(true);
-
-                actionList.clear();
-                actionList.add("Mall (5 minutes)");
-                actionList.add("Bus stop (1 minute)");
-                actionList.add("Directly to home (15 minutes)");
-                
-                if (!listChoice.isSelectionEmpty())
-                {
-                    nextStage = GameStage.WHERE_TO_GO_CHOSE;
-                    break;
-                }
-            break;
-               
-            case WHERE_TO_GO_CHOSE:
-                lblChoice.setVisible(false);
-                listScroller.setVisible(false);
-
-//                actionName = (String) listChoice.getSelectedValue();
-//                if (actionName.equals("[Недоступно]"))
-//                {
-//                    listChoice.clearSelection();
-//                    setText("You've spent a few minutes doing nothing.");
-//                    break;
-//                }
-
-                actionNum = listChoice.getSelectedIndex();
-
-                lblChoice.setVisible(false);
-                listScroller.setVisible(false);
-
-                listChoice.clearSelection();
-
-                switch (actionNum)
-                {
-                    case 0:
-                        nextStage = GOING_TO_MALL;
-                        break;
-                    case 1:
-                        nextStage = GOING_TO_BUS_STOP;
-                        break;
-                    case 2:
-                        nextStage = GOING_TO_HOME;
-                        break;
-                }
                 
             default:
                 setText("Error parsing button. Next text is unavailable, text #" + nextStage);
@@ -2259,7 +2261,10 @@ public class ALongHourAndAHalf extends JFrame
 
         if (min >= 88)
         {
-            setText("You hear the bell finally ring.");
+            if(isFemale())
+                setText("Ты услышала долгожданный звонок.");
+            else
+                setText("Ты услышал долгожданный звонок.");
             nextStage = CLASS_OVER;
         }
         if (testWet())
@@ -2355,13 +2360,13 @@ public class ALongHourAndAHalf extends JFrame
     public void emptyBladder()
     {
         bladder = 0;
-        lblBladder.setText("Bladder: " + (int) bladder + "%");
+        lblBladder.setText("Мочевой пузырь: " + (int) bladder + "%");
     }
 
     public void offsetBladder(double amount)
     {
         bladder += amount/* * incon*/;
-        lblBladder.setText("Bladder: " + (int) bladder + "%");
+        lblBladder.setText("Мочевой пузырь: " + (int) bladder + "%");
     }
 
     public void emptyBelly()
@@ -2387,7 +2392,7 @@ public class ALongHourAndAHalf extends JFrame
             embarassment = 0;
         }
         lblEmbarassment.setVisible(true);
-        lblEmbarassment.setText("Embarassment: " + embarassment + " pts");
+        lblEmbarassment.setText("Смущение: " + embarassment + " pts");
     }
 
     public void offsetTime(int amount)
@@ -2496,7 +2501,7 @@ public class ALongHourAndAHalf extends JFrame
     {
         if (lines.length > MAX_LINES)
         {
-            System.err.println("You can't have more than " + MAX_LINES + " lines at a time!");
+            System.err.println("Невозможно установить больше чем " + MAX_LINES + " строк текста!");
             return;
         }
         if (lines.length <= 0)
@@ -2537,7 +2542,7 @@ public class ALongHourAndAHalf extends JFrame
                 scoreText = scoreText + "\n" + message + ": -" + points + " points";
                 break;
             default:
-                System.err.println("score() method used incorrectly, message: \"" + message + "\"");
+                System.err.println("Метод score() использован неправильно, сообщение: \"" + message + "\"");
         }
     }
 
@@ -2554,7 +2559,7 @@ public class ALongHourAndAHalf extends JFrame
                 scoreText = scoreText + "\n" + message + ": -" + 100 / points + "% of points";
                 break;
             default:
-                System.err.println("score() method used incorrectly, message: \"" + message + "\"");
+                System.err.println("Метод score() использован неправильно, сообщение: \"" + message + "\"");
         }
     }
 
@@ -2597,18 +2602,8 @@ public class ALongHourAndAHalf extends JFrame
         PERSUADE,
         SURPRISE_WET_VOLUNTARY,
         SURPRISE_WET_VOLUNTARY2,
-        SURPRISE_WET_PRESSURE, //End of the hidden gameplay stages 
-        WHERE_TO_GO, //Asking the player where to go after the lessons if all restrooms are locked
-        GOING_TO_MALL, //Street, going to the mall to find a restroom (5 minutes)
-        GOING_TO_BUS_STOP, //Street, going to the bus stop (1 minute, then waiting for a bus for 3 - 20 minutes)
-        GOING_TO_HOME, //Street, going to home on foot (15 minutes)
-        HOME, //Made it to home
-        HOME_LOST_KEYS, //Forgot keys at school (chance 12%)
-        BACK_TO_SCHOOL, //Going back to school on foot (15 minutes)
-        BACK_TO_SCHOOL_BUS_STOP, //Waiting for a bus to school (3 - 15 minutes)
-        IN_BUS, //In a bus (3 minutes, 5% chance to get stuck in traffic (5 - 25 minutes)
-        END_GAME, //Good ending, showing score
-        WHERE_TO_GO_CHOSE
+        SURPRISE_WET_PRESSURE,
+        END_GAME //Good ending, showing score
     }
 
     enum Gender
