@@ -4,8 +4,6 @@ A Long Hour and a Half is a game where one must make it through class with a rat
 
 Future features:
 <br>
- - Extended game ("Can [name] get through an entire school day AND make it home?") (probably will be in the next update)
-<br>
- - Better Dialog (lines made by someone that's not me >_< )
-<br>
- - Story editor (players can create their own stories and play them)
+ - [ ] Extended game ("Can [name] get through an entire school day AND make it home?") (probably will be in the next update)
+ - [ ] Better Dialog (lines made by someone that's not me >_< )
+ - [ ] Story editor (players can create their own stories and play them)
