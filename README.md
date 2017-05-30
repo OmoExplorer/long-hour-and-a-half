@@ -7,3 +7,6 @@ Future features:
  - [ ] Extended game ("Can [name] get through an entire school day AND make it home?") (probably will be in the next update)
  - [ ] Better Dialog (lines made by someone that's not me >_< )
  - [ ] Story editor (players can create their own stories and play them)
+ - [ ] Wear editor (players can create their own wear types and use it in A Long hour and a Half and custom stories
+ - [ ] Save/load game states
+ - [ ] Character presets
