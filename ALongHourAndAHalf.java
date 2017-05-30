@@ -209,7 +209,7 @@ public class ALongHourAndAHalf extends JFrame
     private static void reset(boolean newValues)
     {
         if(newValues)
-            new setupFramePre().setVisible(true);
+            new SetupFramePreview().setVisible(true);
         else
             new ALongHourAndAHalf(nameParam, gndrParam, diffParam, incParam, bladderParam, underParam, outerParam, underColorParam, outerColorParam);
     }
