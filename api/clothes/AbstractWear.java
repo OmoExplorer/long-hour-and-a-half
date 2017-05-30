@@ -1,0 +1,19 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package api.clothes;
+
+/**
+ *
+ * @author Jonisan
+ */
+abstract class AbstractWear
+{
+    private String name;
+    private String insertName;
+    private float pressure;
+    private float absorption;
+    private float dryingOverTime;
+}
