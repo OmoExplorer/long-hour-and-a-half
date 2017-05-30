@@ -88,11 +88,6 @@ import static omo.ALongHourAndAHalf.generator;
  */
 class Wear
 {
-    /**
-     * Отмечено как устаревшее из-за проблем с падежами в русском языке. Вместо этого метка одежды красится в цвет, соответствующий цвету одежды.
-     * @deprecated
-     */
-    @Deprecated
     static String[] colorList = 
     {
         "Black", "Gray", "Red", "Orange", "Yellow", "Green", "Blue", "Dark blue", "Purple", "Pink"
@@ -634,7 +629,7 @@ public class ALongHourAndAHalf extends JFrame
         contentPane.add(lblIncon);
 
         //Time label setup
-        lblMinutes = new JLabel("Время: " + min + " минут(ы) из 90");
+        lblMinutes = new JLabel("Время: " + min + " минут(ы) из " + (stay ? "120" : "90"));
         lblMinutes.setFont(new Font("Tahoma", Font.PLAIN, 15));
         lblMinutes.setBounds(20, 330, 200, 32);
         lblMinutes.setVisible(false);
@@ -1745,7 +1740,8 @@ public class ALongHourAndAHalf extends JFrame
                                     "Уже ничто не важно... Твои " + lower.insert() + " прилипают к коже, как знак этого провала...",
                                     "Игра окончена!");
                     else
-                        setText("Не важно, как ты старалась вытерпеть... Теперь то уже не важно...",
+                        if(isFemale())
+                            setText("Не важно, как ты старалась вытерпеть... Теперь то уже не важно...",
                                     "Уже ничто не важно... Твои " + undies.insert() + " и " + lower.insert() + " прилипают к коже, как знак этого провала...",
                                     "Игра окончена!");
                         else
@@ -1988,7 +1984,6 @@ public class ALongHourAndAHalf extends JFrame
                                     "вошла в кабинку и начала писать.");
                     /*
                     Gender-dependent text block template
-
                     if(!lower.equals("no lower"))
                         if(!undies.equals("промежность")|!undies.equals("член"))
                             Undies: yes
@@ -2235,7 +2230,7 @@ public class ALongHourAndAHalf extends JFrame
                 break;
                 
             default:
-                setText("Error parsing button. Next text is unavailable, text #" + nextStage);
+                setText("Ошибка. Следующий слайд: #" + nextStage);
                 break;
             //case copy (delete if not in use)
             //      case 4:
@@ -2247,42 +2242,43 @@ public class ALongHourAndAHalf extends JFrame
 
     public void passTime()
     {
-        offsetTime(3);
-        offsetBladder(4.5);
-        offsetBelly(-4.5);
-        if (belly != 0)
-            if (belly > 3)
-                offsetBladder(2);
-            else
-            {
-                offsetBladder(belly);
-                emptyBelly();
-            }
-
-        if (min >= 88)
-        {
-            if(isFemale())
-                setText("Ты услышала долгожданный звонок.");
-            else
-                setText("Ты услышал долгожданный звонок.");
-            nextStage = CLASS_OVER;
-        }
-        if (testWet())
-            nextStage = ACCIDENT;
-        
-        for (int i = 0; i < 3; i++)
-            decaySphPower();
-        
-        //Sphincter power rounding
-//        BigDecimal bd = new BigDecimal(sphincterPower);
-//        bd = bd.setScale(1, RoundingMode.HALF_UP);
-//        sphincterPower = bd.floatValue();
-        lblSphPower.setText("Pee holding ability: " + Math.round(sphincterPower) + "%");
-        //Dryness rounding
-//        bd = new BigDecimal(dryness);
-//        bd = bd.setScale(1, RoundingMode.HALF_UP);
-//        dryness = bd.floatValue();
-        lblDryness.setText("Clothes dryness: " + Math.round(dryness));
+//        offsetTime(3);
+//        offsetBladder(4.5);
+//        offsetBelly(-4.5);
+//        if (belly != 0)
+//            if (belly > 3)
+//                offsetBladder(2);
+//            else
+//            {
+//                offsetBladder(belly);
+//                emptyBelly();
+//            }
+//
+//        if (min >= 88)
+//        {
+//            if(isFemale())
+//                setText("Ты услышала долгожданный звонок.");
+//            else
+//                setText("Ты услышал долгожданный звонок.");
+//            nextStage = CLASS_OVER;
+//        }
+//        if (testWet())
+//            nextStage = ACCIDENT;
+//        
+//        for (int i = 0; i < 3; i++)
+//            decaySphPower();
+//        
+//        //Sphincter power rounding
+////        BigDecimal bd = new BigDecimal(sphincterPower);
+////        bd = bd.setScale(1, RoundingMode.HALF_UP);
+////        sphincterPower = bd.floatValue();
+//        lblSphPower.setText("Способность терпеть: " + Math.round(sphincterPower) + "%");
+//        //Dryness rounding
+////        bd = new BigDecimal(dryness);
+////        bd = bd.setScale(1, RoundingMode.HALF_UP);
+////        dryness = bd.floatValue();
+//        lblDryness.setText("Сухость одежды: " + Math.round(dryness));
+        passTime((byte)3);
     }
 
     public void passTime(byte time)
@@ -2293,7 +2289,10 @@ public class ALongHourAndAHalf extends JFrame
 
         if (min >= 88)
         {
-            setText("You hear the bell finally ring.");
+            if(isFemale())
+                setText("Ты услышала долгожданный звонок.");
+            else
+                setText("Ты услышал долгожданный звонок.");
             nextStage = CLASS_OVER;
         }
 
@@ -2317,12 +2316,12 @@ public class ALongHourAndAHalf extends JFrame
 //        BigDecimal bd = new BigDecimal(sphincterPower);
 //        bd = bd.setScale(1, RoundingMode.HALF_UP);
 //        sphincterPower = bd.floatValue();
-        lblSphPower.setText("Pee holding ability: " + Math.round(sphincterPower) + "%");
+        lblSphPower.setText("Способность терпеть: " + Math.round(sphincterPower) + "%");
         //Dryness rounding
 //        bd = new BigDecimal(dryness);
 //        bd = bd.setScale(1, RoundingMode.HALF_UP);
 //        dryness = bd.floatValue();
-        lblDryness.setText("Clothes dryness: " + Math.round(dryness));
+        lblDryness.setText("Сухость одежды: " + Math.round(dryness));
     }
 
     public boolean testWet()
@@ -2398,7 +2397,7 @@ public class ALongHourAndAHalf extends JFrame
     public void offsetTime(int amount)
     {
         min += amount;
-        lblMinutes.setText("Minutes: " + min + " of " + (stay ? "120" : "90"));
+        lblMinutes.setText("Время: " + min + " минут(ы) из " + (stay ? "120" : "90"));
 
         if (drain & (min % 15) == 0)
         {
@@ -2425,48 +2424,57 @@ public class ALongHourAndAHalf extends JFrame
             {
                 //Naked
                 if (lower.getName().equals("Без верхней одежды") && undies.getName().equals("Без нижней одежды"))
-                    setText("You feel as the urine is passing outside...",
-                            "You're about to pee! You must stop it!");
+                    setText("Ты чувствуешь, как моча начинает выходить наружу...",
+                            "Ты начинаешь писаться! Нужно остановить это!");
                 else
                     //Outerwear
                     if (!lower.getName().equals("Без верхней одежды"))
-                        setText("You see the wet spot on your " + lower.insert() + "!",
-                                "You're about to pee! You must stop it!");
+                        if(isFemale())
+                            setText("Ты заметила влажное пятнышко на " + lower.insert() + "!",
+                                    "Ты начинаешь писаться! Нужно остановить это!");
+                        else
+                            setText("Ты заметил влажное пятнышко на " + lower.insert() + "!",
+                                    "Ты начинаешь писаться! Нужно остановить это!!");
                     else
                         //Underwear
                         if (!undies.getName().equals("Без нижней одежды"))
-                            setText("You see the wet spot on your " + undies.insert() + "!",
-                                    "You're about to pee! You must stop it!");
+                            if(isFemale())
+                                setText("Ты заметил влажное пятнышко на " + undies.insert() + "!",
+                                        "Ты начинаешь писаться! Нужно остановить это!");
+                            else
+                                setText("Ты заметил влажное пятнышко на " + undies.insert() + "!",
+                                        "Ты начинаешь писаться! Нужно остановить это!!");
             }
 
             if (dryness < -20)
             {
                 if (lower.getName().equals("Без верхней одежды") && undies.getName().equals("Без нижней одежды"))
-                    if (cornered)
-                    {
-                        setText("You see the puddle on the floor under you! You're peeing!",
-                                "It's too big...");
+                {
+                        setText("Ты видишь лужу на полу под тобой!",
+                                "Ты писаешься...");
                         nextStage = ACCIDENT;
                         handleNextClicked();
-                    } else
-                    {
-                        setText("You see the puddle on your chair! You're peeing!",
-                                "It's too big...");
-                        nextStage = ACCIDENT;
-                        handleNextClicked();
-                    }
+                }
                 else
                     if (!lower.getName().equals("Без верхней одежды"))
                     {
-                        setText("You see the wet spot on your " + lower.insert() + "!",
-                                "It's too big...");
+                        if(isFemale())
+                            setText("Ты заметила влажное пятно на " + lower.insert() + "!",
+                                    "Оно слишком большое! Ты писаешься...");
+                        else
+                            setText("Ты заметил влажное пятно на " + lower.insert() + "!",
+                                    "Оно слишком большое! Ты писаешься...");
                         nextStage = ACCIDENT;
                         handleNextClicked();
                     } else
                         if (!undies.getName().equals("Без нижней одежды"))
                         {
-                            setText("You see the wet spot on your " + undies.insert() + "!",
-                                    "It's too big...");
+                            if(isFemale())
+                                setText("Ты заметила влажное пятно на " + undies.insert() + "!",
+                                        "Оно слишком большое! Ты писаешься...");
+                            else
+                                setText("Ты заметил влажное пятно на " + undies.insert() + "!",
+                                        "Оно слишком большое! Ты писаешься...");
                             nextStage = ACCIDENT;
                             handleNextClicked();
                         }
