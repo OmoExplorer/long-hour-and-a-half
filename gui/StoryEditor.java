@@ -14,6 +14,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.KeyStroke;
 import static javax.swing.SwingUtilities.invokeLater;
@@ -122,9 +123,8 @@ public class StoryEditor extends JFrame
         setJMenuBar(menuBar);
         
         rootNode = new DefaultMutableTreeNode("root");
-        toolTree = new JTree(rootNode);
-        toolTree.setRootVisible(false);
-        toolTree.setBounds(0,20,200,623);
+        
+//        toolTree.setBounds(0,20,200,623);
         
         rootNode.add(new DefaultMutableTreeNode("Story manifest"));
         
@@ -171,12 +171,15 @@ public class StoryEditor extends JFrame
         newCustomWearNode = new DefaultMutableTreeNode("<New custom wear>", false);
         customWearNode.add(newCustomWearNode);
         
-        add(toolTree);
-        toolTree.setBounds(0,20,200,623);
-        toolTree.setVisible(true);
+        toolTree = new JTree(rootNode);
+        toolTree.setRootVisible(false);
+        JScrollPane treeView = new JScrollPane(toolTree);
+        treeView.setBounds(0,5,200,633);
+        add(treeView);
         
         //(0,20,792,623)
         manifestEditPanel = new ManifestEditPanel();
+//        manifestEditPanel.setBounds(0,10,792,633);
         add(manifestEditPanel);
         
         try
