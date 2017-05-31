@@ -26,31 +26,31 @@ public class ManifestEditPanel extends JPanel
     
     public ManifestEditPanel()
     {
-        setBounds(0,20,792,623);
+        setBounds(0,10,792,633);
         
         nameLabel = new JLabel("Story title");
-        nameLabel.setBounds(10,10,20,30);
+        nameLabel.setBounds(0,0,20,20);
 //        nameLabel.setVisible(true);
         add(nameLabel);
         
         nameField = new JTextField();
-        nameField.setBounds(30, 10, 752, 30);
+        nameField.setBounds(25, 0, 757, 30);
         add(nameField);
         
         descriptionLabel = new JLabel("Story description");
-        descriptionLabel.setBounds(10,40,20,30);
+        descriptionLabel.setBounds(5,10,20,20);
         add(descriptionLabel);
         
         descriptionField = new JTextArea();
-        descriptionField.setBounds(30, 40, 752, 100);
+        descriptionField.setBounds(30, 35, 757, 100);
         add(descriptionField);
         
         authorLabel = new JLabel("Author");
-        authorLabel.setBounds(10,150,20,20);
+        authorLabel.setBounds(5,150,20,20);
         add(authorLabel);
         
         authorField = new JTextField();
-        authorField.setBounds(30, 150, 752, 30);
+        authorField.setBounds(30, 150, 757, 30);
         add(authorField);
     }
 }
