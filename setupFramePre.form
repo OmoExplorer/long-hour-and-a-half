@@ -315,7 +315,7 @@
     </Component>
     <Component class="javax.swing.JSlider" name="incontSlider">
       <Properties>
-        <Property name="minimum" type="int" value="1"/>
+        <Property name="minimum" type="int" value="5"/>
         <Property name="toolTipText" type="java.lang.String" value="How incontinent are you? Default = 10"/>
         <Property name="value" type="int" value="10"/>
         <Property name="name" type="java.lang.String" value="incontSlider" noResource="true"/>
@@ -336,13 +336,13 @@
     </Component>
     <Component class="javax.swing.JLabel" name="underwearLabel">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Underwear:"/>
+        <Property name="text" type="java.lang.String" value="&#x41d;&#x438;&#x436;&#x43d;&#x44f;&#x44f; &#x43e;&#x434;&#x435;&#x436;&#x434;&#x430;"/>
         <Property name="name" type="java.lang.String" value="underwearLabel" noResource="true"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="outerwearLabel">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Outerwear:"/>
+        <Property name="text" type="java.lang.String" value="&#x412;&#x435;&#x440;&#x445;&#x43d;&#x44f;&#x44f; &#x43e;&#x434;&#x435;&#x436;&#x434;&#x430;"/>
         <Property name="name" type="java.lang.String" value="outerwearLabel" noResource="true"/>
       </Properties>
     </Component>
