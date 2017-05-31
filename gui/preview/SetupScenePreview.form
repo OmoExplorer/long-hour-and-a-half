@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Form version="1.3" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
+  <AuxValues>
+    <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
+    <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
+  </AuxValues>
+
+  <Layout>
+    <DimensionLayout dim="0">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="nameLabel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="nameField" max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" attributes="0">
+                      <Component id="textLabel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="insertVariableButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
+                      <Component id="linesLabel" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Component id="textScrollPane" pref="388" max="32767" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="operationsLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="actionsLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="nextSceneLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="operationsEditButton" alignment="1" max="32767" attributes="0"/>
+                          <Component id="actionsEditButton" max="32767" attributes="0"/>
+                          <Component id="nextSceneComboBox" max="32767" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="watchedChaactersLabel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="watchedCharactersEditButton" max="32767" attributes="0"/>
+                  </Group>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="1">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="nameLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="nameField" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="textLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="linesLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="insertVariableButton" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="textScrollPane" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="watchedChaactersLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="watchedCharactersEditButton" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="actionsLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="actionsEditButton" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="operationsLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="operationsEditButton" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="nextSceneLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="nextSceneComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="32767" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+  </Layout>
+  <SubComponents>
+    <Component class="javax.swing.JLabel" name="nameLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Scene name"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="nameField">
+    </Component>
+    <Component class="javax.swing.JLabel" name="textLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Scene text"/>
+      </Properties>
+    </Component>
+    <Container class="javax.swing.JScrollPane" name="textScrollPane">
+      <AuxValues>
+        <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+      </AuxValues>
+
+      <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+      <SubComponents>
+        <Component class="javax.swing.JTextArea" name="textArea">
+          <Properties>
+            <Property name="columns" type="int" value="20"/>
+            <Property name="rows" type="int" value="5"/>
+          </Properties>
+        </Component>
+      </SubComponents>
+    </Container>
+    <Component class="javax.swing.JLabel" name="linesLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="0/9 lines"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="insertVariableButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Insert variable..."/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="actionsEditButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Edit..."/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="actionsLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Scene actions"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="operationsLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Scene operations"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="operationsEditButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Edit..."/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="nextSceneLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Next scene"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JComboBox" name="nextSceneComboBox">
+      <Properties>
+        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+          <StringArray count="1">
+            <StringItem index="0" value="&lt;this is the last scene&gt;"/>
+          </StringArray>
+        </Property>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JLabel" name="watchedChaactersLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Watched characters"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="watchedCharactersEditButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Edit..."/>
+      </Properties>
+    </Component>
+  </SubComponents>
+</Form>

@@ -31,104 +31,138 @@ public class StoryEditorPreview extends javax.swing.JFrame
     {
 
         jMenuItem4 = new javax.swing.JMenuItem();
-        sceneNameLabel = new javax.swing.JLabel();
-        sceneNameTextField = new javax.swing.JTextField();
-        jLabel1 = new javax.swing.JLabel();
-        jSpinner1 = new javax.swing.JSpinner();
-        jLabel2 = new javax.swing.JLabel();
+        editorSplitPane = new javax.swing.JSplitPane();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTree1 = new javax.swing.JTree();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jTextField1 = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
+        toolTree = new javax.swing.JTree();
+        toolPanel = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
+        fileMenu = new javax.swing.JMenu();
         newStory = new javax.swing.JMenuItem();
         openStory = new javax.swing.JMenuItem();
-        jMenuItem1 = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
-        jMenuItem3 = new javax.swing.JMenuItem();
-        jMenu2 = new javax.swing.JMenu();
+        saveStory = new javax.swing.JMenuItem();
+        saveStoryAs = new javax.swing.JMenuItem();
+        quit = new javax.swing.JMenuItem();
         storyMenu = new javax.swing.JMenu();
-        jMenuItem5 = new javax.swing.JMenuItem();
+        newElementMenu = new javax.swing.JMenu();
+        newScene = new javax.swing.JMenu();
+        newSetupScene = new javax.swing.JMenuItem();
+        newActiveScene = new javax.swing.JMenuItem();
+        newWettingScene = new javax.swing.JMenuItem();
 
         jMenuItem4.setText("jMenuItem4");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        sceneNameLabel.setText("Scene name");
-
-        jLabel1.setText("Duration (in virtual minutes)");
-
-        jLabel2.setText("Scene type");
-
         javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("root");
-        javax.swing.tree.DefaultMutableTreeNode treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("Story options");
+        javax.swing.tree.DefaultMutableTreeNode treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("Story manifest");
         treeNode1.add(treeNode2);
         treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("Scenes");
         javax.swing.tree.DefaultMutableTreeNode treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("Setup");
+        javax.swing.tree.DefaultMutableTreeNode treeNode4 = new javax.swing.tree.DefaultMutableTreeNode("<new>");
+        treeNode3.add(treeNode4);
         treeNode2.add(treeNode3);
         treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("Action");
+        treeNode4 = new javax.swing.tree.DefaultMutableTreeNode("<new>");
+        treeNode3.add(treeNode4);
         treeNode2.add(treeNode3);
         treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("Wetting");
+        treeNode4 = new javax.swing.tree.DefaultMutableTreeNode("<new>");
+        treeNode3.add(treeNode4);
         treeNode2.add(treeNode3);
         treeNode1.add(treeNode2);
-        jTree1.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
-        jScrollPane2.setViewportView(jTree1);
+        treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("Characters");
+        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("<new>");
+        treeNode2.add(treeNode3);
+        treeNode1.add(treeNode2);
+        treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("Actions");
+        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("<new>");
+        treeNode2.add(treeNode3);
+        treeNode1.add(treeNode2);
+        treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("Operations");
+        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("<new>");
+        treeNode2.add(treeNode3);
+        treeNode1.add(treeNode2);
+        toolTree.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
+        jScrollPane2.setViewportView(toolTree);
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Setup", "Action", "Wetting" }));
+        editorSplitPane.setLeftComponent(jScrollPane2);
 
-        jLabel3.setText("Scene text");
+        javax.swing.GroupLayout toolPanelLayout = new javax.swing.GroupLayout(toolPanel);
+        toolPanel.setLayout(toolPanelLayout);
+        toolPanelLayout.setHorizontalGroup(
+            toolPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 589, Short.MAX_VALUE)
+        );
+        toolPanelLayout.setVerticalGroup(
+            toolPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 480, Short.MAX_VALUE)
+        );
 
-        jLabel4.setText("0/9 lines");
+        editorSplitPane.setRightComponent(toolPanel);
 
-        jMenu1.setText("File");
+        fileMenu.setText("File");
 
         newStory.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
         newStory.setText("New story...");
-        jMenu1.add(newStory);
+        fileMenu.add(newStory);
 
         openStory.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
         openStory.setText("Open story...");
-        jMenu1.add(openStory);
+        fileMenu.add(openStory);
 
-        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItem1.setText("Save story");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener()
+        saveStory.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
+        saveStory.setText("Save story");
+        saveStory.addActionListener(new java.awt.event.ActionListener()
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
             {
-                jMenuItem1ActionPerformed(evt);
+                saveStoryActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItem1);
+        fileMenu.add(saveStory);
 
-        jMenuItem2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItem2.setText("Save story as...");
-        jMenuItem2.addActionListener(new java.awt.event.ActionListener()
+        saveStoryAs.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
+        saveStoryAs.setText("Save story as...");
+        saveStoryAs.addActionListener(new java.awt.event.ActionListener()
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
             {
-                jMenuItem2ActionPerformed(evt);
+                saveStoryAsActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItem2);
+        fileMenu.add(saveStoryAs);
 
-        jMenuItem3.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.InputEvent.ALT_MASK));
-        jMenuItem3.setText("Quit");
-        jMenu1.add(jMenuItem3);
+        quit.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.InputEvent.ALT_MASK));
+        quit.setText("Quit");
+        fileMenu.add(quit);
 
-        jMenuBar1.add(jMenu1);
-
-        jMenu2.setText("Edit");
-        jMenuBar1.add(jMenu2);
+        jMenuBar1.add(fileMenu);
 
         storyMenu.setText("Story");
 
-        jMenuItem5.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.SHIFT_MASK));
-        jMenuItem5.setText("New scene");
-        storyMenu.add(jMenuItem5);
+        newElementMenu.setText("New");
+
+        newScene.setText("Scene");
+
+        newSetupScene.setText("Setup");
+        newScene.add(newSetupScene);
+
+        newActiveScene.setText("Active");
+        newScene.add(newActiveScene);
+
+        newWettingScene.setText("Wetting");
+        newWettingScene.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                newWettingSceneActionPerformed(evt);
+            }
+        });
+        newScene.add(newWettingScene);
+
+        newElementMenu.add(newScene);
+
+        storyMenu.add(newElementMenu);
 
         jMenuBar1.add(storyMenu);
 
@@ -138,67 +172,30 @@ public class StoryEditorPreview extends javax.swing.JFrame
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(sceneNameLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(sceneNameTextField))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(18, 18, 18)
-                        .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel4))
-                    .addComponent(jTextField1))
-                .addContainerGap())
+            .addComponent(editorSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 745, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(sceneNameLabel)
-                    .addComponent(sceneNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 265, Short.MAX_VALUE)
+            .addComponent(editorSplitPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 482, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jMenuItem1ActionPerformed
-    {//GEN-HEADEREND:event_jMenuItem1ActionPerformed
+    private void saveStoryActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_saveStoryActionPerformed
+    {//GEN-HEADEREND:event_saveStoryActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    }//GEN-LAST:event_saveStoryActionPerformed
 
-    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jMenuItem2ActionPerformed
-    {//GEN-HEADEREND:event_jMenuItem2ActionPerformed
+    private void saveStoryAsActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_saveStoryAsActionPerformed
+    {//GEN-HEADEREND:event_saveStoryAsActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItem2ActionPerformed
+    }//GEN-LAST:event_saveStoryAsActionPerformed
+
+    private void newWettingSceneActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_newWettingSceneActionPerformed
+    {//GEN-HEADEREND:event_newWettingSceneActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_newWettingSceneActionPerformed
 
     /**
      * @param args the command line arguments
@@ -249,27 +246,23 @@ public class StoryEditorPreview extends javax.swing.JFrame
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
+    private javax.swing.JSplitPane editorSplitPane;
+    private javax.swing.JMenu fileMenu;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
-    private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JSpinner jSpinner1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTree jTree1;
+    private javax.swing.JMenuItem newActiveScene;
+    private javax.swing.JMenu newElementMenu;
+    private javax.swing.JMenu newScene;
+    private javax.swing.JMenuItem newSetupScene;
     private javax.swing.JMenuItem newStory;
+    private javax.swing.JMenuItem newWettingScene;
     private javax.swing.JMenuItem openStory;
-    private javax.swing.JLabel sceneNameLabel;
-    private javax.swing.JTextField sceneNameTextField;
+    private javax.swing.JMenuItem quit;
+    private javax.swing.JMenuItem saveStory;
+    private javax.swing.JMenuItem saveStoryAs;
     private javax.swing.JMenu storyMenu;
+    private javax.swing.JPanel toolPanel;
+    private javax.swing.JTree toolTree;
     // End of variables declaration//GEN-END:variables
 }
