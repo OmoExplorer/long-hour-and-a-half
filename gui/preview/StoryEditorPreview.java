@@ -5,12 +5,24 @@
  */
 package gui.preview;
 
+import api.Scenes.*;
+import api.*;
+import java.util.ArrayList;
 /**
  *
  * @author Jonisan
  */
 public class StoryEditorPreview extends javax.swing.JFrame
 {
+
+    private static final long serialVersionUID = 1L;
+    
+    private ArrayList<SetupScene> setupScenesList = new ArrayList<>();
+    private ArrayList<ActiveScene> activeScenesList = new ArrayList<>();
+    private ArrayList<WettingScene> wettingScenesList = new ArrayList<>();
+    private ArrayList<api.Character> charactersList = new ArrayList<>();
+    private ArrayList<Action> actionsList = new ArrayList<>();
+    private ArrayList<Operation> operationsList = new ArrayList<>();
 
     /**
      * Creates new form storyEditor
@@ -34,7 +46,6 @@ public class StoryEditorPreview extends javax.swing.JFrame
         editorSplitPane = new javax.swing.JSplitPane();
         jScrollPane2 = new javax.swing.JScrollPane();
         toolTree = new javax.swing.JTree();
-        toolPanel = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         newStory = new javax.swing.JMenuItem();
@@ -48,10 +59,14 @@ public class StoryEditorPreview extends javax.swing.JFrame
         newSetupScene = new javax.swing.JMenuItem();
         newActiveScene = new javax.swing.JMenuItem();
         newWettingScene = new javax.swing.JMenuItem();
+        newCharacterItem = new javax.swing.JMenuItem();
+        newActionItem = new javax.swing.JMenuItem();
+        newOperationItem = new javax.swing.JMenuItem();
 
         jMenuItem4.setText("jMenuItem4");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("root");
         javax.swing.tree.DefaultMutableTreeNode treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("Story manifest");
@@ -83,22 +98,10 @@ public class StoryEditorPreview extends javax.swing.JFrame
         treeNode2.add(treeNode3);
         treeNode1.add(treeNode2);
         toolTree.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
+        toolTree.setRootVisible(false);
         jScrollPane2.setViewportView(toolTree);
 
         editorSplitPane.setLeftComponent(jScrollPane2);
-
-        javax.swing.GroupLayout toolPanelLayout = new javax.swing.GroupLayout(toolPanel);
-        toolPanel.setLayout(toolPanelLayout);
-        toolPanelLayout.setHorizontalGroup(
-            toolPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 589, Short.MAX_VALUE)
-        );
-        toolPanelLayout.setVerticalGroup(
-            toolPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 480, Short.MAX_VALUE)
-        );
-
-        editorSplitPane.setRightComponent(toolPanel);
 
         fileMenu.setText("File");
 
@@ -134,6 +137,13 @@ public class StoryEditorPreview extends javax.swing.JFrame
 
         quit.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.InputEvent.ALT_MASK));
         quit.setText("Quit");
+        quit.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                quitActionPerformed(evt);
+            }
+        });
         fileMenu.add(quit);
 
         jMenuBar1.add(fileMenu);
@@ -144,12 +154,29 @@ public class StoryEditorPreview extends javax.swing.JFrame
 
         newScene.setText("Scene");
 
+        newSetupScene.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.ALT_MASK | java.awt.event.InputEvent.CTRL_MASK));
         newSetupScene.setText("Setup");
+        newSetupScene.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                newSetupSceneActionPerformed(evt);
+            }
+        });
         newScene.add(newSetupScene);
 
+        newActiveScene.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.ALT_MASK | java.awt.event.InputEvent.CTRL_MASK));
         newActiveScene.setText("Active");
+        newActiveScene.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                newActiveSceneActionPerformed(evt);
+            }
+        });
         newScene.add(newActiveScene);
 
+        newWettingScene.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_W, java.awt.event.InputEvent.ALT_MASK | java.awt.event.InputEvent.CTRL_MASK));
         newWettingScene.setText("Wetting");
         newWettingScene.addActionListener(new java.awt.event.ActionListener()
         {
@@ -162,6 +189,39 @@ public class StoryEditorPreview extends javax.swing.JFrame
 
         newElementMenu.add(newScene);
 
+        newCharacterItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.SHIFT_MASK));
+        newCharacterItem.setText("Character");
+        newCharacterItem.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                newCharacterItemActionPerformed(evt);
+            }
+        });
+        newElementMenu.add(newCharacterItem);
+
+        newActionItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.SHIFT_MASK));
+        newActionItem.setText("Action");
+        newActionItem.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                newActionItemActionPerformed(evt);
+            }
+        });
+        newElementMenu.add(newActionItem);
+
+        newOperationItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.SHIFT_MASK));
+        newOperationItem.setText("Operation");
+        newOperationItem.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                newOperationItemActionPerformed(evt);
+            }
+        });
+        newElementMenu.add(newOperationItem);
+
         storyMenu.add(newElementMenu);
 
         jMenuBar1.add(storyMenu);
@@ -172,11 +232,11 @@ public class StoryEditorPreview extends javax.swing.JFrame
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(editorSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 745, Short.MAX_VALUE)
+            .addComponent(editorSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 586, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(editorSplitPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 482, Short.MAX_VALUE)
+            .addComponent(editorSplitPane, javax.swing.GroupLayout.Alignment.TRAILING)
         );
 
         pack();
@@ -194,13 +254,62 @@ public class StoryEditorPreview extends javax.swing.JFrame
 
     private void newWettingSceneActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_newWettingSceneActionPerformed
     {//GEN-HEADEREND:event_newWettingSceneActionPerformed
-        // TODO add your handling code here:
+        wettingScenesList.add(new WettingScene());
+        
+        editorSplitPane.setRightComponent(new WettingScenePreview());
+        pack();
     }//GEN-LAST:event_newWettingSceneActionPerformed
+
+    private void newSetupSceneActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_newSetupSceneActionPerformed
+    {//GEN-HEADEREND:event_newSetupSceneActionPerformed
+        setupScenesList.add(new SetupScene());
+        
+        editorSplitPane.setRightComponent(new SetupScenePreview());
+        pack();
+    }//GEN-LAST:event_newSetupSceneActionPerformed
+
+    private void newActiveSceneActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_newActiveSceneActionPerformed
+    {//GEN-HEADEREND:event_newActiveSceneActionPerformed
+        activeScenesList.add(new ActiveScene());
+        
+        editorSplitPane.setRightComponent(new ActiveScenePreview());
+        pack();
+    }//GEN-LAST:event_newActiveSceneActionPerformed
+
+    private void newCharacterItemActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_newCharacterItemActionPerformed
+    {//GEN-HEADEREND:event_newCharacterItemActionPerformed
+        charactersList.add(new api.Character());
+        
+        editorSplitPane.setRightComponent(new CharacterPanelPreview());
+        pack();
+    }//GEN-LAST:event_newCharacterItemActionPerformed
+
+    private void newActionItemActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_newActionItemActionPerformed
+    {//GEN-HEADEREND:event_newActionItemActionPerformed
+        actionsList.add(new Action());
+        
+        editorSplitPane.setRightComponent(new ActionPanelPreview());
+        pack();
+    }//GEN-LAST:event_newActionItemActionPerformed
+
+    private void newOperationItemActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_newOperationItemActionPerformed
+    {//GEN-HEADEREND:event_newOperationItemActionPerformed
+        operationsList.add(new Operation());
+        
+        editorSplitPane.setRightComponent(new OperationPanelPreview());
+        pack();
+    }//GEN-LAST:event_newOperationItemActionPerformed
+
+    private void quitActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_quitActionPerformed
+    {//GEN-HEADEREND:event_quitActionPerformed
+        SetupFramePreview.main();
+        dispose();
+    }//GEN-LAST:event_quitActionPerformed
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[])
+    public static void main()
     {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -251,8 +360,11 @@ public class StoryEditorPreview extends javax.swing.JFrame
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JMenuItem newActionItem;
     private javax.swing.JMenuItem newActiveScene;
+    private javax.swing.JMenuItem newCharacterItem;
     private javax.swing.JMenu newElementMenu;
+    private javax.swing.JMenuItem newOperationItem;
     private javax.swing.JMenu newScene;
     private javax.swing.JMenuItem newSetupScene;
     private javax.swing.JMenuItem newStory;
@@ -262,7 +374,6 @@ public class StoryEditorPreview extends javax.swing.JFrame
     private javax.swing.JMenuItem saveStory;
     private javax.swing.JMenuItem saveStoryAs;
     private javax.swing.JMenu storyMenu;
-    private javax.swing.JPanel toolPanel;
     private javax.swing.JTree toolTree;
     // End of variables declaration//GEN-END:variables
 }
