@@ -306,7 +306,7 @@
     </Component>
     <Component class="javax.swing.JSlider" name="incontSlider">
       <Properties>
-        <Property name="minimum" type="int" value="1"/>
+        <Property name="minimum" type="int" value="5"/>
         <Property name="toolTipText" type="java.lang.String" value="How incontinent are you? Default = 10"/>
         <Property name="value" type="int" value="10"/>
         <Property name="name" type="java.lang.String" value="incontSlider" noResource="true"/>

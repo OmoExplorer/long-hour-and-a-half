@@ -88,7 +88,6 @@ import static omo.ALongHourAndAHalf.generator;
  */
 class Wear
 {
-
     static String[] colorList = 
     {
         "Black", "Gray", "Red", "Orange", "Yellow", "Green", "Blue", "Dark blue", "Purple", "Pink"
@@ -870,6 +869,8 @@ public class ALongHourAndAHalf extends JFrame
                 break;
 
             case ASK_ACTION:
+                
+                //Called by teacher if unlucky
                 if (generator.nextInt(20) == 5)
                 {
                     setText("Suddenly, you hear the teacher call your name.");
@@ -974,7 +975,7 @@ public class ALongHourAndAHalf extends JFrame
                 listChoice.setListData(actionList.toArray());
                 nextStage = CHOSE_ACTION;
                 passTime();
-                break;
+                    break;
 
             case CHOSE_ACTION:
                 nextStage = ASK_ACTION;
@@ -1279,6 +1280,7 @@ public class ALongHourAndAHalf extends JFrame
                                 "All classes are now dismissed for no reason at all! Bye!",
                                 "Looks like your luck changed for the better.");
                         min = 89;
+                        nextStage = CLASS_OVER;
                         break;
 
                     case 4:
@@ -1660,6 +1662,9 @@ public class ALongHourAndAHalf extends JFrame
             case SURPRISE:
 //                score += 70;
 //                scoreText = scoreText.concat("\nGot the \"surprise\" by " + boyName + ": +70 points");
+                
+                //Resetting timesPeeDenied to use for that boy
+                timesPeeDenied = 0;
                 score("Got the \"surprise\" by " + boyName, '+', 70);
                 setText("Lesson is finally over, and you're running to the restroom as fast as you can.",
                         "But... You see " + boyName + " staying in front of the restroom.",
@@ -1741,7 +1746,8 @@ public class ALongHourAndAHalf extends JFrame
                 offsetBelly(-1.5);
                 decaySphPower();
 
-                actionName = (String) listChoice.getSelectedValue();
+                actionNum = listChoice.getSelectedIndex();
+                actionName = (String)listChoice.getSelectedValue();
                 if (actionName.equals("[Unavailable]"))
                 {
                     setText("You will wet yourself right now,",
@@ -1755,22 +1761,20 @@ public class ALongHourAndAHalf extends JFrame
 
                 listChoice.clearSelection();
 
-                switch (actionName)
+                switch (actionNum)
                 {
-                    case "Hit him":
+                    case 0:
                         nextStage = HIT;
                         break;
-                    case "Try to persuade him to let you pee":
-                    case "Try to persuade him to let you pee again":
-                    case "Take a chance and try to persuade him (RISKY)":
+                    case 1:
                         nextStage = PERSUADE;
                         break;
-                    case "Pee yourself":
+                    case 2:
                         nextStage = SURPRISE_WET_VOLUNTARY;
                 }
 
             case HIT:
-                if (generator.nextInt(100) <= 10)
+                if (generator.nextInt(100) <= 20)
                 {
                     setLinesAsDialogue(2);
                     nextStage = GameStage.END_GAME;
@@ -1874,7 +1878,7 @@ public class ALongHourAndAHalf extends JFrame
                                 if (!undies.getName().equals("No underwear"))
                                     setText("Ok, you may, but let me watch how do you pee.",
                                             "says " + boyName + ". You enter the cabin,",
-                                            "pulled down your " + undies + ",",
+                                            "pulled down your " + undies.insert() + ",",
                                             "stood over the toilet and start peeing under the " + boyName + " spectation.");
                                 else
                                     setText("Ok, you may, but let me watch how do you pee.",
@@ -1918,7 +1922,7 @@ public class ALongHourAndAHalf extends JFrame
                                 {
                                     setText("Ok, you may, but let me watch how do you pee.",
                                             "says " + boyName + ". You enter the cabin,",
-                                            "pulled down your " + undies + ",",
+                                            "pulled down your " + undies.insert() + ",",
                                             "stood over the toilet and start peeing under the " + boyName + " spectation.");
                                 } else
                                 {
@@ -1997,21 +2001,63 @@ public class ALongHourAndAHalf extends JFrame
                 break;
 
             case SURPRISE_WET_VOLUNTARY2:
-                setText("You're feeling the warm, scalding pee stream",
-                        "filling your " + undies.insert() + " and wetting your " + lower.insert() + ".",
-                        "You're closing your eyes and easing your sphincter off.",
-                        "You feel as the pee stream becaming much stronger.");
+                if(!undies.getName().equals("No underwear"))
+                    if(!lower.getName().equals("No outerwear"))
+                        setText("You're feeling the warm, scalding pee stream",
+                                "filling your " + undies.insert() + " and wetting your " + lower.insert() + ".",
+                                "You're closing your eyes and easing your sphincter off.",
+                                "You feel as the pee stream becaming much stronger.");
+                    else
+                        setText("You're feeling the warm, scalding pee stream",
+                                "filling your " + undies.insert() + ".",
+                                "You're closing your eyes and easing your sphincter off.",
+                                "You feel as the pee stream becaming much stronger.");
+                else
+                    if(!lower.getName().equals("No outerwear"))
+                        setText("You're feeling the warm, scalding pee stream",
+                                "filling your " + lower.insert() + ".",
+                                "You're closing your eyes and easing your sphincter off.",
+                                "You feel as the pee stream becaming much stronger.");
+                    else
+                        setText("You're feeling the warm, scalding pee stream",
+                                "irrigating your legs.",
+                                "You're closing your eyes and easing your sphincter off.",
+                                "You feel as the pee stream becaming much stronger.");
                 emptyBladder();
                 nextStage = END_GAME;
                 break;
 
             case SURPRISE_WET_PRESSURE:
-                setText("Ouch... The sudden pain flash is passing through your bladder...",
-                        "You're trying to hold the pee back, but you can't.",
-                        "You're feeling the warm, scalding pee stream",
-                        "filling your " + undies.insert() + " and wetting your " + lower.insert() + ".",
-                        "You're closing your eyes and easing your sphincter off.",
-                        "You feel as the pee stream becaming much stronger.");
+                if(!undies.getName().equals("No underwear"))
+                    if(!lower.getName().equals("No outerwear"))
+                        setText("Ouch... The sudden pain flash is passing through your bladder...",
+                                "You're trying to hold the pee back, but you can't.",
+                                "You're feeling the warm, scalding pee stream",
+                                "filling your " + undies.insert() + " and wetting your " + lower.insert() + ".",
+                                "You're closing your eyes and easing your sphincter off.",
+                                "You feel as the pee stream becaming much stronger.");
+                    else
+                        setText("Ouch... The sudden pain flash is passing through your bladder...",
+                                "You're trying to hold the pee back, but you can't.",
+                                "You're feeling the warm, scalding pee stream",
+                                "filling your " + undies.insert() + ".",
+                                "You're closing your eyes and easing your sphincter off.",
+                                "You feel as the pee stream becaming much stronger.");
+                else
+                    if(!lower.getName().equals("No outerwear"))
+                        setText("Ouch... The sudden pain flash is passing through your bladder...",
+                                "You're trying to hold the pee back, but you can't.",
+                                "You're feeling the warm, scalding pee stream",
+                                "filling your " + lower.insert() + ".",
+                                "You're closing your eyes and easing your sphincter off.",
+                                "You feel as the pee stream becaming much stronger.");
+                    else
+                        setText("Ouch... The sudden pain flash is passing through your bladder...",
+                                "You're trying to hold the pee back, but you can't.",
+                                "You're feeling the warm, scalding pee stream",
+                                "irrigating your legs.",
+                                "You're closing your eyes and easing your sphincter off.",
+                                "You feel as the pee stream becaming much stronger.");
                 emptyBladder();
                 nextStage = END_GAME;
                 break;
@@ -2134,7 +2180,6 @@ public class ALongHourAndAHalf extends JFrame
             }
         return false;
     }
-
 
     public void emptyBladder()
     {

@@ -170,7 +170,7 @@ public class setupFramePre extends javax.swing.JFrame {
         incontLabel.setText("Incontinence");
         incontLabel.setName("incontLabel"); // NOI18N
 
-        incontSlider.setMinimum(1);
+        incontSlider.setMinimum(5);
         incontSlider.setToolTipText("How incontinent are you? Default = 10");
         incontSlider.setValue(10);
         incontSlider.setName("incontSlider"); // NOI18N
@@ -1023,6 +1023,8 @@ public class setupFramePre extends javax.swing.JFrame {
         }
 
         float incont = incontSlider.getValue()/10;
+        if(incont<1)
+            incont += 0.5;
         
         try
         {
