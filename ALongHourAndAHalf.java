@@ -391,6 +391,7 @@ public class ALongHourAndAHalf extends JFrame
     static String outerParam;
     static String underColorParam;
     static String outerColorParam;
+    
     /**
      * Launch the application.
      *
@@ -542,7 +543,7 @@ public class ALongHourAndAHalf extends JFrame
         
         //"Next" button setup
         btnNext = new JButton("Next");
-        btnNext.setToolTipText("Hold down for the time warp");
+//        btnNext.setToolTipText("Hold down for the time warp");
         btnNext.addMouseListener(new MouseAdapter()
         {
             @Override
@@ -603,7 +604,7 @@ public class ALongHourAndAHalf extends JFrame
         contentPane.add(lblName);
 
         //Bladder label setup
-        lblBladder = new JLabel("Bladder: " + bladder + "%");
+        lblBladder = new JLabel("Bladder: " + Math.round(this.bladder) + "%");
         lblBladder.setToolTipText("<html>Normal game:<br>100% = need to hold<br>130% = peeing(game over)<br><br>Hardcore:<br>80% = need to hold<br>100% = peeing(game over)</html>");
         lblBladder.setFont(new Font("Tahoma", Font.PLAIN, 15));
         lblBladder.setBounds(20, 210, 200, 32);
@@ -616,7 +617,7 @@ public class ALongHourAndAHalf extends JFrame
         contentPane.add(lblEmbarassment);
 
         //Belly label setup
-        lblBelly = new JLabel("Belly: " + belly + "%");
+        lblBelly = new JLabel("Belly: " + Math.round(belly) + "%");
         lblBelly.setFont(new Font("Tahoma", Font.PLAIN, 15));
         lblBelly.setBounds(20, 270, 200, 32);
         contentPane.add(lblBelly);
@@ -635,14 +636,14 @@ public class ALongHourAndAHalf extends JFrame
         contentPane.add(lblMinutes);
         
         //Sphincter power label setup
-        lblSphPower = new JLabel("Pee holding ability: " + sphincterPower + "%");
+        lblSphPower = new JLabel("Pee holding ability: " + Math.round(sphincterPower) + "%");
         lblSphPower.setFont(new Font("Tahoma", Font.PLAIN, 15));
         lblSphPower.setBounds(20, 360, 200, 32);
         lblSphPower.setVisible(false);
         contentPane.add(lblSphPower);
         
         //Clothing dryness label setup
-        lblDryness = new JLabel("Clothes dryness: " + dryness);
+        lblDryness = new JLabel("Clothes dryness: " + Math.round(dryness));
         lblDryness.setFont(new Font("Tahoma", Font.PLAIN, 15));
         lblDryness.setBounds(20, 390, 200, 32);
         lblDryness.setVisible(false);
@@ -1099,7 +1100,6 @@ public class ALongHourAndAHalf extends JFrame
                         }
 
                         
-
                         if (generator.nextInt(100) <= 1 + classmatesAwareness & hardcore)
                         {
                             nextStage = CAUGHT;
@@ -1358,9 +1358,10 @@ public class ALongHourAndAHalf extends JFrame
                 break;
 
             case CLASS_OVER:
-                if (generator.nextInt(100) <= 5 && hardcore & isFemale())
+                if (generator.nextInt(100) <= 10 && hardcore & isFemale())
                 {
                     nextStage = SURPRISE;
+                    break;
                 }
                 if (stay)
                 {
@@ -1657,7 +1658,7 @@ public class ALongHourAndAHalf extends JFrame
             /*
              * "Surprise" is an additional scene after the lesson where player is being caught by her classmate. He wants her to wet herself.
              * Triggering conditions: female, hardcore
-             * Triggering chance: 5%
+             * Triggering chance: 10%
              */
             case SURPRISE:
 //                score += 70;
@@ -1772,7 +1773,8 @@ public class ALongHourAndAHalf extends JFrame
                     case 2:
                         nextStage = SURPRISE_WET_VOLUNTARY;
                 }
-
+                break;
+                
             case HIT:
                 if (generator.nextInt(100) <= 20)
                 {
@@ -2075,39 +2077,40 @@ public class ALongHourAndAHalf extends JFrame
 
     public void passTime()
     {
-        offsetTime(3);
-        offsetBladder(4.5);
-        offsetBelly(-4.5);
-        if (belly != 0)
-            if (belly > 3)
-                offsetBladder(2);
-            else
-            {
-                offsetBladder(belly);
-                emptyBelly();
-            }
-
-        if (min >= 88)
-        {
-            setText("You hear the bell finally ring.");
-            nextStage = CLASS_OVER;
-        }
-        if (testWet())
-            nextStage = ACCIDENT;
-        
-        for (int i = 0; i < 3; i++)
-            decaySphPower();
-        
-        //Sphincter power rounding
-//        BigDecimal bd = new BigDecimal(sphincterPower);
-//        bd = bd.setScale(1, RoundingMode.HALF_UP);
-//        sphincterPower = bd.floatValue();
-        lblSphPower.setText("Pee holding ability: " + Math.round(sphincterPower) + "%");
-        //Dryness rounding
-//        bd = new BigDecimal(dryness);
-//        bd = bd.setScale(1, RoundingMode.HALF_UP);
-//        dryness = bd.floatValue();
-        lblDryness.setText("Clothes dryness: " + Math.round(dryness));
+//        offsetTime(3);
+//        offsetBladder(4.5);
+//        offsetBelly(-4.5);
+//        if (belly != 0)
+//            if (belly > 3)
+//                offsetBladder(2);
+//            else
+//            {
+//                offsetBladder(belly);
+//                emptyBelly();
+//            }
+//
+//        if (min >= 88)
+//        {
+//            setText("You hear the bell finally ring.");
+//            nextStage = CLASS_OVER;
+//        }
+//        if (testWet())
+//            nextStage = ACCIDENT;
+//        
+//        for (int i = 0; i < 3; i++)
+//            decaySphPower();
+//        
+//        //Sphincter power rounding
+////        BigDecimal bd = new BigDecimal(sphincterPower);
+////        bd = bd.setScale(1, RoundingMode.HALF_UP);
+////        sphincterPower = bd.floatValue();
+//        lblSphPower.setText("Pee holding ability: " + Math.round(sphincterPower) + "%");
+//        //Dryness rounding
+////        bd = new BigDecimal(dryness);
+////        bd = bd.setScale(1, RoundingMode.HALF_UP);
+////        dryness = bd.floatValue();
+//        lblDryness.setText("Clothes dryness: " + Math.round(dryness));
+        passTime((byte)3);
     }
 
     public void passTime(byte time)
@@ -2190,7 +2193,7 @@ public class ALongHourAndAHalf extends JFrame
     public void offsetBladder(double amount)
     {
         bladder += amount/* * incon*/;
-        lblBladder.setText("Bladder: " + (int) bladder + "%");
+        lblBladder.setText("Bladder: " +  Math.round(bladder) + "%");
     }
 
     public void emptyBelly()
@@ -2205,7 +2208,7 @@ public class ALongHourAndAHalf extends JFrame
         {
             belly = 0;
         }
-        lblBelly.setText("Belly: " + belly + "%");
+        lblBelly.setText("Belly: " + Math.round(belly) + "%");
     }
 
     public void offsetEmbarassment(int amount)
@@ -2242,8 +2245,8 @@ public class ALongHourAndAHalf extends JFrame
         sphincterPower -= bladder / 30;//TODO: Balance this
         if (sphincterPower < 0)
         {
-            dryness += sphincterPower; //Decreasing dryness
-            bladder += sphincterPower; //Decreasing bladder level
+            dryness -= 5; //Decreasing dryness
+            bladder -= 5; //Decreasing bladder level
             sphincterPower = 0;
             if (dryness > 0)
             {
@@ -2296,6 +2299,8 @@ public class ALongHourAndAHalf extends JFrame
                         }
             }
         }
+        lblBladder.setText("Bladder: " + (int) bladder + "%");
+        lblDryness.setText("Clothes dryness: " + Math.round(dryness));
     }
 
     /**
