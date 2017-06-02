@@ -93,13 +93,6 @@ class Wear
         "Black", "Gray", "Red", "Orange", "Yellow", "Green", "Blue", "Dark blue", "Purple", "Pink"
     };
 
-    /**
-     * @param insertName the insert name (used in game text) to set
-     */
-    public void setInsertName(String insertName)
-    {
-        this.insertName = insertName;
-    }
     private final String name;
     private String insertName;
     private final float pressure;
@@ -119,13 +112,21 @@ class Wear
      * 3 minutes
      * @param type
      */
-    public Wear(String name, String insertName, float pressure, float absorption, float dryingOverTime)
+    Wear(String name, String insertName, float pressure, float absorption, float dryingOverTime)
     {
         this.name = name;
         this.insertName = insertName;
         this.pressure = pressure;
         this.absorption = absorption;
         this.dryingOverTime = dryingOverTime;
+    }
+    
+    /**
+     * @param insertName the insert name (used in game text) to set
+     */
+    public void setInsertName(String insertName)
+    {
+        this.insertName = insertName;
     }
 
     /**
@@ -193,6 +194,15 @@ public class ALongHourAndAHalf extends JFrame
     private final static int MAX_LINES = 9;
 
     public static Random generator = new Random();
+    static String nameParam;
+    static Gender gndrParam;
+    static boolean diffParam;
+    static float incParam;
+    static int bladderParam;
+    static String underParam;
+    static String outerParam;
+    static String underColorParam;
+    static String outerColorParam;
 
     @SuppressWarnings("ResultOfObjectAllocationIgnored")
     private static void reset(boolean newValues)
@@ -222,6 +232,8 @@ public class ALongHourAndAHalf extends JFrame
     private final JList<Object> listChoice;
 
     private final JScrollPane listScroller;
+    
+    private final JProgressBar bladderBar;
 
     Wear[] underwearList
             =
@@ -381,16 +393,8 @@ public class ALongHourAndAHalf extends JFrame
     private final JLabel lblLower;
     private final JLabel lblSphPower;
     private final JLabel lblDryness;
+    private final Color lblDefaultColor;
     
-    static String nameParam;
-    static Gender gndrParam;
-    static boolean diffParam;
-    static float incParam;
-    static int bladderParam;
-    static String underParam;
-    static String outerParam;
-    static String underColorParam;
-    static String outerColorParam;
     
     /**
      * Launch the application.
@@ -426,7 +430,7 @@ public class ALongHourAndAHalf extends JFrame
         if (hardcore)
         {
             maxBladder = 100;
-            name = name + " [Hardcore]";
+            name += " [Hardcore]";
         }
 
         //Assigning the boy's name
@@ -609,6 +613,7 @@ public class ALongHourAndAHalf extends JFrame
         lblBladder.setFont(new Font("Tahoma", Font.PLAIN, 15));
         lblBladder.setBounds(20, 210, 200, 32);
         contentPane.add(lblBladder);
+        lblDefaultColor = lblBladder.getForeground();
 
         //Embarassment label setup
         lblEmbarassment = new JLabel("Embarassment: " + embarassment);
@@ -677,6 +682,13 @@ public class ALongHourAndAHalf extends JFrame
         listScroller.setBounds(320, 216, 280, 160);
         listScroller.setVisible(false);
         contentPane.add(listScroller);
+        
+        //Bladder bar setup
+        bladderBar = new JProgressBar();
+        bladderBar.setBounds(16, 212, 200, 25);
+        bladderBar.setMaximum(130);
+        bladderBar.setValue(bladder);
+        add(bladderBar);
 
 //        pack();
         setVisible(true);
@@ -788,9 +800,12 @@ public class ALongHourAndAHalf extends JFrame
                         "Paying much less attention to your daily routine, you quickly run down the stairs, get a small glass of orange juice and chug it.",
                         "",
                         "The cold drink brings a chill down your spine as you collect your things and rush out the door to school.");
+                
+                //MANUAL BLADDER OFFSET
                 offsetBladder(.5);
                 offsetEmbarassment(3);
                 offsetBelly(10);
+                bladderBar.setValue(Math.round(bladder));
                 nextStage = GO_TO_CLASS;
                 break;
 
@@ -1422,17 +1437,18 @@ public class ALongHourAndAHalf extends JFrame
                         "No, " + name + ", you can't go to the restroom now! It will be as punishment.",
                         "And don't think you can hold yourself either! I'm watching you...");
 
-                if (belly >= 3)
-                {
-                    offsetBladder(3);
-                    offsetBelly(-3);
-                    decaySphPower();
-                } else
-                {
-                    offsetBladder(belly + 1);
-                    decaySphPower();
-                    emptyBelly();
-                }
+                
+//                if (belly >= 3)
+//                {
+//                    offsetBladder(3);
+//                    offsetBelly(-3);
+//                    decaySphPower();
+//                } else
+//                {
+//                    offsetBladder(belly + 1);
+//                    decaySphPower();
+//                    emptyBelly();
+//                }
 
                 passTime();
 
@@ -1442,7 +1458,7 @@ public class ALongHourAndAHalf extends JFrame
                     break;
                 }
 
-                offsetTime(3);
+//                offsetTime(3);
                 break;
 
             case ACCIDENT:
@@ -1742,10 +1758,11 @@ public class ALongHourAndAHalf extends JFrame
                 lblChoice.setVisible(false);
                 listScroller.setVisible(false);
 
-                offsetTime(1);
-                offsetBladder(1.5);
-                offsetBelly(-1.5);
-                decaySphPower();
+//                offsetTime(1);
+//                offsetBladder(1.5);
+//                offsetBelly(-1.5);
+//                decaySphPower();
+                passTime((byte)1);
 
                 actionNum = listChoice.getSelectedIndex();
                 actionName = (String)listChoice.getSelectedValue();
@@ -2188,12 +2205,19 @@ public class ALongHourAndAHalf extends JFrame
     {
         bladder = 0;
         lblBladder.setText("Bladder: " + (int) bladder + "%");
+        bladderBar.setValue(0);
     }
 
     public void offsetBladder(double amount)
     {
         bladder += amount/* * incon*/;
         lblBladder.setText("Bladder: " +  Math.round(bladder) + "%");
+        bladderBar.setValue(Math.round(bladder));
+        if((bladder>100&&!hardcore)||(bladder>80&&hardcore))
+            lblBladder.setForeground(Color.RED);
+        else
+            lblBladder.setForeground(lblDefaultColor);
+        
     }
 
     public void emptyBelly()
@@ -2300,6 +2324,7 @@ public class ALongHourAndAHalf extends JFrame
             }
         }
         lblBladder.setText("Bladder: " + (int) bladder + "%");
+        bladderBar.setValue(Math.round(bladder));
         lblDryness.setText("Clothes dryness: " + Math.round(dryness));
     }
 
