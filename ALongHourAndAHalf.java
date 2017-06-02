@@ -75,8 +75,6 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
