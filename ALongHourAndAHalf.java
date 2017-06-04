@@ -19,7 +19,6 @@
 *1.3 Bug fixes
 *    Interface improvements
 *    Game text refining
-*    Extended game
 *
 *
 *A Long Hour and a Half (ALongHourAndAHalf) is a game where
@@ -67,16 +66,15 @@
 *
 *
 *DEV NOTES: Look for bugs, there is always a bunch of them
-*/
-
+ */
+//name used for copying/pasting purposes (to keep from typing over and over again)
+//ALongHourAndAHalf
 package omo;
 
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -91,30 +89,57 @@ import static omo.ALongHourAndAHalf.generator;
  */
 class Wear
 {
-
+    /**
+     * List of all colors that clothes may have.
+     */
     static String[] colorList = 
     {
         "Black", "Gray", "Red", "Orange", "Yellow", "Green", "Blue", "Dark blue", "Purple", "Pink"
     };
 
+    /**
+     * The wear name (e. g. "Regular panties")
+     */
     private final String name;
+    
+    /**
+     * The insert name used in the game text (e. g. "panties")
+     */
     private String insertName;
+    
+    /**
+     * The pressure of an wear.<br>1 point of a pressure takes 1
+     * point from the maximal bladder capacity.
+     */
     private final float pressure;
+    
+    /**
+     * The absorption of an wear.<br>1 point of an absorption
+     * can store 1 point of a leaked pee.
+     */
     private final float absorption;
+    
+    /**
+     * The drying over time.<br>1 point = -1 pee unit per
+     * 3 minutes
+     */
     private final float dryingOverTime;
+    
+    /**
+     * The wear assigned color.
+     */
     private String color;
 
     /**
      *
      * @param name the wear name (e. g. "Regular panties")
-     * @param insertName
+     * @param insertName the insert name used in the game text (e. g. "panties")
      * @param pressure the pressure of an wear.<br>1 point of a pressure takes 1
      * point from the maximal bladder capacity.
      * @param absorption the absorption of an wear.<br>1 point of an absorption
      * can store 1 point of a leaked pee.
      * @param dryingOverTime the drying over time.<br>1 point = -1 pee unit per
      * 3 minutes
-     * @param type
      */
     Wear(String name, String insertName, float pressure, float absorption, float dryingOverTime)
     {
@@ -158,7 +183,7 @@ class Wear
     }
 
     /**
-     * @return the insert name used in the game (e. g. "panties")
+     * @return the insert name used in the game text (e. g. "panties")
      */
     public String insert()
     {
@@ -174,7 +199,7 @@ class Wear
     }
 
     /**
-     * @return the color (enum element)
+     * @return the color
      */
     public String getColor()
     {
@@ -197,7 +222,10 @@ public class ALongHourAndAHalf extends JFrame
     //Maximal lines of a text
     private final static int MAX_LINES = 9;
 
+    //Random stuff generator
     public static Random generator = new Random();
+    
+    //Parameters used for a game reset
     static String nameParam;
     static Gender gndrParam;
     static boolean diffParam;
@@ -208,6 +236,10 @@ public class ALongHourAndAHalf extends JFrame
     static String underColorParam;
     static String outerColorParam;
 
+    /**
+     * Resets the game and values, optionally letting player to select new parameters.
+     * @param newValues 
+     */
     @SuppressWarnings("ResultOfObjectAllocationIgnored")
     private static void reset(boolean newValues)
     {
@@ -217,6 +249,7 @@ public class ALongHourAndAHalf extends JFrame
             new ALongHourAndAHalf(nameParam, gndrParam, diffParam, incParam, bladderParam, underParam, outerParam, underColorParam, outerColorParam);
     }
 
+    //Game frame variables declaration
     private final JPanel contentPane;
     private final JPanel textPanel;
 
@@ -232,14 +265,25 @@ public class ALongHourAndAHalf extends JFrame
     private final JLabel lblIncon;
     private final JLabel lblMinutes;
     private final JLabel lblName;
-
+    private final JButton btnNewGame;
+    private final JLabel lblUndies;
+    private final JLabel lblLower;
+    private final JLabel lblSphPower;
+    private final JLabel lblDryness;
+    private final Color lblDefaultColor;
     private final JList<Object> listChoice;
 
     private final JScrollPane listScroller;
+    
+    private final JProgressBar bladderBar;
 
+    /**
+     * List of all underwear types.
+     */
     Wear[] underwearList
             =
             {
+                //        Name      Insert name     Pressure, Absotption, Drying over time
                 new Wear("Random", "THIS IS A BUG", 0, 0, 0),
                 new Wear("No underwear", "THIS IS A BUG", 0, 0, 1),
                 new Wear("Strings", "panties", 1, 2, 1),
@@ -261,9 +305,13 @@ public class ALongHourAndAHalf extends JFrame
                 new Wear("Super-absorbing diaper", "diaper", 18, 200, 0)
             };
 
+    /**
+     * List of all outerwear types.
+     */
     Wear[] outerwearList
             =
             {
+                //        Name      Insert name     Pressure, Absotption, Drying over time
                 new Wear("Random", "THIS IS A BUG", 0, 0, 0),
                 new Wear("No outerwear", "THIS IS A BUG", 0, 0, 1),
                 new Wear("Long jeans", "jeans", 7, 12, 1.2F),
@@ -290,6 +338,9 @@ public class ALongHourAndAHalf extends JFrame
                 new Wear("Male trousers", "trousers", 9, 15.75F, 1.4F)
             };
 
+    /**
+     * List of all cheats.
+     */
     String[] cheatList
             =
             {
@@ -298,6 +349,9 @@ public class ALongHourAndAHalf extends JFrame
                 "Set your incontinence level", "Toggle hardcore mode", "Set bladder fulness"
             };
 
+    /**
+     * List of all boy names for special hardcore scene.
+     */
     String names[]
             =
             {
@@ -309,14 +363,36 @@ public class ALongHourAndAHalf extends JFrame
                 "Bill",
                 "Dan"
             };
+    
+    /**
+     * Special hardcore scene boy name.
+     */
     String boyName = names[generator.nextInt(names.length)];
 
+    /**
+     * Actions list.
+     */
     ArrayList<String> actionList = new ArrayList<>();
+    
+    /**
+     * A stage after the current stage.
+     */
     private GameStage nextStage;
 
-    public String name; //your name
-    public Wear lower; // lower body clothing
-    public Wear undies; // usually referenced with leaks
+    /**
+     * Character's name.
+     */
+    public String name;
+    
+    /**
+     * Character's lower body clothing.
+     */
+    public Wear lower;
+    
+    /**
+     * Character's undies.
+     */
+    public Wear undies;
     
     /**
      * Current character gender.
@@ -351,21 +427,41 @@ public class ALongHourAndAHalf extends JFrame
     public double belly = 5.0;
     
     /**
-     * Before 2.1:<br>
+     * Before 1.1:<br>
      * simply multiplies a bladder increasement.<br>
      * <br>
-     * 2.1 and after:<br>
+     * 1.1 and after:<br>
      * defines the sphincter weakening speed.
      */
     public float incon = 1.0F;
-    public double maxSphincterPower; //How many minutes you can wait without squirming?
-    public double sphincterPower; //Current sphincter power. The higher bladder level, the faster power consumption.
-    public double dryness; //How much pee your clothes can store now?
+    
+    /**
+     * Maximal time without squirming and leaking.
+     */
+    public double maxSphincterPower;
+    
+    /**
+     * Current sphincter power. The higher bladder level, the faster power consumption.
+     */
+    public double sphincterPower;
+    
+    /**
+     * Amount of pee that clothes can store.
+     */
+    public double dryness;
+    
+    /**
+     * The class time.
+     */
     public byte min = 0;
+    
+    /**
+     * Times teacher denied character to go out.
+     */
     public byte timesPeeDenied = 0;
     
     /**
-     * A number that shows a game session difficulty - the higher score, the
+     * A number that shows a game difficulty - the higher score, the
      * harder was the game. Specific actions (for example, peeing in a restroom
      * during a lesson) reduce score points. Using the cheats will zero the
      * score points.
@@ -376,28 +472,41 @@ public class ALongHourAndAHalf extends JFrame
      * Number of times player got caught holding pee.
      */
     public byte timesCaught = 0;
-    public int classmatesAwareness = 0; //How many classmates know that you've to go?
+    
+    /**
+     * Amount of embarassment raising every time character caught holding pee.
+     */
+    public int classmatesAwareness = 0;
 
-    public boolean stay = false; // Stay after class? (30 minutes)
-    public boolean cornered = false; // Stand in the corner? (can't hold crotch)
-    public boolean drain = false; // Pee mysteriously vanishes every 15 minutes?
-    public boolean hardcore = false; // Hardcore mode: teacher never lets you pee, it's harder to hold pee, you may get caught holding pee
-
+    /**
+     * Whether or not charecter has to stay 30 minutes after class.
+     */
+    public boolean stay = false;
+    
+    /**
+     * Whether or not character currently stands in the corner and unable to hold crotch.
+     */
+    public boolean cornered = false;
+    
+    /**
+     * Whether or not pee drain cheat enabled: pee mysteriously vanishes every 15 minutes.
+     */
+    public boolean drain = false;
+    /**
+     * Whether or not hardcore mode enabled: teacher never lets you pee, it's harder to hold pee, you may get caught holding pee
+     */
+    public boolean hardcore = false;
+    
     /**
      * An array that contains boolean values that define <i>dialogue lines</i>.
      * Dialogue lines, unlike normal lines, are <i>italic</i>.
      */
     private boolean[] dialogueLines = new boolean[MAX_LINES];
-    public boolean cheatsUsed = false;//Did player use cheats?
     
-    private final JButton btnNewGame;
-    private final JLabel lblUndies;
-    private final JLabel lblLower;
-    private final JLabel lblSphPower;
-    private final JLabel lblDryness;
-    private int busTime;
-    private boolean traffic;
-    private boolean schoolOver;
+    /**
+     * Whether or not player has used cheats.
+     */
+    public boolean cheatsUsed = false;
     
     /**
      * Launch the application.
@@ -513,6 +622,8 @@ public class ALongHourAndAHalf extends JFrame
         dryness = lower.getAbsorption() + undies.getAbsorption();
         maxBladder -= lower.getPressure() + undies.getPressure();
         
+        //Setting "No undrwear" insert name depending on character's gender
+        //May be gone soon
         if (isMale())
         {
             underwearList[1].setInsertName("penis");
@@ -521,6 +632,7 @@ public class ALongHourAndAHalf extends JFrame
             underwearList[1].setInsertName("crotch");
         }
         
+        //Finishing saving parameters for game reset
         outerParam = lower.getName();
         underParam = undies.getName();
         underColorParam = undies.getColor();
@@ -550,7 +662,7 @@ public class ALongHourAndAHalf extends JFrame
         
         //"Next" button setup
         btnNext = new JButton("Next");
-        btnNext.setToolTipText("Hold down for the time warp");
+//        btnNext.setToolTipText("Hold down for the time warp");
         btnNext.addMouseListener(new MouseAdapter()
         {
             @Override
@@ -611,11 +723,12 @@ public class ALongHourAndAHalf extends JFrame
         contentPane.add(lblName);
 
         //Bladder label setup
-        lblBladder = new JLabel("Bladder: " + bladder + "%");
+        lblBladder = new JLabel("Bladder: " + Math.round(this.bladder) + "%");
         lblBladder.setToolTipText("<html>Normal game:<br>100% = need to hold<br>130% = peeing(game over)<br><br>Hardcore:<br>80% = need to hold<br>100% = peeing(game over)</html>");
         lblBladder.setFont(new Font("Tahoma", Font.PLAIN, 15));
         lblBladder.setBounds(20, 210, 200, 32);
         contentPane.add(lblBladder);
+        lblDefaultColor = lblBladder.getForeground();
 
         //Embarassment label setup
         lblEmbarassment = new JLabel("Embarassment: " + embarassment);
@@ -624,7 +737,7 @@ public class ALongHourAndAHalf extends JFrame
         contentPane.add(lblEmbarassment);
 
         //Belly label setup
-        lblBelly = new JLabel("Belly: " + belly + "%");
+        lblBelly = new JLabel("Belly: " + Math.round(belly) + "%");
         lblBelly.setFont(new Font("Tahoma", Font.PLAIN, 15));
         lblBelly.setBounds(20, 270, 200, 32);
         contentPane.add(lblBelly);
@@ -643,14 +756,14 @@ public class ALongHourAndAHalf extends JFrame
         contentPane.add(lblMinutes);
         
         //Sphincter power label setup
-        lblSphPower = new JLabel("Pee holding ability: " + sphincterPower + "%");
+        lblSphPower = new JLabel("Pee holding ability: " + Math.round(sphincterPower) + "%");
         lblSphPower.setFont(new Font("Tahoma", Font.PLAIN, 15));
         lblSphPower.setBounds(20, 360, 200, 32);
         lblSphPower.setVisible(false);
         contentPane.add(lblSphPower);
         
         //Clothing dryness label setup
-        lblDryness = new JLabel("Clothes dryness: " + dryness);
+        lblDryness = new JLabel("Clothes dryness: " + Math.round(dryness));
         lblDryness.setFont(new Font("Tahoma", Font.PLAIN, 15));
         lblDryness.setBounds(20, 390, 200, 32);
         lblDryness.setVisible(false);
@@ -684,6 +797,13 @@ public class ALongHourAndAHalf extends JFrame
         listScroller.setBounds(320, 216, 280, 160);
         listScroller.setVisible(false);
         contentPane.add(listScroller);
+        
+        //Bladder bar setup
+        bladderBar = new JProgressBar();
+        bladderBar.setBounds(16, 212, 200, 25);
+        bladderBar.setMaximum(130);
+        bladderBar.setValue(bladder);
+        add(bladderBar);
 
 //        pack();
         setVisible(true);
@@ -739,14 +859,11 @@ public class ALongHourAndAHalf extends JFrame
                     }
                 }
 
+                //Scoring bladder at start
                 score("Bladder at start - " + bladder + "%", '+', Math.round(bladder));
-
-                //Incontinence rounding
-                BigDecimal bd = new BigDecimal(incon);
-                bd = bd.setScale(1, RoundingMode.HALF_UP);
-                incon = bd.floatValue();
-
-                score("Incontinence - " + incon + "x", '*', incon);
+                
+                //Scoring incontinence
+                score("Incontinence - " + Math.round(incon) + "x", '*', Math.round(incon));
 
                 /*
                     Hardcore, it will be harder to hold pee:
@@ -795,9 +912,13 @@ public class ALongHourAndAHalf extends JFrame
                         "Paying much less attention to your daily routine, you quickly run down the stairs, get a small glass of orange juice and chug it.",
                         "",
                         "The cold drink brings a chill down your spine as you collect your things and rush out the door to school.");
+                
+                //MANUAL BLADDER OFFSET
                 offsetBladder(.5);
                 offsetEmbarassment(3);
                 offsetBelly(10);
+                bladderBar.setValue(Math.round(bladder));
+                
                 nextStage = GO_TO_CLASS;
                 break;
 
@@ -837,6 +958,7 @@ public class ALongHourAndAHalf extends JFrame
                 break;
 
             case WALK_IN:
+                //If lower clothes is a skirt
                 if (lower.insert().equals("skirt") || lower.insert().equals("skirt and tights") || lower.insert().equals("skirt and tights"))
                 {
                     setLinesAsDialogue(1, 3);
@@ -847,6 +969,7 @@ public class ALongHourAndAHalf extends JFrame
                             "tad bit embarrassed about your rush into class.");
                     offsetEmbarassment(5);
                 } else
+                    //No outerwear
                     if (lower.getName().equals("No outerwear"))
                     {
                         setLinesAsDialogue(1);
@@ -877,6 +1000,8 @@ public class ALongHourAndAHalf extends JFrame
                 break;
 
             case ASK_ACTION:
+                
+                //Called by teacher if unlucky
                 if (generator.nextInt(20) == 5)
                 {
                     setText("Suddenly, you hear the teacher call your name.");
@@ -933,6 +1058,8 @@ public class ALongHourAndAHalf extends JFrame
                 lblChoice.setVisible(true);
 
                 actionList.clear();
+                
+                //Adding action choices
                 switch (timesPeeDenied)
                 {
                     case 0:
@@ -981,10 +1108,12 @@ public class ALongHourAndAHalf extends JFrame
                 listChoice.setListData(actionList.toArray());
                 nextStage = CHOSE_ACTION;
                 passTime();
-                break;
+                    break;
 
             case CHOSE_ACTION:
                 nextStage = ASK_ACTION;
+                
+                //Do nothing if selection was empty
                 if (listChoice.isSelectionEmpty())
                 {
                     break;
@@ -1094,7 +1223,7 @@ public class ALongHourAndAHalf extends JFrame
                         try
                         {
                             time = Integer.parseInt(JOptionPane.showInputDialog("How much to wait?"));
-                            if (time < 1)
+                            if (time < 1 || time > 125)
                             {
                                 throw new NumberFormatException();
                             }
@@ -1103,9 +1232,9 @@ public class ALongHourAndAHalf extends JFrame
                             nextStage = ASK_ACTION;
                             break;
                         }
-
                         
-
+                        passTime((byte)time);
+                        
                         if (generator.nextInt(100) <= 1 + classmatesAwareness & hardcore)
                         {
                             nextStage = CAUGHT;
@@ -1135,6 +1264,7 @@ public class ALongHourAndAHalf extends JFrame
                 switch (timesPeeDenied)
                 {
                     case 0:
+                        //Success
                         if (generator.nextInt(100) <= 40 & !hardcore)
                         {
                             setText("Yes, you may.,",
@@ -1146,6 +1276,7 @@ public class ALongHourAndAHalf extends JFrame
                             score("Restroom usage during the lesson", '/', 1.25F);
                             emptyBladder();
                             nextStage = ASK_ACTION;
+                        //Fail
                         } else
                         {
                             setText("You ask the teacher if you can go out to the restroom.",
@@ -1286,6 +1417,7 @@ public class ALongHourAndAHalf extends JFrame
                                 "All classes are now dismissed for no reason at all! Bye!",
                                 "Looks like your luck changed for the better.");
                         min = 89;
+                        nextStage = CLASS_OVER;
                         break;
 
                     case 4:
@@ -1363,9 +1495,11 @@ public class ALongHourAndAHalf extends JFrame
                 break;
 
             case CLASS_OVER:
-                if (generator.nextInt(100) <= 5 && hardcore & isFemale())
+                //Special hardcore scene trigger
+                if (generator.nextInt(100) <= 10 && hardcore & isFemale())
                 {
                     nextStage = SURPRISE;
+                    break;
                 }
                 if (stay)
                 {
@@ -1425,35 +1559,14 @@ public class ALongHourAndAHalf extends JFrame
                         "Please... let me go to the restroom... I can't hold it...",
                         "No, " + name + ", you can't go to the restroom now! It will be as punishment.",
                         "And don't think you can hold yourself either! I'm watching you...");
-
-                if (belly >= 3)
-                {
-                    offsetBladder(3);
-                    offsetBelly(-3);
-                    decaySphPower();
-                } else
-                {
-                    offsetBladder(belly + 1);
-                    decaySphPower();
-                    emptyBelly();
-                }
-
+                
                 passTime();
-
-                if (testWet())
-                {
-                    nextStage = ACCIDENT;
-                    break;
-                }
-
-                offsetTime(3);
                 break;
 
             case ACCIDENT:
 //                listChoice.setVisible(false);
                 listScroller.setVisible(false);
                 lblChoice.setVisible(false);
-                //setLinesAsDialogue(6);
                 setText("You can't help it.. No matter how much pressure you use, the leaks won't stop.",
                         "Despite all this, you try your best, but suddenly you're forced to stop.",
                         "You can't move, or you risk peeing yourself. Heck, the moment you stood up you thought you could barely move for risk of peeing everywhere.",
@@ -1607,8 +1720,6 @@ public class ALongHourAndAHalf extends JFrame
                                 "Damn, he may spread that fact...");
                         offsetEmbarassment(3);
                         classmatesAwareness += 5;
-//                        score += 3;
-//                        scoreText = scoreText.concat("\nCaught holding pee: +3 points");
                         score("Caught holding pee", '+', 3);
                         timesCaught++;
                         break;
@@ -1619,8 +1730,6 @@ public class ALongHourAndAHalf extends JFrame
                                 "If I hold it until the lesson end, I will beat them.");
                         offsetEmbarassment(8);
                         classmatesAwareness += 5;
-//                        score += 8;
-//                        scoreText = scoreText.concat("\nCaught holding pee: +8 points");
                         score("Caught holding pee", '+', 8);
                         timesCaught++;
                         break;
@@ -1641,8 +1750,6 @@ public class ALongHourAndAHalf extends JFrame
                         }
                         offsetEmbarassment(12);
                         classmatesAwareness += 5;
-//                        score += 12;
-//                        scoreText = scoreText.concat("\nCaught holding pee: +12 points");
                         score("Caught holding pee", '+', 12);
                         timesCaught++;
                         break;
@@ -1652,21 +1759,21 @@ public class ALongHourAndAHalf extends JFrame
                                 "Oh god... So embarassed...");
                         offsetEmbarassment(20);
                         classmatesAwareness += 5;
-//                        score += 20;
-//                        scoreText = scoreText.concat("\nCaught holding pee: +20 points");
                         score("Caught holding pee", '+', 20);
                 }
                 nextStage = ASK_ACTION;
                 break;
 
+                //The special hardcore scene
             /*
              * "Surprise" is an additional scene after the lesson where player is being caught by her classmate. He wants her to wet herself.
              * Triggering conditions: female, hardcore
-             * Triggering chance: 5%
+             * Triggering chance: 10%
              */
             case SURPRISE:
-//                score += 70;
-//                scoreText = scoreText.concat("\nGot the \"surprise\" by " + boyName + ": +70 points");
+                
+                //Resetting timesPeeDenied to use for that boy
+                timesPeeDenied = 0;
                 score("Got the \"surprise\" by " + boyName, '+', 70);
                 setText("Lesson is finally over, and you're running to the restroom as fast as you can.",
                         "But... You see " + boyName + " staying in front of the restroom.",
@@ -1735,6 +1842,7 @@ public class ALongHourAndAHalf extends JFrame
                 nextStage = SURPRISE_DIALOGUE;
                 if (listChoice.isSelectionEmpty())
                 {
+                    //No idling
                     setText("You will wet yourself right now,",
                             boyName + " says.",
                             "Then " + boyName + " pressed your bladder...");
@@ -1742,15 +1850,14 @@ public class ALongHourAndAHalf extends JFrame
                 }
                 lblChoice.setVisible(false);
                 listScroller.setVisible(false);
+                
+                passTime((byte)1);
 
-                offsetTime(1);
-                offsetBladder(1.5);
-                offsetBelly(-1.5);
-                decaySphPower();
-
-                actionName = (String) listChoice.getSelectedValue();
+                actionNum = listChoice.getSelectedIndex();
+                actionName = (String)listChoice.getSelectedValue();
                 if (actionName.equals("[Unavailable]"))
                 {
+                    //No idling
                     setText("You will wet yourself right now,",
                             boyName + " says.",
                             "Then " + boyName + " pressed your bladder...");
@@ -1762,27 +1869,24 @@ public class ALongHourAndAHalf extends JFrame
 
                 listChoice.clearSelection();
 
-                switch (actionName)
+                switch (actionNum)
                 {
-                    case "Hit him":
+                    case 0:
                         nextStage = HIT;
                         break;
-                    case "Try to persuade him to let you pee":
-                    case "Try to persuade him to let you pee again":
-                    case "Take a chance and try to persuade him (RISKY)":
+                    case 1:
                         nextStage = PERSUADE;
                         break;
-                    case "Pee yourself":
+                    case 2:
                         nextStage = SURPRISE_WET_VOLUNTARY;
                 }
-
+                break;
+                
             case HIT:
-                if (generator.nextInt(100) <= 10)
+                if (generator.nextInt(100) <= 20)
                 {
                     setLinesAsDialogue(2);
                     nextStage = GameStage.END_GAME;
-//                    score += 40;
-//                    scoreText = scoreText.concat("\nSuccessful hit on " + boyName + "'s groin: +40 points");
                     score("Successful hit on " + boyName + "'s groin", '+', 40F);
                     if (!lower.getName().equals("No outerwear"))
                         if (!undies.getName().equals("No underwear"))
@@ -1881,14 +1985,12 @@ public class ALongHourAndAHalf extends JFrame
                                 if (!undies.getName().equals("No underwear"))
                                     setText("Ok, you may, but let me watch how do you pee.",
                                             "says " + boyName + ". You enter the cabin,",
-                                            "pulled down your " + undies + ",",
+                                            "pulled down your " + undies.insert() + ",",
                                             "stood over the toilet and start peeing under the " + boyName + " spectation.");
                                 else
                                     setText("Ok, you may, but let me watch how do you pee.",
                                             "says " + boyName + ". You enter the cabin,",
                                             "stood over the toilet and start peeing under the " + boyName + " spectation.");
-//                            score += 40;
-//                            scoreText = scoreText.concat("\nPersuaded " + boyName + " to pee: +40 points");
                             score("Persuaded " + boyName + " to pee", '+', 40);
                             emptyBladder();
                             nextStage = END_GAME;
@@ -1925,7 +2027,7 @@ public class ALongHourAndAHalf extends JFrame
                                 {
                                     setText("Ok, you may, but let me watch how do you pee.",
                                             "says " + boyName + ". You enter the cabin,",
-                                            "pulled down your " + undies + ",",
+                                            "pulled down your " + undies.insert() + ",",
                                             "stood over the toilet and start peeing under the " + boyName + " spectation.");
                                 } else
                                 {
@@ -1933,8 +2035,6 @@ public class ALongHourAndAHalf extends JFrame
                                             "says " + boyName + ". You enter the cabin,",
                                             "stood over the toilet and start peeing under the " + boyName + " spectation.");
                                 }
-//                            score += 60;
-//                            scoreText = scoreText.concat("\nPersuaded " + boyName + " to pee: +60 points");
                             score("Persuaded " + boyName + " to pee", '+', 60);
                             emptyBladder();
                             nextStage = END_GAME;
@@ -1977,8 +2077,6 @@ public class ALongHourAndAHalf extends JFrame
                                             "says " + boyName + ". You enter the cabin,",
                                             "stood over the toilet and start peeing under the " + boyName + " spectation.");
 
-//                            score += 80;
-//                            scoreText = scoreText.concat("\nPersuaded " + boyName + " to pee: +80 points");
                             score("Persuaded " + boyName + " to pee", '+', 80);
                             emptyBladder();
                             nextStage = END_GAME;
@@ -2004,327 +2102,123 @@ public class ALongHourAndAHalf extends JFrame
                 break;
 
             case SURPRISE_WET_VOLUNTARY2:
-                setText("You're feeling the warm, scalding pee stream",
-                        "filling your " + undies.insert() + " and wetting your " + lower.insert() + ".",
-                        "You're closing your eyes and easing your sphincter off.",
-                        "You feel as the pee stream becaming much stronger.");
+                if(!undies.getName().equals("No underwear"))
+                    if(!lower.getName().equals("No outerwear"))
+                        setText("You're feeling the warm, scalding pee stream",
+                                "filling your " + undies.insert() + " and wetting your " + lower.insert() + ".",
+                                "You're closing your eyes and easing your sphincter off.",
+                                "You feel as the pee stream becaming much stronger.");
+                    else
+                        setText("You're feeling the warm, scalding pee stream",
+                                "filling your " + undies.insert() + ".",
+                                "You're closing your eyes and easing your sphincter off.",
+                                "You feel as the pee stream becaming much stronger.");
+                else
+                    if(!lower.getName().equals("No outerwear"))
+                        setText("You're feeling the warm, scalding pee stream",
+                                "filling your " + lower.insert() + ".",
+                                "You're closing your eyes and easing your sphincter off.",
+                                "You feel as the pee stream becaming much stronger.");
+                    else
+                        setText("You're feeling the warm, scalding pee stream",
+                                "irrigating your legs.",
+                                "You're closing your eyes and easing your sphincter off.",
+                                "You feel as the pee stream becaming much stronger.");
                 emptyBladder();
                 nextStage = END_GAME;
                 break;
 
             case SURPRISE_WET_PRESSURE:
-                setText("Ouch... The sudden pain flash is passing through your bladder...",
-                        "You're trying to hold the pee back, but you can't.",
-                        "You're feeling the warm, scalding pee stream",
-                        "filling your " + undies.insert() + " and wetting your " + lower.insert() + ".",
-                        "You're closing your eyes and easing your sphincter off.",
-                        "You feel as the pee stream becaming much stronger.");
+                if(!undies.getName().equals("No underwear"))
+                    if(!lower.getName().equals("No outerwear"))
+                        setText("Ouch... The sudden pain flash is passing through your bladder...",
+                                "You're trying to hold the pee back, but you can't.",
+                                "You're feeling the warm, scalding pee stream",
+                                "filling your " + undies.insert() + " and wetting your " + lower.insert() + ".",
+                                "You're closing your eyes and easing your sphincter off.",
+                                "You feel as the pee stream becaming much stronger.");
+                    else
+                        setText("Ouch... The sudden pain flash is passing through your bladder...",
+                                "You're trying to hold the pee back, but you can't.",
+                                "You're feeling the warm, scalding pee stream",
+                                "filling your " + undies.insert() + ".",
+                                "You're closing your eyes and easing your sphincter off.",
+                                "You feel as the pee stream becaming much stronger.");
+                else
+                    if(!lower.getName().equals("No outerwear"))
+                        setText("Ouch... The sudden pain flash is passing through your bladder...",
+                                "You're trying to hold the pee back, but you can't.",
+                                "You're feeling the warm, scalding pee stream",
+                                "filling your " + lower.insert() + ".",
+                                "You're closing your eyes and easing your sphincter off.",
+                                "You feel as the pee stream becaming much stronger.");
+                    else
+                        setText("Ouch... The sudden pain flash is passing through your bladder...",
+                                "You're trying to hold the pee back, but you can't.",
+                                "You're feeling the warm, scalding pee stream",
+                                "irrigating your legs.",
+                                "You're closing your eyes and easing your sphincter off.",
+                                "You feel as the pee stream becaming much stronger.");
                 emptyBladder();
                 nextStage = END_GAME;
                 break;
 
-            case WHERE_TO_GO:
-                setLinesAsDialogue(4);
-                setText("Lesson is over, and you're running to the restroom as fast as you can.",
-                       "Trying to get into the restroom,",
-                       "You find with fear that restroom is locked for some reason.",
-                       "Damnit... Seems that I have to pee somewhere else...");
-                lblChoice.setText("Where to go?");
-                listScroller.setVisible(true);
-                lblChoice.setVisible(true);
-
-                actionList.clear();
-                actionList.add("Mall (5 minutes)");
-                actionList.add("Bus stop (1 minute)");
-                actionList.add("Directly to home (15 minutes)");
-                
-                if (!listChoice.isSelectionEmpty())
-                {
-                    nextStage = GameStage.WHERE_TO_GO_CHOSE;
-                    passTime();
-                    break;
-                }
-            break;
-               
-            case WHERE_TO_GO_CHOSE:
-                lblChoice.setVisible(false);
-                listScroller.setVisible(false);
-
-//                actionName = (String) listChoice.getSelectedValue();
-//                if (actionName.equals("[Unavailable]"))
-//                {
-//                    listChoice.clearSelection();
-//                    setText("You've spent a few minutes doing nothing.");
-//                    break;
-//                }
-
-                actionNum = listChoice.getSelectedIndex();
-
-                lblChoice.setVisible(false);
-                listScroller.setVisible(false);
-
-                listChoice.clearSelection();
-
-                switch (actionNum)
-                {
-                    case 0:
-                        nextStage = GOING_TO_MALL;
-                        setLinesAsDialogue(2);
-                        setText("You decided to go to mall.",
-                                "Probably, there will be a restroom.");
-                        break;
-                    case 1:
-                        nextStage = GOING_TO_BUS_STOP;
-                        setLinesAsDialogue(2);
-                        setText("You decided to go to the bus stop.",
-                                "I'll try to hold it till home.");
-                        break;
-                    case 2:
-                        nextStage = GOING_TO_HOME;
-                        setLinesAsDialogue(2);
-                        setText("You decided to go to home on foot.",
-                                "I may get stuck on the bus stop for a lot.");
-                        break;
-                }
-                
-            case GOING_TO_MALL:
-                passTime((byte)5);
-                
-                //That tricky code saves a lot of space
-                boolean publicRestroomFound = generator.nextBoolean();
-                boolean queue = generator.nextInt(100)<30;
-                boolean allowedToUseEmployeeRestroom = generator.nextInt(100)<15;
-                
-                setText((bladder<80)?"You came to the mall without any problems.":"You finally made it to the mall. Ah, that was the hard road...",
-                        
-                    publicRestroomFound?
-                        "You've found a public restroom."
-                        :
-                        "Strangely, you couldn't find a public restroom, but you've found a restroom for employees.",
-                        
-                    publicRestroomFound?
-                        queue?
-                            "There's a line! You've to wait!"
-                            :
-                            ""
-                        :
-                        allowedToUseEmployeeRestroom?
-                            "<i>Can I use this restroom, please?</i>\n<i>Yes, you can.</i>"
-                            :
-                            "<i>Can I use this restroom, please?</i>\n<i>Sorry, I can't let you in. This restroom is for employees only.</i>",
-                        
-                    (publicRestroomFound&&!queue)||(!publicRestroomFound&&allowedToUseEmployeeRestroom)?
-                        !lower.getName().equals("No outerwear")?
-                            !undies.getName().equals("No underwear")?
-                                "You enter it, pulled down your " + lower.insert() + " and " + undies.insert() + ",\nwearily flop down on the toilet and start peeing."
-                                :
-                                "You enter it, pulled down your " + lower.insert() + ",\nwearily flop down on the toilet and start peeing."
-                        :
-                            !undies.getName().equals("No underwear")?
-                                "You enter it, pulled down your " + undies.insert() + ",\nwearily flop down on the toilet and start peeing."
-                                :
-                                "You enter it, wearily flop down on the toilet and start peeing."
-                    :
-                    "Damn it..." 
-                );
-                
-            if((publicRestroomFound&&!queue)||(!publicRestroomFound&&allowedToUseEmployeeRestroom))
-                nextStage = GameStage.MALL_TOILET;
-            else if(publicRestroomFound&&queue)
-            {
-                passTime();
-                nextStage = GameStage.MALL_TOILET;
-            }
-            else if(!publicRestroomFound&&!allowedToUseEmployeeRestroom)
-                nextStage = GameStage.WHERE_TO_GO_MALL;
-        break;
-        
-        case WHERE_TO_GO_MALL:
-            setText("Why do there is no public restrooms!?",
-                    "Anyway, you've to go somewhere else.");
-            actionList.clear();
-            actionList.add("Bus stop (1 minute)");
-            actionList.add("Directly to home (15 minutes)");
-            
-            if (!listChoice.isSelectionEmpty())
-            {
-                nextStage = GameStage.WHERE_TO_GO_MALL_CHOSE;
-            }
-        break;
-            
-        case WHERE_TO_GO_MALL_CHOSE:
-            lblChoice.setVisible(false);
-                listScroller.setVisible(false);
-
-//                actionName = (String) listChoice.getSelectedValue();
-//                if (actionName.equals("[Unavailable]"))
-//                {
-//                    listChoice.clearSelection();
-//                    setText("You've spent a few minutes doing nothing.");
-//                    break;
-//                }
-
-                actionNum = listChoice.getSelectedIndex();
-
-                lblChoice.setVisible(false);
-                listScroller.setVisible(false);
-
-                listChoice.clearSelection();
-
-                switch (actionNum)
-                {
-                    case 0:
-                        nextStage = GOING_TO_BUS_STOP;
-                        setLinesAsDialogue(2);
-                        setText("You decided to go to the bus stop.",
-                                "I'll try to hold it till home.");
-                    case 1:
-                        nextStage = GOING_TO_HOME;
-                        setLinesAsDialogue(2);
-                        setText("You decided to go to home on foot.",
-                                "I may get stuck on the bus stop for a lot.");
-                }
-            break;
-            
-            case GOING_TO_BUS_STOP:
-                busTime = generator.nextInt(17)+3;
-                passTime((byte)1);
-                setText("You came to the bus stop,",
-                        "Sat on the bench and started waiting for a bus.");
-                nextStage = BUS_STOP;
-            break;
-            
-            case BUS_STOP:
-                if(busTime>0)
-                {
-                    setText("Sitting on the bench,",
-                            "You're waiting the bus to come.");
-                    passTime();
-                    busTime -= 3;
-                }
-                else
-                {
-                    setText("Finally, you see the bus coming to the stop.",
-                            "You enter it.");
-                    nextStage = IN_BUS;
-                    
-                    //Stuck in traffic
-                    if(generator.nextInt(100)<10)
-                    {
-                        busTime = generator.nextInt(20)+5;
-                        traffic = true;
-                    }
-                    else //No traffic
-                    {
-                        passTime((byte)5);
-                        
-                        //Forgot keys in school
-                        if(generator.nextInt(100)<7)
-                            nextStage = HOME_LOST_KEYS;
-                        else
-                            nextStage = HOME;
-                    }
-                }
-                
-            case IN_BUS:
-                if(busTime>0)
-                {
-                    setText("It seems that bus is stuck in traffic.",
-                            "No, please... Why me?..");
-                    passTime();
-                    busTime -= 3;
-                }
-                else
-                {
-                    setText("Finally, bus managed to arrive to your stop.");
-                    //Forgot keys in school
-                        if(generator.nextInt(100)<7)
-                            nextStage = HOME_LOST_KEYS;
-                        else
-                            nextStage = HOME;
-                }
-                
-            case HOME:
-                setText("You run to your house, open the door with keys,",
-                        "Run to the bathroom,",
-                        "Flop to the toilet and start peeing.",
-                        "You're so happy that you made it to home with dry clothes.");
-                nextStage = END_GAME;
-            break;
-            
-            case HOME_LOST_KEYS:
-                setLinesAsDialogue(4);
-                setText("You run to your house.",
-                        "You're trying to find the keys, but",
-                        "You just remembered that you forgot them in the school.",
-                        "Nooooooo...");
-                passTime();
-                nextStage = WHERE_TO_GO_BACK;
-            
-            case WHERE_TO_GO_BACK:
-                lblChoice.setText("How to go to school?");
-                listScroller.setVisible(true);
-                lblChoice.setVisible(true);
-
-                actionList.clear();
-                actionList.add("To bus stop (1 minute)");
-                actionList.add("On foot (15 minutes)");
-                
-                if (!listChoice.isSelectionEmpty())
-                {
-                    nextStage = GameStage.WHERE_TO_GO_CHOSE;
-                    passTime();
-                    break;
-                }
-                
             default:
                 setText("Error parsing button. Next text is unavailable, text #" + nextStage);
                 break;
-            //case copy (delete if not in use)
+            //case template
             //      case 4:
             //   setText("");
-            //   nextStage = 5;
+            //   nextStage = ;
             //   break;
         }
     }
 
+    /**
+     * Increments the time by 3 minutes and all time-related parameters.
+     */
     public void passTime()
     {
-        offsetTime(3);
-        offsetBladder(4.5);
-        offsetBelly(-4.5);
-        if (belly != 0)
-            if (belly > 3)
-                offsetBladder(2);
-            else
-            {
-                offsetBladder(belly);
-                emptyBelly();
-            }
-
-        if (min >= 88)
-        {
-            setText("You hear the bell finally ring.");
-            nextStage = CLASS_OVER;
-        }
-        if (testWet())
-            nextStage = ACCIDENT;
-        
-        for (int i = 0; i < 3; i++)
-            decaySphPower();
-        
-        //Sphincter power rounding
-//        BigDecimal bd = new BigDecimal(sphincterPower);
-//        bd = bd.setScale(1, RoundingMode.HALF_UP);
-//        sphincterPower = bd.floatValue();
-        lblSphPower.setText("Pee holding ability: " + Math.round(sphincterPower) + "%");
-        //Dryness rounding
-//        bd = new BigDecimal(dryness);
-//        bd = bd.setScale(1, RoundingMode.HALF_UP);
-//        dryness = bd.floatValue();
-        lblDryness.setText("Clothes dryness: " + Math.round(dryness));
+//        offsetTime(3);
+//        offsetBladder(4.5);
+//        offsetBelly(-4.5);
+//        if (belly != 0)
+//            if (belly > 3)
+//                offsetBladder(2);
+//            else
+//            {
+//                offsetBladder(belly);
+//                emptyBelly();
+//            }
+//
+//        if (min >= 88)
+//        {
+//            setText("You hear the bell finally ring.");
+//            nextStage = CLASS_OVER;
+//        }
+//        if (testWet())
+//            nextStage = ACCIDENT;
+//        
+//        for (int i = 0; i < 3; i++)
+//            decaySphPower();
+//        
+//        //Sphincter power rounding
+////        BigDecimal bd = new BigDecimal(sphincterPower);
+////        bd = bd.setScale(1, RoundingMode.HALF_UP);
+////        sphincterPower = bd.floatValue();
+//        lblSphPower.setText("Pee holding ability: " + Math.round(sphincterPower) + "%");
+//        //Dryness rounding
+////        bd = new BigDecimal(dryness);
+////        bd = bd.setScale(1, RoundingMode.HALF_UP);
+////        dryness = bd.floatValue();
+//        lblDryness.setText("Clothes dryness: " + Math.round(dryness));
+        passTime((byte)3);
     }
 
+    /**
+     * Increments the time by # minutes and all time-related parameters.
+     * @param time #
+     */
     public void passTime(byte time)
     {
         offsetTime(time);
@@ -2340,6 +2234,7 @@ public class ALongHourAndAHalf extends JFrame
         if (testWet())
             nextStage = ACCIDENT;
         
+        //Decrementing sphincter power for every 3 minutes
         for (int i = 0; i < time; i++)
         {
             decaySphPower();
@@ -2352,28 +2247,25 @@ public class ALongHourAndAHalf extends JFrame
                     emptyBelly();
                 }
         }
-       
         
+        //Updating labels
         lblSphPower.setText("Pee holding ability: " + Math.round(sphincterPower) + "%");
-        
         lblDryness.setText("Clothes dryness: " + Math.round(dryness));
     }
 
+    /**
+     * Checks the wetting conditions.
+     * @return true, if it's time to wet; false otherwise
+     */
     public boolean testWet()
     {
         //If bladder is filled more than 130 points in the normal mode and 100 points in the hardcore mode, forcing wetting
         if (bladder >= maxBladder & !hardcore)
             return true;
         else
-            //If bladder is filled more than 100 points in the normal mode and 50 points in the hardcore mode
+            //If bladder is filled more than 100 points in the normal mode and 50 points in the hardcore mode, character has a chance to wet
             if ((bladder > maxBladder - 30 & !hardcore) | (bladder > maxBladder - 20 & hardcore))
             {
-//                double wetChance = bladder + (hardcore ? 30 : 10) + embarassment;
-//                double wetLimit = generator.nextInt(80);
-//                if (wetChance > wetLimit)
-//                {
-//                    return true;
-//                }
                 if(!hardcore)
                 {
                     byte wetChance = (byte)(3 * (bladder - 100));
@@ -2390,18 +2282,35 @@ public class ALongHourAndAHalf extends JFrame
         return false;
     }
 
+    /**
+     * Empties the bladder.
+     */
     public void emptyBladder()
     {
         bladder = 0;
         lblBladder.setText("Bladder: " + (int) bladder + "%");
+        bladderBar.setValue(0);
     }
 
+    /**
+     * Offsets bladder fulness by a specified amount.
+     * @param amount the amount to offset bladder fulness
+     */
     public void offsetBladder(double amount)
     {
-        bladder += amount/* * incon*/;
-        lblBladder.setText("Bladder: " + (int) bladder + "%");
+        bladder += amount/* * incon*/;//Incontinence does another job after 1.1
+        lblBladder.setText("Bladder: " +  Math.round(bladder) + "%");
+        bladderBar.setValue(Math.round(bladder));
+        if((bladder>100&&!hardcore)||(bladder>80&&hardcore))
+            lblBladder.setForeground(Color.RED);
+        else
+            lblBladder.setForeground(lblDefaultColor);
+        
     }
 
+    /**
+     * Empties the belly.
+     */
     public void emptyBelly()
     {
         offsetBelly(-belly);
@@ -2414,7 +2323,7 @@ public class ALongHourAndAHalf extends JFrame
         {
             belly = 0;
         }
-        lblBelly.setText("Belly: " + belly + "%");
+        lblBelly.setText("Belly: " + Math.round(belly) + "%");
     }
 
     public void offsetEmbarassment(int amount)
@@ -2439,6 +2348,9 @@ public class ALongHourAndAHalf extends JFrame
         }
     }
 
+    /**
+     * Decreases the sphincter power.
+     */
     public void decaySphPower()
     {
         //Clothes drying over time
@@ -2451,8 +2363,8 @@ public class ALongHourAndAHalf extends JFrame
         sphincterPower -= bladder / 30;//TODO: Balance this
         if (sphincterPower < 0)
         {
-            dryness += sphincterPower; //Decreasing dryness
-            bladder += sphincterPower; //Decreasing bladder level
+            dryness -= 5; //Decreasing dryness
+            bladder -= 5; //Decreasing bladder level
             sphincterPower = 0;
             if (dryness > 0)
             {
@@ -2475,18 +2387,18 @@ public class ALongHourAndAHalf extends JFrame
             if (dryness < -20)
             {
                 if (lower.getName().equals("No outerwear") && undies.getName().equals("No underwear"))
-                    if (cornered||schoolOver)
+                    if (cornered)
                     {
                         setText("You see the puddle on the floor under you! You're peeing!",
                                 "It's too big...");
                         nextStage = ACCIDENT;
-//                        handleNextClicked();
+                        handleNextClicked();
                     } else
                     {
                         setText("You see the puddle on your chair! You're peeing!",
                                 "It's too big...");
                         nextStage = ACCIDENT;
-//                        handleNextClicked();
+                        handleNextClicked();
                     }
                 else
                     if (!lower.getName().equals("No outerwear"))
@@ -2494,17 +2406,20 @@ public class ALongHourAndAHalf extends JFrame
                         setText("You see the wet spot on your " + lower.insert() + "!",
                                 "It's too big...");
                         nextStage = ACCIDENT;
-//                        handleNextClicked();
+                        handleNextClicked();
                     } else
                         if (!undies.getName().equals("No underwear"))
                         {
                             setText("You see the wet spot on your " + undies.insert() + "!",
                                     "It's too big...");
                             nextStage = ACCIDENT;
-//                            handleNextClicked();
+                            handleNextClicked();
                         }
             }
         }
+        lblBladder.setText("Bladder: " + (int) bladder + "%");
+        bladderBar.setValue(Math.round(bladder));
+        lblDryness.setText("Clothes dryness: " + Math.round(dryness));
     }
 
     /**
@@ -2529,6 +2444,10 @@ public class ALongHourAndAHalf extends JFrame
         }
     }
 
+    /**
+     * Sets the in-game text.
+     * @param lines the in-game text to set
+     */
     @SuppressWarnings("UseOfSystemOutOrSystemErr")
     private void setText(String... lines)
     {
@@ -2562,6 +2481,12 @@ public class ALongHourAndAHalf extends JFrame
         this.dialogueLines = new boolean[MAX_LINES];
     }
 
+    /**
+     * Adds/substracts the player score
+     * @param message the reason to manipulate score
+     * @param mode add or substract
+     * @param points points to add/substract
+     */
     public void score(String message, char mode, int points)
     {
         switch (mode)
@@ -2579,6 +2504,12 @@ public class ALongHourAndAHalf extends JFrame
         }
     }
 
+    /**
+     * Multiplies/divides the player score
+     * @param message the reason to manipulate score
+     * @param mode multiply or divide
+     * @param points points to multiply/divide
+     */
     public void score(String message, char mode, float points)
     {
         switch (mode)
@@ -2598,30 +2529,29 @@ public class ALongHourAndAHalf extends JFrame
 
     enum GameStage
     {
-        LEAVE_BED, //Home
-        LEAVE_HOME, //Home
-        GO_TO_CLASS, //Home -> school
-        WALK_IN, //School
-        SIT_DOWN, //School
-        ASK_ACTION, //School, waiting for player to select an action
-        CHOSE_ACTION, //TODO: Rework
-        ASK_TO_PEE, //School, asking a teacher to pee
-        CALLED_ON, //School, teacher asked character a question
-        CAUGHT, //School, classmates have spotted that character has to pee (hardcore only)
-        USE_BOTTLE, //School, cheat, peeing in a bottle
-        ASK_CHEAT, //School, waiting for player to select a cheat 
-        CHOSE_CHEAT, //TODO: Rework
-        CLASS_OVER, //School, class over
-        AFTER_CLASS, //School, writing lines if character has failed to ask teacher to go to the restroom for three times
-        ACCIDENT, //School, leaking
+        LEAVE_BED,
+        LEAVE_HOME,
+        GO_TO_CLASS,
+        WALK_IN,
+        SIT_DOWN,
+        ASK_ACTION,
+        CHOSE_ACTION,
+        ASK_TO_PEE,
+        CALLED_ON,
+        CAUGHT,
+        USE_BOTTLE,
+        ASK_CHEAT,
+        CHOSE_CHEAT,
+        CLASS_OVER,
+        AFTER_CLASS,
+        ACCIDENT,
         GIVE_UP,
-        WET, //School, wetting
-        POST_WET, //School, being made fun of
-        POST_WET_BUS, //Bus, passangers around can't understand how did character pee in a bus
-        POST_WET_STREET, //Street, passersby confusedly look at character
-        GAME_OVER, //Wetting
-        SURPRISE, //Hidden gameplay after passing through the class in the hardcore mode
-        SURPRISE_2, 
+        WET,
+        POST_WET,
+        GAME_OVER,
+        END_GAME,
+        SURPRISE,
+        SURPRISE_2,
         SURPRISE_ACCIDENT,
         SURPRISE_DIALOGUE,
         SURPRISE_CHOSE,
@@ -2629,23 +2559,7 @@ public class ALongHourAndAHalf extends JFrame
         PERSUADE,
         SURPRISE_WET_VOLUNTARY,
         SURPRISE_WET_VOLUNTARY2,
-        SURPRISE_WET_PRESSURE, //End of the hidden gameplay stages 
-        WHERE_TO_GO, //Asking the player where to go after the lessons if all restrooms are locked
-        GOING_TO_MALL, //Street, going to the mall to find a restroom (5 minutes)
-        GOING_TO_BUS_STOP, //Street, going to the bus stop (1 minute, then waiting for a bus for 3 - 20 minutes)
-        GOING_TO_HOME, //Street, going to home on foot (15 minutes)
-        HOME, //Made it to home
-        HOME_LOST_KEYS, //Forgot keys at school (chance 12%)
-        BACK_TO_SCHOOL, //Going back to school on foot (15 minutes)
-        BACK_TO_SCHOOL_BUS_STOP, //Waiting for a bus to school (3 - 15 minutes)
-        IN_BUS, //In a bus (3 minutes, 5% chance to get stuck in traffic (5 - 25 minutes)
-        END_GAME, //Good ending, showing score
-        WHERE_TO_GO_CHOSE,
-        MALL_TOILET, //Peeing in mall
-        WHERE_TO_GO_MALL, //Failed to pee in mall, going to somewhere else
-        WHERE_TO_GO_MALL_CHOSE,
-        BUS_STOP, //Waiting for a bus for 3 - 20 minutes
-        WHERE_TO_GO_BACK //Going back to school to take the keys
+        SURPRISE_WET_PRESSURE
     }
 
     enum Gender
