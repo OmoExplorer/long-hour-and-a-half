@@ -129,6 +129,11 @@ class Wear
      * The wear assigned color.
      */
     private String color;
+    
+    /**
+     * Whether or not certain wear equals "No under/outerwear".
+     */
+    private final boolean missing;
 
     /**
      *
@@ -149,6 +154,7 @@ class Wear
         this.pressure = pressure;
         this.absorption = absorption;
         this.dryingOverTime = dryingOverTime;
+        missing = name.equals("No underwear")||name.equals("No outerwear");
     }
 
     /**
@@ -214,12 +220,19 @@ class Wear
     {
         this.color = color;
     }
+    
+    /**
+     * @return whether or not certain wear equals "No under/outerwear".
+     */
+    boolean isMissing()
+    {
+        return missing;
+    }
 }
 
 @SuppressWarnings("serial")
 public class ALongHourAndAHalf extends JFrame
 {
-
     //Maximal lines of a text
     private final static int MAX_LINES = 9;
 
@@ -288,7 +301,7 @@ public class ALongHourAndAHalf extends JFrame
     private final JScrollPane listScroller;
 
     private final JProgressBar bladderBar;
-	private final JProgressBar sphincterBar;
+    private final JProgressBar sphincterBar;
     private final JProgressBar drynessBar;
     private final JProgressBar timeBar;
 
@@ -601,7 +614,7 @@ public class ALongHourAndAHalf extends JFrame
         }
 
         //Assigning color
-        if (!undies.getName().equals("No underwear"))
+        if (!undies.isMissing())
         {
             if (!undiesColor.equals("Random"))
             {
@@ -644,7 +657,7 @@ public class ALongHourAndAHalf extends JFrame
         }
 
         //Assigning color
-        if (!lower.getName().equals("No outerwear"))
+        if (!lower.isMissing())
         {
             if (!lowerColor.equals("Random"))
             {
@@ -846,7 +859,7 @@ public class ALongHourAndAHalf extends JFrame
         bladderBar.setBounds(16, 212, 300, 25);
         bladderBar.setMaximum(130);
         bladderBar.setValue(bladder);
-        add(bladderBar);
+        contentPane.add(bladderBar);
         
         //Sphincter bar setup
         sphincterBar = new JProgressBar();
@@ -854,7 +867,7 @@ public class ALongHourAndAHalf extends JFrame
         sphincterBar.setMaximum((int)Math.round(maxSphincterPower));
         sphincterBar.setValue((int)Math.round(sphincterPower));
         sphincterBar.setVisible(false);
-        add(sphincterBar);
+        contentPane.add(sphincterBar);
         
         //Dryness bar setup
         drynessBar = new JProgressBar();
@@ -863,7 +876,7 @@ public class ALongHourAndAHalf extends JFrame
         drynessBar.setValue((int)dryness);
         drynessBar.setMinimum(MINIMAL_DRYNESS);
         drynessBar.setVisible(false);
-        add(drynessBar);
+        contentPane.add(drynessBar);
         
         //Time bar setup
         timeBar = new JProgressBar();
@@ -871,9 +884,9 @@ public class ALongHourAndAHalf extends JFrame
         timeBar.setMaximum(90);
         timeBar.setValue(min);
         timeBar.setVisible(false);
-        add(timeBar);
+        contentPane.add(timeBar);
 
-//        pack();
+        //Displaying the frame
         setVisible(true);
 
         //Starting the game
@@ -899,8 +912,6 @@ public class ALongHourAndAHalf extends JFrame
         return gender == MALE;
     }
 
-    //Telling the compiler to ignore missing break at the end of some cases
-    @SuppressWarnings("fallthrough")
     private void handleNextClicked()
     {
         switch (nextStage)
@@ -946,10 +957,11 @@ public class ALongHourAndAHalf extends JFrame
                     score("Hardcore", '*', 2F);
                 }
 
+                //Making line 1 italic
                 setLinesAsDialogue(1);
-                if (!lower.getName().equals("No outerwear"))
+                if (!lower.isMissing())
                 {
-                    if (!undies.getName().equals("No underwear"))
+                    if (!undies.isMissing())
                     //Both lower clothes and undies
                     {
                         setText("Wh-what? D-did I forget to set my alarm?!",
@@ -966,7 +978,7 @@ public class ALongHourAndAHalf extends JFrame
                                 "not even worrying about what covers your chest.");
                     }
                 }
-                else if (!undies.getName().equals("No underwear"))
+                else if (!undies.isMissing())
                 //Undies only
                 {
                     setText("Wh-what? D-did I forget to set my alarm?!",
@@ -981,7 +993,10 @@ public class ALongHourAndAHalf extends JFrame
                             "You cry, tumbling out of bed and feeling an instant jolt from your bladder.",
                             "You are running downstairs fully naked.");
                 }
+                //Adding 0.5 of liquid to bladder
                 offsetBladder(.5);
+                
+                //Setting the next stage to "Leaving home"
                 nextStage = LEAVE_HOME;
                 break;
 
@@ -1002,6 +1017,7 @@ public class ALongHourAndAHalf extends JFrame
                 break;
 
             case GO_TO_CLASS:
+                //Displaying all values
                 lblMinutes.setVisible(true);
                 lblSphPower.setVisible(true);
                 lblDryness.setVisible(true);
@@ -1009,8 +1025,9 @@ public class ALongHourAndAHalf extends JFrame
                 drynessBar.setVisible(true);
                 timeBar.setVisible(true);
 
-                if (!lower.getName().equals("No outerwear"))
+                if (!lower.isMissing())
                 {
+                    //Skirt blowing in the wind
                     if (lower.insert().equals("skirt"))
                     {
                         setText("You rush into class, your " + lower.insert() + " blowing in the wind.",
@@ -1020,10 +1037,11 @@ public class ALongHourAndAHalf extends JFrame
                     }
                     else
                     {
+                        //Nothing is blowing in wind
                         setText("You rush into class and sit down to your seat without a minute to spare.");
                     }
                 }
-                else if (!undies.getName().equals("No underwear"))
+                else if (!undies.isMissing())
                 {
                     setText("You rush into class; your classmates are looking at your " + undies.insert() + ".",
                             "You can't understand how you forgot put on any lower clothing,",
@@ -1062,7 +1080,7 @@ public class ALongHourAndAHalf extends JFrame
                     offsetEmbarassment(5);
                 }
                 else //No outerwear
-                    if (lower.getName().equals("No outerwear"))
+                    if (lower.isMissing())
                     {
                         setLinesAsDialogue(1);
                         setText("WHAT!? YOU CAME TO SCHOOL NAKED!?",
@@ -1093,7 +1111,8 @@ public class ALongHourAndAHalf extends JFrame
                 break;
 
             case ASK_ACTION:
-
+                do
+                {
                 //Called by teacher if unlucky
                 if (generator.nextInt(20) == 5)
                 {
@@ -1211,42 +1230,30 @@ public class ALongHourAndAHalf extends JFrame
                 actionList.add("Just wait");
                 actionList.add("Cheat (will reset your score)");
 
+                //Loading the choice array into the action selector
                 listChoice.setListData(actionList.toArray());
                 nextStage = CHOSE_ACTION;
                 passTime();
+                //Don't go further if player selected no or unavailable action
+                }while(listChoice.isSelectionEmpty()||listChoice.getSelectedValue().equals("[Unavailable]"));
                 break;
 
             case CHOSE_ACTION:
                 nextStage = ASK_ACTION;
-
-                //Do nothing if selection was empty
-                if (listChoice.isSelectionEmpty())
-                {
-                    break;
-                }
+                
+                //Hiding the action selector
                 lblChoice.setVisible(false);
                 listScroller.setVisible(false);
-
-                String actionName = (String) listChoice.getSelectedValue();
-                if (actionName.equals("[Unavailable]"))
-                {
-                    listChoice.clearSelection();
-                    setText("You've spent a few minutes doing nothing.");
-                    break;
-                }
-
-                int actionNum = listChoice.getSelectedIndex();
-
-                lblChoice.setVisible(false);
-                listScroller.setVisible(false);
-
                 listChoice.clearSelection();
                 btnNext.setText("Next");
 
+                //Getting selected action ID to distinguish selected option
+                int actionNum = listChoice.getSelectedIndex();
+                
+                //Doing action job
                 switch (actionNum)
                 {
-                    //Default effectiveness: 12
-
+                    
                     //Ask the teacher to go pee
                     case 0:
                         nextStage = ASK_TO_PEE;
@@ -1276,6 +1283,7 @@ public class ALongHourAndAHalf extends JFrame
                         rechargeSphPower(20);
                         offsetTime(3);
 
+                        //Chance to be caught by classmates in hardcore mode
                         if (generator.nextInt(100) <= 15 + classmatesAwareness & hardcore)
                         {
                             nextStage = CAUGHT;
@@ -1306,6 +1314,7 @@ public class ALongHourAndAHalf extends JFrame
                         rechargeSphPower(2);
                         offsetTime(3);
 
+                        //Chance to be caught by classmates in hardcore mode
                         if (generator.nextInt(100) <= 3 + classmatesAwareness & hardcore)
                         {
                             nextStage = CAUGHT;
@@ -1333,6 +1342,8 @@ public class ALongHourAndAHalf extends JFrame
                      * Future effectiveness: 2.4(1), 0.4(2), 0.47(30)
                      */
                     case 4:
+                        
+                        //Asking player how much to wait
                         int time;
                         try
                         {
@@ -1342,6 +1353,7 @@ public class ALongHourAndAHalf extends JFrame
                                 throw new NumberFormatException();
                             }
                         }
+                        //Ignoring invalid output
                         catch (NumberFormatException | NullPointerException e)
                         {
                             nextStage = ASK_ACTION;
@@ -1350,6 +1362,7 @@ public class ALongHourAndAHalf extends JFrame
 
                         passTime((byte) time);
 
+                        //Chance to be caught by classmates in hardcore mode
                         if (generator.nextInt(100) <= 1 + classmatesAwareness & hardcore)
                         {
                             nextStage = CAUGHT;
@@ -1365,13 +1378,10 @@ public class ALongHourAndAHalf extends JFrame
                     case 5:
                         setText("You've got to go so bad.",
                                 "There must be something you can do, right?");
+                        
+                        //Zeroing points
                         cheatsUsed = true;
                         nextStage = ASK_CHEAT;
-                        break;
-
-                    default:
-                        setText("You sat a few minutes doing nothing.");
-                        nextStage = ASK_ACTION;
                         break;
                 }
                 break;
@@ -1494,20 +1504,17 @@ public class ALongHourAndAHalf extends JFrame
                 break;
 
             case ASK_CHEAT:
+                do
+                {
                 lblChoice.setText("Select a cheat:");
                 listChoice.setListData(cheatList);
-                btnNext.setText("Choose");
                 lblChoice.setVisible(true);
                 listScroller.setVisible(true);
                 nextStage = CHOSE_CHEAT;
+                }while(listChoice.isSelectionEmpty());
                 break;
 
             case CHOSE_CHEAT:
-                if (listChoice.isSelectionEmpty())
-                {
-                    break;
-                }
-
                 lblChoice.setText("");
                 lblChoice.setVisible(false);
                 listScroller.setVisible(false);
@@ -1609,9 +1616,7 @@ public class ALongHourAndAHalf extends JFrame
                         "You make your way to the front of the room and act lost, knowing you'll be stuck",
                         "up there for a while as the teacher explains it.",
                         "Well, you can't dare to hold yourself now...");
-
-//                score += 5;
-//                scoreText = scoreText.concat("\nCalled on the lesson: +5 points");
+                
                 score("Called on the lesson", '+', 5);
                 nextStage = ASK_ACTION;
                 passTime((byte) 5);
@@ -1630,23 +1635,20 @@ public class ALongHourAndAHalf extends JFrame
                     break;
                 }
 
-                //setLinesAsDialogue(6);
                 if (generator.nextBoolean())
                 {
                     setText("Lesson is finally over, and you're running to the restroom as fast as you can.",
                             "No, please... All cabins are occupied, and there's a line. You have to wait!");
 
-//                    score += 5;
-//                    scoreText = scoreText.concat("\nWaited for a free cabin in the restroom: +5 score");
-                    score("Waited for a free cabin in the restroom", '+', 5);
-                    passTime((byte) 5);
+                    score("Waited for a free cabin in the restroom", '+', 3);
+                    passTime();
                     break;
                 }
                 else
                 {
-                    if (!lower.getName().equals("No outerwear"))
+                    if (!lower.isMissing())
                     {
-                        if (!undies.getName().equals("No underwear"))
+                        if (!undies.isMissing())
                         {
                             setText("Lesson is over, and you're running to the restroom as fast as you can.",
                                     "Thank god, one cabin is free!",
@@ -1661,7 +1663,7 @@ public class ALongHourAndAHalf extends JFrame
                                     "wearily flop down on the toilet and start peeing.");
                         }
                     }
-                    else if (!undies.getName().equals("No underwear"))
+                    else if (!undies.isMissing())
                     {
                         setText("Lesson is over, and you're running to the restroom as fast as you can.",
                                 "Thank god, one cabin is free!",
@@ -1697,7 +1699,6 @@ public class ALongHourAndAHalf extends JFrame
                 break;
 
             case ACCIDENT:
-//                listChoice.setVisible(false);
                 listScroller.setVisible(false);
                 lblChoice.setVisible(false);
                 setText("You can't help it.. No matter how much pressure you use, the leaks won't stop.",
@@ -1709,9 +1710,9 @@ public class ALongHourAndAHalf extends JFrame
 
             case GIVE_UP:
                 offsetEmbarassment(80);
-                if (!lower.getName().equals("No outerwear"))
+                if (!lower.isMissing())
                 {
-                    if (!undies.getName().equals("No underwear"))
+                    if (!undies.isMissing())
                     {
                         setText("You get tired of holding all the urine in your aching bladder,",
                                 "and you decide to give up and pee in your " + undies.insert() + ".");
@@ -1722,7 +1723,7 @@ public class ALongHourAndAHalf extends JFrame
                                 "and you decided to pee in your " + lower.insert() + ".");
                     }
                 }
-                else if (!undies.getName().equals("No underwear"))
+                else if (!undies.isMissing())
                 {
                     setText("You get tired of holding all the urine in your aching bladder,",
                             "and you decide to give up and pee in your " + undies.insert() + ".");
@@ -1738,9 +1739,9 @@ public class ALongHourAndAHalf extends JFrame
             case WET:
                 emptyBladder();
                 embarassment = 100;
-                if (!lower.getName().equals("No outerwear"))
+                if (!lower.isMissing())
                 {
-                    if (!undies.getName().equals("No underwear"))
+                    if (!undies.isMissing())
                     {
                         setText("Before you can move an inch, pee quickly soaks through your " + undies.insert() + ",",
                                 "floods your " + lower.insert() + ", and streaks down your legs.",
@@ -1752,7 +1753,7 @@ public class ALongHourAndAHalf extends JFrame
                                 "A large puddle quickly forms, and you can't stop tears from falling down your cheeks.");
                     }
                 }
-                else if (!undies.getName().equals("No underwear"))
+                else if (!undies.isMissing())
                 {
                     setText("Before you can move an inch, pee quickly soaks through your " + undies.insert() + ", and streaks down your legs.",
                             "A large puddle quickly forms, and you can't stop tears from falling down your cheeks.");
@@ -1774,14 +1775,14 @@ public class ALongHourAndAHalf extends JFrame
                 setLinesAsDialogue(2);
                 if (!stay)
                 {
-                    if (lower.getName().equals("No outerwear"))
+                    if (lower.isMissing())
                     {
-                        if (isFemale() && undies.getName().equals("No underwear"))
+                        if (isFemale() && undies.isMissing())
                         {
                             setText("People around you are laughing loudly.",
                                     name + " peed herself! Ahaha!!!");
                         }
-                        else if (isMale() && undies.getName().equals("No underwear"))
+                        else if (isMale() && undies.isMissing())
                         {
                             setText("People around you are laughing loudly.",
                                     name + " peed himself! Ahaha!!!");
@@ -1813,9 +1814,9 @@ public class ALongHourAndAHalf extends JFrame
                 break;
 
             case GAME_OVER:
-                if (lower.getName().equals("No outerwear"))
+                if (lower.isMissing())
                 {
-                    if (undies.getName().equals("No underwear"))
+                    if (undies.isMissing())
                     {
                         setText("No matter how hard you tried... It doesn't seem to matter, even to think about it...",
                                 "No, nobody would be as sadistic as that, especially to themselves...",
@@ -1830,7 +1831,7 @@ public class ALongHourAndAHalf extends JFrame
                                 "Game over!");
                     }
                 }
-                else if (undies.getName().equals("No underwear"))
+                else if (undies.isMissing())
                 {
                     setText("No matter how hard you tried... It doesn't seem to matter, even to think about it...",
                             "Your " + lower.insert() + " clinging to your skin, a sign of your failure...",//TODO: Add "is/are" depending on lower clothes type
@@ -1871,7 +1872,8 @@ public class ALongHourAndAHalf extends JFrame
                         classmatesAwareness += 5;
                         score("Caught holding pee", '+', 3);
                         timesCaught++;
-                        break;
+                    break;
+                        
                     case 1:
                         setLinesAsDialogue(3);
                         setText("You'he heard a suspicious whisper behind you.",
@@ -1881,7 +1883,8 @@ public class ALongHourAndAHalf extends JFrame
                         classmatesAwareness += 5;
                         score("Caught holding pee", '+', 8);
                         timesCaught++;
-                        break;
+                    break;
+                    
                     case 2:
                         if (isFemale())
                         {
@@ -1902,7 +1905,8 @@ public class ALongHourAndAHalf extends JFrame
                         classmatesAwareness += 5;
                         score("Caught holding pee", '+', 12);
                         timesCaught++;
-                        break;
+                    break;
+                    
                     default:
                         setText("The chuckles are continiously passing over the classroom.",
                                 "Everyone are watching over you.",
@@ -1986,7 +1990,7 @@ public class ALongHourAndAHalf extends JFrame
                 lblChoice.setVisible(true);
                 listScroller.setVisible(true);
                 nextStage = SURPRISE_CHOSE;
-                break;
+            break;
 
             case SURPRISE_CHOSE:
                 nextStage = SURPRISE_DIALOGUE;
@@ -2001,11 +2005,8 @@ public class ALongHourAndAHalf extends JFrame
                 lblChoice.setVisible(false);
                 listScroller.setVisible(false);
 
-                passTime((byte) 1);
-
                 actionNum = listChoice.getSelectedIndex();
-                actionName = (String) listChoice.getSelectedValue();
-                if (actionName.equals("[Unavailable]"))
+                if (listChoice.getSelectedValue().equals("[Unavailable]"))
                 {
                     //No idling
                     setText("You will wet yourself right now,",
@@ -2030,7 +2031,7 @@ public class ALongHourAndAHalf extends JFrame
                     case 2:
                         nextStage = SURPRISE_WET_VOLUNTARY;
                 }
-                break;
+            break;
 
             case HIT:
                 if (generator.nextInt(100) <= 20)
@@ -2038,9 +2039,9 @@ public class ALongHourAndAHalf extends JFrame
                     setLinesAsDialogue(2);
                     nextStage = GameStage.END_GAME;
                     score("Successful hit on " + boyName + "'s groin", '+', 40F);
-                    if (!lower.getName().equals("No outerwear"))
+                    if (!lower.isMissing())
                     {
-                        if (!undies.getName().equals("No underwear"))
+                        if (!undies.isMissing())
                         {
                             setText("You hit " + boyName + "'s groin.",
                                     "Ouch!.. You, little bitch...",
@@ -2059,7 +2060,7 @@ public class ALongHourAndAHalf extends JFrame
                                     "wearily flop down on the toilet and start peeing.");
                         }
                     }
-                    else if (!undies.getName().equals("No underwear"))
+                    else if (!undies.isMissing())
                     {
                         setText("You hit " + boyName + "'s groin.",
                                 "Ouch!.. You, little bitch...",
@@ -2077,40 +2078,6 @@ public class ALongHourAndAHalf extends JFrame
                                 "opened the cabin door, entered it,",
                                 "wearily flop down on the toilet and start peeing.");
                     }
-                    /*
-                    Gender-dependent text block template
-
-                    if(!lower.equals("no lower"))
-                        if(!undies.equals("crotch")|!undies.equals("penis"))
-                            Undies: yes
-                            Lower: yes
-                            setText("Lesson is over, and you're running to the restroom as fast as you can.",
-                                    "Thank god, one cabin is free!",
-                                    "You enter it, pulled down your " + lower + " and " + undies + ",",
-                                    "wearily flop down on the toilet and start peeing.");
-                        else
-                            Undies: no
-                            Lower: yes
-                            setText("Lesson is over, and you're running to the restroom as fast as you can.",
-                                    "Thank god, one cabin is free!",
-                                    "You enter it, pulled down your " + lower + ",",
-                                    "wearily flop down on the toilet and start peeing.");
-                    else
-                        if(!undies.equals("crotch")|!undies.equals("penis"))
-                            Undies: yes
-                            Lower: no
-                            setText("Lesson is over, and you're running to the restroom as fast as you can.",
-                                    "Thank god, one cabin is free!",
-                                    "You enter it, pulled down your " + undies + ",",
-                                    "wearily flop down on the toilet and start peeing.");
-                        else
-                            Undies: no
-                            Lower: no
-                            setText("Lesson is over, and you're running to the restroom as fast as you can.",
-                                    "Thank god, one cabin is free!",
-                                    "You enter it,",
-                                    "wearily flop down on the toilet and start peeing.");
-                     */
                 }
                 else
                 {
@@ -2130,9 +2097,9 @@ public class ALongHourAndAHalf extends JFrame
                         if (generator.nextInt(100) <= 10)
                         {
                             setLinesAsDialogue(1);
-                            if (!lower.getName().equals("No outerwear"))
+                            if (!lower.isMissing())
                             {
-                                if (!undies.getName().equals("No underwear"))
+                                if (!undies.isMissing())
                                 {
                                     setText("Ok, you may, but let me watch how do you pee.",
                                             "says " + boyName + ". You enter the cabin,",
@@ -2147,7 +2114,7 @@ public class ALongHourAndAHalf extends JFrame
                                             "stood over the toilet and start peeing under the " + boyName + " spectation.");
                                 }
                             }
-                            else if (!undies.getName().equals("No underwear"))
+                            else if (!undies.isMissing())
                             {
                                 setText("Ok, you may, but let me watch how do you pee.",
                                         "says " + boyName + ". You enter the cabin,",
@@ -2177,9 +2144,9 @@ public class ALongHourAndAHalf extends JFrame
                     case 1:
                         if (generator.nextInt(100) <= 5)
                         {
-                            if (!lower.getName().equals("No outerwear"))
+                            if (!lower.isMissing())
                             {
-                                if (!undies.getName().equals("No underwear"))
+                                if (!undies.isMissing())
                                 {
                                     setText("Ok, you may, but let me watch how do you pee.",
                                             "says " + boyName + ". You enter the cabin,",
@@ -2194,7 +2161,7 @@ public class ALongHourAndAHalf extends JFrame
                                             "stood over the toilet and start peeing under the " + boyName + " spectation.");
                                 }
                             }
-                            else if (!undies.getName().equals("No underwear"))
+                            else if (!undies.isMissing())
                             {
                                 setText("Ok, you may, but let me watch how do you pee.",
                                         "says " + boyName + ". You enter the cabin,",
@@ -2224,9 +2191,9 @@ public class ALongHourAndAHalf extends JFrame
                     case 2:
                         if (generator.nextInt(100) <= 2)
                         {
-                            if (!lower.getName().equals("No outerwear"))
+                            if (!lower.isMissing())
                             {
-                                if (!undies.getName().equals("No underwear"))
+                                if (!undies.isMissing())
                                 {
                                     setText("Ok, you may, but let me watch how do you pee.",
                                             "says " + boyName + ". You enter the cabin,",
@@ -2243,7 +2210,7 @@ public class ALongHourAndAHalf extends JFrame
                                 }
                             }
 
-                            else if (!undies.getName().equals("No underwear"))
+                            else if (!undies.isMissing())
 
                             {
                                 setText("Ok, you may, but let me watch how do you pee.",
@@ -2285,9 +2252,9 @@ public class ALongHourAndAHalf extends JFrame
                 break;
 
             case SURPRISE_WET_VOLUNTARY2:
-                if (!undies.getName().equals("No underwear"))
+                if (!undies.isMissing())
                 {
-                    if (!lower.getName().equals("No outerwear"))
+                    if (!lower.isMissing())
                     {
                         setText("You're feeling the warm, scalding pee stream",
                                 "filling your " + undies.insert() + " and wetting your " + lower.insert() + ".",
@@ -2302,7 +2269,7 @@ public class ALongHourAndAHalf extends JFrame
                                 "You feel as the pee stream becaming much stronger.");
                     }
                 }
-                else if (!lower.getName().equals("No outerwear"))
+                else if (!lower.isMissing())
                 {
                     setText("You're feeling the warm, scalding pee stream",
                             "filling your " + lower.insert() + ".",
@@ -2321,9 +2288,9 @@ public class ALongHourAndAHalf extends JFrame
                 break;
 
             case SURPRISE_WET_PRESSURE:
-                if (!undies.getName().equals("No underwear"))
+                if (!undies.isMissing())
                 {
-                    if (!lower.getName().equals("No outerwear"))
+                    if (!lower.isMissing())
                     {
                         setText("Ouch... The sudden pain flash is passing through your bladder...",
                                 "You're trying to hold the pee back, but you can't.",
@@ -2342,7 +2309,7 @@ public class ALongHourAndAHalf extends JFrame
                                 "You feel as the pee stream becaming much stronger.");
                     }
                 }
-                else if (!lower.getName().equals("No outerwear"))
+                else if (!lower.isMissing())
                 {
                     setText("Ouch... The sudden pain flash is passing through your bladder...",
                             "You're trying to hold the pee back, but you can't.",
@@ -2594,19 +2561,19 @@ public class ALongHourAndAHalf extends JFrame
             if (dryness > 0)
             {
                 //Naked
-                if (lower.getName().equals("No outerwear") && undies.getName().equals("No underwear"))
+                if (lower.isMissing() && undies.isMissing())
                 {
                     setText("You feel as the urine is passing outside...",
                             "You're about to pee! You must stop it!");
                 }
                 else //Outerwear
-                if (!lower.getName().equals("No outerwear"))
+                if (!lower.isMissing())
                 {
                     setText("You see the wet spot on your " + lower.insert() + "!",
                             "You're about to pee! You must stop it!");
                 }
                 else //Underwear
-                if (!undies.getName().equals("No underwear"))
+                if (!undies.isMissing())
                 {
                     setText("You see the wet spot on your " + undies.insert() + "!",
                             "You're about to pee! You must stop it!");
@@ -2615,7 +2582,7 @@ public class ALongHourAndAHalf extends JFrame
 
             if (dryness < MINIMAL_DRYNESS)
             {
-                if (lower.getName().equals("No outerwear") && undies.getName().equals("No underwear"))
+                if (lower.isMissing() && undies.isMissing())
                 {
                     if (cornered)
                     {
@@ -2632,14 +2599,14 @@ public class ALongHourAndAHalf extends JFrame
                         handleNextClicked();
                     }
                 }
-                else if (!lower.getName().equals("No outerwear"))
+                else if (!lower.isMissing())
                 {
                     setText("You see the wet spot on your " + lower.insert() + "!",
                             "It's too big...");
                     nextStage = ACCIDENT;
                     handleNextClicked();
                 }
-                else if (!undies.getName().equals("No underwear"))
+                else if (!undies.isMissing())
                 {
                     setText("You see the wet spot on your " + undies.insert() + "!",
                             "It's too big...");
