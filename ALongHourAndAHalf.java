@@ -236,6 +236,11 @@ public class ALongHourAndAHalf extends JFrame
     static String outerParam;
     static String underColorParam;
     static String outerColorParam;
+    
+    /**
+     * The dryness game over minimal threshold.
+     */
+    private static final int MINIMAL_DRYNESS = 0;
 
     /**
      * Resets the game and values, optionally letting player to select new
@@ -504,6 +509,7 @@ public class ALongHourAndAHalf extends JFrame
      * 15 minutes.
      */
     public boolean drain = false;
+    
     /**
      * Whether or not hardcore mode enabled: teacher never lets you pee, it's
      * harder to hold pee, you may get caught holding pee
@@ -520,6 +526,7 @@ public class ALongHourAndAHalf extends JFrame
      * Whether or not player has used cheats.
      */
     public boolean cheatsUsed = false;
+    
 
     /**
      * Launch the application.
@@ -854,7 +861,7 @@ public class ALongHourAndAHalf extends JFrame
         drynessBar.setBounds(16, 392, 300, 25);
         drynessBar.setMaximum((int)dryness);
         drynessBar.setValue((int)dryness);
-        drynessBar.setMinimum(-20);
+        drynessBar.setMinimum(MINIMAL_DRYNESS);
         drynessBar.setVisible(false);
         add(drynessBar);
         
@@ -2582,7 +2589,7 @@ public class ALongHourAndAHalf extends JFrame
         if (sphincterPower < 0)
         {
             dryness -= 5; //Decreasing dryness
-            bladder -= 5; //Decreasing bladder level
+            bladder -= 2.5; //Decreasing bladder level
             sphincterPower = 0;
             if (dryness > 0)
             {
@@ -2606,7 +2613,7 @@ public class ALongHourAndAHalf extends JFrame
                 }
             }
 
-            if (dryness < -20)
+            if (dryness < MINIMAL_DRYNESS)
             {
                 if (lower.getName().equals("No outerwear") && undies.getName().equals("No underwear"))
                 {
