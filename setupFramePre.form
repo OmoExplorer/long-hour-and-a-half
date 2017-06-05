@@ -36,43 +36,21 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="jScrollPane3" alignment="0" pref="782" max="32767" attributes="0"/>
-                  <Component id="start" alignment="0" max="32767" attributes="0"/>
-                  <Group type="102" alignment="0" attributes="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="difficultyPanel" max="32767" attributes="0"/>
-                          <Component id="nameField" max="32767" attributes="0"/>
-                          <Group type="102" attributes="0">
-                              <Component id="nameLabel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                          </Group>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="basSliderRadio" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="basSlider" max="32767" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="randomBasSlider" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Component id="incontSlider" alignment="0" max="32767" attributes="0"/>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="femaleRadio" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="32767" attributes="0"/>
-                              <Component id="maleRadio" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="incontLabel" min="-2" max="-2" attributes="0"/>
-                                  <Component id="bladAtStartLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                          </Group>
-                      </Group>
-                  </Group>
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="nameField" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="difficultyPanel" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="jScrollPane1" alignment="1" max="32767" attributes="0"/>
+                                  <Group type="102" attributes="0">
+                                      <Component id="nameLabel" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="underwearLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Group type="102" alignment="0" attributes="0">
@@ -100,16 +78,30 @@
                                       <Component id="undiesColor_random" min="-2" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
                           </Group>
-                          <Component id="jScrollPane1" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="basSliderRadio" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="basSlider" max="32767" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="randomBasSlider" min="-2" max="-2" attributes="0"/>
+                          </Group>
                           <Component id="jScrollPane2" max="32767" attributes="0"/>
+                          <Component id="incontSlider" alignment="0" max="32767" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="femaleRadio" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="maleRadio" min="-2" max="-2" attributes="0"/>
+                          </Group>
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" attributes="0">
+                                  <Component id="outerwearLabel" min="-2" max="-2" attributes="0"/>
+                                  <Component id="incontLabel" min="-2" max="-2" attributes="0"/>
+                                  <Component id="bladAtStartLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Group type="102" alignment="0" attributes="0">
                                       <Component id="lowerColor_black1" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="lowerColor_gray1" min="-2" max="-2" attributes="0"/>
@@ -132,11 +124,15 @@
                                       <EmptySpace type="separate" max="-2" attributes="0"/>
                                       <Component id="lowerColor_random1" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <Component id="outerwearLabel" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
                       </Group>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="start" min="-2" pref="590" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="wearEditorButton" max="32767" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -148,14 +144,18 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
+                  <Group type="102" attributes="0">
                       <Component id="nameLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
                       <Component id="nameField" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="difficultyPanel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <Component id="underwearLabel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jScrollPane1" min="-2" pref="155" max="-2" attributes="0"/>
                   </Group>
-                  <Group type="102" alignment="0" attributes="0">
+                  <Group type="102" alignment="1" attributes="0">
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="femaleRadio" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="maleRadio" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -172,17 +172,11 @@
                       <Component id="incontLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="incontSlider" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <Component id="outerwearLabel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jScrollPane2" min="-2" pref="155" max="-2" attributes="0"/>
                   </Group>
-              </Group>
-              <EmptySpace max="32767" attributes="0"/>
-              <Group type="103" groupAlignment="1" attributes="0">
-                  <Component id="underwearLabel" min="-2" max="-2" attributes="0"/>
-                  <Component id="outerwearLabel" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="1" attributes="0">
-                  <Component id="jScrollPane1" min="-2" pref="155" max="-2" attributes="0"/>
-                  <Component id="jScrollPane2" min="-2" pref="155" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="32767" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
@@ -212,8 +206,11 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jScrollPane3" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="start" min="-2" pref="88" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <Component id="start" pref="117" max="32767" attributes="0"/>
+                  <Component id="wearEditorButton" max="32767" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -221,6 +218,7 @@
   <SubComponents>
     <Component class="javax.swing.JTextField" name="nameField">
       <Properties>
+        <Property name="text" type="java.lang.String" value="&#x41c;&#x438;&#x441;&#x441;&#x438;&#x441; &#x41d;&#x438;&#x43a;&#x442;&#x43e;"/>
         <Property name="toolTipText" type="java.lang.String" value=""/>
         <Property name="name" type="java.lang.String" value="nameField" noResource="true"/>
       </Properties>
@@ -267,7 +265,7 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="normalDiffRadio" max="32767" attributes="0"/>
-                  <EmptySpace min="-2" pref="104" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="100" max="-2" attributes="0"/>
                   <Component id="hardDiffRadio" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -315,7 +313,7 @@
     </Component>
     <Component class="javax.swing.JSlider" name="incontSlider">
       <Properties>
-        <Property name="minimum" type="int" value="5"/>
+        <Property name="minimum" type="int" value="1"/>
         <Property name="toolTipText" type="java.lang.String" value="How incontinent are you? Default = 10"/>
         <Property name="value" type="int" value="10"/>
         <Property name="name" type="java.lang.String" value="incontSlider" noResource="true"/>
@@ -323,7 +321,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="bladAtStartLabel">
       <Properties>
-        <Property name="text" type="java.lang.String" value="&#x41c;&#x43e;&#x447;&#x435;&#x432;&#x43e;&#x439; &#x43f;&#x443;&#x437;&#x44b;&#x440;&#x44c; &#x43f;&#x440;&#x438; &#x441;&#x442;&#x430;&#x440;&#x442;&#x435;"/>
+        <Property name="text" type="java.lang.String" value="&#x41c;&#x43e;&#x447;&#x435;&#x432;&#x43e;&#x439; &#x43f;&#x443;&#x437;&#x44b;&#x440;&#x44c; &#x441; &#x43d;&#x430;&#x447;&#x430;&#x43b;&#x430; &#x438;&#x433;&#x440;&#x44b;"/>
         <Property name="name" type="java.lang.String" value="bladAtStartLabel" noResource="true"/>
       </Properties>
     </Component>
@@ -342,7 +340,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="outerwearLabel">
       <Properties>
-        <Property name="text" type="java.lang.String" value="&#x412;&#x435;&#x440;&#x445;&#x43d;&#x44f;&#x44f; &#x43e;&#x434;&#x435;&#x436;&#x434;&#x430;"/>
+        <Property name="text" type="java.lang.String" value="Outerwear:"/>
         <Property name="name" type="java.lang.String" value="outerwearLabel" noResource="true"/>
       </Properties>
     </Component>
@@ -404,7 +402,7 @@
         <Component class="javax.swing.JTree" name="underwearTree">
           <Properties>
             <Property name="model" type="javax.swing.tree.TreeModel" editor="org.netbeans.modules.form.editors2.TreeModelEditor">
-              <TreeModel code="&#x421;&#x43b;&#x443;&#x447;&#x430;&#x439;&#x43d;&#x43e;&#xa;&#x416;&#x435;&#x43d;&#x441;&#x43a;&#x430;&#x44f;&#xa; &#x422;&#x440;&#x443;&#x441;&#x438;&#x43a;&#x438;&#xa;  &#x421;&#x442;&#x440;&#x438;&#x43d;&#x433;&#x438;&#xa;  &#x422;&#x440;&#x443;&#x441;&#x438;&#x43a;&#x438; &quot;&#x422;&#x430;&#x43d;&#x433;&#x430;&quot;&#xa;  &#x41e;&#x431;&#x44b;&#x447;&#x43d;&#x44b;&#x435; &#x442;&#x440;&#x443;&#x441;&#x438;&#x43a;&#x438;&#xa;  &#x422;&#x440;&#x443;&#x441;&#x438;&#x43a;&#x438; &#x441; &#x437;&#x430;&#x43a;&#x440;&#x44b;&#x442;&#x44b;&#x43c;&#x438; &#x431;&#x451;&#x434;&#x440;&#x430;&#x43c;&#x438;&#xa; &#x41a;&#x443;&#x43f;&#x430;&#x43b;&#x44c;&#x43d;&#x438;&#x43a;&#x438;&#xa;  &#x411;&#x438;&#x43a;&#x438;&#x43d;&#x438;-&#x441;&#x442;&#x440;&#x438;&#x43d;&#x433;&#x438;&#xa;  &#x41e;&#x431;&#x44b;&#x447;&#x43d;&#x44b;&#x435; &#x431;&#x438;&#x43a;&#x438;&#x43d;&#x438;&#xa;  &#x421;&#x43b;&#x438;&#x442;&#x43d;&#x44b;&#x439; &#x43a;&#x443;&#x43f;&#x430;&#x43b;&#x44c;&#x43d;&#x438;&#x43a;&#xa; &#x41f;&#x43e;&#x434;&#x433;&#x443;&#x437;&#x43d;&#x438;&#x43a;&#x438;&#xa;  &#x41b;&#x451;&#x433;&#x43a;&#x438;&#x439; &#x43f;&#x43e;&#x434;&#x433;&#x443;&#x437;&#x43d;&#x438;&#x43a;&#xa;  &#x421;&#x440;&#x435;&#x434;&#x43d;&#x438;&#x439; &#x43f;&#x43e;&#x434;&#x433;&#x443;&#x437;&#x43d;&#x438;&#x43a;&#xa;  &#x411;&#x43e;&#x43b;&#x44c;&#x448;&#x43e;&#x439; &#x43f;&#x43e;&#x434;&#x433;&#x443;&#x437;&#x43d;&#x438;&#x43a;&#xa; &#x41f;&#x440;&#x43e;&#x43a;&#x43b;&#x430;&#x434;&#x43a;&#x438;&#xa;  &#x41b;&#x451;&#x433;&#x43a;&#x430;&#x44f; &#x43f;&#x440;&#x43e;&#x43a;&#x43b;&#x430;&#x434;&#x43a;&#x430;&#xa;  &#x41e;&#x431;&#x44b;&#x447;&#x43d;&#x430;&#x44f; &#x43f;&#x440;&#x43e;&#x43a;&#x43b;&#x430;&#x434;&#x43a;&#x430;&#xa;  &#x411;&#x43e;&#x43b;&#x44c;&#x448;&#x430;&#x44f; &#x43f;&#x440;&#x43e;&#x43a;&#x43b;&#x430;&#x434;&#x43a;&#x430;&#xa;&#x41c;&#x443;&#x436;&#x441;&#x43a;&#x430;&#x44f;&#xa; &#x422;&#x440;&#x443;&#x441;&#x44b;&#xa; &#x422;&#x440;&#x443;&#x441;&#x44b; &#x441; &#x437;&#x430;&#x43a;&#x440;&#x44b;&#x442;&#x44b;&#x43c;&#x438; &#x431;&#x451;&#x434;&#x440;&#x430;&#x43c;&#x438;&#xa;&#x421;&#x43f;&#x435;&#x446;&#x438;&#x430;&#x43b;&#x44c;&#x43d;&#x430;&#x44f;&#xa; &#x410;&#x43d;&#x442;&#x438;-&#x433;&#x440;&#x430;&#x432;&#x438;&#x442;&#x430;&#x446;&#x438;&#x43e;&#x43d;&#x43d;&#x44b;&#x435; &#x442;&#x440;&#x443;&#x441;&#x44b;&#xa; &#x413;&#x438;&#x43f;&#x435;&#x440;&#x432;&#x43f;&#x438;&#x442;&#x44b;&#x432;&#x430;&#x44e;&#x449;&#x438;&#x439; &#x43f;&#x43e;&#x434;&#x433;&#x443;&#x437;&#x43d;&#x438;&#x43a;&#xa;&#x411;&#x435;&#x437; &#x43d;&#x438;&#x436;&#x43d;&#x435;&#x439; &#x43e;&#x434;&#x435;&#x436;&#x434;&#x44b;"/>
+              <TreeModel code="&#x421;&#x43b;&#x443;&#x447;&#x430;&#x439;&#x43d;&#x43e;&#xa;&#x416;&#x435;&#x43d;&#x441;&#x43a;&#x430;&#x44f;&#xa; &#x422;&#x440;&#x443;&#x441;&#x438;&#x43a;&#x438;&#xa;  &#x421;&#x442;&#x440;&#x438;&#x43d;&#x433;&#x438;&#xa;  &#x422;&#x440;&#x443;&#x441;&#x438;&#x43a;&#x438; &quot;&#x422;&#x430;&#x43d;&#x433;&#x430;&quot;&#xa;  &#x41e;&#x431;&#x44b;&#x447;&#x43d;&#x44b;&#x435; &#x442;&#x440;&#x443;&#x441;&#x438;&#x43a;&#x438;&#xa;  &#x422;&#x440;&#x443;&#x441;&#x438;&#x43a;&#x438; &#x441; &#x437;&#x430;&#x43a;&#x440;&#x44b;&#x442;&#x44b;&#x43c;&#x438; &#x431;&#x451;&#x434;&#x440;&#x430;&#x43c;&#x438;&#xa; &#x41a;&#x443;&#x43f;&#x430;&#x43b;&#x44c;&#x43d;&#x438;&#x43a;&#x438;&#xa;  &#x411;&#x438;&#x43a;&#x438;&#x43d;&#x438;-&#x441;&#x442;&#x440;&#x438;&#x43d;&#x433;&#x438;&#xa;  &#x41e;&#x431;&#x44b;&#x447;&#x43d;&#x44b;&#x435; &#x431;&#x438;&#x43a;&#x438;&#x43d;&#x438;&#xa;  &#x421;&#x43b;&#x438;&#x442;&#x43d;&#x44b;&#x439; &#x43a;&#x443;&#x43f;&#x430;&#x43b;&#x44c;&#x43d;&#x438;&#x43a;&#xa; &#x41f;&#x43e;&#x434;&#x433;&#x443;&#x437;&#x43d;&#x438;&#x43a;&#x438;&#xa;  &#x41b;&#x451;&#x433;&#x43a;&#x438;&#x439; &#x43f;&#x43e;&#x434;&#x433;&#x443;&#x437;&#x43d;&#x438;&#x43a;&#xa;  &#x421;&#x440;&#x435;&#x434;&#x43d;&#x438;&#x439; &#x43f;&#x43e;&#x434;&#x433;&#x443;&#x437;&#x43d;&#x438;&#x43a;&#xa;  &#x411;&#x43e;&#x43b;&#x44c;&#x448;&#x43e;&#x439; &#x43f;&#x43e;&#x434;&#x433;&#x443;&#x437;&#x43d;&#x438;&#x43a;&#xa; &#x41f;&#x440;&#x43e;&#x43a;&#x43b;&#x430;&#x434;&#x43a;&#x438;&#xa;  &#x41b;&#x451;&#x433;&#x43a;&#x430;&#x44f; &#x43f;&#x440;&#x43e;&#x43a;&#x43b;&#x430;&#x434;&#x43a;&#x430;&#xa;  &#x41e;&#x431;&#x44b;&#x447;&#x43d;&#x430;&#x44f; &#x43f;&#x440;&#x43e;&#x43a;&#x43b;&#x430;&#x434;&#x43a;&#x430;&#xa;  &#x411;&#x43e;&#x43b;&#x44c;&#x448;&#x430;&#x44f; &#x43f;&#x440;&#x43e;&#x43a;&#x43b;&#x430;&#x434;&#x43a;&#x430;&#xa;&#x41c;&#x443;&#x436;&#x441;&#x43a;&#x430;&#x44f;&#xa; &#x422;&#x440;&#x443;&#x441;&#x44b;&#xa; &#x422;&#x440;&#x443;&#x441;&#x44b; &#x441; &#x437;&#x430;&#x43a;&#x440;&#x44b;&#x442;&#x44b;&#x43c;&#x438; &#x431;&#x451;&#x434;&#x440;&#x430;&#x43c;&#x438;&#xa;&#x421;&#x43f;&#x435;&#x446;&#x438;&#x430;&#x43b;&#x44c;&#x43d;&#x430;&#x44f;&#xa; &#x410;&#x43d;&#x442;&#x438;-&#x433;&#x440;&#x430;&#x432;&#x438;&#x442;&#x430;&#x446;&#x438;&#x43e;&#x43d;&#x43d;&#x44b;&#x435; &#x442;&#x440;&#x443;&#x441;&#x44b;&#xa; &#x413;&#x438;&#x43f;&#x435;&#x440;&#x432;&#x43f;&#x438;&#x442;&#x44b;&#x432;&#x430;&#x44e;&#x449;&#x438;&#x439; &#x43f;&#x43e;&#x434;&#x433;&#x443;&#x437;&#x43d;&#x438;&#x43a;&#xa;&#x411;&#x435;&#x437; &#x43d;&#x438;&#x436;&#x43d;&#x435;&#x439; &#x43e;&#x434;&#x435;&#x436;&#x434;&#x44b;&#xa;&#x41f;&#x43e;&#x43b;&#x44c;&#x437;&#x43e;&#x432;&#x430;&#x442;&#x435;&#x43b;&#x44c;&#x441;&#x43a;&#x430;&#x44f;"/>
             </Property>
             <Property name="name" type="java.lang.String" value="underwearTree" noResource="true"/>
             <Property name="rootVisible" type="boolean" value="false"/>
@@ -425,7 +423,7 @@
         <Component class="javax.swing.JTree" name="outerwearTree">
           <Properties>
             <Property name="model" type="javax.swing.tree.TreeModel" editor="org.netbeans.modules.form.editors2.TreeModelEditor">
-              <TreeModel code="&#x421;&#x43b;&#x443;&#x447;&#x430;&#x439;&#x43d;&#x43e;&#xa;&#x416;&#x435;&#x43d;&#x441;&#x43a;&#x430;&#x44f;&#xa; &#x414;&#x436;&#x438;&#x43d;&#x441;&#x44b;&#xa;  &#x41e;&#x431;&#x44b;&#x447;&#x43d;&#x44b;&#x435; &#x434;&#x436;&#x438;&#x43d;&#x441;&#x44b;&#xa;  &#x414;&#x436;&#x438;&#x43d;&#x441;&#x44b; &#x43f;&#x43e; &#x43a;&#x43e;&#x43b;&#x435;&#x43d;&#x43e;&#xa;  &#x414;&#x436;&#x438;&#x43d;&#x441;&#x43e;&#x432;&#x44b;&#x435; &#x448;&#x43e;&#x440;&#x442;&#x44b;&#xa;  &#x414;&#x436;&#x438;&#x43d;&#x441;&#x43e;&#x432;&#x44b;&#x435; &#x43c;&#x438;&#x43d;&#x438;-&#x448;&#x43e;&#x440;&#x442;&#x44b;&#xa; &#x411;&#x440;&#x44e;&#x43a;&#x438;&#xa;  &#x41e;&#x431;&#x44b;&#x447;&#x43d;&#x44b;&#x435; &#x431;&#x440;&#x44e;&#x43a;&#x438;&#xa;  &#x411;&#x440;&#x44e;&#x43a;&#x438; &#x43f;&#x43e; &#x43a;&#x43e;&#x43b;&#x435;&#x43d;&#x43e;&#xa;  &#x428;&#x43e;&#x440;&#x442;&#x44b;&#xa;  &#x41c;&#x438;&#x43d;&#x438;-&#x448;&#x43e;&#x440;&#x442;&#x44b;&#xa; &#x42e;&#x431;&#x43a;&#x438;&#xa;  &#x414;&#x43b;&#x438;&#x43d;&#x43d;&#x430;&#x44f; &#x44e;&#x431;&#x43a;&#x430;&#xa;  &#x41e;&#x431;&#x44b;&#x447;&#x43d;&#x430;&#x44f; &#x44e;&#x431;&#x43a;&#x430;&#xa;  &#x41a;&#x43e;&#x440;&#x43e;&#x442;&#x43a;&#x430;&#x44f; &#x44e;&#x431;&#x43a;&#x430;&#xa;  &#x41c;&#x438;&#x43d;&#x438;-&#x44e;&#x431;&#x43a;&#x430;&#xa;  &#x41c;&#x438;&#x43a;&#x440;&#x43e;-&#x44e;&#x431;&#x43a;&#x430;&#xa;  &#x414;&#x43b;&#x438;&#x43d;&#x43d;&#x430;&#x44f; &#x44e;&#x431;&#x43a;&#x430; &#x441; &#x43a;&#x43e;&#x43b;&#x433;&#x43e;&#x442;&#x43a;&#x430;&#x43c;&#x438;&#xa;  &#x41e;&#x431;&#x44b;&#x447;&#x43d;&#x430;&#x44f; &#x44e;&#x431;&#x43a;&#x430; &#x441; &#x43a;&#x43e;&#x43b;&#x433;&#x43e;&#x442;&#x43a;&#x430;&#x43c;&#x438;&#xa;  &#x41a;&#x43e;&#x440;&#x43e;&#x442;&#x43a;&#x430;&#x44f; &#x44e;&#x431;&#x43a;&#x430; &#x441; &#x43a;&#x43e;&#x43b;&#x433;&#x43e;&#x442;&#x43a;&#x430;&#x43c;&#x438;&#xa;  &#x41c;&#x438;&#x43d;&#x438;-&#x44e;&#x431;&#x43a;&#x430; &#x441; &#x43a;&#x43e;&#x43b;&#x433;&#x43e;&#x442;&#x43a;&#x430;&#x43c;&#x438;&#xa;  &#x41c;&#x438;&#x43a;&#x440;&#x43e;-&#x44e;&#x431;&#x43a;&#x430; &#x441; &#x43a;&#x43e;&#x43b;&#x433;&#x43e;&#x442;&#x43a;&#x430;&#x43c;&#x438;&#xa; &#x41b;&#x435;&#x433;&#x433;&#x438;&#x43d;&#x441;&#x44b;&#xa;&#x41c;&#x443;&#x436;&#x441;&#x43a;&#x430;&#x44f;&#xa; &#x414;&#x436;&#x438;&#x43d;&#x441;&#x44b;&#xa;  &#x41c;&#x443;&#x436;&#x441;&#x43a;&#x438;&#x435; &#x434;&#x436;&#x438;&#x441;&#x43e;&#x432;&#x44b;&#x435; &#x448;&#x43e;&#x440;&#x442;&#x44b;&#xa;  &#x41c;&#x443;&#x436;&#x441;&#x43a;&#x438;&#x435; &#x434;&#x436;&#x438;&#x43d;&#x441;&#x44b;&#xa; &#x41c;&#x443;&#x436;&#x441;&#x43a;&#x438;&#x435; &#x431;&#x440;&#x44e;&#x43a;&#x438;&#xa;&#x411;&#x435;&#x437; &#x432;&#x435;&#x440;&#x445;&#x43d;&#x435;&#x439; &#x43e;&#x434;&#x435;&#x436;&#x434;&#x44b;"/>
+              <TreeModel code="&#x421;&#x43b;&#x443;&#x447;&#x430;&#x439;&#x43d;&#x43e;&#xa;&#x416;&#x435;&#x43d;&#x441;&#x43a;&#x430;&#x44f;&#xa; &#x414;&#x436;&#x438;&#x43d;&#x441;&#x44b;&#xa;  &#x41e;&#x431;&#x44b;&#x447;&#x43d;&#x44b;&#x435; &#x434;&#x436;&#x438;&#x43d;&#x441;&#x44b;&#xa;  &#x414;&#x436;&#x438;&#x43d;&#x441;&#x44b; &#x43f;&#x43e; &#x43a;&#x43e;&#x43b;&#x435;&#x43d;&#x43e;&#xa;  &#x414;&#x436;&#x438;&#x43d;&#x441;&#x43e;&#x432;&#x44b;&#x435; &#x448;&#x43e;&#x440;&#x442;&#x44b;&#xa;  &#x414;&#x436;&#x438;&#x43d;&#x441;&#x43e;&#x432;&#x44b;&#x435; &#x43c;&#x438;&#x43d;&#x438;-&#x448;&#x43e;&#x440;&#x442;&#x44b;&#xa; &#x411;&#x440;&#x44e;&#x43a;&#x438;&#xa;  &#x41e;&#x431;&#x44b;&#x447;&#x43d;&#x44b;&#x435; &#x431;&#x440;&#x44e;&#x43a;&#x438;&#xa;  &#x411;&#x440;&#x44e;&#x43a;&#x438; &#x43f;&#x43e; &#x43a;&#x43e;&#x43b;&#x435;&#x43d;&#x43e;&#xa;  &#x428;&#x43e;&#x440;&#x442;&#x44b;&#xa;  &#x41c;&#x438;&#x43d;&#x438;-&#x448;&#x43e;&#x440;&#x442;&#x44b;&#xa; &#x42e;&#x431;&#x43a;&#x438;&#xa;  &#x414;&#x43b;&#x438;&#x43d;&#x43d;&#x430;&#x44f; &#x44e;&#x431;&#x43a;&#x430;&#xa;  &#x41e;&#x431;&#x44b;&#x447;&#x43d;&#x430;&#x44f; &#x44e;&#x431;&#x43a;&#x430;&#xa;  &#x41a;&#x43e;&#x440;&#x43e;&#x442;&#x43a;&#x430;&#x44f; &#x44e;&#x431;&#x43a;&#x430;&#xa;  &#x41c;&#x438;&#x43d;&#x438;-&#x44e;&#x431;&#x43a;&#x430;&#xa;  &#x41c;&#x438;&#x43a;&#x440;&#x43e;-&#x44e;&#x431;&#x43a;&#x430;&#xa;  &#x414;&#x43b;&#x438;&#x43d;&#x43d;&#x430;&#x44f; &#x44e;&#x431;&#x43a;&#x430; &#x441; &#x43a;&#x43e;&#x43b;&#x433;&#x43e;&#x442;&#x43a;&#x430;&#x43c;&#x438;&#xa;  &#x41e;&#x431;&#x44b;&#x447;&#x43d;&#x430;&#x44f; &#x44e;&#x431;&#x43a;&#x430; &#x441; &#x43a;&#x43e;&#x43b;&#x433;&#x43e;&#x442;&#x43a;&#x430;&#x43c;&#x438;&#xa;  &#x41a;&#x43e;&#x440;&#x43e;&#x442;&#x43a;&#x430;&#x44f; &#x44e;&#x431;&#x43a;&#x430; &#x441; &#x43a;&#x43e;&#x43b;&#x433;&#x43e;&#x442;&#x43a;&#x430;&#x43c;&#x438;&#xa;  &#x41c;&#x438;&#x43d;&#x438;-&#x44e;&#x431;&#x43a;&#x430; &#x441; &#x43a;&#x43e;&#x43b;&#x433;&#x43e;&#x442;&#x43a;&#x430;&#x43c;&#x438;&#xa;  &#x41c;&#x438;&#x43a;&#x440;&#x43e;-&#x44e;&#x431;&#x43a;&#x430; &#x441; &#x43a;&#x43e;&#x43b;&#x433;&#x43e;&#x442;&#x43a;&#x430;&#x43c;&#x438;&#xa; &#x41b;&#x435;&#x433;&#x433;&#x438;&#x43d;&#x441;&#x44b;&#xa;&#x41c;&#x443;&#x436;&#x441;&#x43a;&#x430;&#x44f;&#xa; &#x414;&#x436;&#x438;&#x43d;&#x441;&#x44b;&#xa;  &#x41c;&#x443;&#x436;&#x441;&#x43a;&#x438;&#x435; &#x434;&#x436;&#x438;&#x441;&#x43e;&#x432;&#x44b;&#x435; &#x448;&#x43e;&#x440;&#x442;&#x44b;&#xa;  &#x41c;&#x443;&#x436;&#x441;&#x43a;&#x438;&#x435; &#x434;&#x436;&#x438;&#x43d;&#x441;&#x44b;&#xa; &#x41c;&#x443;&#x436;&#x441;&#x43a;&#x438;&#x435; &#x431;&#x440;&#x44e;&#x43a;&#x438;&#xa;&#x411;&#x435;&#x437; &#x432;&#x435;&#x440;&#x445;&#x43d;&#x435;&#x439; &#x43e;&#x434;&#x435;&#x436;&#x434;&#x44b;&#xa;&#x41f;&#x43e;&#x43b;&#x44c;&#x437;&#x43e;&#x432;&#x430;&#x442;&#x435;&#x43b;&#x44c;&#x441;&#x43a;&#x430;&#x44f;"/>
             </Property>
             <Property name="name" type="java.lang.String" value="outerwearTree" noResource="true"/>
             <Property name="rootVisible" type="boolean" value="false"/>
@@ -1126,7 +1124,7 @@
         </Property>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
-            <LineBorder/>
+            <LineBorder thickness="3"/>
           </Border>
         </Property>
         <Property name="toolTipText" type="java.lang.String" value="Random"/>
@@ -1142,12 +1140,12 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="18" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="14" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="18" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="14" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>
@@ -1159,7 +1157,7 @@
         </Property>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
-            <LineBorder/>
+            <LineBorder thickness="3"/>
           </Border>
         </Property>
         <Property name="toolTipText" type="java.lang.String" value="Random"/>
@@ -1175,15 +1173,24 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="18" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="14" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="18" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="14" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>
     </Container>
+    <Component class="javax.swing.JButton" name="wearEditorButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="&#x420;&#x435;&#x434;&#x430;&#x43a;&#x442;&#x43e;&#x440; &#x43e;&#x434;&#x435;&#x436;&#x434;&#x44b;"/>
+        <Property name="name" type="java.lang.String" value="wearEditorButton" noResource="true"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="wearEditorButtonActionPerformed"/>
+      </Events>
+    </Component>
   </SubComponents>
 </Form>

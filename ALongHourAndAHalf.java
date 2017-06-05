@@ -72,27 +72,35 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileFilter;
 import static omo.ALongHourAndAHalf.GameStage.*;
 import static omo.ALongHourAndAHalf.Gender.*;
 import static omo.ALongHourAndAHalf.generator;
+import static omo.Wear.WearType.*;
 
 /**
  * Describes an underwear of an outerwear of a character.
  *
  * @author JavaBird
  */
-class Wear
+class Wear implements Serializable
 {
 
     static String[] colorList =
     {
         "Чёрный", "Серый", "Красный", "Оранжевый", "Жёлтый", "Зелёный", "Синий", "Тёмно-синий", "Фиолетовый", "Розовый"
     };
+    private static final long serialVersionUID = 1L;
 
     private final String name;
     private String insertName;
@@ -102,7 +110,8 @@ class Wear
     private String color;
     byte число;//Единственное или множественное
     String названиеВВинительномПадеже;
-
+    private WearType type;
+	
     /**
      *
      * @param name           the wear name (e. g. "Regular panties")
@@ -125,7 +134,31 @@ class Wear
         this.dryingOverTime = dryingOverTime;
         this.число = число;
     }
-
+    
+    /**
+     *
+     * @param name           the wear name (e. g. "Regular panties")
+     * @param insertName
+     * @param pressure       the pressure of an wear.<br>1 point of a pressure
+     *                       takes 1 point from the maximal bladder capacity.
+     * @param absorption     the absorption of an wear.<br>1 point of an
+     *                       absorption can store 1 point of a leaked pee.
+     * @param dryingOverTime the drying over time.<br>1 point = -1 pee unit per
+     *                       3 minutes
+     * @param type
+     */
+    Wear(String name, String insertName, String винительныйПадеж, float pressure, float absorption, float dryingOverTime, WearType type, byte число)
+    {
+        this.name = name;
+        this.insertName = insertName;
+        this.названиеВВинительномПадеже = винительныйПадеж;
+        this.pressure = pressure;
+        this.absorption = absorption;
+        this.dryingOverTime = dryingOverTime;
+        this.число = число;
+        this.type = type;
+    }
+    
     /**
      * @param insertName the insert name (used in game text) to set
      */
@@ -210,9 +243,29 @@ class Wear
             {
             } 
     }
+    
+
+    /**
+     * @return the type
+     */
+    public WearType getType()
+    {
+        return type;
+    }
+
+    /**
+     * @param type the type to set
+     */
+    public void setType(WearType type)
+    {
+        this.type = type;
+    }
+    public enum WearType
+    {
+        UNDERWEAR,OUTERWEAR,BOTH_SUITABLE
+    }
 }
 
-//TODO: Разобраться с падежами
 @SuppressWarnings("serial")
 public class ALongHourAndAHalf extends JFrame
 {
@@ -462,6 +515,12 @@ public class ALongHourAndAHalf extends JFrame
     private final JLabel lblLower;
     private final JLabel lblSphPower;
     private final JLabel lblDryness;
+    private final JProgressBar sphincterBar;
+    private final JProgressBar drynessBar;
+    private final JProgressBar timeBar;
+
+    JFileChooser fc;
+    private final JProgressBar bladderBar;
 
     /**
      * Launch the application.
@@ -503,6 +562,56 @@ public class ALongHourAndAHalf extends JFrame
         //Assigning the boy's name
         boyName = names[generator.nextInt(names.length)];
 
+        //Setting up custom wear file chooser
+        this.fc = new JFileChooser();
+//        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        fc.setFileFilter(new FileFilter()
+        {
+            @Override
+            public boolean accept(File pathname)
+            {
+                String extension = "";
+                int i = pathname.getName().lastIndexOf('.');
+                if (i > 0)
+                {
+                    extension = pathname.getName().substring(i + 1);
+                }
+                return extension.equals("lhhwear");
+            }
+
+            @Override
+            public String getDescription()
+            {
+                return "A Long Hour and a Half Custom wear";
+            }
+        });
+
+        if (under.equals("Пользовательская"))
+        {
+            fc.setDialogTitle("Открыть файл нижней одежды");
+            if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
+            {
+                File file = fc.getSelectedFile();
+                try
+                {
+                    FileInputStream fin = new FileInputStream(file);
+                    ObjectInputStream ois = new ObjectInputStream(fin);
+                    undies = (Wear) ois.readObject();
+                    if(undies.getType()==OUTERWEAR)
+                    {
+                        JOptionPane.showMessageDialog(null, "Это не нижняя одежда.", "Неверный вид одежды", JOptionPane.ERROR_MESSAGE);
+                        dispose();
+                        setupFramePre.main(new String[0]); 
+                    }
+                } catch (IOException | ClassNotFoundException e)
+                {
+                    JOptionPane.showMessageDialog(null, "Ошибка при работе с файлом.", "Ошибка", JOptionPane.ERROR_MESSAGE);
+                    dispose();
+                    setupFramePre.main(new String[0]);
+                }
+            }
+        }
+
         //If random undies were chosen...
         if (under.equals("Случайно"))
         {
@@ -528,6 +637,7 @@ public class ALongHourAndAHalf extends JFrame
                 }
             }
         }
+
         //If the selected undies weren't found
         if (undies == null)
         {
@@ -550,6 +660,31 @@ public class ALongHourAndAHalf extends JFrame
         else
         {
             undies.setColor("");
+        }
+        if (outer.equals("Пользовательская"))
+        {
+            fc.setDialogTitle("Открыть файл верхней одежды");
+            if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
+            {
+                File file = fc.getSelectedFile();
+                try
+                {
+                    FileInputStream fin = new FileInputStream(file);
+                    ObjectInputStream ois = new ObjectInputStream(fin);
+                    lower = (Wear) ois.readObject();
+                    if(lower.getType()==UNDERWEAR)
+                    {
+                        JOptionPane.showMessageDialog(null, "Это не верхняя одежда.", "Неверный вид одежды", JOptionPane.ERROR_MESSAGE);
+                        dispose();
+                        setupFramePre.main(new String[0]); 
+                    }
+                } catch (IOException | ClassNotFoundException e)
+                {
+                    JOptionPane.showMessageDialog(null, "Ошибка при работе с файлом.", "Ошибка", JOptionPane.ERROR_MESSAGE);
+                    dispose();
+                    setupFramePre.main(new String[0]);
+                }
+            }
         }
 
         //Same with the lower clothes
@@ -619,7 +754,7 @@ public class ALongHourAndAHalf extends JFrame
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 640, 540);
         setLocationRelativeTo(null);
-        contentPane = new JPanel();
+        contentPane= new JPanel();
         contentPane.setBackground(Color.LIGHT_GRAY);
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
@@ -647,7 +782,7 @@ public class ALongHourAndAHalf extends JFrame
             }
         });
 
-        btnNext.setBounds((textPanel.getWidth() / 2) + 50, 480, 89, 23);
+        btnNext.setBounds((textPanel.getWidth() / 2) + 25, 460, 280, 43);
         contentPane.add(btnNext);
 
         //"Quit" button setup
@@ -705,13 +840,13 @@ public class ALongHourAndAHalf extends JFrame
         contentPane.add(lblBladder);
 
         //Embarassment label setup
-        lblEmbarassment = new JLabel("Смущение: " + embarassment);
+        lblEmbarassment = new JLabel("Смущение: " + Math.round(embarassment));
         lblEmbarassment.setFont(new Font("Tahoma", Font.PLAIN, 15));
         lblEmbarassment.setBounds(20, 240, 200, 32);
         contentPane.add(lblEmbarassment);
 
         //Belly label setup
-        lblBelly = new JLabel("Вода в животе: " + belly + "%");
+        lblBelly = new JLabel("Вода в животе: " + Math.round(belly) + "%");
         lblBelly.setFont(new Font("Tahoma", Font.PLAIN, 15));
         lblBelly.setBounds(20, 270, 200, 32);
         contentPane.add(lblBelly);
@@ -730,15 +865,15 @@ public class ALongHourAndAHalf extends JFrame
         contentPane.add(lblMinutes);
 
         //Sphincter power label setup
-        lblSphPower = new JLabel("Способность терпеть: " + sphincterPower + "%");
+        lblSphPower = new JLabel("Способность терпеть: " + Math.round(sphincterPower) + "%");
         lblSphPower.setFont(new Font("Tahoma", Font.PLAIN, 15));
         lblSphPower.setBounds(20, 360, 250, 32);
         lblSphPower.setVisible(false);
         contentPane.add(lblSphPower);
 
         //Clothing dryness label setup
-        lblDryness = new JLabel("Сухость одежды: " + dryness);
-        lblBladder.setToolTipText("-20 = конец игры");
+        lblDryness = new JLabel("Сухость одежды: " + Math.round(dryness));
+        lblDryness.setToolTipText("0 = конец игры");
         lblDryness.setFont(new Font("Tahoma", Font.PLAIN, 15));
         lblDryness.setBounds(20, 390, 200, 32);
         lblDryness.setVisible(false);
@@ -759,7 +894,7 @@ public class ALongHourAndAHalf extends JFrame
         //Choice label ("What to do?") setup
         lblChoice = new JLabel();
         lblChoice.setFont(new Font("Tahoma", Font.BOLD, 12));
-        lblChoice.setBounds(320, 192, 280, 32);
+        lblChoice.setBounds(320, 162, 280, 32);
         lblChoice.setVisible(false);
         contentPane.add(lblChoice);
 
@@ -769,10 +904,42 @@ public class ALongHourAndAHalf extends JFrame
         listChoice.setLayoutOrientation(JList.VERTICAL);
 
         listScroller = new JScrollPane(listChoice);
-        listScroller.setBounds(320, 216, 280, 160);
+        listScroller.setBounds(320, 194, 300, 300);
         listScroller.setVisible(false);
         contentPane.add(listScroller);
+        
+        //Bladder bar setup
+        bladderBar = new JProgressBar();
+        bladderBar.setBounds(16, 212, 300, 25);
+        bladderBar.setMaximum(130);
+        bladderBar.setValue(bladder);
+        add(bladderBar);
 
+        //Sphincter bar setup
+        sphincterBar = new JProgressBar();
+        sphincterBar.setBounds(16, 362, 300, 25);
+        sphincterBar.setMaximum((int)Math.round(maxSphincterPower));
+        sphincterBar.setValue((int)Math.round(sphincterPower));
+        sphincterBar.setVisible(false);
+        add(sphincterBar);
+        
+        //Dryness bar setup
+        drynessBar = new JProgressBar();
+        drynessBar.setBounds(16, 392, 300, 25);
+        drynessBar.setMaximum((int)dryness);
+        drynessBar.setValue((int)dryness);
+        drynessBar.setMinimum(0);
+        drynessBar.setVisible(false);
+        add(drynessBar);
+        
+        //Time bar setup
+        timeBar = new JProgressBar();
+        timeBar.setBounds(16, 332, 300, 25);
+        timeBar.setMaximum(90);
+        timeBar.setValue(min);
+        timeBar.setVisible(false);
+        add(timeBar);
+        
 //        pack();
         setVisible(true);
 
@@ -799,8 +966,6 @@ public class ALongHourAndAHalf extends JFrame
         return gender == MALE;
     }
 
-    //Telling the compiler to ignore missing break at the end of some cases
-    @SuppressWarnings("fallthrough")
     private void handleNextClicked()
     {
         switch (nextStage)
@@ -944,6 +1109,9 @@ public class ALongHourAndAHalf extends JFrame
                 lblMinutes.setVisible(true);
                 lblSphPower.setVisible(true);
                 lblDryness.setVisible(true);
+                sphincterBar.setVisible(true);
+                drynessBar.setVisible(true);
+                timeBar.setVisible(true);
 
                 if (!lower.getName().equals("Без верхней одежды"))
                 {
@@ -1703,6 +1871,7 @@ public class ALongHourAndAHalf extends JFrame
                     case 1:
                         setText("Ты решаешь остаться после уроков.");
                         stay = true;
+                        timeBar.setMaximum(120);
                         nextStage = ASK_ACTION;
                         break;
 
@@ -1716,6 +1885,7 @@ public class ALongHourAndAHalf extends JFrame
                         setText("Из громкоговорителей раздался голос:",
                                 "Все уроки отменены без причины!");
                         min = 89;
+                        nextStage = ASK_ACTION;
                         break;
 
                     case 4:
@@ -1723,6 +1893,7 @@ public class ALongHourAndAHalf extends JFrame
                         timesPeeDenied = 0;
                         stay = false;
                         cornered = false;
+                        timeBar.setMaximum(90);
                         nextStage = ASK_ACTION;
                         break;
 
@@ -1803,9 +1974,10 @@ public class ALongHourAndAHalf extends JFrame
                 break;
 
             case CLASS_OVER:
-                if (generator.nextInt(100) <= 5 && hardcore & isFemale())
+                if (generator.nextInt(100) <= 10 && hardcore & isFemale())
                 {
                     nextStage = SURPRISE;
+                    break;
                 }
                 if (stay)
                 {
@@ -1884,6 +2056,8 @@ public class ALongHourAndAHalf extends JFrame
                             "Нет, " + name + ", потерпишь! Это будет как наказание.");
                 }
 
+                timeBar.setMaximum(120);
+                
                 if (belly >= 3)
                 {
                     offsetBladder(3);
@@ -2284,6 +2458,7 @@ public class ALongHourAndAHalf extends JFrame
                 decaySphPower();
 
                 actionName = (String) listChoice.getSelectedValue();
+                actionNum = listChoice.getSelectedIndex();
                 if (actionName.equals("[Недоступно]"))
                 {
                     setText("Ты пописаешь здесь и сейчас...,",
@@ -2297,20 +2472,19 @@ public class ALongHourAndAHalf extends JFrame
 
                 listChoice.clearSelection();
 
-                switch (actionName)
+                switch (actionNum)
                 {
-                    case "Ударить его":
+                    case 0:
                         nextStage = HIT;
                         break;
-                    case "Попробовать уговорить его пописать":
-                    case "Попробовать уговорить его пописать ещё раз":
-                    case "Попробовать уговорить его пописать ещё раз (опасно)":
+                    case 1:
                         nextStage = PERSUADE;
                         break;
-                    case "Описаться":
+                    case 2:
                         nextStage = SURPRISE_WET_VOLUNTARY;
                 }
-
+            break;
+            
             case HIT:
                 if (generator.nextInt(100) <= 10)
                 {
@@ -2708,42 +2882,6 @@ public class ALongHourAndAHalf extends JFrame
 
     public void passTime()
     {
-//        offsetTime(3);
-//        offsetBladder(4.5);
-//        offsetBelly(-4.5);
-//        if (belly != 0)
-//            if (belly > 3)
-//                offsetBladder(2);
-//            else
-//            {
-//                offsetBladder(belly);
-//                emptyBelly();
-//            }
-//
-//        if (min >= 88)
-//        {
-//            if(isFemale())
-//                setText("Ты услышала долгожданный звонок.");
-//            else
-//                setText("Ты услышал долгожданный звонок.");
-//            nextStage = CLASS_OVER;
-//        }
-//        if (testWet())
-//            nextStage = ACCIDENT;
-//        
-//        for (int i = 0; i < 3; i++)
-//            decaySphPower();
-//        
-//        //Sphincter power rounding
-////        BigDecimal bd = new BigDecimal(sphincterPower);
-////        bd = bd.setScale(1, RoundingMode.HALF_UP);
-////        sphincterPower = bd.floatValue();
-//        lblSphPower.setText("Способность терпеть: " + Math.round(sphincterPower) + "%");
-//        //Dryness rounding
-////        bd = new BigDecimal(dryness);
-////        bd = bd.setScale(1, RoundingMode.HALF_UP);
-////        dryness = bd.floatValue();
-//        lblDryness.setText("Сухость одежды: " + Math.round(dryness));
         passTime((byte) 3);
     }
 
@@ -2788,16 +2926,10 @@ public class ALongHourAndAHalf extends JFrame
             }
         }
 
-        //Sphincter power rounding
-//        BigDecimal bd = new BigDecimal(sphincterPower);
-//        bd = bd.setScale(1, RoundingMode.HALF_UP);
-//        sphincterPower = bd.floatValue();
         lblSphPower.setText("Способность терпеть: " + Math.round(sphincterPower) + "%");
-        //Dryness rounding
-//        bd = new BigDecimal(dryness);
-//        bd = bd.setScale(1, RoundingMode.HALF_UP);
-//        dryness = bd.floatValue();
+        sphincterBar.setValue((int)Math.round(sphincterPower));
         lblDryness.setText("Сухость одежды: " + Math.round(dryness));
+        drynessBar.setValue((int)Math.round(dryness));
     }
 
     
@@ -2820,8 +2952,7 @@ public class ALongHourAndAHalf extends JFrame
                     byte wetChance = (byte) (3 * (bladder - 100));
                     if (generator.nextInt(100) < wetChance)
                         return true;
-                }
-                else
+                } else
                 {
                     byte wetChance = (byte) (5 * (bladder - 80));
                     if (generator.nextInt(100) < wetChance)
@@ -2855,7 +2986,7 @@ public class ALongHourAndAHalf extends JFrame
         {
             belly = 0;
         }
-        lblBelly.setText("Вода в животе: " + belly + "%");
+        lblBelly.setText("Вода в животе: " + Math.round(belly) + "%");
     }
 
     public void offsetEmbarassment(int amount)
@@ -2866,12 +2997,13 @@ public class ALongHourAndAHalf extends JFrame
             embarassment = 0;
         }
         lblEmbarassment.setVisible(true);
-        lblEmbarassment.setText("Смущение: " + embarassment);
+        lblEmbarassment.setText("Смущение: " + Math.round(embarassment));
     }
 
     public void offsetTime(int amount)
     {
         min += amount;
+        timeBar.setValue(min);
         lblMinutes.setText("Время: " + min + " минут(ы) из " + (stay ? "120" : "90"));
 
         if (drain & (min % 15) == 0)
@@ -2896,8 +3028,8 @@ public class ALongHourAndAHalf extends JFrame
         sphincterPower -= bladder / 30;//TODO: Balance this
         if (sphincterPower < 0)
         {
-            dryness += sphincterPower; //Decreasing dryness
-            bladder += sphincterPower; //Decreasing bladder level
+            dryness -= 5; //Decreasing dryness
+            bladder -= 2.5; //Decreasing bladder level
             sphincterPower = 0;
             if (dryness > 0)
             {
@@ -2921,7 +3053,7 @@ public class ALongHourAndAHalf extends JFrame
                 }
             }
 
-            if (dryness < -20)
+            if (dryness < 0)
             {
                 if (lower.getName().equals("Без верхней одежды") && undies.getName().equals("Без нижней одежды"))
                 {
@@ -3016,6 +3148,14 @@ public class ALongHourAndAHalf extends JFrame
                 score -= points;
                 scoreText = scoreText + "\n" + message + ": -" + points + " очков";
                 break;
+            case '*':
+               score *= points;
+               scoreText = scoreText + "\n" + message + ": +" + points * 100 + "% of points";
+               break;
+            case '/':
+               score /= points;
+               scoreText = scoreText + "\n" + message + ": -" + 100 / points + "% of points";
+               break;
             default:
                 System.err.println("Метод score() использован неправильно, сообщение: \"" + message + "\"");
         }
@@ -3025,6 +3165,14 @@ public class ALongHourAndAHalf extends JFrame
     {
         switch (mode)
         {
+            case '+':
+                score += points;
+                scoreText = scoreText + "\n" + message + ": +" + points + " очков";
+                break;
+            case '-':
+                score -= points;
+                scoreText = scoreText + "\n" + message + ": -" + points + " очков";
+                break;
             case '*':
                 score *= points;
                 scoreText = scoreText + "\n" + message + ": +" + points * 100 + "% очков";
