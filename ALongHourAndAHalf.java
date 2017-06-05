@@ -110,7 +110,7 @@ class Wear implements Serializable
     private String color;
     byte число;//Единственное или множественное
     String названиеВВинительномПадеже;
-	private WearType type;
+    private WearType type;
 	
     /**
      *
@@ -134,34 +134,37 @@ class Wear implements Serializable
         this.dryingOverTime = dryingOverTime;
         this.число = число;
     }
-
+    
+    /**
+     *
+     * @param name           the wear name (e. g. "Regular panties")
+     * @param insertName
+     * @param pressure       the pressure of an wear.<br>1 point of a pressure
+     *                       takes 1 point from the maximal bladder capacity.
+     * @param absorption     the absorption of an wear.<br>1 point of an
+     *                       absorption can store 1 point of a leaked pee.
+     * @param dryingOverTime the drying over time.<br>1 point = -1 pee unit per
+     *                       3 minutes
+     * @param type
+     */
+    Wear(String name, String insertName, String винительныйПадеж, float pressure, float absorption, float dryingOverTime, WearType type, byte число)
+    {
+        this.name = name;
+        this.insertName = insertName;
+        this.названиеВВинительномПадеже = винительныйПадеж;
+        this.pressure = pressure;
+        this.absorption = absorption;
+        this.dryingOverTime = dryingOverTime;
+        this.число = число;
+        this.type = type;
+    }
+    
     /**
      * @param insertName the insert name (used in game text) to set
      */
     public void setInsertName(String insertName)
     {
         this.insertName = insertName;
-    }
-    
-    /**
-     * @param name the wear name (e. g. "Regular panties")
-     * @param insertName
-     * @param pressure the pressure of an wear.<br>1 point of a pressure takes 1
-     * point from the maximal bladder capacity.
-     * @param absorption the absorption of an wear.<br>1 point of an absorption
-     * can store 1 point of a leaked pee.
-     * @param dryingOverTime the drying over time.<br>1 point = -1 pee unit per
-     * 3 minutes
-     * @param type the wear type
-     */
-    public Wear(String name, String insertName, float pressure, float absorption, float dryingOverTime, WearType type)
-    {
-        this.name = name;
-        this.insertName = insertName;
-        this.pressure = pressure;
-        this.absorption = absorption;
-        this.dryingOverTime = dryingOverTime;
-        this.type = type;
     }
 
     /**
@@ -241,10 +244,6 @@ class Wear implements Serializable
             } 
     }
     
-    public enum WearType
-    {
-        UNDERWEAR,OUTERWEAR,BOTH_SUITABLE
-    }
 
     /**
      * @return the type
@@ -260,6 +259,10 @@ class Wear implements Serializable
     public void setType(WearType type)
     {
         this.type = type;
+    }
+    public enum WearType
+    {
+        UNDERWEAR,OUTERWEAR,BOTH_SUITABLE
     }
 }
 
@@ -514,16 +517,6 @@ public class ALongHourAndAHalf extends JFrame
     private final JLabel lblSphPower;
     private final JLabel lblDryness;
 
-    static String nameParam;
-    static Gender gndrParam;
-    static boolean diffParam;
-    static float incParam;
-    static int bladderParam;
-    static String underParam;
-    static String outerParam;
-    static String underColorParam;
-    static String outerColorParam;
-
     JFileChooser fc;
 
     /**
@@ -590,9 +583,9 @@ public class ALongHourAndAHalf extends JFrame
             }
         });
 
-        if (under.equals("Custom"))
+        if (under.equals("Пользовательская"))
         {
-            fc.setDialogTitle("Open an underwear file");
+            fc.setDialogTitle("Открыть файл нижней одежды");
             if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
             {
                 File file = fc.getSelectedFile();
@@ -603,13 +596,13 @@ public class ALongHourAndAHalf extends JFrame
                     undies = (Wear) ois.readObject();
                     if(undies.getType()==OUTERWEAR)
                     {
-                        JOptionPane.showMessageDialog(null, "This isn't an underwear.", "Wrong wear type", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "Это не нижняя одежда.", "Неверный вид одежды", JOptionPane.ERROR_MESSAGE);
                         dispose();
                         setupFramePre.main(new String[0]); 
                     }
                 } catch (IOException | ClassNotFoundException e)
                 {
-                    JOptionPane.showMessageDialog(null, "File error.", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Ошибка при работе с файлом.", "Ошибка", JOptionPane.ERROR_MESSAGE);
                     dispose();
                     setupFramePre.main(new String[0]);
                 }
@@ -664,10 +657,10 @@ public class ALongHourAndAHalf extends JFrame
         else
         {
             undies.setColor("");
-
-        if (outer.equals("Custom"))
+        }
+        if (outer.equals("Пользовательская"))
         {
-            fc.setDialogTitle("Open an outerwear file");
+            fc.setDialogTitle("Открыть файл верхней одежды");
             if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
             {
                 File file = fc.getSelectedFile();
@@ -678,13 +671,13 @@ public class ALongHourAndAHalf extends JFrame
                     lower = (Wear) ois.readObject();
                     if(lower.getType()==UNDERWEAR)
                     {
-                        JOptionPane.showMessageDialog(null, "This isn't an outerwear.", "Wrong wear type", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "Это не верхняя одежда.", "Неверный вид одежды", JOptionPane.ERROR_MESSAGE);
                         dispose();
                         setupFramePre.main(new String[0]); 
                     }
                 } catch (IOException | ClassNotFoundException e)
                 {
-                    JOptionPane.showMessageDialog(null, "File error.", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Ошибка при работе с файлом.", "Ошибка", JOptionPane.ERROR_MESSAGE);
                     dispose();
                     setupFramePre.main(new String[0]);
                 }
@@ -758,7 +751,7 @@ public class ALongHourAndAHalf extends JFrame
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 640, 540);
         setLocationRelativeTo(null);
-        contentPane = new JPanel();
+        contentPane= new JPanel();
         contentPane.setBackground(Color.LIGHT_GRAY);
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
