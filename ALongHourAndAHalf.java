@@ -72,27 +72,35 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileFilter;
 import static omo.ALongHourAndAHalf.GameStage.*;
 import static omo.ALongHourAndAHalf.Gender.*;
 import static omo.ALongHourAndAHalf.generator;
+import static omo.Wear.WearType.*;
 
 /**
  * Describes an underwear of an outerwear of a character.
  *
  * @author JavaBird
  */
-class Wear
+class Wear implements Serializable
 {
 
     static String[] colorList =
     {
         "Чёрный", "Серый", "Красный", "Оранжевый", "Жёлтый", "Зелёный", "Синий", "Тёмно-синий", "Фиолетовый", "Розовый"
     };
+    private static final long serialVersionUID = 1L;
 
     private final String name;
     private String insertName;
@@ -102,7 +110,8 @@ class Wear
     private String color;
     byte число;//Единственное или множественное
     String названиеВВинительномПадеже;
-
+	private WearType type;
+	
     /**
      *
      * @param name           the wear name (e. g. "Regular panties")
@@ -132,6 +141,27 @@ class Wear
     public void setInsertName(String insertName)
     {
         this.insertName = insertName;
+    }
+    
+    /**
+     * @param name the wear name (e. g. "Regular panties")
+     * @param insertName
+     * @param pressure the pressure of an wear.<br>1 point of a pressure takes 1
+     * point from the maximal bladder capacity.
+     * @param absorption the absorption of an wear.<br>1 point of an absorption
+     * can store 1 point of a leaked pee.
+     * @param dryingOverTime the drying over time.<br>1 point = -1 pee unit per
+     * 3 minutes
+     * @param type the wear type
+     */
+    public Wear(String name, String insertName, float pressure, float absorption, float dryingOverTime, WearType type)
+    {
+        this.name = name;
+        this.insertName = insertName;
+        this.pressure = pressure;
+        this.absorption = absorption;
+        this.dryingOverTime = dryingOverTime;
+        this.type = type;
     }
 
     /**
@@ -209,6 +239,27 @@ class Wear
             catch (ArrayIndexOutOfBoundsException e)
             {
             } 
+    }
+    
+    public enum WearType
+    {
+        UNDERWEAR,OUTERWEAR,BOTH_SUITABLE
+    }
+
+    /**
+     * @return the type
+     */
+    public WearType getType()
+    {
+        return type;
+    }
+
+    /**
+     * @param type the type to set
+     */
+    public void setType(WearType type)
+    {
+        this.type = type;
     }
 }
 
@@ -463,6 +514,18 @@ public class ALongHourAndAHalf extends JFrame
     private final JLabel lblSphPower;
     private final JLabel lblDryness;
 
+    static String nameParam;
+    static Gender gndrParam;
+    static boolean diffParam;
+    static float incParam;
+    static int bladderParam;
+    static String underParam;
+    static String outerParam;
+    static String underColorParam;
+    static String outerColorParam;
+
+    JFileChooser fc;
+
     /**
      * Launch the application.
      *
@@ -503,6 +566,56 @@ public class ALongHourAndAHalf extends JFrame
         //Assigning the boy's name
         boyName = names[generator.nextInt(names.length)];
 
+        //Setting up custom wear file chooser
+        this.fc = new JFileChooser();
+//        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        fc.setFileFilter(new FileFilter()
+        {
+            @Override
+            public boolean accept(File pathname)
+            {
+                String extension = "";
+                int i = pathname.getName().lastIndexOf('.');
+                if (i > 0)
+                {
+                    extension = pathname.getName().substring(i + 1);
+                }
+                return extension.equals("lhhwear");
+            }
+
+            @Override
+            public String getDescription()
+            {
+                return "A Long Hour and a Half Custom wear";
+            }
+        });
+
+        if (under.equals("Custom"))
+        {
+            fc.setDialogTitle("Open an underwear file");
+            if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
+            {
+                File file = fc.getSelectedFile();
+                try
+                {
+                    FileInputStream fin = new FileInputStream(file);
+                    ObjectInputStream ois = new ObjectInputStream(fin);
+                    undies = (Wear) ois.readObject();
+                    if(undies.getType()==OUTERWEAR)
+                    {
+                        JOptionPane.showMessageDialog(null, "This isn't an underwear.", "Wrong wear type", JOptionPane.ERROR_MESSAGE);
+                        dispose();
+                        setupFramePre.main(new String[0]); 
+                    }
+                } catch (IOException | ClassNotFoundException e)
+                {
+                    JOptionPane.showMessageDialog(null, "File error.", "Error", JOptionPane.ERROR_MESSAGE);
+                    dispose();
+                    setupFramePre.main(new String[0]);
+                }
+            }
+        }
+
         //If random undies were chosen...
         if (under.equals("Случайно"))
         {
@@ -528,6 +641,7 @@ public class ALongHourAndAHalf extends JFrame
                 }
             }
         }
+
         //If the selected undies weren't found
         if (undies == null)
         {
@@ -550,6 +664,31 @@ public class ALongHourAndAHalf extends JFrame
         else
         {
             undies.setColor("");
+
+        if (outer.equals("Custom"))
+        {
+            fc.setDialogTitle("Open an outerwear file");
+            if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
+            {
+                File file = fc.getSelectedFile();
+                try
+                {
+                    FileInputStream fin = new FileInputStream(file);
+                    ObjectInputStream ois = new ObjectInputStream(fin);
+                    lower = (Wear) ois.readObject();
+                    if(lower.getType()==UNDERWEAR)
+                    {
+                        JOptionPane.showMessageDialog(null, "This isn't an outerwear.", "Wrong wear type", JOptionPane.ERROR_MESSAGE);
+                        dispose();
+                        setupFramePre.main(new String[0]); 
+                    }
+                } catch (IOException | ClassNotFoundException e)
+                {
+                    JOptionPane.showMessageDialog(null, "File error.", "Error", JOptionPane.ERROR_MESSAGE);
+                    dispose();
+                    setupFramePre.main(new String[0]);
+                }
+            }
         }
 
         //Same with the lower clothes
@@ -2708,42 +2847,6 @@ public class ALongHourAndAHalf extends JFrame
 
     public void passTime()
     {
-//        offsetTime(3);
-//        offsetBladder(4.5);
-//        offsetBelly(-4.5);
-//        if (belly != 0)
-//            if (belly > 3)
-//                offsetBladder(2);
-//            else
-//            {
-//                offsetBladder(belly);
-//                emptyBelly();
-//            }
-//
-//        if (min >= 88)
-//        {
-//            if(isFemale())
-//                setText("Ты услышала долгожданный звонок.");
-//            else
-//                setText("Ты услышал долгожданный звонок.");
-//            nextStage = CLASS_OVER;
-//        }
-//        if (testWet())
-//            nextStage = ACCIDENT;
-//        
-//        for (int i = 0; i < 3; i++)
-//            decaySphPower();
-//        
-//        //Sphincter power rounding
-////        BigDecimal bd = new BigDecimal(sphincterPower);
-////        bd = bd.setScale(1, RoundingMode.HALF_UP);
-////        sphincterPower = bd.floatValue();
-//        lblSphPower.setText("Способность терпеть: " + Math.round(sphincterPower) + "%");
-//        //Dryness rounding
-////        bd = new BigDecimal(dryness);
-////        bd = bd.setScale(1, RoundingMode.HALF_UP);
-////        dryness = bd.floatValue();
-//        lblDryness.setText("Сухость одежды: " + Math.round(dryness));
         passTime((byte) 3);
     }
 
@@ -2820,8 +2923,7 @@ public class ALongHourAndAHalf extends JFrame
                     byte wetChance = (byte) (3 * (bladder - 100));
                     if (generator.nextInt(100) < wetChance)
                         return true;
-                }
-                else
+                } else
                 {
                     byte wetChance = (byte) (5 * (bladder - 80));
                     if (generator.nextInt(100) < wetChance)
