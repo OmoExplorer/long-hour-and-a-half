@@ -256,7 +256,7 @@ public class WearEditor extends javax.swing.JFrame
         fc.setSelectedFile(new File(nameField.getText()));
         if (fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION)
         {
-            File file = new File(fc.getSelectedFile().getAbsolutePath() + ".lhhwear");
+            File file = new File(fc.getSelectedFile().getAbsolutePath() + ".lhhruswear");
             FileOutputStream fout;
             ObjectOutputStream oos;
             try
