@@ -836,7 +836,7 @@ public class setupFramePre extends javax.swing.JFrame {
         );
 
         undiesColor_random.setBackground(new Color(204, 204, 204));
-        undiesColor_random.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0)));
+        undiesColor_random.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 3));
         undiesColor_random.setToolTipText("Random");
         undiesColor_random.setName("undiesColor_random"); // NOI18N
         undiesColor_random.setPreferredSize(new Dimension(20, 20));
@@ -851,14 +851,14 @@ public class setupFramePre extends javax.swing.JFrame {
         GroupLayout undiesColor_randomLayout = new GroupLayout(undiesColor_random);
         undiesColor_random.setLayout(undiesColor_randomLayout);
         undiesColor_randomLayout.setHorizontalGroup(undiesColor_randomLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 18, Short.MAX_VALUE)
+            .addGap(0, 14, Short.MAX_VALUE)
         );
         undiesColor_randomLayout.setVerticalGroup(undiesColor_randomLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 18, Short.MAX_VALUE)
+            .addGap(0, 14, Short.MAX_VALUE)
         );
 
         lowerColor_random1.setBackground(new Color(204, 204, 204));
-        lowerColor_random1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0)));
+        lowerColor_random1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 3));
         lowerColor_random1.setToolTipText("Random");
         lowerColor_random1.setName("lowerColor_random1"); // NOI18N
         lowerColor_random1.setPreferredSize(new Dimension(20, 20));
@@ -873,10 +873,10 @@ public class setupFramePre extends javax.swing.JFrame {
         GroupLayout lowerColor_random1Layout = new GroupLayout(lowerColor_random1);
         lowerColor_random1.setLayout(lowerColor_random1Layout);
         lowerColor_random1Layout.setHorizontalGroup(lowerColor_random1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 18, Short.MAX_VALUE)
+            .addGap(0, 14, Short.MAX_VALUE)
         );
         lowerColor_random1Layout.setVerticalGroup(lowerColor_random1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 18, Short.MAX_VALUE)
+            .addGap(0, 14, Short.MAX_VALUE)
         );
 
         wearEditorButton.setText("Редактор одежды");
