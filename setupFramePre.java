@@ -7,11 +7,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.util.Random;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -22,6 +24,7 @@ import javax.swing.JTextPane;
 import javax.swing.JTree;
 import javax.swing.LayoutStyle;
 import javax.swing.WindowConstants;
+import javax.swing.filechooser.FileFilter;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import omo.ALongHourAndAHalf.*;
@@ -35,11 +38,36 @@ public class setupFramePre extends javax.swing.JFrame {
     private static final long serialVersionUID = 1L;
     private String undiesColor = "Случайно";
     private String lowerColor = "Случайно";
+    JFileChooser fc;
+    private Wear customUnderwear;
+    private Wear customOuterwear;
 
     /**
      * Creates new form setupFrame
      */
     public setupFramePre() {
+        this.fc = new JFileChooser();
+        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        fc.setFileFilter(new FileFilter()
+        {
+            @Override
+            public boolean accept(File pathname)
+            {
+                String extension = "";
+                int i = pathname.getName().lastIndexOf('.');
+                if (i > 0)
+                {
+                    extension = pathname.getName().substring(i + 1);
+                }
+                return extension.equals("lhhwear");
+            }
+
+            @Override
+            public String getDescription()
+            {
+                return "A Long Hour and a Half Custom wear";
+            }
+        });
         initComponents();
     }
 
@@ -52,56 +80,56 @@ public class setupFramePre extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents()
     {
+        buttonGroup1 = new ButtonGroup();
+        buttonGroup2 = new ButtonGroup();
+        buttonGroup3 = new ButtonGroup();
+        nameField = new JTextField();
+        maleRadio = new JRadioButton();
+        femaleRadio = new JRadioButton();
+        difficultyPanel = new JPanel();
+        normalDiffRadio = new JRadioButton();
+        hardDiffRadio = new JRadioButton();
+        incontLabel = new JLabel();
+        incontSlider = new JSlider();
+        bladAtStartLabel = new JLabel();
+        basSlider = new JSlider();
+        underwearLabel = new JLabel();
+        outerwearLabel = new JLabel();
+        start = new JButton();
+        nameLabel = new JLabel();
+        basSliderRadio = new JRadioButton();
+        randomBasSlider = new JRadioButton();
+        jScrollPane1 = new JScrollPane();
+        underwearTree = new JTree();
+        jScrollPane2 = new JScrollPane();
+        outerwearTree = new JTree();
+        jScrollPane3 = new JScrollPane();
+        jTextPane1 = new JTextPane();
+        undiesColor_black = new JPanel();
+        undiesColor_gray = new JPanel();
+        undiesColor_red = new JPanel();
+        undiesColor_orange = new JPanel();
+        undiesColor_yellow = new JPanel();
+        undiesColor_green = new JPanel();
+        undiesColor_blue = new JPanel();
+        undiesColor_darkBlue = new JPanel();
+        undiesColor_purple = new JPanel();
+        undiesColor_pink = new JPanel();
+        lowerColor_pink1 = new JPanel();
+        lowerColor_black1 = new JPanel();
+        lowerColor_gray1 = new JPanel();
+        lowerColor_red1 = new JPanel();
+        lowerColor_orange1 = new JPanel();
+        lowerColor_yellow1 = new JPanel();
+        lowerColor_green1 = new JPanel();
+        lowerColor_blue1 = new JPanel();
+        lowerColor_darkBlue1 = new JPanel();
+        lowerColor_purple1 = new JPanel();
+        undiesColor_random = new JPanel();
+        lowerColor_random1 = new JPanel();
+        wearEditorButton = new JButton();
 
-        buttonGroup1 = new javax.swing.ButtonGroup();
-        buttonGroup2 = new javax.swing.ButtonGroup();
-        buttonGroup3 = new javax.swing.ButtonGroup();
-        nameField = new javax.swing.JTextField();
-        maleRadio = new javax.swing.JRadioButton();
-        femaleRadio = new javax.swing.JRadioButton();
-        difficultyPanel = new javax.swing.JPanel();
-        normalDiffRadio = new javax.swing.JRadioButton();
-        hardDiffRadio = new javax.swing.JRadioButton();
-        incontLabel = new javax.swing.JLabel();
-        incontSlider = new javax.swing.JSlider();
-        bladAtStartLabel = new javax.swing.JLabel();
-        basSlider = new javax.swing.JSlider();
-        underwearLabel = new javax.swing.JLabel();
-        outerwearLabel = new javax.swing.JLabel();
-        start = new javax.swing.JButton();
-        nameLabel = new javax.swing.JLabel();
-        basSliderRadio = new javax.swing.JRadioButton();
-        randomBasSlider = new javax.swing.JRadioButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        underwearTree = new javax.swing.JTree();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        outerwearTree = new javax.swing.JTree();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        jTextPane1 = new javax.swing.JTextPane();
-        undiesColor_black = new javax.swing.JPanel();
-        undiesColor_gray = new javax.swing.JPanel();
-        undiesColor_red = new javax.swing.JPanel();
-        undiesColor_orange = new javax.swing.JPanel();
-        undiesColor_yellow = new javax.swing.JPanel();
-        undiesColor_green = new javax.swing.JPanel();
-        undiesColor_blue = new javax.swing.JPanel();
-        undiesColor_darkBlue = new javax.swing.JPanel();
-        undiesColor_purple = new javax.swing.JPanel();
-        undiesColor_pink = new javax.swing.JPanel();
-        lowerColor_pink1 = new javax.swing.JPanel();
-        lowerColor_black1 = new javax.swing.JPanel();
-        lowerColor_gray1 = new javax.swing.JPanel();
-        lowerColor_red1 = new javax.swing.JPanel();
-        lowerColor_orange1 = new javax.swing.JPanel();
-        lowerColor_yellow1 = new javax.swing.JPanel();
-        lowerColor_green1 = new javax.swing.JPanel();
-        lowerColor_blue1 = new javax.swing.JPanel();
-        lowerColor_darkBlue1 = new javax.swing.JPanel();
-        lowerColor_purple1 = new javax.swing.JPanel();
-        undiesColor_random = new javax.swing.JPanel();
-        lowerColor_random1 = new javax.swing.JPanel();
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
 
         nameField.setToolTipText("");
@@ -282,6 +310,8 @@ public class setupFramePre extends javax.swing.JFrame {
         treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("Без нижней одежды");
         treeNode1.add(treeNode2);
         underwearTree.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
+        treeNode2 = new DefaultMutableTreeNode("Custom");
+        treeNode1.add(treeNode2);
         underwearTree.setName("underwearTree"); // NOI18N
         underwearTree.setRootVisible(false);
         jScrollPane1.setViewportView(underwearTree);
@@ -350,6 +380,8 @@ public class setupFramePre extends javax.swing.JFrame {
         treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("Без верхней одежды");
         treeNode1.add(treeNode2);
         outerwearTree.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
+        treeNode2 = new DefaultMutableTreeNode("Custom");
+        treeNode1.add(treeNode2);
         outerwearTree.setName("outerwearTree"); // NOI18N
         outerwearTree.setRootVisible(false);
         jScrollPane2.setViewportView(outerwearTree);
@@ -890,15 +922,24 @@ public class setupFramePre extends javax.swing.JFrame {
             .addGap(0, 18, Short.MAX_VALUE)
         );
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        wearEditorButton.setText("Wear editor");
+        wearEditorButton.setName("wearEditorButton"); // NOI18N
+        wearEditorButton.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent evt)
+            {
+                wearEditorButtonActionPerformed(evt);
+            }
+        });
+
+        GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 782, Short.MAX_VALUE)
-                    .addComponent(start, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane3, GroupLayout.DEFAULT_SIZE, 782, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(difficultyPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -980,9 +1021,12 @@ public class setupFramePre extends javax.swing.JFrame {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(lowerColor_pink1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(18, 18, 18)
-                                        .addComponent(lowerColor_random1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(outerwearLabel))
-                                .addGap(0, 0, Short.MAX_VALUE)))))
+                                        .addComponent(lowerColor_random1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+                                .addGap(0, 0, Short.MAX_VALUE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(start, GroupLayout.PREFERRED_SIZE, 590, GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(wearEditorButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -1009,45 +1053,43 @@ public class setupFramePre extends javax.swing.JFrame {
                             .addComponent(randomBasSlider))
                         .addGap(8, 8, 8)
                         .addComponent(incontLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(incontSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(underwearLabel)
-                    .addComponent(outerwearLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(undiesColor_black, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(undiesColor_gray, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(undiesColor_red, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(undiesColor_orange, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(undiesColor_green, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(undiesColor_blue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(undiesColor_darkBlue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(undiesColor_purple, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(undiesColor_pink, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(undiesColor_yellow, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lowerColor_black1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lowerColor_gray1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lowerColor_red1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lowerColor_orange1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lowerColor_green1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lowerColor_blue1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lowerColor_darkBlue1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lowerColor_purple1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lowerColor_pink1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lowerColor_yellow1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(undiesColor_random, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lowerColor_random1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(start, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(14, 14, 14))
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(incontSlider, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(outerwearLabel)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane2, GroupLayout.PREFERRED_SIZE, 155, GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addComponent(undiesColor_black, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(undiesColor_gray, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(undiesColor_red, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(undiesColor_orange, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(undiesColor_green, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(undiesColor_blue, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(undiesColor_darkBlue, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(undiesColor_purple, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(undiesColor_pink, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(undiesColor_yellow, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lowerColor_black1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lowerColor_gray1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lowerColor_red1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lowerColor_orange1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lowerColor_green1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lowerColor_blue1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lowerColor_darkBlue1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lowerColor_purple1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lowerColor_pink1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lowerColor_yellow1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(undiesColor_random, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lowerColor_random1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                    .addComponent(start, GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
+                    .addComponent(wearEditorButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -1595,10 +1637,15 @@ public class setupFramePre extends javax.swing.JFrame {
         lowerColor = "Случайно";
     }//GEN-LAST:event_lowerColor_random1MouseClicked
 
+    private void wearEditorButtonActionPerformed(ActionEvent evt)//GEN-FIRST:event_wearEditorButtonActionPerformed
+    {//GEN-HEADEREND:event_wearEditorButtonActionPerformed
+        WearEditor.main(new String[0]);
+    }//GEN-LAST:event_wearEditorButtonActionPerformed
+
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -1627,52 +1674,53 @@ public class setupFramePre extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JSlider basSlider;
-    private javax.swing.JRadioButton basSliderRadio;
-    private javax.swing.JLabel bladAtStartLabel;
-    private javax.swing.ButtonGroup buttonGroup1;
-    private javax.swing.ButtonGroup buttonGroup2;
-    private javax.swing.ButtonGroup buttonGroup3;
-    private javax.swing.JPanel difficultyPanel;
-    private javax.swing.JRadioButton femaleRadio;
-    private javax.swing.JRadioButton hardDiffRadio;
-    private javax.swing.JLabel incontLabel;
-    private javax.swing.JSlider incontSlider;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTextPane jTextPane1;
-    private javax.swing.JPanel lowerColor_black1;
-    private javax.swing.JPanel lowerColor_blue1;
-    private javax.swing.JPanel lowerColor_darkBlue1;
-    private javax.swing.JPanel lowerColor_gray1;
-    private javax.swing.JPanel lowerColor_green1;
-    private javax.swing.JPanel lowerColor_orange1;
-    private javax.swing.JPanel lowerColor_pink1;
-    private javax.swing.JPanel lowerColor_purple1;
-    private javax.swing.JPanel lowerColor_random1;
-    private javax.swing.JPanel lowerColor_red1;
-    private javax.swing.JPanel lowerColor_yellow1;
-    private javax.swing.JRadioButton maleRadio;
-    private javax.swing.JTextField nameField;
-    private javax.swing.JLabel nameLabel;
-    private javax.swing.JRadioButton normalDiffRadio;
-    private javax.swing.JLabel outerwearLabel;
-    private javax.swing.JTree outerwearTree;
-    private javax.swing.JRadioButton randomBasSlider;
-    private javax.swing.JButton start;
-    private javax.swing.JLabel underwearLabel;
-    private javax.swing.JTree underwearTree;
-    private javax.swing.JPanel undiesColor_black;
-    private javax.swing.JPanel undiesColor_blue;
-    private javax.swing.JPanel undiesColor_darkBlue;
-    private javax.swing.JPanel undiesColor_gray;
-    private javax.swing.JPanel undiesColor_green;
-    private javax.swing.JPanel undiesColor_orange;
-    private javax.swing.JPanel undiesColor_pink;
-    private javax.swing.JPanel undiesColor_purple;
-    private javax.swing.JPanel undiesColor_random;
-    private javax.swing.JPanel undiesColor_red;
-    private javax.swing.JPanel undiesColor_yellow;
+    private JSlider basSlider;
+    private JRadioButton basSliderRadio;
+    private JLabel bladAtStartLabel;
+    private ButtonGroup buttonGroup1;
+    private ButtonGroup buttonGroup2;
+    private ButtonGroup buttonGroup3;
+    private JPanel difficultyPanel;
+    private JRadioButton femaleRadio;
+    private JRadioButton hardDiffRadio;
+    private JLabel incontLabel;
+    private JSlider incontSlider;
+    private JScrollPane jScrollPane1;
+    private JScrollPane jScrollPane2;
+    private JScrollPane jScrollPane3;
+    private JTextPane jTextPane1;
+    private JPanel lowerColor_black1;
+    private JPanel lowerColor_blue1;
+    private JPanel lowerColor_darkBlue1;
+    private JPanel lowerColor_gray1;
+    private JPanel lowerColor_green1;
+    private JPanel lowerColor_orange1;
+    private JPanel lowerColor_pink1;
+    private JPanel lowerColor_purple1;
+    private JPanel lowerColor_random1;
+    private JPanel lowerColor_red1;
+    private JPanel lowerColor_yellow1;
+    private JRadioButton maleRadio;
+    private JTextField nameField;
+    private JLabel nameLabel;
+    private JRadioButton normalDiffRadio;
+    private JLabel outerwearLabel;
+    private JTree outerwearTree;
+    private JRadioButton randomBasSlider;
+    private JButton start;
+    private JLabel underwearLabel;
+    private JTree underwearTree;
+    private JPanel undiesColor_black;
+    private JPanel undiesColor_blue;
+    private JPanel undiesColor_darkBlue;
+    private JPanel undiesColor_gray;
+    private JPanel undiesColor_green;
+    private JPanel undiesColor_orange;
+    private JPanel undiesColor_pink;
+    private JPanel undiesColor_purple;
+    private JPanel undiesColor_random;
+    private JPanel undiesColor_red;
+    private JPanel undiesColor_yellow;
+    private JButton wearEditorButton;
     // End of variables declaration//GEN-END:variables
 }

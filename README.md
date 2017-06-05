@@ -8,8 +8,17 @@
 
 Будущие изменения:
 <br>
+<<<<<<< HEAD
 - [ ] Расширенная игра (если туалеты в школе заперты, персонажу придется идти домой и писать уже там, также он может забыть ключи в школе и ему придется идти обратно)
 - [ ] Редактор рассказов (игроки смогут создавать, редактировать и играть в пользовательские истории)
 - [ ] Редактор одежды (игроки смогут создавать, редактировать и использовать свою одежду как в основной истории, так и в пользовательских
 - [ ] Сохранение игры
 - [ ] Шаблоны персонажей
+=======
+ - [ ] Extended game ("Can [name] get through an entire school day AND make it home?") (probably will be in the next update)
+ - [ ] Better Dialog (lines made by someone that's not me >_< )
+ - [ ] Story editor (players can create their own stories and play them)
+ - [x] Wear editor (players can create their own wear types and use it in A Long hour and a Half and custom stories
+ - [ ] Save/load game states
+ - [ ] Character presets
+>>>>>>> wear-editor
