@@ -1589,7 +1589,7 @@ public class ALongHourAndAHalf extends JFrame
                 String scoreText2 = "Your score: " + score + "\n" + scoreText;
 
                 JOptionPane.showMessageDialog(this, scoreText2);
-                System.exit(0);
+                btnNext.setVisible(false);
                 break;
 
             case CAUGHT:
