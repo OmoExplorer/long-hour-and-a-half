@@ -515,8 +515,12 @@ public class ALongHourAndAHalf extends JFrame
     private final JLabel lblLower;
     private final JLabel lblSphPower;
     private final JLabel lblDryness;
+    private final JProgressBar sphincterBar;
+    private final JProgressBar drynessBar;
+    private final JProgressBar timeBar;
 
     JFileChooser fc;
+    private final JProgressBar bladderBar;
 
     /**
      * Launch the application.
@@ -778,7 +782,7 @@ public class ALongHourAndAHalf extends JFrame
             }
         });
 
-        btnNext.setBounds((textPanel.getWidth() / 2) + 50, 480, 89, 23);
+        btnNext.setBounds((textPanel.getWidth() / 2) + 25, 460, 280, 43);
         contentPane.add(btnNext);
 
         //"Quit" button setup
@@ -869,7 +873,7 @@ public class ALongHourAndAHalf extends JFrame
 
         //Clothing dryness label setup
         lblDryness = new JLabel("Сухость одежды: " + Math.round(dryness));
-        lblBladder.setToolTipText("0 = конец игры");
+        lblDryness.setToolTipText("0 = конец игры");
         lblDryness.setFont(new Font("Tahoma", Font.PLAIN, 15));
         lblDryness.setBounds(20, 390, 200, 32);
         lblDryness.setVisible(false);
@@ -890,7 +894,7 @@ public class ALongHourAndAHalf extends JFrame
         //Choice label ("What to do?") setup
         lblChoice = new JLabel();
         lblChoice.setFont(new Font("Tahoma", Font.BOLD, 12));
-        lblChoice.setBounds(320, 192, 280, 32);
+        lblChoice.setBounds(320, 162, 280, 32);
         lblChoice.setVisible(false);
         contentPane.add(lblChoice);
 
@@ -900,10 +904,42 @@ public class ALongHourAndAHalf extends JFrame
         listChoice.setLayoutOrientation(JList.VERTICAL);
 
         listScroller = new JScrollPane(listChoice);
-        listScroller.setBounds(320, 216, 280, 160);
+        listScroller.setBounds(320, 194, 300, 300);
         listScroller.setVisible(false);
         contentPane.add(listScroller);
+        
+        //Bladder bar setup
+        bladderBar = new JProgressBar();
+        bladderBar.setBounds(16, 212, 300, 25);
+        bladderBar.setMaximum(130);
+        bladderBar.setValue(bladder);
+        add(bladderBar);
 
+        //Sphincter bar setup
+        sphincterBar = new JProgressBar();
+        sphincterBar.setBounds(16, 362, 300, 25);
+        sphincterBar.setMaximum((int)Math.round(maxSphincterPower));
+        sphincterBar.setValue((int)Math.round(sphincterPower));
+        sphincterBar.setVisible(false);
+        add(sphincterBar);
+        
+        //Dryness bar setup
+        drynessBar = new JProgressBar();
+        drynessBar.setBounds(16, 392, 300, 25);
+        drynessBar.setMaximum((int)dryness);
+        drynessBar.setValue((int)dryness);
+        drynessBar.setMinimum(0);
+        drynessBar.setVisible(false);
+        add(drynessBar);
+        
+        //Time bar setup
+        timeBar = new JProgressBar();
+        timeBar.setBounds(16, 332, 300, 25);
+        timeBar.setMaximum(90);
+        timeBar.setValue(min);
+        timeBar.setVisible(false);
+        add(timeBar);
+        
 //        pack();
         setVisible(true);
 
@@ -1073,6 +1109,9 @@ public class ALongHourAndAHalf extends JFrame
                 lblMinutes.setVisible(true);
                 lblSphPower.setVisible(true);
                 lblDryness.setVisible(true);
+                sphincterBar.setVisible(true);
+                drynessBar.setVisible(true);
+                timeBar.setVisible(true);
 
                 if (!lower.getName().equals("Без верхней одежды"))
                 {
@@ -1832,6 +1871,7 @@ public class ALongHourAndAHalf extends JFrame
                     case 1:
                         setText("Ты решаешь остаться после уроков.");
                         stay = true;
+                        timeBar.setMaximum(120);
                         nextStage = ASK_ACTION;
                         break;
 
@@ -1845,6 +1885,7 @@ public class ALongHourAndAHalf extends JFrame
                         setText("Из громкоговорителей раздался голос:",
                                 "Все уроки отменены без причины!");
                         min = 89;
+                        nextStage = ASK_ACTION;
                         break;
 
                     case 4:
@@ -1852,6 +1893,7 @@ public class ALongHourAndAHalf extends JFrame
                         timesPeeDenied = 0;
                         stay = false;
                         cornered = false;
+                        timeBar.setMaximum(90);
                         nextStage = ASK_ACTION;
                         break;
 
@@ -2014,6 +2056,8 @@ public class ALongHourAndAHalf extends JFrame
                             "Нет, " + name + ", потерпишь! Это будет как наказание.");
                 }
 
+                timeBar.setMaximum(120);
+                
                 if (belly >= 3)
                 {
                     offsetBladder(3);
@@ -2883,8 +2927,9 @@ public class ALongHourAndAHalf extends JFrame
         }
 
         lblSphPower.setText("Способность терпеть: " + Math.round(sphincterPower) + "%");
-        
+        sphincterBar.setValue((int)Math.round(sphincterPower));
         lblDryness.setText("Сухость одежды: " + Math.round(dryness));
+        drynessBar.setValue((int)Math.round(dryness));
     }
 
     
@@ -2958,6 +3003,7 @@ public class ALongHourAndAHalf extends JFrame
     public void offsetTime(int amount)
     {
         min += amount;
+        timeBar.setValue(min);
         lblMinutes.setText("Время: " + min + " минут(ы) из " + (stay ? "120" : "90"));
 
         if (drain & (min % 15) == 0)
@@ -3102,6 +3148,14 @@ public class ALongHourAndAHalf extends JFrame
                 score -= points;
                 scoreText = scoreText + "\n" + message + ": -" + points + " очков";
                 break;
+            case '*':
+               score *= points;
+               scoreText = scoreText + "\n" + message + ": +" + points * 100 + "% of points";
+               break;
+            case '/':
+               score /= points;
+               scoreText = scoreText + "\n" + message + ": -" + 100 / points + "% of points";
+               break;
             default:
                 System.err.println("Метод score() использован неправильно, сообщение: \"" + message + "\"");
         }
@@ -3111,6 +3165,14 @@ public class ALongHourAndAHalf extends JFrame
     {
         switch (mode)
         {
+            case '+':
+                score += points;
+                scoreText = scoreText + "\n" + message + ": +" + points + " очков";
+                break;
+            case '-':
+                score -= points;
+                scoreText = scoreText + "\n" + message + ": -" + points + " очков";
+                break;
             case '*':
                 score *= points;
                 scoreText = scoreText + "\n" + message + ": +" + points * 100 + "% очков";
