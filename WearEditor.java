@@ -62,7 +62,7 @@ public class WearEditor extends javax.swing.JFrame
                 {
                     extension = pathname.getName().substring(i + 1);
                 }
-                return extension.equals("lhhwear");
+                return extension.equals("lhhruswear");
             }
 
             @Override
