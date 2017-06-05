@@ -266,7 +266,6 @@ class Wear implements Serializable
     }
 }
 
-//TODO: Разобраться с падежами
 @SuppressWarnings("serial")
 public class ALongHourAndAHalf extends JFrame
 {
