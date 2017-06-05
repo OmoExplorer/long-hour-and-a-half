@@ -94,13 +94,6 @@ class Wear
         "Black", "Gray", "Red", "Orange", "Yellow", "Green", "Blue", "Dark blue", "Purple", "Pink"
     };
 
-    /**
-     * @param insertName the insert name (used in game text) to set
-     */
-    public void setInsertName(String insertName)
-    {
-        this.insertName = insertName;
-    }
     private final String name;
     private String insertName;
     private final float pressure;
@@ -120,13 +113,21 @@ class Wear
      * 3 minutes
      * @param type
      */
-    public Wear(String name, String insertName, float pressure, float absorption, float dryingOverTime)
+    Wear(String name, String insertName, float pressure, float absorption, float dryingOverTime)
     {
         this.name = name;
         this.insertName = insertName;
         this.pressure = pressure;
         this.absorption = absorption;
         this.dryingOverTime = dryingOverTime;
+    }
+    
+    /**
+     * @param insertName the insert name (used in game text) to set
+     */
+    public void setInsertName(String insertName)
+    {
+        this.insertName = insertName;
     }
 
     /**
@@ -194,6 +195,15 @@ public class ALongHourAndAHalf extends JFrame
     private final static int MAX_LINES = 9;
 
     public static Random generator = new Random();
+    static String nameParam;
+    static Gender gndrParam;
+    static boolean diffParam;
+    static float incParam;
+    static int bladderParam;
+    static String underParam;
+    static String outerParam;
+    static String underColorParam;
+    static String outerColorParam;
 
     @SuppressWarnings("ResultOfObjectAllocationIgnored")
     private static void reset(boolean newValues)
@@ -383,15 +393,6 @@ public class ALongHourAndAHalf extends JFrame
     private final JLabel lblSphPower;
     private final JLabel lblDryness;
     
-    static String nameParam;
-    static Gender gndrParam;
-    static boolean diffParam;
-    static float incParam;
-    static int bladderParam;
-    static String underParam;
-    static String outerParam;
-    static String underColorParam;
-    static String outerColorParam;
     /**
      * Launch the application.
      *
@@ -426,7 +427,7 @@ public class ALongHourAndAHalf extends JFrame
         if (hardcore)
         {
             maxBladder = 100;
-            name = name + " [Hardcore]";
+            name += " [Hardcore]";
         }
 
         //Assigning the boy's name
