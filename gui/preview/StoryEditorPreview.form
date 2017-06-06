@@ -208,10 +208,13 @@
             <Component class="javax.swing.JTree" name="toolTree">
               <Properties>
                 <Property name="model" type="javax.swing.tree.TreeModel" editor="org.netbeans.modules.form.editors2.TreeModelEditor">
-                  <TreeModel code="Story manifest&#xa;Scenes&#xa; Setup&#xa;  &lt;new&gt;&#xa; Action&#xa;  &lt;new&gt;&#xa; Wetting&#xa;  &lt;new&gt;&#xa;Characters&#xa;  &lt;new&gt;&#xa;Actions&#xa; &lt;new&gt;&#xa;Operations&#xa; &lt;new&gt;&#xa;"/>
+                  <TreeModel code="Story manifest&#xa;Scenes&#xa; Setup&#xa;  &lt;new setup scene&gt;&#xa; Action&#xa;  &lt;new action scene&gt;&#xa; Wetting&#xa;  &lt;new wetting scene&gt;&#xa;Characters&#xa;  &lt;new character&gt;&#xa;Actions&#xa; &lt;new action&gt;&#xa;Operations&#xa; &lt;new operation&gt;&#xa;"/>
                 </Property>
                 <Property name="rootVisible" type="boolean" value="false"/>
               </Properties>
+              <Events>
+                <EventHandler event="valueChanged" listener="javax.swing.event.TreeSelectionListener" parameters="javax.swing.event.TreeSelectionEvent" handler="toolTreeValueChanged"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

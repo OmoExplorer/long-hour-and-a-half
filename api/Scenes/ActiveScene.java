@@ -6,15 +6,14 @@
 package api.Scenes;
 
 /**
- *
- * @author Jonisan
+ * @author JavaBird
  */
 public class ActiveScene extends Scene
 {
     private int sceneTime;
 
     /**
-     * @return the sceneTime
+     * @return the scene time
      */
     public int getSceneTime()
     {
@@ -22,7 +21,7 @@ public class ActiveScene extends Scene
     }
 
     /**
-     * @param sceneTime the sceneTime to set
+     * @param sceneTime the new scene time
      */
     public void setSceneTime(int sceneTime)
     {

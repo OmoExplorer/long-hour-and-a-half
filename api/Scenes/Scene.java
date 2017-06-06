@@ -10,12 +10,23 @@ import api.Operation;
 import java.util.ArrayList;
 
 /**
- *
- * @author Jonisan
+ * @author JavaBird
  */
 public abstract class Scene
 {
+    private String sceneTitle;
+    private String sceneText;
+    private ArrayList<Character> watchedCharacters;
+    private ArrayList<Action> actionList;
+    private ArrayList<Operation> operationList;
+    private Scene nextScene;
 
+    public Scene()
+    {
+        sceneTitle = "New scene";
+        sceneText = "Write something here";
+    }
+    
     /**
      * @return the sceneTitle
      */
@@ -111,10 +122,4 @@ public abstract class Scene
     {
         this.nextScene = nextScene;
     }
-    private String sceneTitle;
-    private String sceneText;
-    private ArrayList<Character> watchedCharacters;
-    private ArrayList<Action> actionList;
-    private ArrayList<Operation> operationList;
-    private Scene nextScene;
 }
