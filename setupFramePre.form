@@ -36,7 +36,6 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="jScrollPane3" alignment="0" pref="782" max="32767" attributes="0"/>
-                  <Component id="start" alignment="0" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
@@ -130,6 +129,11 @@
                           </Group>
                       </Group>
                   </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="start" min="-2" pref="590" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="wearEditorButton" max="32767" attributes="0"/>
+                  </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -174,7 +178,7 @@
                       <Component id="jScrollPane2" min="-2" pref="155" max="-2" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace pref="21" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="undiesColor_black" min="-2" max="-2" attributes="0"/>
                   <Component id="undiesColor_gray" min="-2" max="-2" attributes="0"/>
@@ -202,8 +206,11 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jScrollPane3" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="start" min="-2" pref="117" max="-2" attributes="0"/>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <Component id="start" pref="117" max="32767" attributes="0"/>
+                  <Component id="wearEditorButton" max="32767" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -395,7 +402,7 @@
         <Component class="javax.swing.JTree" name="underwearTree">
           <Properties>
             <Property name="model" type="javax.swing.tree.TreeModel" editor="org.netbeans.modules.form.editors2.TreeModelEditor">
-              <TreeModel code="Random&#xa;Female&#xa; Panties&#xa;  Strings&#xa;  Tanga panties&#xa;  Regular panties&#xa;  &quot;Boy shorts&quot; panties&#xa; Swimwear&#xa;  String bikini&#xa;  Regular bikini&#xa;  Swimsuit&#xa; Diapers&#xa;  Light diaper&#xa;  Normal diaper&#xa;  Heavy diaper&#xa; Menstrual pads&#xa;  Light pad&#xa;  Normal pad&#xa;  Big pad&#xa;Male&#xa; Pants&#xa; Shorts-alike pants&#xa;Special&#xa; Anti-gravity pants&#xa; Super-absorbing diaper&#xa;No underwear"/>
+              <TreeModel code="Random&#xa;Female&#xa; Panties&#xa;  Strings&#xa;  Tanga panties&#xa;  Regular panties&#xa;  &quot;Boy shorts&quot; panties&#xa; Swimwear&#xa;  String bikini&#xa;  Regular bikini&#xa;  Swimsuit&#xa; Diapers&#xa;  Light diaper&#xa;  Normal diaper&#xa;  Heavy diaper&#xa; Menstrual pads&#xa;  Light pad&#xa;  Normal pad&#xa;  Big pad&#xa;Male&#xa; Pants&#xa; Shorts-alike pants&#xa;Special&#xa; Anti-gravity pants&#xa; Super-absorbing diaper&#xa;No underwear&#xa;Custom"/>
             </Property>
             <Property name="name" type="java.lang.String" value="underwearTree" noResource="true"/>
             <Property name="rootVisible" type="boolean" value="false"/>
@@ -416,7 +423,7 @@
         <Component class="javax.swing.JTree" name="outerwearTree">
           <Properties>
             <Property name="model" type="javax.swing.tree.TreeModel" editor="org.netbeans.modules.form.editors2.TreeModelEditor">
-              <TreeModel code="Random&#xa;Female&#xa; Jeans&#xa;  Long jeans&#xa;  Knee-length jeans&#xa;  Short jeans&#xa;  Very short jeans&#xa; Trousers&#xa;  Long trousers&#xa;  Knee-length trousers&#xa;  Short trousers&#xa;  Very short trousers&#xa; Skirts&#xa;  Long skirt&#xa;  Knee-length skirt&#xa;  Short skirt&#xa;  Mini skirt&#xa;  Micro skirt&#xa;  Long skirt and tights&#xa;  Knee-length skirt and tights&#xa;  Short skirt and tights&#xa;  Mini skirt and tights&#xa;  Micro skirt and tights&#xa; Leggings&#xa;Male&#xa; Jeans&#xa;  Short male jeans &#xa;  Normal male jeans &#xa; Male trousers&#xa;No outerwear"/>
+              <TreeModel code="Random&#xa;Female&#xa; Jeans&#xa;  Long jeans&#xa;  Knee-length jeans&#xa;  Short jeans&#xa;  Very short jeans&#xa; Trousers&#xa;  Long trousers&#xa;  Knee-length trousers&#xa;  Short trousers&#xa;  Very short trousers&#xa; Skirts&#xa;  Long skirt&#xa;  Knee-length skirt&#xa;  Short skirt&#xa;  Mini skirt&#xa;  Micro skirt&#xa;  Long skirt and tights&#xa;  Knee-length skirt and tights&#xa;  Short skirt and tights&#xa;  Mini skirt and tights&#xa;  Micro skirt and tights&#xa; Leggings&#xa;Male&#xa; Jeans&#xa;  Short male jeans &#xa;  Normal male jeans &#xa; Male trousers&#xa;No outerwear&#xa;Custom"/>
             </Property>
             <Property name="name" type="java.lang.String" value="outerwearTree" noResource="true"/>
             <Property name="rootVisible" type="boolean" value="false"/>
@@ -1176,5 +1183,14 @@
         </DimensionLayout>
       </Layout>
     </Container>
+    <Component class="javax.swing.JButton" name="wearEditorButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Wear editor"/>
+        <Property name="name" type="java.lang.String" value="wearEditorButton" noResource="true"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="wearEditorButtonActionPerformed"/>
+      </Events>
+    </Component>
   </SubComponents>
 </Form>
