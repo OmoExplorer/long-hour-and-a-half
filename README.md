@@ -4,6 +4,11 @@
 
 #### **Файлы на вкладке Code не предназначены для запуска. Чтобы запустить игру, перейдите на страницу [последнего обновления](https://github.com/javabird25/long-hour-and-a-half/releases/tag/v1.3_rus), скачайте файл ALongHourAndAHalf.jar и запустите его. Если запуск не происходит, [установите или обновите Java](https://java.com/).**
 
+## *[Development help wanted](https://github.com/javabird25/long-hour-and-a-half/issues/10)*
+
+Current update v1.3 is still under development because we can't release it without the reworked game text.
+<br><br>
+
 A Long Hour and a Half is a game where one must make it through class with a rather full bladder. This game is narrative, being extremely text based, but it have choices that can hurt and help your ability to hold.
 
 ## Future features
