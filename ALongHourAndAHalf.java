@@ -72,35 +72,27 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.filechooser.FileFilter;
 import static omo.ALongHourAndAHalf.GameStage.*;
 import static omo.ALongHourAndAHalf.Gender.*;
 import static omo.ALongHourAndAHalf.generator;
-import static omo.Wear.WearType.*;
 
 /**
  * Describes an underwear of an outerwear of a character.
  *
  * @author JavaBird
  */
-class Wear implements Serializable
+class Wear
 {
 
-    static String[] colorList =
+    static String[] colorList = 
     {
         "Black", "Gray", "Red", "Orange", "Yellow", "Green", "Blue", "Dark blue", "Purple", "Pink"
     };
-    private static final long serialVersionUID = 1L;
 
     /**
      * @param insertName the insert name (used in game text) to set
@@ -115,9 +107,9 @@ class Wear implements Serializable
     private final float absorption;
     private final float dryingOverTime;
     private String color;
-    private WearType type;
 
     /**
+     *
      * @param name the wear name (e. g. "Regular panties")
      * @param insertName
      * @param pressure the pressure of an wear.<br>1 point of a pressure takes 1
@@ -135,27 +127,6 @@ class Wear implements Serializable
         this.pressure = pressure;
         this.absorption = absorption;
         this.dryingOverTime = dryingOverTime;
-    }
-    
-    /**
-     * @param name the wear name (e. g. "Regular panties")
-     * @param insertName
-     * @param pressure the pressure of an wear.<br>1 point of a pressure takes 1
-     * point from the maximal bladder capacity.
-     * @param absorption the absorption of an wear.<br>1 point of an absorption
-     * can store 1 point of a leaked pee.
-     * @param dryingOverTime the drying over time.<br>1 point = -1 pee unit per
-     * 3 minutes
-     * @param type the wear type
-     */
-    public Wear(String name, String insertName, float pressure, float absorption, float dryingOverTime, WearType type)
-    {
-        this.name = name;
-        this.insertName = insertName;
-        this.pressure = pressure;
-        this.absorption = absorption;
-        this.dryingOverTime = dryingOverTime;
-        this.type = type;
     }
 
     /**
@@ -205,34 +176,13 @@ class Wear implements Serializable
     {
         return color;
     }
-
+    
     /**
      * @param color the color to set
      */
     public void setColor(String color)
     {
         this.color = color;
-    }
-    
-    public enum WearType
-    {
-        UNDERWEAR,OUTERWEAR,BOTH_SUITABLE
-    }
-
-    /**
-     * @return the type
-     */
-    public WearType getType()
-    {
-        return type;
-    }
-
-    /**
-     * @param type the type to set
-     */
-    public void setType(WearType type)
-    {
-        this.type = type;
     }
 }
 
@@ -248,7 +198,7 @@ public class ALongHourAndAHalf extends JFrame
     @SuppressWarnings("ResultOfObjectAllocationIgnored")
     private static void reset(boolean newValues)
     {
-        if (newValues)
+        if(newValues)
             new setupFramePre().setVisible(true);
         else
             new ALongHourAndAHalf(nameParam, gndrParam, diffParam, incParam, bladderParam, underParam, outerParam, underColorParam, outerColorParam);
@@ -354,12 +304,12 @@ public class ALongHourAndAHalf extends JFrame
     public String name; //your name
     public Wear lower; // lower body clothing
     public Wear undies; // usually referenced with leaks
-
+    
     /**
      * Current character gender.
      */
     public Gender gender;
-
+    
     /**
      * Text to be displayed after the game which shows how many {@link score}
      * did you get.
@@ -370,23 +320,23 @@ public class ALongHourAndAHalf extends JFrame
      * Current bladdder fulness.
      */
     public float bladder = 5.0F;
-
+    
     /**
      * Maximal bladder fulness.
      */
     public float maxBladder = 130;
-
+    
     /**
      * Makes the wetting chance higher after reaching 100% of the bladder
      * fulness.
      */
     public int embarassment = 0;
-
+    
     /**
      * Amount of a water in a belly.
      */
     public double belly = 5.0;
-
+    
     /**
      * Before 2.1:<br>
      * simply multiplies a bladder increasement.<br>
@@ -400,7 +350,7 @@ public class ALongHourAndAHalf extends JFrame
     public double dryness; //How much pee your clothes can store now?
     public byte min = 0;
     public byte timesPeeDenied = 0;
-
+    
     /**
      * A number that shows a game session difficulty - the higher score, the
      * harder was the game. Specific actions (for example, peeing in a restroom
@@ -408,7 +358,7 @@ public class ALongHourAndAHalf extends JFrame
      * score points.
      */
     public int score = 0;
-
+    
     /**
      * Number of times player got caught holding pee.
      */
@@ -426,13 +376,13 @@ public class ALongHourAndAHalf extends JFrame
      */
     private boolean[] dialogueLines = new boolean[MAX_LINES];
     public boolean cheatsUsed = false;//Did player use cheats?
-
+    
     private final JButton btnNewGame;
     private final JLabel lblUndies;
     private final JLabel lblLower;
     private final JLabel lblSphPower;
     private final JLabel lblDryness;
-
+    
     static String nameParam;
     static Gender gndrParam;
     static boolean diffParam;
@@ -442,9 +392,6 @@ public class ALongHourAndAHalf extends JFrame
     static String outerParam;
     static String underColorParam;
     static String outerColorParam;
-
-    JFileChooser fc;
-
     /**
      * Launch the application.
      *
@@ -464,8 +411,8 @@ public class ALongHourAndAHalf extends JFrame
         nameParam = name;
         gndrParam = gndr;
         incParam = inc;
-        bladderParam = bladder;
-
+        bladderParam=bladder;
+        
         //Assigning constructor parameters to values
         this.name = name;
         gender = gndr;
@@ -485,62 +432,12 @@ public class ALongHourAndAHalf extends JFrame
         //Assigning the boy's name
         boyName = names[generator.nextInt(names.length)];
 
-        //Setting up custom wear file chooser
-        this.fc = new JFileChooser();
-//        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        fc.setFileFilter(new FileFilter()
-        {
-            @Override
-            public boolean accept(File pathname)
-            {
-                String extension = "";
-                int i = pathname.getName().lastIndexOf('.');
-                if (i > 0)
-                {
-                    extension = pathname.getName().substring(i + 1);
-                }
-                return extension.equals("lhhwear");
-            }
-
-            @Override
-            public String getDescription()
-            {
-                return "A Long Hour and a Half Custom wear";
-            }
-        });
-
-        if (under.equals("Custom"))
-        {
-            fc.setDialogTitle("Open an underwear file");
-            if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
-            {
-                File file = fc.getSelectedFile();
-                try
-                {
-                    FileInputStream fin = new FileInputStream(file);
-                    ObjectInputStream ois = new ObjectInputStream(fin);
-                    undies = (Wear) ois.readObject();
-                    if(undies.getType()==OUTERWEAR)
-                    {
-                        JOptionPane.showMessageDialog(null, "This isn't an underwear.", "Wrong wear type", JOptionPane.ERROR_MESSAGE);
-                        dispose();
-                        setupFramePre.main(new String[0]); 
-                    }
-                } catch (IOException | ClassNotFoundException e)
-                {
-                    JOptionPane.showMessageDialog(null, "File error.", "Error", JOptionPane.ERROR_MESSAGE);
-                    dispose();
-                    setupFramePre.main(new String[0]);
-                }
-            }
-        }
-
         //If random undies were chosen...
         if (under.equals("Random"))
         {
             undies = underwearList[generator.nextInt(underwearList.length)];
-            while (undies.getName().equals("Random"))
-                //...selecting random undies from the undies array.
+            while(undies.getName().equals("Random"))
+            //...selecting random undies from the undies array.
                 undies = underwearList[generator.nextInt(underwearList.length)];
             //If random undies weren't chosen...
         } else
@@ -557,7 +454,6 @@ public class ALongHourAndAHalf extends JFrame
                 }
             }
         }
-
         //If the selected undies weren't found
         if (undies == null)
         {
@@ -566,45 +462,19 @@ public class ALongHourAndAHalf extends JFrame
         }
 
         //Assigning color
-        if (!undies.getName().equals("No underwear"))
-            if (!undiesColor.equals("Random"))
+        if(!undies.getName().equals("No underwear"))
+            if(!undiesColor.equals("Random"))
                 undies.setColor(undiesColor);
             else
                 undies.setColor(Wear.colorList[generator.nextInt(Wear.colorList.length)]);
         else
             undies.setColor("");
-
-        if (outer.equals("Custom"))
-        {
-            fc.setDialogTitle("Open an outerwear file");
-            if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
-            {
-                File file = fc.getSelectedFile();
-                try
-                {
-                    FileInputStream fin = new FileInputStream(file);
-                    ObjectInputStream ois = new ObjectInputStream(fin);
-                    lower = (Wear) ois.readObject();
-                    if(lower.getType()==UNDERWEAR)
-                    {
-                        JOptionPane.showMessageDialog(null, "This isn't an outerwear.", "Wrong wear type", JOptionPane.ERROR_MESSAGE);
-                        dispose();
-                        setupFramePre.main(new String[0]); 
-                    }
-                } catch (IOException | ClassNotFoundException e)
-                {
-                    JOptionPane.showMessageDialog(null, "File error.", "Error", JOptionPane.ERROR_MESSAGE);
-                    dispose();
-                    setupFramePre.main(new String[0]);
-                }
-            }
-        }
-
+        
         //Same with the lower clothes
         if (outer.equals("Random"))
         {
             lower = outerwearList[generator.nextInt(outerwearList.length)];
-            while (lower.getName().equals("Random"))
+            while(lower.getName().equals("Random"))
                 lower = outerwearList[generator.nextInt(outerwearList.length)];
         } else
         {
@@ -622,10 +492,10 @@ public class ALongHourAndAHalf extends JFrame
             JOptionPane.showMessageDialog(null, "Incorrect outerwear selected. Setting random instead.", "Incorrect outerwear", JOptionPane.WARNING_MESSAGE);
             lower = outerwearList[generator.nextInt(outerwearList.length)];
         }
-
+        
         //Assigning color
-        if (!lower.getName().equals("No outerwear"))
-            if (!lowerColor.equals("Random"))
+        if(!lower.getName().equals("No outerwear"))
+            if(!lowerColor.equals("Random"))
                 lower.setColor(lowerColor);
             else
                 lower.setColor(Wear.colorList[generator.nextInt(Wear.colorList.length)]);
@@ -635,7 +505,7 @@ public class ALongHourAndAHalf extends JFrame
         //Calculating dryness and maximal bladder capacity values
         dryness = lower.getAbsorption() + undies.getAbsorption();
         maxBladder -= lower.getPressure() + undies.getPressure();
-
+        
         if (isMale())
         {
             underwearList[1].setInsertName("penis");
@@ -643,12 +513,12 @@ public class ALongHourAndAHalf extends JFrame
         {
             underwearList[1].setInsertName("crotch");
         }
-
+        
         outerParam = lower.getName();
         underParam = undies.getName();
         underColorParam = undies.getColor();
         outerColorParam = lower.getColor();
-
+        
         //Game window setup
         setResizable(false);
         setTitle("A Long Hour and a Half");
@@ -670,7 +540,7 @@ public class ALongHourAndAHalf extends JFrame
         textLabel.setHorizontalAlignment(SwingConstants.CENTER);
         textLabel.setBounds(0, 0, 614, 150);
         textPanel.add(textLabel);
-
+        
         //"Next" button setup
         btnNext = new JButton("Next");
         btnNext.setToolTipText("Hold down for the time warp");
@@ -682,7 +552,7 @@ public class ALongHourAndAHalf extends JFrame
                 handleNextClicked();
             }
         });
-
+        
         btnNext.setBounds((textPanel.getWidth() / 2) + 50, 480, 89, 23);
         contentPane.add(btnNext);
 
@@ -698,7 +568,7 @@ public class ALongHourAndAHalf extends JFrame
         });
         btnQuit.setBounds((textPanel.getWidth() / 2) - 120, 480, 89, 23);
         contentPane.add(btnQuit);
-
+        
         //"Reset" button setup
         btnReset = new JButton("Reset");
         btnReset.addMouseListener(new MouseAdapter()
@@ -712,7 +582,7 @@ public class ALongHourAndAHalf extends JFrame
         });
         btnReset.setBounds((textPanel.getWidth() / 2) - 300, 480, 89, 23);
         contentPane.add(btnReset);
-
+        
         //"New game" button setup
         btnNewGame = new JButton("New game");
         btnNewGame.addMouseListener(new MouseAdapter()
@@ -764,27 +634,27 @@ public class ALongHourAndAHalf extends JFrame
         lblMinutes.setBounds(20, 330, 200, 32);
         lblMinutes.setVisible(false);
         contentPane.add(lblMinutes);
-
+        
         //Sphincter power label setup
         lblSphPower = new JLabel("Pee holding ability: " + sphincterPower + "%");
         lblSphPower.setFont(new Font("Tahoma", Font.PLAIN, 15));
         lblSphPower.setBounds(20, 360, 200, 32);
         lblSphPower.setVisible(false);
         contentPane.add(lblSphPower);
-
+        
         //Clothing dryness label setup
         lblDryness = new JLabel("Clothes dryness: " + dryness);
         lblDryness.setFont(new Font("Tahoma", Font.PLAIN, 15));
         lblDryness.setBounds(20, 390, 200, 32);
         lblDryness.setVisible(false);
         contentPane.add(lblDryness);
-
+        
         //Undies label setup
         lblUndies = new JLabel("Undies: " + undies.getColor() + " " + undies.getName().toLowerCase());
         lblUndies.setFont(new Font("Tahoma", Font.PLAIN, 15));
         lblUndies.setBounds(20, 420, 400, 32);
         contentPane.add(lblUndies);
-
+        
         //Lower label setup
         lblLower = new JLabel("Lower: " + lower.getColor() + " " + lower.getName().toLowerCase());
         lblLower.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -1008,37 +878,37 @@ public class ALongHourAndAHalf extends JFrame
                 }
 
                 //Bladder: 0-20
-                if (bladder <= 20)
+                if (bladder<=20)
                     setText("Feeling bored about the day, and not really caring about the class too much,",
                             "you look to the clock, watching the minutes tick by.");
                 //Bladder: 20-40
-                if (bladder > 20 && bladder <= 40)
+                if (bladder>20 && bladder<=40)
                     setText("Having to pee a little bit,",
                             "you look to the clock, watching the minutes tick by and wishing the lesson to get over faster.");
                 //Bladder: 40-60
-                if (bladder > 40 && bladder <= 60)
+                if (bladder>40 && bladder<=60)
                     setText("Clearly having to pee,",
                             "you inpatiently wait for the lesson end.");
                 //Bladder: 60-80
-                if (bladder > 60 && bladder <= 80)
+                if (bladder>60 && bladder<=80)
                 {
                     setLinesAsDialogue(2);
                     setText("You feel the rather strong pressure in your bladder, and you need to pee very much.",
                             "Maybe I should ask teacher to go to the restroom? It hurts a bit...");
                 }
                 //Bladder: 80-100
-                if (bladder > 80 && bladder <= 100)
+                if (bladder>80 && bladder<=100)
                 {
-                    setLinesAsDialogue(1, 3);
+                    setLinesAsDialogue(1,3);
                     setText("Keeping all that urine inside will become impossible very soon.",
                             "You feel the terrible pain and pressure in your bladder, and you need to pee as bad as never.",
                             "Ouch, it hurts a lot... I must do something about it now, or else...");
                 }
                 //Bladder: 100-130
-                if (bladder > 100 && bladder <= 130)
+                if (bladder>100 && bladder<=130)
                 {
-                    setLinesAsDialogue(1, 3);
-                    if (isFemale())
+                    setLinesAsDialogue(1,3);
+                    if(isFemale())
                         setText("This is really extreme...",
                                 "You know that you can't keep it any longer and you may wet yourself in any moment and oh,",
                                 "You can clearly see your bladder as it bulging.",
@@ -1226,6 +1096,8 @@ public class ALongHourAndAHalf extends JFrame
                             nextStage = ASK_ACTION;
                             break;
                         }
+
+                        
 
                         if (generator.nextInt(100) <= 1 + classmatesAwareness & hardcore)
                         {
@@ -1444,7 +1316,7 @@ public class ALongHourAndAHalf extends JFrame
                         hardcore = !hardcore;
                         nextStage = ASK_ACTION;
                         break;
-
+                        
                     case 9:
                         setText("Suddenly you felt something going on in your bladder.");
                         incon = Float.parseFloat(JOptionPane.showInputDialog("How your bladder is full now?"));
@@ -1475,7 +1347,7 @@ public class ALongHourAndAHalf extends JFrame
                         "You make your way to the front of the room and act lost, knowing you'll be stuck",
                         "up there for a while as the teacher explains it.",
                         "Well, you can't dare to hold yourself now...");
-
+                
 //                score += 5;
 //                scoreText = scoreText.concat("\nCalled on the lesson: +5 points");
                 score("Called on the lesson", '+', 5);
@@ -1499,7 +1371,7 @@ public class ALongHourAndAHalf extends JFrame
                 {
                     setText("Lesson is finally over, and you're running to the restroom as fast as you can.",
                             "No, please... All cabins are occupied, and there's a line. You have to wait!");
-
+                    
 //                    score += 5;
 //                    scoreText = scoreText.concat("\nWaited for a free cabin in the restroom: +5 score");
                     score("Waited for a free cabin in the restroom", '+', 5);
@@ -1610,7 +1482,7 @@ public class ALongHourAndAHalf extends JFrame
 
             case WET:
                 emptyBladder();
-                embarassment = 100;
+                embarassment=100;
                 if (!lower.getName().equals("No outerwear"))
                 {
                     if (!undies.getName().equals("No underwear"))
@@ -2176,10 +2048,10 @@ public class ALongHourAndAHalf extends JFrame
         }
         if (testWet())
             nextStage = ACCIDENT;
-
+        
         for (int i = 0; i < 3; i++)
             decaySphPower();
-
+        
         //Sphincter power rounding
 //        BigDecimal bd = new BigDecimal(sphincterPower);
 //        bd = bd.setScale(1, RoundingMode.HALF_UP);
@@ -2206,7 +2078,7 @@ public class ALongHourAndAHalf extends JFrame
 
         if (testWet())
             nextStage = ACCIDENT;
-
+        
         for (int i = 0; i < time; i++)
         {
             decaySphPower();
@@ -2219,7 +2091,7 @@ public class ALongHourAndAHalf extends JFrame
                     emptyBelly();
                 }
         }
-
+        
         //Sphincter power rounding
 //        BigDecimal bd = new BigDecimal(sphincterPower);
 //        bd = bd.setScale(1, RoundingMode.HALF_UP);
@@ -2247,20 +2119,22 @@ public class ALongHourAndAHalf extends JFrame
 //                {
 //                    return true;
 //                }
-                if (!hardcore)
+                if(!hardcore)
                 {
-                    byte wetChance = (byte) (3 * (bladder - 100));
-                    if (generator.nextInt(100) < wetChance)
+                    byte wetChance = (byte)(3 * (bladder - 100));
+                    if(generator.nextInt(100)<wetChance)
                         return true;
-                } else
+                }
+                else
                 {
-                    byte wetChance = (byte) (5 * (bladder - 80));
-                    if (generator.nextInt(100) < wetChance)
+                    byte wetChance = (byte)(5 * (bladder - 80));
+                    if(generator.nextInt(100)<wetChance)
                         return true;
                 }
             }
         return false;
     }
+
 
     public void emptyBladder()
     {

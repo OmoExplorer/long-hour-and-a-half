@@ -7,13 +7,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.File;
 import java.util.Random;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -24,7 +22,6 @@ import javax.swing.JTextPane;
 import javax.swing.JTree;
 import javax.swing.LayoutStyle;
 import javax.swing.WindowConstants;
-import javax.swing.filechooser.FileFilter;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import omo.ALongHourAndAHalf.*;
@@ -38,37 +35,11 @@ public class setupFramePre extends javax.swing.JFrame {
     private static final long serialVersionUID = 1L;
     private String undiesColor = "Random";
     private String lowerColor = "Random";
-    JFileChooser fc;
-    private Wear customUnderwear;
-    private Wear customOuterwear;
-    
 
     /**
      * Creates new form setupFrame
      */
     public setupFramePre() {
-        this.fc = new JFileChooser();
-        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        fc.setFileFilter(new FileFilter()
-        {
-            @Override
-            public boolean accept(File pathname)
-            {
-                String extension = "";
-                int i = pathname.getName().lastIndexOf('.');
-                if (i > 0)
-                {
-                    extension = pathname.getName().substring(i + 1);
-                }
-                return extension.equals("lhhwear");
-            }
-
-            @Override
-            public String getDescription()
-            {
-                return "A Long Hour and a Half Custom wear";
-            }
-        });
         initComponents();
     }
 
@@ -129,7 +100,6 @@ public class setupFramePre extends javax.swing.JFrame {
         lowerColor_purple1 = new JPanel();
         undiesColor_random = new JPanel();
         lowerColor_random1 = new JPanel();
-        wearEditorButton = new JButton();
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -310,8 +280,6 @@ public class setupFramePre extends javax.swing.JFrame {
         treeNode1.add(treeNode2);
         treeNode2 = new DefaultMutableTreeNode("No underwear");
         treeNode1.add(treeNode2);
-        treeNode2 = new DefaultMutableTreeNode("Custom");
-        treeNode1.add(treeNode2);
         underwearTree.setModel(new DefaultTreeModel(treeNode1));
         underwearTree.setName("underwearTree"); // NOI18N
         underwearTree.setRootVisible(false);
@@ -379,8 +347,6 @@ public class setupFramePre extends javax.swing.JFrame {
         treeNode2.add(treeNode3);
         treeNode1.add(treeNode2);
         treeNode2 = new DefaultMutableTreeNode("No outerwear");
-        treeNode1.add(treeNode2);
-        treeNode2 = new DefaultMutableTreeNode("Custom");
         treeNode1.add(treeNode2);
         outerwearTree.setModel(new DefaultTreeModel(treeNode1));
         outerwearTree.setName("outerwearTree"); // NOI18N
@@ -879,16 +845,6 @@ public class setupFramePre extends javax.swing.JFrame {
             .addGap(0, 18, Short.MAX_VALUE)
         );
 
-        wearEditorButton.setText("Wear editor");
-        wearEditorButton.setName("wearEditorButton"); // NOI18N
-        wearEditorButton.addActionListener(new ActionListener()
-        {
-            public void actionPerformed(ActionEvent evt)
-            {
-                wearEditorButtonActionPerformed(evt);
-            }
-        });
-
         GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -896,6 +852,7 @@ public class setupFramePre extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane3, GroupLayout.DEFAULT_SIZE, 782, Short.MAX_VALUE)
+                    .addComponent(start, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -974,11 +931,7 @@ public class setupFramePre extends javax.swing.JFrame {
                                         .addComponent(lowerColor_pink1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                         .addGap(18, 18, 18)
                                         .addComponent(lowerColor_random1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-                                .addGap(0, 0, Short.MAX_VALUE))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(start, GroupLayout.PREFERRED_SIZE, 590, GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(wearEditorButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addGap(0, 0, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -1014,7 +967,7 @@ public class setupFramePre extends javax.swing.JFrame {
                         .addComponent(outerwearLabel)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane2, GroupLayout.PREFERRED_SIZE, 155, GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(undiesColor_black, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(undiesColor_gray, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
@@ -1041,9 +994,7 @@ public class setupFramePre extends javax.swing.JFrame {
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                    .addComponent(start, GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
-                    .addComponent(wearEditorButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(start, GroupLayout.PREFERRED_SIZE, 117, GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -1592,15 +1543,10 @@ public class setupFramePre extends javax.swing.JFrame {
         lowerColor = "Random";
     }//GEN-LAST:event_lowerColor_random1MouseClicked
 
-    private void wearEditorButtonActionPerformed(ActionEvent evt)//GEN-FIRST:event_wearEditorButtonActionPerformed
-    {//GEN-HEADEREND:event_wearEditorButtonActionPerformed
-        WearEditor.main(new String[0]);
-    }//GEN-LAST:event_wearEditorButtonActionPerformed
-
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -1676,6 +1622,5 @@ public class setupFramePre extends javax.swing.JFrame {
     private JPanel undiesColor_random;
     private JPanel undiesColor_red;
     private JPanel undiesColor_yellow;
-    private JButton wearEditorButton;
     // End of variables declaration//GEN-END:variables
 }
