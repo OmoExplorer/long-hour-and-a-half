@@ -171,7 +171,7 @@ class Wear
      * 3 minutes
      * @param type the wear type
      */
-    public Wear(String name, String insertName, float pressure, float absorption, float dryingOverTime, WearType type)
+    Wear(String name, String insertName, float pressure, float absorption, float dryingOverTime, WearType type)
     {
         this.name = name;
         this.insertName = insertName;
@@ -254,11 +254,6 @@ class Wear
         return missing;
     }
 
-    public enum WearType
-    {
-        UNDERWEAR, OUTERWEAR, BOTH_SUITABLE
-    }
-
     /**
      * @return the type
      */
@@ -273,6 +268,11 @@ class Wear
     public void setType(WearType type)
     {
         this.type = type;
+    }
+    
+    public enum WearType
+    {
+        UNDERWEAR, OUTERWEAR, BOTH_SUITABLE
     }
 }
 
@@ -2339,7 +2339,7 @@ public class ALongHourAndAHalf extends JFrame
                         setText("You feel the warm pee stream",
                                 "filling your " + undies.insert() + ".",
                                 "You close your eyes and ease your sphincter off.",
-                                "You feel the pee stream become much stronger.")
+                                "You feel the pee stream become much stronger.");
                     }
                 } else
                     if (!lower.isMissing())
@@ -2347,13 +2347,13 @@ public class ALongHourAndAHalf extends JFrame
                         setText("You feel the warm pee stream",
                                 "filling your " + lower.insert() + ".",
                                 "You close your eyes and ease your sphincter off.",
-                                "You feel the pee stream become much stronger.")
+                                "You feel the pee stream become much stronger.");
                     } else
                     {
                         setText("You feel the warm pee stream",
                                 "running down your legs.",
                                 "You close your eyes and ease your sphincter off.",
-                                "You feel the pee stream become much stronger.")
+                                "You feel the pee stream become much stronger.");
                     }
                 emptyBladder();
                 nextStage = END_GAME;
@@ -2369,7 +2369,7 @@ public class ALongHourAndAHalf extends JFrame
                                 "You feel the warm pee stream",
                                 "filling your " + undies.insert() + " and darkening your " + lower.insert() + ".",
                                 "You close your eyes and ease your sphincter off.",
-                                "You feel the pee stream become much stronger.")
+                                "You feel the pee stream become much stronger.");
                     } else
                     {
                         setText("Ouch... The sudden pain flash passes through your bladder...",
@@ -2377,7 +2377,7 @@ public class ALongHourAndAHalf extends JFrame
                                 "You feel the warm pee stream",
                                 "filling your " + undies.insert() + ".",
                                 "You close your eyes and ease your sphincter off.",
-                                "You feel the pee stream become much stronger.")
+                                "You feel the pee stream become much stronger.");
                     }
                 } else
                     if (!lower.isMissing())
@@ -2387,7 +2387,7 @@ public class ALongHourAndAHalf extends JFrame
                                 "You feel the warm pee stream",
                                 "filling your " + lower.insert() + ".",
                                 "You close your eyes and ease your sphincter off.",
-                                "You feel the pee stream become much stronger.")
+                                "You feel the pee stream become much stronger.");
                     } else
                     {
                         setText("Ouch... The sudden pain flash passes through your bladder...",
@@ -2395,7 +2395,7 @@ public class ALongHourAndAHalf extends JFrame
                                 "You feel the warm pee stream",
                                 "running down your legs.",
                                 "You close your eyes and ease your sphincter off.",
-                                "You feel the pee stream become much stronger.")
+                                "You feel the pee stream become much stronger.");
                     }
                 emptyBladder();
                 nextStage = END_GAME;
