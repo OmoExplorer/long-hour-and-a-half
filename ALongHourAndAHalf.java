@@ -1342,6 +1342,7 @@ public class ALongHourAndAHalf extends JFrame
                 break;
 
             case CHOSE_ACTION:
+                System.out.println();
                 nextStage = ASK_ACTION;
                 if (listChoice.isSelectionEmpty() || listChoice.getSelectedValue().equals("[Unavailable]"))
                 {
@@ -1352,14 +1353,10 @@ public class ALongHourAndAHalf extends JFrame
                 //Hiding the action selector
                 lblChoice.setVisible(false);
                 listScroller.setVisible(false);
-                listChoice.clearSelection();
                 btnNext.setText("Next");
 
-                //Getting selected action ID to distinguish selected option
-                int actionNum = listChoice.getSelectedIndex();
-
                 //Doing action job
-                switch (actionNum)
+                switch (listChoice.getSelectedIndex())
                 {
 
                     //Ask the teacher to go pee
@@ -1487,6 +1484,9 @@ public class ALongHourAndAHalf extends JFrame
                         cheatsUsed = true;
                         nextStage = ASK_CHEAT;
                         break;
+                    
+                    case -1:
+                        setText("Bugs.");
                 }
                 break;
 
@@ -2092,7 +2092,7 @@ public class ALongHourAndAHalf extends JFrame
                 lblChoice.setVisible(false);
                 listScroller.setVisible(false);
 
-                actionNum = listChoice.getSelectedIndex();
+//                actionNum = listChoice.getSelectedIndex();
                 if (listChoice.getSelectedValue().equals("[Unavailable]"))
                 {
                     //No idling
@@ -2107,7 +2107,7 @@ public class ALongHourAndAHalf extends JFrame
 
                 listChoice.clearSelection();
 
-                switch (actionNum)
+                switch (listChoice.getSelectedIndex())
                 {
                     case 0:
                         nextStage = HIT;
