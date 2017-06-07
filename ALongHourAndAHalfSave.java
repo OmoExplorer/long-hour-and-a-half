@@ -11,7 +11,7 @@ import omo.ALongHourAndAHalf.Gender;
 
 /**
  *
- * @author Никита
+ * @author JavaBird
  */
 class ALongHourAndAHalfSave implements Serializable
 {
@@ -23,6 +23,7 @@ class ALongHourAndAHalfSave implements Serializable
     private float bladder;
     private float incontinence;
     private float belly;
+    private byte embarassment;
     private byte dryness;
     private byte maxSphincterPower;
     private byte sphincterPower;
@@ -30,5 +31,10 @@ class ALongHourAndAHalfSave implements Serializable
     private Wear outerwear;
     private byte time;
     private GameStage stage;
+    private short score;
     private String scoreText;
+    private byte timesPeeDenied;
+    private byte timesCaught;
+    private short classmatesAwareness;
+    private boolean stay;
 }
