@@ -16,7 +16,6 @@ import javax.swing.tree.TreePath;
  */
 public class StoryEditorPreview extends javax.swing.JFrame
 {
-
     private static final long serialVersionUID = 1L;
     
     private ArrayList<SetupScene> setupScenesList = new ArrayList<>();
@@ -25,7 +24,10 @@ public class StoryEditorPreview extends javax.swing.JFrame
     private ArrayList<api.Character> charactersList = new ArrayList<>();
     private ArrayList<Action> actionsList = new ArrayList<>();
     private ArrayList<Operation> operationsList = new ArrayList<>();
-    private SetupScene currentOperatingScene;
+    public Scene currentOperatingScene;
+    public api.Character currentOperatingCharacter;
+    public Action currentOperatingAction;
+    public Operation currentOperatingOperation;
 
     /**
      * Creates new form storyEditor
@@ -265,7 +267,7 @@ public class StoryEditorPreview extends javax.swing.JFrame
     {//GEN-HEADEREND:event_newWettingSceneActionPerformed
         wettingScenesList.add(new WettingScene());
         
-        editorSplitPane.setRightComponent(new WettingScenePreview());
+        editorSplitPane.setRightComponent(new WettingScenePanelPreview());
         pack();
     }//GEN-LAST:event_newWettingSceneActionPerformed
 
@@ -273,7 +275,7 @@ public class StoryEditorPreview extends javax.swing.JFrame
     {//GEN-HEADEREND:event_newSetupSceneActionPerformed
         setupScenesList.add(new SetupScene());
         
-        editorSplitPane.setRightComponent(new SetupScenePreview());
+        editorSplitPane.setRightComponent(new SetupScenePanelPreview());
         pack();
     }//GEN-LAST:event_newSetupSceneActionPerformed
 
@@ -281,7 +283,7 @@ public class StoryEditorPreview extends javax.swing.JFrame
     {//GEN-HEADEREND:event_newActiveSceneActionPerformed
         activeScenesList.add(new ActiveScene());
         
-        editorSplitPane.setRightComponent(new ActiveScenePreview());
+        editorSplitPane.setRightComponent(new ActiveScenePanelPreview());
         pack();
     }//GEN-LAST:event_newActiveSceneActionPerformed
 
@@ -311,7 +313,7 @@ public class StoryEditorPreview extends javax.swing.JFrame
 
     private void quitActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_quitActionPerformed
     {//GEN-HEADEREND:event_quitActionPerformed
-        SetupFramePreview.main();
+        SetupFramePanelPreview.main();
         dispose();
     }//GEN-LAST:event_quitActionPerformed
 
@@ -323,50 +325,6 @@ public class StoryEditorPreview extends javax.swing.JFrame
         switchPanel(treePathNew, treePathOld);
     }//GEN-LAST:event_toolTreeValueChanged
 
-    public static void main()
-    {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try
-        {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels())
-            {
-                if ("Nimbus".equals(info.getName()))
-                {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex)
-        {
-            java.util.logging.Logger.getLogger(StoryEditorPreview.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex)
-        {
-            java.util.logging.Logger.getLogger(StoryEditorPreview.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex)
-        {
-            java.util.logging.Logger.getLogger(StoryEditorPreview.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex)
-        {
-            java.util.logging.Logger.getLogger(StoryEditorPreview.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable()
-        {
-            public void run()
-            {
-                new StoryEditorPreview().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JSplitPane editorSplitPane;
@@ -403,7 +361,7 @@ public class StoryEditorPreview extends javax.swing.JFrame
         switch(oldSelectionParent)
         {
             case "Setup":
-                //Saving
+                SetupScenePanelPreview.onClose();
                 break;
             case "Active":
                 //Saving
@@ -427,7 +385,7 @@ public class StoryEditorPreview extends javax.swing.JFrame
             case "root":
                 if(newSelection.equals("Story manifest"))
                 {
-                    editorSplitPane.setRightComponent(new StoryManifestPreview());
+                    editorSplitPane.setRightComponent(new StoryManifestPanelPreview());
                     pack();
                 }
                 break;
@@ -443,7 +401,82 @@ public class StoryEditorPreview extends javax.swing.JFrame
                         currentOperatingScene = iScene;
                     });
                 }
-                editorSplitPane.setRightComponent(new SetupScenePreview());
+                editorSplitPane.setRightComponent(new SetupScenePanelPreview());
+                pack();
+                break;
+            case "Active":
+                if(newSelection.equals("<new active scene>"))
+                {
+                    activeScenesList.add(new ActiveScene());
+                }
+                else
+                {
+                    activeScenesList.stream().filter((iScene) -> (iScene.getSceneTitle().equals(newSelection))).forEachOrdered((iScene) ->
+                    {
+                        currentOperatingScene = iScene;
+                    });
+                }
+                editorSplitPane.setRightComponent(new ActiveScenePanelPreview());
+                pack();
+                break;
+            case "Wetting":
+                if(newSelection.equals("<new wetting scene>"))
+                {
+                    wettingScenesList.add(new WettingScene());
+                }
+                else
+                {
+                    wettingScenesList.stream().filter((iScene) -> (iScene.getSceneTitle().equals(newSelection))).forEachOrdered((iScene) ->
+                    {
+                        currentOperatingScene = iScene;
+                    });
+                }
+                editorSplitPane.setRightComponent(new WettingScenePanelPreview());
+                pack();
+                break;
+            case "Characters":
+                if(newSelection.equals("<new character>"))
+                {
+                    charactersList.add(new api.Character());
+                }
+                else
+                {
+                    charactersList.stream().filter((iCharacter) -> (iCharacter.getName().equals(newSelection))).forEachOrdered((iCharacter) ->
+                    {
+                        currentOperatingCharacter = iCharacter;
+                    });
+                }
+                editorSplitPane.setRightComponent(new CharacterPanelPreview());
+                pack();
+                break;
+            case "Actions":
+                if(newSelection.equals("<new action>"))
+                {
+                    actionsList.add(new Action());
+                }
+                else
+                {
+                    actionsList.stream().filter((iAction) -> (iAction.getName().equals(newSelection))).forEachOrdered((iAction) ->
+                    {
+                        currentOperatingAction = iAction;
+                    });
+                }
+                editorSplitPane.setRightComponent(new ActionPanelPreview());
+                pack();
+                break;
+            case "Operations":
+                if(newSelection.equals("<new operation>"))
+                {
+                    operationsList.add(new Operation());
+                }
+                else
+                {
+                    operationsList.stream().filter((iOperation) -> (iOperation.getName().equals(newSelection))).forEachOrdered((iOperation) ->
+                    {
+                        currentOperatingOperation = iOperation;
+                    });
+                }
+                editorSplitPane.setRightComponent(new OperationPanelPreview());
                 pack();
                 break;
         }

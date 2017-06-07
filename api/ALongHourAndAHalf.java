@@ -68,7 +68,7 @@
 //ALongHourAndAHalf
 package api;
 
-import gui.preview.SetupFramePreview;
+import gui.preview.SetupFramePanelPreview;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
@@ -210,7 +210,7 @@ public class ALongHourAndAHalf extends JFrame
     private static void reset(boolean newValues)
     {
         if(newValues)
-            new SetupFramePreview().setVisible(true);
+            new SetupFramePanelPreview().setVisible(true);
         else
             new ALongHourAndAHalf(nameParam, gndrParam, diffParam, incParam, bladderParam, underParam, outerParam, underColorParam, outerColorParam);
     }
