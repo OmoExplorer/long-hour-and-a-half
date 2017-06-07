@@ -321,35 +321,35 @@ public class ALongHourAndAHalf extends JFrame
     }
 
     //Game frame variables declaration
-    private final JPanel contentPane;
-    private final JPanel textPanel;
+    private JPanel contentPane;
+    private JPanel textPanel;
 
-    private final JButton btnNext;
-    private final JButton btnReset;
-    private final JButton btnQuit;
+    private JButton btnNext;
+    private JButton btnReset;
+    private JButton btnQuit;
 
-    private final JLabel textLabel;
-    private final JLabel lblBelly;
-    private final JLabel lblBladder;
-    private final JLabel lblChoice;
-    private final JLabel lblEmbarassment;
-    private final JLabel lblIncon;
-    private final JLabel lblMinutes;
-    private final JLabel lblName;
-    private final JButton btnNewGame;
-    private final JLabel lblUndies;
-    private final JLabel lblLower;
-    private final JLabel lblSphPower;
-    private final JLabel lblDryness;
-    private final Color lblDefaultColor;
-    private final JList<Object> listChoice;
+    private JLabel textLabel;
+    private JLabel lblBelly;
+    private JLabel lblBladder;
+    private JLabel lblChoice;
+    private JLabel lblEmbarassment;
+    private JLabel lblIncon;
+    private JLabel lblMinutes;
+    private JLabel lblName;
+    private JButton btnNewGame;
+    private JLabel lblUndies;
+    private JLabel lblLower;
+    private JLabel lblSphPower;
+    private JLabel lblDryness;
+    private Color lblDefaultColor;
+    private JList<Object> listChoice;
 
-    private final JScrollPane listScroller;
+    private JScrollPane listScroller;
 
-    private final JProgressBar bladderBar;
-    private final JProgressBar sphincterBar;
-    private final JProgressBar drynessBar;
-    private final JProgressBar timeBar;
+    private JProgressBar bladderBar;
+    private JProgressBar sphincterBar;
+    private JProgressBar drynessBar;
+    private JProgressBar timeBar;
 
     /**
      * List of all underwear types.
@@ -585,7 +585,8 @@ public class ALongHourAndAHalf extends JFrame
      * Whether or not player has used cheats.
      */
     public boolean cheatsUsed = false;
-    private final JFileChooser fc;
+    private JFileChooser fcWear;
+    private JFileChooser fcGame;
 
     /**
      * Launch the application.
@@ -600,7 +601,7 @@ public class ALongHourAndAHalf extends JFrame
      * @param undiesColor the underwear color
      * @param lowerColor the outerwear color
      */
-    public ALongHourAndAHalf(String name, Gender gndr, boolean diff, float inc, int bladder, String under, String outer, String undiesColor, String lowerColor)
+    void preConstructor(String name, Gender gndr, boolean diff, float inc, int bladder)
     {
         //Saving parameters for the reset
         nameParam = name;
@@ -628,8 +629,8 @@ public class ALongHourAndAHalf extends JFrame
         boyName = names[generator.nextInt(names.length)];
 
         //Setting up custom wear file chooser
-        this.fc = new JFileChooser();
-        fc.setFileFilter(new FileFilter()
+        fcWear = new JFileChooser();
+        fcWear.setFileFilter(new FileFilter()
         {
             @Override
             public boolean accept(File pathname)
@@ -650,143 +651,27 @@ public class ALongHourAndAHalf extends JFrame
             }
         });
 
-        if (under.equals("Custom"))
+        fcGame = new JFileChooser();
+        fcGame.setFileFilter(new FileFilter()
         {
-            fc.setDialogTitle("Open an underwear file");
-            if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
+            @Override
+            public boolean accept(File pathname)
             {
-                File file = fc.getSelectedFile();
-                try
+                String extension = "";
+                int i = pathname.getName().lastIndexOf('.');
+                if (i > 0)
                 {
-                    FileInputStream fin = new FileInputStream(file);
-                    ObjectInputStream ois = new ObjectInputStream(fin);
-                    undies = (Wear) ois.readObject();
-                    if (undies.getType() == OUTERWEAR)
-                    {
-                        JOptionPane.showMessageDialog(null, "This isn't an underwear.", "Wrong wear type", JOptionPane.ERROR_MESSAGE);
-                        dispose();
-                        setupFramePre.main(new String[0]);
-                    }
-                } catch (IOException | ClassNotFoundException e)
-                {
-                    JOptionPane.showMessageDialog(null, "File error.", "Error", JOptionPane.ERROR_MESSAGE);
-                    dispose();
-                    setupFramePre.main(new String[0]);
+                    extension = pathname.getName().substring(i + 1);
                 }
+                return extension.equals("lhhsav");
             }
-        }
-        
-        //If random undies were chosen...
-        if (under.equals("Random"))
-        {
-            undies = underwearList[generator.nextInt(underwearList.length)];
-            while (undies.getName().equals("Random"))
-            //...selecting random undies from the undies array.
-            {
-                undies = underwearList[generator.nextInt(underwearList.length)];
-            }
-            //If random undies weren't chosen...
-        } else
-        {
-            //We look for the selected undies in the array
-            for (Wear iWear : underwearList)
-            {
-                //By comparing all possible undies' names with the selected undies string
-                if (iWear.getName().equals(under))
-                {
-                    //If the selected undies were found, assigning current compared undies to the character's undies
-                    undies = iWear;
-                    break;
-                }
-            }
-        }
-        //If the selected undies weren't found
-        if (undies == null)
-        {
-            JOptionPane.showMessageDialog(null, "Incorrect underwear selected. Setting random instead.", "Incorrect underwear", JOptionPane.WARNING_MESSAGE);
-            undies = underwearList[generator.nextInt(underwearList.length)];
-        }
 
-        //Assigning color
-        if (!undies.isMissing())
-        {
-            if (!undiesColor.equals("Random"))
+            @Override
+            public String getDescription()
             {
-                undies.setColor(undiesColor);
-            } else
-            {
-                undies.setColor(Wear.colorList[generator.nextInt(Wear.colorList.length)]);
+                return "A Long Hour and a Half Save game";
             }
-        } else
-        {
-            undies.setColor("");
-        }
-
-        if (outer.equals("Custom"))
-        {
-            fc.setDialogTitle("Open an outerwear file");
-            if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
-            {
-                File file = fc.getSelectedFile();
-                try
-                {
-                    FileInputStream fin = new FileInputStream(file);
-                    ObjectInputStream ois = new ObjectInputStream(fin);
-                    lower = (Wear) ois.readObject();
-                    if (lower.getType() == UNDERWEAR)
-                    {
-                        JOptionPane.showMessageDialog(null, "This isn't an outerwear.", "Wrong wear type", JOptionPane.ERROR_MESSAGE);
-                        dispose();
-                        setupFramePre.main(new String[0]);
-                    }
-                } catch (IOException | ClassNotFoundException e)
-                {
-                    JOptionPane.showMessageDialog(null, "File error.", "Error", JOptionPane.ERROR_MESSAGE);
-                    dispose();
-                    setupFramePre.main(new String[0]);
-                }
-            }
-        }
-
-        //Same with the lower clothes
-        if (outer.equals("Random"))
-        {
-            lower = outerwearList[generator.nextInt(outerwearList.length)];
-            while (lower.getName().equals("Random"))
-            {
-                lower = outerwearList[generator.nextInt(outerwearList.length)];
-            }
-        } else
-        {
-            for (Wear iWear : outerwearList)
-            {
-                if (iWear.getName().equals(outer))
-                {
-                    lower = iWear;
-                    break;
-                }
-            }
-        }
-        if (lower == null)
-        {
-            JOptionPane.showMessageDialog(null, "Incorrect outerwear selected. Setting random instead.", "Incorrect outerwear", JOptionPane.WARNING_MESSAGE);
-            lower = outerwearList[generator.nextInt(outerwearList.length)];
-        }
-
-        //Assigning color
-        if (!lower.isMissing())
-        {
-            if (!lowerColor.equals("Random"))
-            {
-                lower.setColor(lowerColor);
-            } else
-            {
-                lower.setColor(Wear.colorList[generator.nextInt(Wear.colorList.length)]);
-            }
-        } else
-        {
-            lower.setColor("");
-        }
+        });
 
         //Calculating dryness and maximal bladder capacity values
         dryness = lower.getAbsorption() + undies.getAbsorption();
@@ -1009,6 +894,155 @@ public class ALongHourAndAHalf extends JFrame
         handleNextClicked();
     }
 
+    ALongHourAndAHalf(String name, Gender gndr, boolean diff, float inc, int bladder, String under, String outer, String undiesColor, String lowerColor)
+    {
+        preConstructor(name, gndr, diff, inc, bladder);
+        
+        if (under.equals("Custom"))
+        {
+            fcWear.setDialogTitle("Open an underwear file");
+            if (fcWear.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
+            {
+                File file = fcWear.getSelectedFile();
+                try
+                {
+                    FileInputStream fin = new FileInputStream(file);
+                    ObjectInputStream ois = new ObjectInputStream(fin);
+                    undies = (Wear) ois.readObject();
+                    if (undies.getType() == OUTERWEAR)
+                    {
+                        JOptionPane.showMessageDialog(null, "This isn't an underwear.", "Wrong wear type", JOptionPane.ERROR_MESSAGE);
+                        dispose();
+                        setupFramePre.main(new String[0]);
+                    }
+                } catch (IOException | ClassNotFoundException e)
+                {
+                    JOptionPane.showMessageDialog(null, "File error.", "Error", JOptionPane.ERROR_MESSAGE);
+                    dispose();
+                    setupFramePre.main(new String[0]);
+                }
+            }
+        }
+        
+        if (under.equals("Random"))
+        {
+            undies = underwearList[generator.nextInt(underwearList.length)];
+            while (undies.getName().equals("Random"))
+            //...selecting random undies from the undies array.
+            {
+                undies = underwearList[generator.nextInt(underwearList.length)];
+            }
+            //If random undies weren't chosen...
+        } else
+        {
+            //We look for the selected undies in the array
+            for (Wear iWear : underwearList)
+            {
+                //By comparing all possible undies' names with the selected undies string
+                if (iWear.getName().equals(under))
+                {
+                    //If the selected undies were found, assigning current compared undies to the character's undies
+                    undies = iWear;
+                    break;
+                }
+            }
+        }
+        //If the selected undies weren't found
+        if (undies == null)
+        {
+            JOptionPane.showMessageDialog(null, "Incorrect underwear selected. Setting random instead.", "Incorrect underwear", JOptionPane.WARNING_MESSAGE);
+            undies = underwearList[generator.nextInt(underwearList.length)];
+        }
+        
+        //Assigning color
+        if (!undies.isMissing())
+        {
+            if (!undiesColor.equals("Random"))
+            {
+                undies.setColor(undiesColor);
+            } else
+            {
+                undies.setColor(Wear.colorList[generator.nextInt(Wear.colorList.length)]);
+            }
+        } else
+        {
+            undies.setColor("");
+        }
+        
+        if (outer.equals("Custom"))
+        {
+            fcWear.setDialogTitle("Open an outerwear file");
+            if (fcWear.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
+            {
+                File file = fcWear.getSelectedFile();
+                try
+                {
+                    FileInputStream fin = new FileInputStream(file);
+                    ObjectInputStream ois = new ObjectInputStream(fin);
+                    lower = (Wear) ois.readObject();
+                    if (lower.getType() == UNDERWEAR)
+                    {
+                        JOptionPane.showMessageDialog(null, "This isn't an outerwear.", "Wrong wear type", JOptionPane.ERROR_MESSAGE);
+                        dispose();
+                        setupFramePre.main(new String[0]);
+                    }
+                } catch (IOException | ClassNotFoundException e)
+                {
+                    JOptionPane.showMessageDialog(null, "File error.", "Error", JOptionPane.ERROR_MESSAGE);
+                    dispose();
+                    setupFramePre.main(new String[0]);
+                }
+            }
+        }
+
+        //Same with the lower clothes
+        if (outer.equals("Random"))
+        {
+            lower = outerwearList[generator.nextInt(outerwearList.length)];
+            while (lower.getName().equals("Random"))
+            {
+                lower = outerwearList[generator.nextInt(outerwearList.length)];
+            }
+        } else
+        {
+            for (Wear iWear : outerwearList)
+            {
+                if (iWear.getName().equals(outer))
+                {
+                    lower = iWear;
+                    break;
+                }
+            }
+        }
+        if (lower == null)
+        {
+            JOptionPane.showMessageDialog(null, "Incorrect outerwear selected. Setting random instead.", "Incorrect outerwear", JOptionPane.WARNING_MESSAGE);
+            lower = outerwearList[generator.nextInt(outerwearList.length)];
+        }
+        
+        //Assigning color
+        if (!lower.isMissing())
+        {
+            if (!lowerColor.equals("Random"))
+            {
+                lower.setColor(lowerColor);
+            } else
+            {
+                lower.setColor(Wear.colorList[generator.nextInt(Wear.colorList.length)]);
+            }
+        } else
+        {
+            lower.setColor("");
+        }
+    }
+    
+    ALongHourAndAHalf(Save save)
+    {
+        preConstructor(save.name,save.gender,save.hardcore,save.incontinence,(int)save.bladder);
+        undies = save.underwear;
+        lower = save.outerwear;
+    }
+    
     /**
      * @return TRUE - if character's gender is female<br>FALSE - if character's
      * gender is male
