@@ -1,9 +1,7 @@
 /*
-*ALongHourAndAHalf Vers. 1.2
-*Date of Version: 5/27/2017
-*Time of Version: 22:08
+*ALongHourAndAHalf Vers. 1.3
 *
-*Dev: Rosalie Elodie
+*Dev: Rosalie Elodie, JavaBird, Anna May
 *
 *Version History:
 *0.1: Default game mechanics shown, non interactable. No playability, no customization. Not all game mechanics even implemented, purely a showcase program.
@@ -18,6 +16,10 @@
 *    New game options frame
 *    Even more clothes
 *    Cleaned and documented code a bit
+*1.3 Bug fixes
+*    Interface improvements
+*    Game text refining
+*    Wear editor
 *
 *
 *A Long Hour and a Half (ALongHourAndAHalf) is a game where
@@ -41,28 +43,29 @@
 *Other options, which may be added in later or not, are these:
 *Extended game ("Can [name] get through an entire school day AND make it home?") (probably will be in the next update)
 *Better Dialog (lines made by someone that's not me >_< )
+*Story editor (players can create their own stories and play them)
+*Save/load game states
+*Character presets
 *
 *
-*If you have any questions, or want to shove code in her face,
-*be sure to send them to Rosalie at her following email address:
-*rosalieelodiedev@gmail.com
-*(without caps)
-*RosalieElodieDev@gmail.com
-*(with caps)
+*If you have any questions, bugs or suggestions, 
+*create an issue or a pull request on GitHub:
+*https://github.com/javabird25/long-hour-and-a-half/
 *
-*She also goes by the terrible username "Justice" on Omo.org
-*(omorashi.org)
-*and you're free to contact her there!
-*(If you already have an account there, it's much more preferable ^^; )
-*
+*Developers' usernames table
+*   Code documentation  |GitHub                                      |Omorashi.org
+*   --------------------|--------------------------------------------|---------------------------------------------------------------------
+*   Rosalie Elodie      |REDev987532(https://github.com/REDev987532) |Justice (https://www.omorashi.org/profile/25796-justice/)
+*   JavaBird            |javabird25 (https://github.com/javabird25)  |FromRUSForum (https://www.omorashi.org/profile/89693-fromrusforum/)
+*   Anna May            |AnnahMay (https://github.com/AnnahMay)      |Anna May (https://www.omorashi.org/profile/10087-anna-may/)
+*   notwillnotcast      |?                                           |notwillnotcast (https://www.omorashi.org/profile/14935-notwillnotcast/)
+*   
 *FINAL NOTE: While this is created by Rosalie Dev, she allows it to be posted
 *freely, so long as she's creditted. She also states that this program is
 *ABSOLUTELY FREE, not to mention she hopes you enjoy ^_^
 *
 *
 *DEV NOTES: Look for bugs, there is always a bunch of them
-*Bugs:
-*
  */
 //name used for copying/pasting purposes (to keep from typing over and over again)
 //ALongHourAndAHalf
@@ -77,8 +80,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -243,7 +244,6 @@ class Wear implements Serializable
             {
             } 
     }
-    
 
     /**
      * @return the type
@@ -995,11 +995,6 @@ public class ALongHourAndAHalf extends JFrame
                 }
 
                 score("Заполненность мочевого пузыря в начале игры - " + bladder + "%", '+', Math.round(bladder));
-
-                //Incontinence rounding
-                BigDecimal bd = new BigDecimal(incon);
-                bd = bd.setScale(1, RoundingMode.HALF_UP);
-                incon = bd.floatValue();
 
                 score("Инконтиненция - " + incon + "x", '*', incon);
 
@@ -2295,7 +2290,7 @@ public class ALongHourAndAHalf extends JFrame
                 String scoreText2 = "Очки: " + score + "\n" + scoreText;
 
                 JOptionPane.showMessageDialog(this, scoreText2);
-                System.exit(0);
+                btnNext.setVisible(false);
                 break;
 
             case CAUGHT:
@@ -2795,12 +2790,6 @@ public class ALongHourAndAHalf extends JFrame
                 break;
 
             case SURPRISE_WET_PRESSURE:
-//                setText("Ай... Внезапная нестерпимая вспышка ужасной боли пронзила мочевой пузырь...",
-//                        "Ты пытаешься вытерпеть, но физически не можешь.",
-//                        "Ты почуствовала тёплую, обжигающую струю мочи,",
-//                        "заливающую твои " + undies.insert() + " и " + lower.insert() + ".",
-//                        "Ты закрываешь свои глаза и полностью расслабляешься.",
-//                        "Ты чувствуешь, как струя стала намного сильнее.");
                 
                 if (!lower.getName().equals("Без верхней одежды"))
                 {
