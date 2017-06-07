@@ -493,7 +493,7 @@ public class ALongHourAndAHalf extends JFrame
      * Makes the wetting chance higher after reaching 100% of the bladder
      * fulness.
      */
-    public int embarassment = 0;
+    public byte embarassment = 0;
 
     /**
      * Amount of a water in a belly.
