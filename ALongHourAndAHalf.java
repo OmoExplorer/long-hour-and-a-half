@@ -367,16 +367,16 @@ public class ALongHourAndAHalf extends JFrame
                 new Wear("String bikini", "bikini panties", 1, 1, 2),
                 new Wear("Regular bikini", "bikini panties", 2, 2, 2),
                 new Wear("Swimsuit", "swimsuit", 4, 2.5F, 2.5F),
-                new Wear("Light diaper", "diaper", 4.5F, 10, 0),
-                new Wear("Normal diaper", "diaper", 9, 20, 0),
-                new Wear("Heavy diaper", "diaper", 18, 30, 0),
-                new Wear("Light pad", "pad", 1, 8, 0.25F),
-                new Wear("Normal pad", "pad", 1.5F, 12, 0.25F),
-                new Wear("Big pad", "pad", 2, 16, 0.25F),
+                new Wear("Light diaper", "diaper", 9, 50, 0),
+                new Wear("Normal diaper", "diaper", 18, 100, 0),
+                new Wear("Heavy diaper", "diaper", 25, 175, 0),
+                new Wear("Light pad", "pad", 2, 16, 0.25F),
+                new Wear("Normal pad", "pad", 3, 24, 0.25F),
+                new Wear("Big pad", "pad", 4, 32, 0.25F),
                 new Wear("Pants", "pants", 2.5F, 5, 1),
                 new Wear("Shorts-alike pants", "pants", 3.75F, 7.5F, 1),
                 new Wear("Anti-gravity pants", "pants", 0, 4, 1),
-                new Wear("Super-absorbing diaper", "diaper", 18, 200, 0)
+                new Wear("Super-absorbing diaper", "diaper", 18, 600, 0)
             };
 
     /**
@@ -1604,21 +1604,25 @@ public class ALongHourAndAHalf extends JFrame
                 break;
 
             case ASK_CHEAT:
-                do
-                {
+//                do
+//                {
                     lblChoice.setText("Select a cheat:");
                     listChoice.setListData(cheatList);
                     lblChoice.setVisible(true);
                     listScroller.setVisible(true);
                     nextStage = CHOSE_CHEAT;
-                } while (listChoice.isSelectionEmpty());
+//                } while (listChoice.isSelectionEmpty());
                 break;
 
             case CHOSE_CHEAT:
                 lblChoice.setText("");
                 lblChoice.setVisible(false);
                 listScroller.setVisible(false);
-
+                if(listChoice.isSelectionEmpty())
+                {
+                    nextStage = ASK_CHEAT;
+                    break;
+                }
                 switch (listChoice.getSelectedIndex())
                 {
                     case 0:
@@ -1676,6 +1680,9 @@ public class ALongHourAndAHalf extends JFrame
                                 "looking pill, and you take it.");
                         incon = Float.parseFloat(JOptionPane.showInputDialog("How incontinent are you now?"));
                         lblIncon.setText("Incontinence: " + incon + "x");
+                        maxSphincterPower = 100 / incon;
+                        sphincterPower = maxSphincterPower;
+                        lblSphPower.setText("Pee holding ability: " + Math.round(sphincterPower) + "%");
                         nextStage = ASK_ACTION;
                         break;
 
