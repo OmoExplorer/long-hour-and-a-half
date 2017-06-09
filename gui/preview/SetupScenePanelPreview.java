@@ -17,10 +17,10 @@ import java.util.ArrayList;
 public class SetupScenePanelPreview extends javax.swing.JPanel
 {
     private static final long serialVersionUID = 1L;
-    private ArrayList<Character> watchedCharacters;
-    private ArrayList<Action> actions;
-    private ArrayList<Operation> operations;
-    private Scene nextScene;
+    private static ArrayList<Character> watchedCharacters;
+    private static ArrayList<Action> actions;
+    private static ArrayList<Operation> operations;
+    private static Scene nextScene;
 
     /**
      * Creates new form scenePreview
@@ -152,7 +152,7 @@ public class SetupScenePanelPreview extends javax.swing.JPanel
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    ArrayList<Object> onClose()
+    static ArrayList<Object> onClose()
     {
         ArrayList<Object> paramList = new ArrayList<>();
         paramList.add(nameField.getText());
@@ -169,13 +169,13 @@ public class SetupScenePanelPreview extends javax.swing.JPanel
     private javax.swing.JLabel actionsLabel;
     private javax.swing.JButton insertVariableButton;
     private javax.swing.JLabel linesLabel;
-    public javax.swing.JTextField nameField;
+    public static javax.swing.JTextField nameField;
     private javax.swing.JLabel nameLabel;
     private javax.swing.JComboBox<String> nextSceneComboBox;
     private javax.swing.JLabel nextSceneLabel;
     private javax.swing.JButton operationsEditButton;
     private javax.swing.JLabel operationsLabel;
-    private javax.swing.JTextArea textArea;
+    private static javax.swing.JTextArea textArea;
     private javax.swing.JLabel textLabel;
     private javax.swing.JScrollPane textScrollPane;
     private javax.swing.JLabel watchedChaactersLabel;

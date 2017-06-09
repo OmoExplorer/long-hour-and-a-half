@@ -13,6 +13,11 @@ public class ActionPanelPreview extends javax.swing.JPanel
 {
     private static final long serialVersionUID = 1L;
 
+    static void onClose()
+    {
+        
+    }
+
     /**
      * Creates new form ActionPanel
      */

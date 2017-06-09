@@ -5,6 +5,11 @@
  */
 package gui.preview;
 
+import api.Action;
+import api.Operation;
+import api.Scenes.Scene;
+import java.util.ArrayList;
+
 /**
  *
  * @author Jonisan
@@ -12,6 +17,22 @@ package gui.preview;
 public class WettingScenePanelPreview extends javax.swing.JPanel
 {
     private static final long serialVersionUID = 1L;
+    private static ArrayList<Character> watchedCharacters;
+    private static ArrayList<Action> actions;
+    private static ArrayList<Operation> operations;
+    private static Scene nextScene;
+    
+    static ArrayList<Object> onClose()
+    {
+        ArrayList<Object> paramList = new ArrayList<>();
+        paramList.add(nameField.getText());
+        paramList.add(textArea.getText());
+        paramList.add(watchedCharacters);
+        paramList.add(actions);
+        paramList.add(operations);
+        paramList.add(nextScene);
+        return paramList;
+    }
 
     /**
      * Creates new form scenePreview
@@ -149,13 +170,13 @@ public class WettingScenePanelPreview extends javax.swing.JPanel
     private javax.swing.JLabel actionsLabel;
     private javax.swing.JButton insertVariableButton;
     private javax.swing.JLabel linesLabel;
-    private javax.swing.JTextField nameField;
+    private static javax.swing.JTextField nameField;
     private javax.swing.JLabel nameLabel;
     private javax.swing.JComboBox<String> nextSceneComboBox;
     private javax.swing.JLabel nextSceneLabel;
     private javax.swing.JButton operationsEditButton;
     private javax.swing.JLabel operationsLabel;
-    private javax.swing.JTextArea textArea;
+    private static javax.swing.JTextArea textArea;
     private javax.swing.JLabel textLabel;
     private javax.swing.JScrollPane textScrollPane;
     private javax.swing.JLabel watchedChaactersLabel;

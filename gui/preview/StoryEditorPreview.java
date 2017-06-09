@@ -20,7 +20,7 @@ public class StoryEditorPreview extends javax.swing.JFrame
     
     private ArrayList<SetupScene> setupScenesList = new ArrayList<>();
     private ArrayList<ActiveScene> activeScenesList = new ArrayList<>();
-    private ArrayList<WettingScene> wettingScenesList = new ArrayList<>();
+    static ArrayList<WettingScene> wettingScenesList = new ArrayList<>();
     private ArrayList<api.Character> charactersList = new ArrayList<>();
     private ArrayList<Action> actionsList = new ArrayList<>();
     private ArrayList<Operation> operationsList = new ArrayList<>();
@@ -313,7 +313,7 @@ public class StoryEditorPreview extends javax.swing.JFrame
 
     private void quitActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_quitActionPerformed
     {//GEN-HEADEREND:event_quitActionPerformed
-        SetupFramePanelPreview.main();
+        SetupFramePreview.main();
         dispose();
     }//GEN-LAST:event_quitActionPerformed
 
@@ -364,16 +364,16 @@ public class StoryEditorPreview extends javax.swing.JFrame
                 SetupScenePanelPreview.onClose();
                 break;
             case "Active":
-                //Saving
+                ActiveScenePanelPreview.onClose();
                 break;
             case "Wetting":
-                //Saving
+                WettingScenePanelPreview.onClose();
                 break;
             case "Characters":
-                //Saving
+                CharacterPanelPreview.onClose();
                 break;
             case "Actions":
-                //Saving
+                ActionPanelPreview.onClose();
                 break;
             case "Operations":
                 //Saving

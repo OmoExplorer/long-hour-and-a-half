@@ -30,7 +30,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import api.ALongHourAndAHalf;
 import api.ALongHourAndAHalf.Gender;
-import gui.StoryEditor;
 
 /**
  *
@@ -1653,13 +1652,10 @@ public class SetupFramePreview extends javax.swing.JFrame {
     @SuppressWarnings("ResultOfObjectAllocationIgnored")
     private void customStoryCreateActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_customStoryCreateActionPerformed
     {//GEN-HEADEREND:event_customStoryCreateActionPerformed
-        StoryEditorPreview.main();
+        new StoryEditorPreview();
         dispose();
     }//GEN-LAST:event_customStoryCreateActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main() {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -1677,13 +1673,7 @@ public class SetupFramePreview extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(SetupFramePreview.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
         
-        //</editor-fold>
-        //</editor-fold>
-
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
             new SetupFramePreview().setVisible(true);

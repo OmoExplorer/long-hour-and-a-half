@@ -5,12 +5,16 @@
  */
 package gui.preview;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Jonisan
  */
 public class CharacterPanelPreview extends javax.swing.JPanel
 {
+
+    private static final long serialVersionUID = 1L;
 
     /**
      * Creates new form CharacterPanelPreview
@@ -274,6 +278,7 @@ public class CharacterPanelPreview extends javax.swing.JPanel
         );
 
         forceOrLetRadioGroup.add(letParametersRadioGroup);
+        letParametersRadioGroup.setSelected(true);
         letParametersRadioGroup.setText("Let player select parameters");
 
         letParametersPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -512,7 +517,7 @@ public class CharacterPanelPreview extends javax.swing.JPanel
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addGap(17, 17, 17)
-                        .addComponent(wettingSceneComboBox, 0, 332, Short.MAX_VALUE)))
+                        .addComponent(wettingSceneComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -528,6 +533,21 @@ public class CharacterPanelPreview extends javax.swing.JPanel
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    static ArrayList<Object> onClose()
+    {
+        ArrayList<Object> paramList = new ArrayList<>();
+        StoryEditorPreview.wettingScenesList.stream().filter((iScene) -> (iScene.getSceneTitle().equals(wettingSceneComboBox.getSelectedItem()))).forEachOrdered((iScene) ->
+        {
+            paramList.add(iScene);
+        });
+        paramList.add(letParametersRadioGroup.isSelected());
+        
+        if(letParametersRadioGroup.isSelected())
+        {
+            
+        }
+        return paramList;
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel bladderPanel;
@@ -563,7 +583,7 @@ public class CharacterPanelPreview extends javax.swing.JPanel
     private javax.swing.JButton letOuterwearSelectButton;
     private javax.swing.JLabel letOuterwearSelectLabel;
     private javax.swing.JPanel letParametersPanel;
-    private javax.swing.JRadioButton letParametersRadioGroup;
+    private static javax.swing.JRadioButton letParametersRadioGroup;
     private javax.swing.JLabel letRandomIncontinenceFromLabel;
     private javax.swing.JSpinner letRandomIncontinenceFromSpinner;
     private javax.swing.JLabel letRandomIncontinenceToLabel;
@@ -587,6 +607,6 @@ public class CharacterPanelPreview extends javax.swing.JPanel
     private javax.swing.JSpinner randomIncontinenceToSpinner;
     private javax.swing.JButton underwearSelectButton;
     private javax.swing.JLabel underwearSelectLabel;
-    private javax.swing.JComboBox<String> wettingSceneComboBox;
+    private static javax.swing.JComboBox<String> wettingSceneComboBox;
     // End of variables declaration//GEN-END:variables
 }
