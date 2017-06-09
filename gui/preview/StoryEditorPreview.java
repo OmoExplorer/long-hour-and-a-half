@@ -24,10 +24,12 @@ public class StoryEditorPreview extends javax.swing.JFrame
     private ArrayList<api.Character> charactersList = new ArrayList<>();
     private ArrayList<Action> actionsList = new ArrayList<>();
     private ArrayList<Operation> operationsList = new ArrayList<>();
-    public Scene currentOperatingScene;
-    public api.Character currentOperatingCharacter;
-    public Action currentOperatingAction;
-    public Operation currentOperatingOperation;
+    public static SetupScene currentOperatingSetupScene;
+    public static ActiveScene currentOperatingActiveScene;
+    public static WettingScene currentOperatingWettingScene;
+    public static api.Character currentOperatingCharacter;
+    public static Action currentOperatingAction;
+    public static Operation currentOperatingOperation;
 
     /**
      * Creates new form storyEditor
@@ -376,7 +378,7 @@ public class StoryEditorPreview extends javax.swing.JFrame
                 ActionPanelPreview.onClose();
                 break;
             case "Operations":
-                //Saving
+                OperationPanelPreview.onClose();
                 break;
         }
         
@@ -398,7 +400,7 @@ public class StoryEditorPreview extends javax.swing.JFrame
                 {
                     setupScenesList.stream().filter((iScene) -> (iScene.getSceneTitle().equals(newSelection))).forEachOrdered((iScene) ->
                     {
-                        currentOperatingScene = iScene;
+                        currentOperatingSetupScene = iScene;
                     });
                 }
                 editorSplitPane.setRightComponent(new SetupScenePanelPreview());
@@ -413,7 +415,7 @@ public class StoryEditorPreview extends javax.swing.JFrame
                 {
                     activeScenesList.stream().filter((iScene) -> (iScene.getSceneTitle().equals(newSelection))).forEachOrdered((iScene) ->
                     {
-                        currentOperatingScene = iScene;
+                        currentOperatingActiveScene = iScene;
                     });
                 }
                 editorSplitPane.setRightComponent(new ActiveScenePanelPreview());
@@ -428,7 +430,7 @@ public class StoryEditorPreview extends javax.swing.JFrame
                 {
                     wettingScenesList.stream().filter((iScene) -> (iScene.getSceneTitle().equals(newSelection))).forEachOrdered((iScene) ->
                     {
-                        currentOperatingScene = iScene;
+                        currentOperatingWettingScene = iScene;
                     });
                 }
                 editorSplitPane.setRightComponent(new WettingScenePanelPreview());

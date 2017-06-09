@@ -195,6 +195,9 @@
           </Layout>
           <SubComponents>
             <Component class="javax.swing.JTextField" name="nameField">
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
+              </AuxValues>
             </Component>
             <Component class="javax.swing.JLabel" name="nameLabel">
               <Properties>
@@ -598,6 +601,9 @@
                       <SpinnerModel initial="0" maximum="130" minimum="0" numberType="java.lang.Short" stepSize="1" type="number"/>
                     </Property>
                   </Properties>
+                  <AuxValues>
+                    <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
+                  </AuxValues>
                 </Component>
                 <Component class="javax.swing.JLabel" name="letBladderRandomFromLabel">
                   <Properties>
@@ -610,6 +616,9 @@
                       <SpinnerModel initial="0" maximum="130" minimum="0" numberType="java.lang.Short" stepSize="1" type="number"/>
                     </Property>
                   </Properties>
+                  <AuxValues>
+                    <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
+                  </AuxValues>
                 </Component>
                 <Component class="javax.swing.JLabel" name="letBladderRandomToLabel">
                   <Properties>
@@ -622,6 +631,9 @@
                       <SpinnerModel initial="50" maximum="130" minimum="0" numberType="java.lang.Short" stepSize="1" type="number"/>
                     </Property>
                   </Properties>
+                  <AuxValues>
+                    <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
+                  </AuxValues>
                 </Component>
                 <Component class="javax.swing.JLabel" name="letBladderDefinedFromLabel">
                   <Properties>
@@ -633,6 +645,9 @@
                     <Property name="selected" type="boolean" value="true"/>
                     <Property name="text" type="java.lang.String" value="Defined"/>
                   </Properties>
+                  <AuxValues>
+                    <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
+                  </AuxValues>
                 </Component>
                 <Component class="javax.swing.JLabel" name="letBladderDefinedToLabel">
                   <Properties>
@@ -645,12 +660,18 @@
                       <SpinnerModel initial="130" maximum="130" minimum="0" numberType="java.lang.Short" stepSize="1" type="number"/>
                     </Property>
                   </Properties>
+                  <AuxValues>
+                    <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
+                  </AuxValues>
                 </Component>
                 <Component class="javax.swing.JCheckBox" name="letBladderRandomCheckbox">
                   <Properties>
                     <Property name="selected" type="boolean" value="true"/>
                     <Property name="text" type="java.lang.String" value="Random"/>
                   </Properties>
+                  <AuxValues>
+                    <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
+                  </AuxValues>
                 </Component>
               </SubComponents>
             </Container>
@@ -727,6 +748,9 @@
                     <Property name="selected" type="boolean" value="true"/>
                     <Property name="text" type="java.lang.String" value="Defined"/>
                   </Properties>
+                  <AuxValues>
+                    <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
+                  </AuxValues>
                 </Component>
                 <Component class="javax.swing.JLabel" name="definedIncontinenceFromLabel">
                   <Properties>
@@ -739,6 +763,9 @@
                       <SpinnerModel initial="0.5" maximum="10.0" minimum="0.5" numberType="java.lang.Float" stepSize="1.0" type="number"/>
                     </Property>
                   </Properties>
+                  <AuxValues>
+                    <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
+                  </AuxValues>
                 </Component>
                 <Component class="javax.swing.JSpinner" name="definedIncontinenceToSpinner">
                   <Properties>
@@ -746,6 +773,9 @@
                       <SpinnerModel initial="10.0" maximum="10.0" minimum="0.5" numberType="java.lang.Float" stepSize="1.0" type="number"/>
                     </Property>
                   </Properties>
+                  <AuxValues>
+                    <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
+                  </AuxValues>
                 </Component>
                 <Component class="javax.swing.JLabel" name="definedIncontinenceToLabel">
                   <Properties>
@@ -757,6 +787,9 @@
                     <Property name="selected" type="boolean" value="true"/>
                     <Property name="text" type="java.lang.String" value="Random"/>
                   </Properties>
+                  <AuxValues>
+                    <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
+                  </AuxValues>
                 </Component>
                 <Component class="javax.swing.JLabel" name="letRandomIncontinenceFromLabel">
                   <Properties>
@@ -774,6 +807,9 @@
                       <SpinnerModel initial="10.0" maximum="10.0" minimum="0.5" numberType="java.lang.Float" stepSize="1.0" type="number"/>
                     </Property>
                   </Properties>
+                  <AuxValues>
+                    <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
+                  </AuxValues>
                 </Component>
                 <Component class="javax.swing.JSpinner" name="letRandomIncontinenceFromSpinner">
                   <Properties>
@@ -781,6 +817,9 @@
                       <SpinnerModel initial="0.5" maximum="10.0" minimum="0.5" numberType="java.lang.Float" stepSize="1.0" type="number"/>
                     </Property>
                   </Properties>
+                  <AuxValues>
+                    <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
+                  </AuxValues>
                 </Component>
               </SubComponents>
             </Container>

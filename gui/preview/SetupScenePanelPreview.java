@@ -9,6 +9,7 @@ import api.Action;
 import api.Operation;
 import api.Scenes.Scene;
 import java.util.ArrayList;
+import static gui.preview.StoryEditorPreview.*;
 
 /**
  *
@@ -152,16 +153,14 @@ public class SetupScenePanelPreview extends javax.swing.JPanel
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    static ArrayList<Object> onClose()
+    static void onClose()
     {
-        ArrayList<Object> paramList = new ArrayList<>();
-        paramList.add(nameField.getText());
-        paramList.add(textArea.getText());
-        paramList.add(watchedCharacters);
-        paramList.add(actions);
-        paramList.add(operations);
-        paramList.add(nextScene);
-        return paramList;
+        currentOperatingSetupScene.setSceneTitle(nameField.getText());
+        currentOperatingSetupScene.setSceneText(textArea.getText());
+        currentOperatingSetupScene.setWatchedCharacters(watchedCharacters);
+        currentOperatingSetupScene.setActionList(actions);
+        currentOperatingSetupScene.setOperationList(operations);
+        currentOperatingSetupScene.setNextScene(nextScene);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

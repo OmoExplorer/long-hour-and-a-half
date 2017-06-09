@@ -8,6 +8,7 @@ package gui.preview;
 import api.Action;
 import api.Operation;
 import api.Scenes.Scene;
+import static gui.preview.StoryEditorPreview.currentOperatingWettingScene;
 import java.util.ArrayList;
 
 /**
@@ -22,16 +23,14 @@ public class WettingScenePanelPreview extends javax.swing.JPanel
     private static ArrayList<Operation> operations;
     private static Scene nextScene;
     
-    static ArrayList<Object> onClose()
+    static void onClose()
     {
-        ArrayList<Object> paramList = new ArrayList<>();
-        paramList.add(nameField.getText());
-        paramList.add(textArea.getText());
-        paramList.add(watchedCharacters);
-        paramList.add(actions);
-        paramList.add(operations);
-        paramList.add(nextScene);
-        return paramList;
+        currentOperatingWettingScene.setSceneTitle(nameField.getText());
+        currentOperatingWettingScene.setSceneText(textArea.getText());
+        currentOperatingWettingScene.setWatchedCharacters(watchedCharacters);
+        currentOperatingWettingScene.setActionList(actions);
+        currentOperatingWettingScene.setOperationList(operations);
+        currentOperatingWettingScene.setNextScene(nextScene);
     }
 
     /**
@@ -119,14 +118,14 @@ public class WettingScenePanelPreview extends javax.swing.JPanel
                             .addComponent(operationsLabel)
                             .addComponent(actionsLabel)
                             .addComponent(nextSceneLabel))
-                        .addGap(64, 64, 64)
+                        .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(operationsEditButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(operationsEditButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(actionsEditButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(nextSceneComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(watchedChaactersLabel)
-                        .addGap(52, 52, 52)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(watchedCharactersEditButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );

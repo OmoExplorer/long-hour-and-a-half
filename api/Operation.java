@@ -5,6 +5,8 @@
  */
 package api;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Jonisan
@@ -12,6 +14,8 @@ package api;
 public class Operation
 {
     private String name;
+    private ArrayList<Operation> childOperations;
+    
     public void operate()
     {}
 
@@ -29,5 +33,13 @@ public class Operation
     public void setName(String name)
     {
         this.name = name;
+    }
+
+    /**
+     * @param childOperations the childOperations to set
+     */
+    public void setChildOperations(ArrayList<Operation> childOperations)
+    {
+        this.childOperations = childOperations;
     }
 }

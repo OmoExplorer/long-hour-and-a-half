@@ -5,7 +5,7 @@
  */
 package gui.preview;
 
-import java.util.ArrayList;
+import static gui.preview.StoryEditorPreview.currentOperatingCharacter;
 
 /**
  *
@@ -533,35 +533,69 @@ public class CharacterPanelPreview extends javax.swing.JPanel
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    static ArrayList<Object> onClose()
+    static void onClose()
     {
-        ArrayList<Object> paramList = new ArrayList<>();
         StoryEditorPreview.wettingScenesList.stream().filter((iScene) -> (iScene.getSceneTitle().equals(wettingSceneComboBox.getSelectedItem()))).forEachOrdered((iScene) ->
         {
-            paramList.add(iScene);
+            currentOperatingCharacter.setWettingScene(iScene);
         });
-        paramList.add(letParametersRadioGroup.isSelected());
         
-        if(letParametersRadioGroup.isSelected())
+        boolean letParameters = letParametersRadioGroup.isSelected();
+        currentOperatingCharacter.allowParametersSelection(letParameters);
+        if(letParameters)
         {
+            boolean defineBladder = definedBladderCheckbox.isSelected();
+            currentOperatingCharacter.canDefineBladder(defineBladder);
+            if(defineBladder)
+            {
+                currentOperatingCharacter.setDefinedBladderFrom((short)letBladderDefinedFromSpinner.getValue());
+                currentOperatingCharacter.setDefinedBladderTo((short)letBladderDefinedToSpinner.getValue());
+            }
             
+            boolean randomBladder = letBladderRandomCheckbox.isSelected();
+            currentOperatingCharacter.allowRandomBladder(randomBladder);
+            if(randomBladder)
+            {
+                currentOperatingCharacter.setRandomBladderFrom((short)letBladderRandomFromSpinner.getValue());
+                currentOperatingCharacter.setRandomBladderTo((short)letBladderRandomToSpinner.getValue());
+            }
+            
+            boolean defineIncontinence = definedIncontinenceCheckbox.isSelected();
+            currentOperatingCharacter.canDefineIncontinence(defineIncontinence);
+            if(defineBladder)
+            {
+                currentOperatingCharacter.setDefinedIncontinenceFrom((short)definedIncontinenceFromSpinner.getValue());
+                currentOperatingCharacter.setDefinedIncontinenceTo((short)definedIncontinenceToSpinner.getValue());
+            }
+            
+            boolean randomIncontinence = randomIncontinenceCheckbox.isSelected();
+            currentOperatingCharacter.allowRandomIncontinence(randomIncontinence);
+            if(randomBladder)
+            {
+                currentOperatingCharacter.setRandomIncontinenceFrom((short)letRandomIncontinenceFromSpinner.getValue());
+                currentOperatingCharacter.setRandomIncontinenceTo((short)letRandomIncontinenceToSpinner.getValue());
+            }
+            //TODO: Wear
         }
-        return paramList;
+        else
+        {
+            currentOperatingCharacter.forceName(nameField.getText());
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel bladderPanel;
     private javax.swing.ButtonGroup bladderRadioGroup;
     private javax.swing.JSpinner bladderSpinner;
-    private javax.swing.JCheckBox definedBladderCheckbox;
+    private static javax.swing.JCheckBox definedBladderCheckbox;
     private javax.swing.JRadioButton definedBladderRadioButton;
-    private javax.swing.JCheckBox definedIncontinenceCheckbox;
+    private static javax.swing.JCheckBox definedIncontinenceCheckbox;
     private javax.swing.JLabel definedIncontinenceFromLabel;
-    private javax.swing.JSpinner definedIncontinenceFromSpinner;
+    private static javax.swing.JSpinner definedIncontinenceFromSpinner;
     private javax.swing.JRadioButton definedIncontinenceRadioButton;
     private javax.swing.JSpinner definedIncontinenceSpinner;
     private javax.swing.JLabel definedIncontinenceToLabel;
-    private javax.swing.JSpinner definedIncontinenceToSpinner;
+    private static javax.swing.JSpinner definedIncontinenceToSpinner;
     private javax.swing.ButtonGroup forceOrLetRadioGroup;
     private javax.swing.JRadioButton forceParametersRadioButton;
     private javax.swing.JPanel forcedParametersPanel;
@@ -570,27 +604,27 @@ public class CharacterPanelPreview extends javax.swing.JPanel
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel letBladderDefinedFromLabel;
-    private javax.swing.JSpinner letBladderDefinedFromSpinner;
+    private static javax.swing.JSpinner letBladderDefinedFromSpinner;
     private javax.swing.JLabel letBladderDefinedToLabel;
-    private javax.swing.JSpinner letBladderDefinedToSpinner;
+    private static javax.swing.JSpinner letBladderDefinedToSpinner;
     private javax.swing.JPanel letBladderPanel;
-    private javax.swing.JCheckBox letBladderRandomCheckbox;
+    private static javax.swing.JCheckBox letBladderRandomCheckbox;
     private javax.swing.JLabel letBladderRandomFromLabel;
-    private javax.swing.JSpinner letBladderRandomFromSpinner;
+    private static javax.swing.JSpinner letBladderRandomFromSpinner;
     private javax.swing.JLabel letBladderRandomToLabel;
-    private javax.swing.JSpinner letBladderRandomToSpinner;
+    private static javax.swing.JSpinner letBladderRandomToSpinner;
     private javax.swing.JPanel letIncontinencePanel;
     private javax.swing.JButton letOuterwearSelectButton;
     private javax.swing.JLabel letOuterwearSelectLabel;
     private javax.swing.JPanel letParametersPanel;
     private static javax.swing.JRadioButton letParametersRadioGroup;
     private javax.swing.JLabel letRandomIncontinenceFromLabel;
-    private javax.swing.JSpinner letRandomIncontinenceFromSpinner;
+    private static javax.swing.JSpinner letRandomIncontinenceFromSpinner;
     private javax.swing.JLabel letRandomIncontinenceToLabel;
-    private javax.swing.JSpinner letRandomIncontinenceToSpinner;
+    private static javax.swing.JSpinner letRandomIncontinenceToSpinner;
     private javax.swing.JButton letUnderwearSelectButton;
     private javax.swing.JLabel letUnderwearSelectLabel;
-    private javax.swing.JTextField nameField;
+    private static javax.swing.JTextField nameField;
     private javax.swing.JLabel nameLabel;
     private javax.swing.JButton outerwearSelectButton;
     private javax.swing.JLabel outerwearSelectLabel;
@@ -599,7 +633,7 @@ public class CharacterPanelPreview extends javax.swing.JPanel
     private javax.swing.JRadioButton randomBladderRadioButton;
     private javax.swing.JLabel randomBladderToLabel;
     private javax.swing.JSpinner randomBladderToSpinner;
-    private javax.swing.JCheckBox randomIncontinenceCheckbox;
+    private static javax.swing.JCheckBox randomIncontinenceCheckbox;
     private javax.swing.JLabel randomIncontinenceFromLabel;
     private javax.swing.JSpinner randomIncontinenceFromSpinner;
     private javax.swing.JRadioButton randomIncontinenceRadioButton;

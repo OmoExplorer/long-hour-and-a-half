@@ -5,12 +5,24 @@
  */
 package gui.preview;
 
+import javax.swing.JPanel;
+
+import static gui.preview.StoryEditorPreview.currentOperatingOperation;
+
 /**
  *
  * @author Jonisan
  */
-public class OperationPanelPreview extends javax.swing.JPanel
+public class OperationPanelPreview extends JPanel
 {
+
+    private static final long serialVersionUID = 1L;
+
+    static void onClose()
+    {
+        currentOperatingOperation.setName(nameField.getName());
+//        currentOperatingOperation.setChildOperations();
+    }
 
     /**
      * Creates new form OperationPanel
@@ -75,7 +87,7 @@ public class OperationPanelPreview extends javax.swing.JPanel
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JTextField nameField;
+    private static javax.swing.JTextField nameField;
     private javax.swing.JLabel nameLabel;
     // End of variables declaration//GEN-END:variables
 }

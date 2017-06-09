@@ -5,6 +5,7 @@
  */
 package api;
 
+import api.Scenes.WettingScene;
 import api.clothes.Underwear;
 import api.clothes.Outerwear;
 
@@ -14,148 +15,85 @@ import api.clothes.Outerwear;
  */
 public class Character
 {
+
     /**
-     * @return the name
+     * @return the randomIncontinenceFrom
      */
-    public String getName()
+    public short getRandomIncontinenceFrom()
     {
-        return name;
+        return randomIncontinenceFrom;
     }
 
     /**
-     * @param name the name to set
+     * @param randomIncontinenceFrom the randomIncontinenceFrom to set
      */
-    public void setName(String name)
+    public void setRandomIncontinenceFrom(short randomIncontinenceFrom)
     {
-        this.name = name;
+        this.randomIncontinenceFrom = randomIncontinenceFrom;
     }
 
     /**
-     * @return the bladder
+     * @return the randomIncontinenceTo
      */
-    public float getBladder()
+    public short getRandomIncontinenceTo()
     {
-        return bladder;
+        return randomIncontinenceTo;
     }
 
     /**
-     * @param bladder the bladder to set
+     * @param randomIncontinenceTo the randomIncontinenceTo to set
      */
-    public void setBladder(float bladder)
+    public void setRandomIncontinenceTo(short randomIncontinenceTo)
     {
-        this.bladder = bladder;
+        this.randomIncontinenceTo = randomIncontinenceTo;
     }
 
     /**
-     * @return the affectedByTime
+     * @param definedIncontinenceFrom the definedIncontinenceFrom to set
      */
-    public boolean isAffectedByTime()
+    public void setDefinedIncontinenceFrom(short definedIncontinenceFrom)
     {
-        return affectedByTime;
+        this.definedIncontinenceFrom = definedIncontinenceFrom;
     }
 
     /**
-     * @param affectedByTime the affectedByTime to set
+     * @param definedIncontinenceTo the definedIncontinenceTo to set
      */
-    public void setAffectedByTime(boolean affectedByTime)
+    public void setDefinedIncontinenceTo(short definedIncontinenceTo)
     {
-        this.affectedByTime = affectedByTime;
+        this.definedIncontinenceTo = definedIncontinenceTo;
     }
 
     /**
-     * @return the incontinence
+     * @param definedBladderFrom the definedBladderFrom to set
      */
-    public float getIncontinence()
+    public void setDefinedBladderFrom(short definedBladderFrom)
     {
-        return incontinence;
+        this.definedBladderFrom = definedBladderFrom;
     }
 
     /**
-     * @param incontinence the incontinence to set
+     * @param definedBladderTo the definedBladderTo to set
      */
-    public void setIncontinence(float incontinence)
+    public void setDefinedBladderTo(short definedBladderTo)
     {
-        this.incontinence = incontinence;
+        this.definedBladderTo = definedBladderTo;
     }
 
     /**
-     * @return the bellyWater
+     * @param randomBladderFrom the randomBladderFrom to set
      */
-    public float getBellyWater()
+    public void setRandomBladderFrom(short randomBladderFrom)
     {
-        return bellyWater;
+        this.randomBladderFrom = randomBladderFrom;
     }
 
     /**
-     * @param bellyWater the bellyWater to set
+     * @param randomBladderTo the randomBladderTo to set
      */
-    public void setBellyWater(float bellyWater)
+    public void setRandomBladderTo(short randomBladderTo)
     {
-        this.bellyWater = bellyWater;
-    }
-
-    /**
-     * @return the sphincterPower
-     */
-    public float getSphincterPower()
-    {
-        return sphincterPower;
-    }
-
-    /**
-     * @param sphincterPower the sphincterPower to set
-     */
-    public void setSphincterPower(float sphincterPower)
-    {
-        this.sphincterPower = sphincterPower;
-    }
-
-    /**
-     * @return the maxSphincterPower
-     */
-    public float getMaxSphincterPower()
-    {
-        return maxSphincterPower;
-    }
-
-    /**
-     * @param maxSphincterPower the maxSphincterPower to set
-     */
-    public void setMaxSphincterPower(float maxSphincterPower)
-    {
-        this.maxSphincterPower = maxSphincterPower;
-    }
-
-    /**
-     * @return the underwear
-     */
-    public Underwear getUnderwear()
-    {
-        return underwear;
-    }
-
-    /**
-     * @param underwear the underwear to set
-     */
-    public void setUnderwear(Underwear underwear)
-    {
-        this.underwear = underwear;
-    }
-
-    /**
-     * @return the outerwear
-     */
-    public Outerwear getOuterwear()
-    {
-        return outerwear;
-    }
-
-    /**
-     * @param outerwear the outerwear to set
-     */
-    public void setOuterwear(Outerwear outerwear)
-    {
-        this.outerwear = outerwear;
+        this.randomBladderTo = randomBladderTo;
     }
     
     private String name;
@@ -167,4 +105,84 @@ public class Character
     private float maxSphincterPower;
     private Underwear underwear;
     private Outerwear outerwear;
+    private WettingScene wettingScene;
+    private boolean allowParametersSelection;
+    private boolean canDefineBladder;
+    private short randomBladderFrom;
+    private short randomBladderTo;
+    private short definedBladderFrom;
+    private short definedBladderTo;
+    private boolean allowRandomBladder;
+    private boolean canDefineIncontinence;
+    private short randomIncontinenceFrom;
+    private short randomIncontinenceTo;
+    private short definedIncontinenceFrom;
+    private short definedIncontinenceTo;
+    private boolean allowRandomIncontinence;
+    private boolean forceName;
+
+    /**
+     * @param wettingScene the character's wetting scene to set
+     */
+    public void setWettingScene(WettingScene wettingScene)
+    {
+        this.wettingScene = wettingScene;
+    }
+
+    /**
+     * @param allowParametersSelection the allowParametersSelection to set
+     */
+    public void allowParametersSelection(boolean allowParametersSelection)
+    {
+        this.allowParametersSelection = allowParametersSelection;
+    }
+
+    /**
+     * @param canDefineBladder whether to allow player to define bladder fulness
+     */
+    public void canDefineBladder(boolean canDefineBladder)
+    {
+        this.canDefineBladder = canDefineBladder;
+    }
+
+    /**
+     * @param allowRandomBladder the allowRandomBladder to set
+     */
+    public void allowRandomBladder(boolean allowRandomBladder)
+    {
+        this.allowRandomBladder = allowRandomBladder;
+    }
+
+    /**
+     * @param canDefineIncontinence the canDefineIncontinence to set
+     */
+    public void canDefineIncontinence(boolean canDefineIncontinence)
+    {
+        this.canDefineIncontinence = canDefineIncontinence;
+    }
+
+    /**
+     * @param allowRandomIncontinence the allowRandomIncontinence to set
+     */
+    public void allowRandomIncontinence(boolean allowRandomIncontinence)
+    {
+        this.allowRandomIncontinence = allowRandomIncontinence;
+    }
+
+    /**
+     * @param forcedName
+     */
+    public void forceName(String forcedName)
+    {
+        forceName = true;
+        name = forcedName;
+    }
+
+    /**
+     * @return the name
+     */
+    public String getName()
+    {
+        return name;
+    }
 }
