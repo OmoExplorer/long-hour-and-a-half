@@ -358,8 +358,8 @@ public class ALongHourAndAHalf extends JFrame
             =
             {
                 //        Name      Insert name     Pressure, Absotption, Drying over time
-                new Wear("Random", "<b><i>LACK OF WEAR HANDLING$"+Thread.currentThread().getStackTrace()[3].getLineNumber()+"</i></b>", 0, 0, 0),
-                new Wear("No underwear", "<b><i>LACK OF WEAR HANDLING$"+Thread.currentThread().getStackTrace()[3].getLineNumber()+"</i></b>", 0, 0, 1),
+                new Wear("Random", "<b><i>LACK OF WEAR HANDLING$"+Thread.currentThread().getStackTrace()[0].getLineNumber()+"</i></b>", 0, 0, 0),
+                new Wear("No underwear", "<b><i>LACK OF WEAR HANDLING$"+Thread.currentThread().getStackTrace()[0].getLineNumber()+"</i></b>", 0, 0, 1),
                 new Wear("Strings", "panties", 1, 2, 1),
                 new Wear("Tanga panties", "panties", 1.5F, 3, 1),
                 new Wear("Regular panties", "panties", 2, 4, 1),
@@ -386,8 +386,8 @@ public class ALongHourAndAHalf extends JFrame
             =
             {
                 //        Name      Insert name     Pressure, Absotption, Drying over time
-                new Wear("Random", "<b><i>LACK OF WEAR HANDLING$"+Thread.currentThread().getStackTrace()[3].getLineNumber()+"</i></b>", 0, 0, 0),
-                new Wear("No outerwear", "<b><i>LACK OF WEAR HANDLING$"+Thread.currentThread().getStackTrace()[3].getLineNumber()+"</i></b>", 0, 0, 1),
+                new Wear("Random", "<b><i>LACK OF WEAR HANDLING$"+Thread.currentThread().getStackTrace()[0].getLineNumber()+"</i></b>", 0, 0, 0),
+                new Wear("No outerwear", "<b><i>LACK OF WEAR HANDLING$"+Thread.currentThread().getStackTrace()[0].getLineNumber()+"</i></b>", 0, 0, 1),
                 new Wear("Long jeans", "jeans", 7, 12, 1.2F),
                 new Wear("Knee-length jeans", "jeans", 6, 10, 1.2F),
                 new Wear("Short jeans", "shorts", 5, 8.5F, 1.2F),
@@ -477,7 +477,7 @@ public class ALongHourAndAHalf extends JFrame
      * Text to be displayed after the game which shows how many {@link score}
      * did you get.
      */
-    public String scoreText;
+    public String scoreText = "";
 
     /**
      * Current bladdder fulness.
@@ -1496,10 +1496,32 @@ public class ALongHourAndAHalf extends JFrame
                         //Success
                         if (generator.nextInt(100) <= 40 & !hardcore)
                         {
-                            setText("Yes, you may.",
-                                    "says the teacher. You run to the restroom. Thank god, one cabin is free!",
-                                    "You enter it, pulled down your " + lower.insert() + " and " + undies.insert() + ",",
-                                    "wearily flop down on the toilet and start peeing.");
+                            if(!lower.isMissing())
+                                if(!undies.isMissing())
+                                    setText("You ask the teacher if you can go out to the restroom.",
+                                            "Yes, you may.",
+                                            "says the teacher. You run to the restroom. Thank god, one cabin is free!",
+                                            "You enter it, pulled down your " + lower.insert() + " and " + undies.insert() + ",",
+                                            "wearily flop down on the toilet and start peeing.");
+                                else
+                                    setText("You ask the teacher if you can go out to the restroom.",
+                                            "Yes, you may.",
+                                            "says the teacher. You run to the restroom. Thank god, one cabin is free!",
+                                            "You enter it, pulled down your " + lower.insert() + ",",
+                                            "wearily flop down on the toilet and start peeing.");
+                            else
+                                if(!undies.isMissing())
+                                    setText("You ask the teacher if you can go out to the restroom.",
+                                            "Yes, you may.",
+                                            "says the teacher. You run to the restroom. Thank god, one cabin is free!",
+                                            "You enter it, pulled down your " + undies.insert() + ",",
+                                            "wearily flop down on the toilet and start peeing.");
+                                else
+                                    setText("You ask the teacher if you can go out to the restroom.",
+                                            "Yes, you may.",
+                                            "says the teacher. You run to the restroom. Thank god, one cabin is free!",
+                                            "You enter it,",
+                                            "wearily flop down on the toilet and start peeing.");
 //                            score *= 0.2;
 //                            scoreText = scoreText.concat("\nRestroom usage during the lesson: -80% of points");
                             score("Restroom usage during the lesson", '/', 1.25F);
@@ -1518,11 +1540,32 @@ public class ALongHourAndAHalf extends JFrame
                     case 1:
                         if (generator.nextInt(100) <= 10 & !hardcore)
                         {
-                            setText("You ask the teacher again if you can go out to the restroom.",
-                                    "Yes, you may.,",
-                                    "says the teacher. You run to the restroom. Thank god, one cabin is free!",
-                                    "You enter it, pulled down your " + lower.insert() + " and " + undies.insert() + ",",
-                                    "wearily flop down on the toilet and start peeing.");
+                            if(!lower.isMissing())
+                                if(!undies.isMissing())
+                                    setText("You ask the teacher again if you can go out to the restroom.",
+                                            "Yes, you may.",
+                                            "says the teacher. You run to the restroom. Thank god, one cabin is free!",
+                                            "You enter it, pulled down your " + lower.insert() + " and " + undies.insert() + ",",
+                                            "wearily flop down on the toilet and start peeing.");
+                                else
+                                    setText("You ask the teacher again if you can go out to the restroom.",
+                                            "Yes, you may.",
+                                            "says the teacher. You run to the restroom. Thank god, one cabin is free!",
+                                            "You enter it, pulled down your " + lower.insert() + ",",
+                                            "wearily flop down on the toilet and start peeing.");
+                            else
+                                if(!undies.isMissing())
+                                    setText("You ask the teacher again if you can go out to the restroom.",
+                                            "Yes, you may.",
+                                            "says the teacher. You run to the restroom. Thank god, one cabin is free!",
+                                            "You enter it, pulled down your " + undies.insert() + ",",
+                                            "wearily flop down on the toilet and start peeing.");
+                                else
+                                    setText("You ask the teacher again if you can go out to the restroom.",
+                                            "Yes, you may.",
+                                            "says the teacher. You run to the restroom. Thank god, one cabin is free!",
+                                            "You enter it,",
+                                            "wearily flop down on the toilet and start peeing.");
 //                            score *= 0.22;
 //                            scoreText = scoreText.concat("\nRestroom usage during the lesson: -78% of points");
                             score("Restroom usage during the lesson", '/', 1.25F);
@@ -1540,11 +1583,32 @@ public class ALongHourAndAHalf extends JFrame
                     case 2:
                         if (generator.nextInt(100) <= 30 & !hardcore)
                         {
-                            setText("You ask the teacher if you can go out to the restroom.",
-                                    "OK, you may. You are so annoying, " + name + "!",
-                                    "says the teacher. You run to the restroom. Thank god, one cabin is free!",
-                                    "You enter it, pulled down your " + lower.insert() + " and " + undies.insert() + ",",
-                                    "wearily flop down on the toilet and start peeing.");
+                            if(!lower.isMissing())
+                                if(!undies.isMissing())
+                                    setText("You ask the teacher again if you can go out to the restroom.",
+                                            "Yes, you may.",
+                                            "says the teacher. You run to the restroom. Thank god, one cabin is free!",
+                                            "You enter it, pulled down your " + lower.insert() + " and " + undies.insert() + ",",
+                                            "wearily flop down on the toilet and start peeing.");
+                                else
+                                    setText("You ask the teacher again if you can go out to the restroom.",
+                                            "Yes, you may.",
+                                            "says the teacher. You run to the restroom. Thank god, one cabin is free!",
+                                            "You enter it, pulled down your " + lower.insert() + ",",
+                                            "wearily flop down on the toilet and start peeing.");
+                            else
+                                if(!undies.isMissing())
+                                    setText("You ask the teacher again if you can go out to the restroom.",
+                                            "Yes, you may.",
+                                            "says the teacher. You run to the restroom. Thank god, one cabin is free!",
+                                            "You enter it, pulled down your " + undies.insert() + ",",
+                                            "wearily flop down on the toilet and start peeing.");
+                                else
+                                    setText("You ask the teacher again if you can go out to the restroom.",
+                                            "Yes, you may.",
+                                            "says the teacher. You run to the restroom. Thank god, one cabin is free!",
+                                            "You enter it,",
+                                            "wearily flop down on the toilet and start peeing.");
 //                            score *= 0.23;
 //                            scoreText = scoreText.concat("\nRestroom usage during the lesson: -77% of points");
                             score("Restroom usage during the lesson", '/', 1.25F);
@@ -1562,11 +1626,32 @@ public class ALongHourAndAHalf extends JFrame
                     case 3:
                         if (generator.nextInt(100) <= 7 & !hardcore)
                         {
-                            setText("Desperately, you ask the teacher if you can go out to the restroom.",
-                                    "OK, you may. You are so annoying, " + name + "!",
-                                    "says the teacher. You run to the restroom. Thank god, one cabin is free!",
-                                    "You enter it, pulled down your " + lower.insert() + " and " + undies.insert() + ",",
-                                    "wearily flop down on the toilet and start peeing.");
+                            if(!lower.isMissing())
+                                if(!undies.isMissing())
+                                    setText("Desperately, you ask the teacher if you can go out to the restroom.",
+                                            "Yes, you may.",
+                                            "says the teacher. You run to the restroom. Thank god, one cabin is free!",
+                                            "You enter it, pulled down your " + lower.insert() + " and " + undies.insert() + ",",
+                                            "wearily flop down on the toilet and start peeing.");
+                                else
+                                    setText("Desperately, you ask the teacher if you can go out to the restroom.",
+                                            "Yes, you may.",
+                                            "says the teacher. You run to the restroom. Thank god, one cabin is free!",
+                                            "You enter it, pulled down your " + lower.insert() + ",",
+                                            "wearily flop down on the toilet and start peeing.");
+                            else
+                                if(!undies.isMissing())
+                                    setText("Desperately, you ask the teacher if you can go out to the restroom.",
+                                            "Yes, you may.",
+                                            "says the teacher. You run to the restroom. Thank god, one cabin is free!",
+                                            "You enter it, pulled down your " + undies.insert() + ",",
+                                            "wearily flop down on the toilet and start peeing.");
+                                else
+                                    setText("Desperately, you ask the teacher if you can go out to the restroom.",
+                                            "Yes, you may.",
+                                            "says the teacher. You run to the restroom. Thank god, one cabin is free!",
+                                            "You enter it,",
+                                            "wearily flop down on the toilet and start peeing.");
 //                            score *= 0.3;
 //                            scoreText = scoreText.concat("\nRestroom usage during the lesson: -70% of points");
                             score("Restroom usage during the lesson", '/', 1.25F);
@@ -1675,10 +1760,8 @@ public class ALongHourAndAHalf extends JFrame
                         setText("A friend in the desk next to you hands you a familiar",
                                 "looking pill, and you take it.");
                         incon = Float.parseFloat(JOptionPane.showInputDialog("How incontinent are you now?"));
-                        lblIncon.setText("Incontinence: " + incon + "x");
                         maxSphincterPower = 100 / incon;
                         sphincterPower = maxSphincterPower;
-                        lblSphPower.setText("Pee holding ability: " + Math.round(sphincterPower) + "%");
                         nextStage = ASK_ACTION;
                         break;
 
@@ -1692,7 +1775,6 @@ public class ALongHourAndAHalf extends JFrame
                     case 9:
                         setText("Suddenly you felt something going on in your bladder.");
                         incon = Float.parseFloat(JOptionPane.showInputDialog("How your bladder is full now?"));
-                        lblIncon.setText("Bladder: " + bladder + "%");
                         nextStage = ASK_ACTION;
                         break;
                 }
