@@ -528,7 +528,7 @@ public class ALongHourAndAHalf extends JFrame
     /**
      * The class time.
      */
-    public byte min = 0;
+    public byte time = 0;
 
     /**
      * Times teacher denied character to go out.
@@ -619,7 +619,7 @@ public class ALongHourAndAHalf extends JFrame
         sphincterPower = maxSphincterPower;
 
         //Making bladder smaller in the hardcore mode, adding hardcore label
-        if (hardcore)
+        if (diff)
         {
             maxBladder = 100;
             name += " [Hardcore]";
@@ -673,25 +673,17 @@ public class ALongHourAndAHalf extends JFrame
             }
         });
 
-        //Calculating dryness and maximal bladder capacity values
-        dryness = lower.getAbsorption() + undies.getAbsorption();
-        maxBladder -= lower.getPressure() + undies.getPressure();
-
         //Setting "No undrwear" insert name depending on character's gender
         //May be gone soon
         if (isMale())
         {
-            underwearList[1].setInsertName("penis");
+           underwearList[1].setInsertName("penis");
         } else
         {
-            underwearList[1].setInsertName("crotch");
+           underwearList[1].setInsertName("crotch");
         }
 
-        //Finishing saving parameters for game reset
-        outerParam = lower.getName();
-        underParam = undies.getName();
-        underColorParam = undies.getColor();
-        outerColorParam = lower.getColor();
+        
 
         //Game window setup
         setResizable(false);
@@ -805,7 +797,7 @@ public class ALongHourAndAHalf extends JFrame
         contentPane.add(lblIncon);
 
         //Time label setup
-        lblMinutes = new JLabel("Minutes: " + min + " of 90");
+        lblMinutes = new JLabel("Minutes: " + time + " of 90");
         lblMinutes.setFont(new Font("Tahoma", Font.PLAIN, 15));
         lblMinutes.setBounds(20, 330, 200, 32);
         lblMinutes.setVisible(false);
@@ -824,19 +816,7 @@ public class ALongHourAndAHalf extends JFrame
         lblDryness.setBounds(20, 390, 200, 32);
         lblDryness.setVisible(false);
         contentPane.add(lblDryness);
-
-        //Undies label setup
-        lblUndies = new JLabel("Undies: " + undies.getColor() + " " + undies.getName().toLowerCase());
-        lblUndies.setFont(new Font("Tahoma", Font.PLAIN, 15));
-        lblUndies.setBounds(20, 420, 400, 32);
-        contentPane.add(lblUndies);
-
-        //Lower label setup
-        lblLower = new JLabel("Lower: " + lower.getColor() + " " + lower.getName().toLowerCase());
-        lblLower.setFont(new Font("Tahoma", Font.PLAIN, 15));
-        lblLower.setBounds(20, 450, 400, 32);
-        contentPane.add(lblLower);
-
+        
         //Choice label ("What to do?") setup
         lblChoice = new JLabel();
         lblChoice.setFont(new Font("Tahoma", Font.BOLD, 12));
@@ -882,7 +862,7 @@ public class ALongHourAndAHalf extends JFrame
         timeBar = new JProgressBar();
         timeBar.setBounds(16, 332, 300, 25);
         timeBar.setMaximum(90);
-        timeBar.setValue(min);
+        timeBar.setValue(time);
         timeBar.setVisible(false);
         contentPane.add(timeBar);
 
@@ -1034,6 +1014,8 @@ public class ALongHourAndAHalf extends JFrame
         {
             lower.setColor("");
         }
+        
+        
     }
     
     ALongHourAndAHalf(Save save)
@@ -1041,6 +1023,48 @@ public class ALongHourAndAHalf extends JFrame
         preConstructor(save.name,save.gender,save.hardcore,save.incontinence,(int)save.bladder);
         undies = save.underwear;
         lower = save.outerwear;
+        embarassment = save.embarassment;
+        dryness = save.dryness;
+        maxSphincterPower = save.maxSphincterPower;
+        sphincterPower = save.sphincterPower;
+        time = save.time;
+        nextStage = save.stage;
+        score = save.score;
+        scoreText = save.scoreText;
+        timesPeeDenied = save.timesPeeDenied;
+        timesCaught = save.timesCaught;
+        classmatesAwareness = save.classmatesAwareness;
+        stay = save.stay;
+        cornered = save.cornered;
+        drain = save.drain;
+        cheatsUsed = save.cheatsUsed;
+        boyName = save.boyName;
+        postConstructor();
+    }
+    
+    void postConstructor()
+    {
+        //Calculating dryness and maximal bladder capacity values
+        dryness = lower.getAbsorption() + undies.getAbsorption();
+        maxBladder -= lower.getPressure() + undies.getPressure();
+        
+        //Finishing saving parameters for game reset
+        outerParam = lower.getName();
+        underParam = undies.getName();
+        underColorParam = undies.getColor();
+        outerColorParam = lower.getColor();
+        
+        //Undies label setup
+        lblUndies = new JLabel("Undies: " + undies.getColor() + " " + undies.getName().toLowerCase());
+        lblUndies.setFont(new Font("Tahoma", Font.PLAIN, 15));
+        lblUndies.setBounds(20, 420, 400, 32);
+        contentPane.add(lblUndies);
+
+        //Lower label setup
+        lblLower = new JLabel("Lower: " + lower.getColor() + " " + lower.getName().toLowerCase());
+        lblLower.setFont(new Font("Tahoma", Font.PLAIN, 15));
+        lblLower.setBounds(20, 450, 400, 32);
+        contentPane.add(lblLower);
     }
     
     /**
@@ -1481,11 +1505,11 @@ public class ALongHourAndAHalf extends JFrame
                     case 4:
 
                         //Asking player how much to wait
-                        int time;
+                        int incTime;
                         try
                         {
-                            time = Integer.parseInt(JOptionPane.showInputDialog("How much to wait?"));
-                            if (time < 1 || time > 125)
+                            incTime = Integer.parseInt(JOptionPane.showInputDialog("How much to wait?"));
+                            if (incTime < 1 || incTime > 125)
                             {
                                 throw new NumberFormatException();
                             }
@@ -1496,7 +1520,7 @@ public class ALongHourAndAHalf extends JFrame
                             break;
                         }
 
-                        passTime((byte) time);
+                        passTime((byte) incTime);
 
                         //Chance to be caught by classmates in hardcore mode
                         if (generator.nextInt(100) <= 1 + classmatesAwareness & hardcore)
@@ -1616,7 +1640,7 @@ public class ALongHourAndAHalf extends JFrame
                                 cornered = true;
 //                            score += 1.3 * (90 - min / 3);
 //                            scoreText = scoreText.concat("\nStayed on corner " + (90 - min) + " minutes: +" + 1.3 * (90 - min / 3) + " score");
-                                score("Stayed on corner " + (90 - min) + " minutes", '+', 1.3F * (90 - min / 3));
+                                score("Stayed on corner " + (90 - time) + " minutes", '+', 1.3F * (90 - time / 3));
                                 offsetEmbarassment(5);
                             } else
                             {
@@ -1679,7 +1703,7 @@ public class ALongHourAndAHalf extends JFrame
                         setText("A voice comes over the loudspeaker:",
                                 "All classes are now dismissed for no reason at all! Bye!",
                                 "Looks like your luck changed for the better.");
-                        min = 89;
+                        time = 89;
                         nextStage = CLASS_OVER;
                         break;
 
@@ -1813,7 +1837,7 @@ public class ALongHourAndAHalf extends JFrame
                 break;
 
             case AFTER_CLASS:
-                if (min >= 120)
+                if (time >= 120)
                 {
                     stay = false;
                     nextStage = CLASS_OVER;
@@ -2465,7 +2489,7 @@ public class ALongHourAndAHalf extends JFrame
         offsetBladder(time * 1.5);
         offsetBelly(-time * 1.5);
 
-        if (min >= 88)
+        if (this.time >= 88)
         {
             setText("You hear the bell finally ring.");
             nextStage = CLASS_OVER;
@@ -2594,10 +2618,10 @@ public class ALongHourAndAHalf extends JFrame
 
     public void offsetTime(int amount)
     {
-        min += amount;
-        lblMinutes.setText("Minutes: " + min + " of " + (stay ? "120" : "90"));
-        timeBar.setValue(min);
-        if (drain & (min % 15) == 0)
+        time += amount;
+        lblMinutes.setText("Minutes: " + time + " of " + (stay ? "120" : "90"));
+        timeBar.setValue(time);
+        if (drain & (time % 15) == 0)
         {
             emptyBladder();
         }

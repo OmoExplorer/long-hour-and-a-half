@@ -17,12 +17,12 @@ class Save implements Serializable
 {
     private static final long serialVersionUID = 1L;
     
-    String name;
-    boolean hardcore;
-    Gender gender;
-    float bladder;
-    float incontinence;
-    float belly;
+    String name; //Already has been given to the constructor
+    boolean hardcore; //Already has been given to the constructor
+    Gender gender; //Already has been given to the constructor
+    float bladder; //Already has been given to the constructor
+    float incontinence; //Already has been given to the constructor
+    float belly; //Already has been given to the constructor
     byte embarassment;
     byte dryness;
     byte maxSphincterPower;
