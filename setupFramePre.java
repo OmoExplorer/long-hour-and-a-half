@@ -28,6 +28,7 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import omo.ALongHourAndAHalf.*;
+import omo.ALongHourAndAHalf.Gender;
 
 /**
  *
@@ -1126,7 +1127,7 @@ public class setupFramePre extends javax.swing.JFrame {
 //                case "Swimwear":
 //                case "Diapers":
 //                case "Menstrual pads":
-//                    //TODO: Random wear on nothing selected
+//                    
 //                    break;
 //                default:
 //                    switch (outerwearTree.getLastSelectedPathComponent().toString()) {
