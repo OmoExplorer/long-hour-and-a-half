@@ -500,7 +500,13 @@ public class ALongHourAndAHalf extends JFrame
      * Amount of a water in a belly.
      */
     public double belly = 5.0;
-
+    
+    /**
+     * Amount of the character thirstiness.
+     * Used only in hardcore mode.
+     */
+    public float thirst = 0;
+    
     /**
      * Before 1.1:<br>
      * simply multiplies a bladder increasement.<br>
@@ -588,6 +594,9 @@ public class ALongHourAndAHalf extends JFrame
     public boolean cheatsUsed = false;
     private final JFileChooser fc;
     private boolean specialHardcoreStage = false;
+    private final JLabel lblThirst;
+    private final JProgressBar thirstBar;
+    private float MAXIMAL_THIRST;
 
     /**
      * Launch the application.
@@ -823,7 +832,7 @@ public class ALongHourAndAHalf extends JFrame
         setResizable(false);
         setTitle("A Long Hour and a Half");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 640, 540);
+        setBounds(100, 100, 640, 574);
         setLocationRelativeTo(null);
 
         contentPane = new JPanel();
@@ -854,7 +863,7 @@ public class ALongHourAndAHalf extends JFrame
             }
         });
 
-        btnNext.setBounds((textPanel.getWidth() / 2) + 25, 460, 280, 43);
+        btnNext.setBounds((textPanel.getWidth() / 2) + 25, ACTION_BUTTONS_TOP_BORDER, 285, 35);
         contentPane.add(btnNext);
 
         //"Quit" button setup
@@ -867,7 +876,7 @@ public class ALongHourAndAHalf extends JFrame
                 System.exit(0);
             }
         });
-        btnQuit.setBounds((textPanel.getWidth() / 2) - 120, 480, 89, 23);
+        btnQuit.setBounds((textPanel.getWidth() / 2) - 120, ACTION_BUTTONS_TOP_BORDER, ACTION_BUTTONS_WIDTH, ACTION_BUTTONS_HEIGHT);
         contentPane.add(btnQuit);
 
         //"Reset" button setup
@@ -881,7 +890,7 @@ public class ALongHourAndAHalf extends JFrame
                 dispose();
             }
         });
-        btnReset.setBounds((textPanel.getWidth() / 2) - 300, 480, 89, 23);
+        btnReset.setBounds((textPanel.getWidth() / 2) - 300, ACTION_BUTTONS_TOP_BORDER, ACTION_BUTTONS_WIDTH, ACTION_BUTTONS_HEIGHT);
         contentPane.add(btnReset);
 
         //"New game" button setup
@@ -895,7 +904,7 @@ public class ALongHourAndAHalf extends JFrame
                 dispose();
             }
         });
-        btnNewGame.setBounds((textPanel.getWidth() / 2) - 210, 480, 89, 23);
+        btnNewGame.setBounds((textPanel.getWidth() / 2) - 210, ACTION_BUTTONS_TOP_BORDER, ACTION_BUTTONS_WIDTH, ACTION_BUTTONS_HEIGHT);
         contentPane.add(btnNewGame);
 
         //Name label setup
@@ -924,6 +933,25 @@ public class ALongHourAndAHalf extends JFrame
         lblBelly.setBounds(20, 270, 200, 32);
         contentPane.add(lblBelly);
 
+        //Thirst label setup
+        lblThirst = new JLabel("Thirst: " + Math.round(thirst) + "%");
+        lblThirst.setFont(new Font("Tahoma", Font.PLAIN, 15));
+        lblThirst.setBounds(20, 480, 200, 32);
+        if(hardcore)
+        {
+            contentPane.add(lblThirst);
+        }
+        
+        //Thirst bar setup
+        thirstBar = new JProgressBar();
+        thirstBar.setBounds(16, 482, 300, 25);
+        thirstBar.setMaximum(60);
+        thirstBar.setValue((int) thirst);
+        if(hardcore)
+        {
+        contentPane.add(thirstBar);
+        }
+        
         //Incontinence label setup
         lblIncon = new JLabel("Incontinence: " + inc + "x");
         lblIncon.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -976,7 +1004,7 @@ public class ALongHourAndAHalf extends JFrame
         listChoice.setLayoutOrientation(JList.VERTICAL);
 
         listScroller = new JScrollPane(listChoice);
-        listScroller.setBounds(320, 194, 300, 300);
+        listScroller.setBounds(320, 194, 310, 318);
         listScroller.setVisible(false);
         contentPane.add(listScroller);
 
@@ -1059,6 +1087,9 @@ public class ALongHourAndAHalf extends JFrame
         nextStage = LEAVE_BED;
         handleNextClicked();
     }
+    private static final int ACTION_BUTTONS_HEIGHT = 35;
+    private static final int ACTION_BUTTONS_WIDTH = 89;
+    private static final int ACTION_BUTTONS_TOP_BORDER = 510;
 
     /**
      * @return TRUE - if character's gender is female<br>FALSE - if character's
@@ -1360,7 +1391,14 @@ public class ALongHourAndAHalf extends JFrame
                 {
                     actionList.add("[Unavailable]");
                 }
-
+                if(hardcore)
+                {
+                actionList.add("Drink water");
+                }
+                else
+                {
+                    actionList.add("[Unavailable]");
+                }
                 actionList.add("Just wait");
                 actionList.add("Cheat (will reset your score)");
 
@@ -1462,7 +1500,16 @@ public class ALongHourAndAHalf extends JFrame
                                 "defeat and get rid of the painful ache in your bladder.");
                         nextStage = GIVE_UP;
                         break;
-
+                        
+                    //Drink water
+                    case 4:
+                        setText("Feeling a tad bit thirsty,",
+                        "You decide to take a small sip of water from your bottle to get rid of it.");
+                        offsetBelly(thirst);
+                        thirst = 0;
+                        passTime();
+                        nextStage = ASK_ACTION;
+                        break;
                     /*
                      * Wait
                      * =========================
@@ -1471,7 +1518,7 @@ public class ALongHourAndAHalf extends JFrame
                      * Detection chance: 1
                      * Future effectiveness: 2.4(1), 0.4(2), 0.47(30)
                      */
-                    case 4:
+                    case 5:
 
                         //Asking player how much to wait
                         int time;
@@ -1504,7 +1551,7 @@ public class ALongHourAndAHalf extends JFrame
                         break;
 
                     //Cheat
-                    case 5:
+                    case 6:
                         setText("You've got to go so bad!",
                                 "There must be something you can do, right?");
 
@@ -1800,7 +1847,7 @@ public class ALongHourAndAHalf extends JFrame
                         setText("A voice comes over the loudspeaker:",
                                 "All classes are now dismissed for no reason at all! Bye!",
                                 "Looks like your luck changed for the better.");
-                        min = 89;
+                        min = ACTION_BUTTONS_WIDTH;
                         nextStage = CLASS_OVER;
                         break;
 
@@ -2597,6 +2644,13 @@ public class ALongHourAndAHalf extends JFrame
                 nextStage = END_GAME;
                 break;
 
+            case DRINK:
+                setText("Feeling a tad bit thirsty,",
+                        "You decide to take a small sip of water from your bottle to get rid of it.");
+                offsetBelly(thirst);
+                thirst = 0;
+                break;
+                
             default:
                 setText("Error parsing button. Next text is unavailable, text #" + nextStage);
                 break;
@@ -2652,12 +2706,16 @@ public class ALongHourAndAHalf extends JFrame
                 }
             }
         }
-
+        if(hardcore)
+        {
+        thirst+=2;
+        if(thirst>MAXIMAL_THIRST)
+        {
+            nextStage = DRINK;
+        }
+        }
         //Updating labels
-        lblSphPower.setText("Pee holding ability: " + Math.round(sphincterPower) + "%");
-        sphincterBar.setValue((int) Math.round(sphincterPower));
-        lblDryness.setText("Clothes dryness: " + Math.round(dryness));
-//        drynessBar.setValue((int)Math.round(sphincterPower));
+        updateUI();
     }
 
     /**
@@ -3036,6 +3094,8 @@ public class ALongHourAndAHalf extends JFrame
         sphincterBar.setValue((int) Math.round(sphincterPower));
         drynessBar.setValue((int) dryness);
         timeBar.setValue(min);
+        lblThirst.setText("Thirst: " + Math.round(thirst) + "%");
+        thirstBar.setValue((int) thirst);
     }
 
     byte hideActionUI()
@@ -3086,7 +3146,8 @@ public class ALongHourAndAHalf extends JFrame
         PERSUADE,
         SURPRISE_WET_VOLUNTARY,
         SURPRISE_WET_VOLUNTARY2,
-        SURPRISE_WET_PRESSURE
+        SURPRISE_WET_PRESSURE,
+        DRINK
     }
 
     enum Gender
