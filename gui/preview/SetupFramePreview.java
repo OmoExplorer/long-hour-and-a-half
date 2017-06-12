@@ -1,5 +1,7 @@
 package gui.preview;
 
+import api.ALongHourAndAHalf;
+import api.ALongHourAndAHalf.Gender;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -28,8 +30,6 @@ import javax.swing.WindowConstants;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-import api.ALongHourAndAHalf;
-import api.ALongHourAndAHalf.Gender;
 
 /**
  *
@@ -1652,11 +1652,11 @@ public class SetupFramePreview extends javax.swing.JFrame {
     @SuppressWarnings("ResultOfObjectAllocationIgnored")
     private void customStoryCreateActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_customStoryCreateActionPerformed
     {//GEN-HEADEREND:event_customStoryCreateActionPerformed
-        new StoryEditorPreview();
+        new StoryEditorPreview().setVisible(true);
         dispose();
     }//GEN-LAST:event_customStoryCreateActionPerformed
 
-    public static void main() {
+    public static void main(String[] args) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.

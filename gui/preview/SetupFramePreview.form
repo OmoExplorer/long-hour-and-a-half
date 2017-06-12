@@ -45,7 +45,6 @@
             <Property name="fileFilter" type="javax.swing.filechooser.FileFilter" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
               <Connection code="new FileFilter()&#xd;&#xa;{&#xd;&#xa;    public boolean accept(File f) {&#xd;&#xa;        String extension = getExtension(f);&#xd;&#xa;        if (extension != null)&#xd;&#xa;            if (extension.equals(&quot;ose&quot;))&#xd;&#xa;                return true;&#xd;&#xa;    return false;&#xd;&#xa;    }&#xd;&#xa;&#xd;&#xa;    public String getDescription()&#xd;&#xa;    {&#xd;&#xa;        return &quot;Omorashi Story Editor stories&quot;;&#xd;&#xa;    }&#xd;&#xa;}" type="code"/>
             </Property>
-            <Property name="fileHidingEnabled" type="boolean" value="true"/>
             <Property name="name" type="java.lang.String" value="storyOpener" noResource="true"/>
           </Properties>
         </Component>

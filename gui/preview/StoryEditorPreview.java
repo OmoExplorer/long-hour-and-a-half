@@ -315,7 +315,7 @@ public class StoryEditorPreview extends javax.swing.JFrame
 
     private void quitActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_quitActionPerformed
     {//GEN-HEADEREND:event_quitActionPerformed
-        SetupFramePreview.main();
+        SetupFramePreview.main(new String[0]);
         dispose();
     }//GEN-LAST:event_quitActionPerformed
 
@@ -353,9 +353,19 @@ public class StoryEditorPreview extends javax.swing.JFrame
 
     private void switchPanel(TreePath treePathNew, TreePath treePathOld)
     {
-        String newSelectionParent = (String) treePathNew.getPath()[treePathNew.getPath().length-1];
-        String oldSelectionParent = (String) treePathOld.getPath()[treePathOld.getPath().length-1];
-        String newSelection = (String) treePathNew.getPath()[treePathNew.getPath().length];
+        updateToolTree();
+        String newSelectionParent = treePathNew.getPath()[treePathNew.getPath().length-1].toString();
+        String oldSelectionParent;
+        try
+        {
+            oldSelectionParent = treePathOld.getPath()[treePathOld.getPath().length-1].toString();
+        }
+        catch (Exception e)
+        {
+            oldSelectionParent = "None";
+        }
+        
+        String newSelection = treePathNew.getPath()[treePathNew.getPath().length-1].toString();
         
         System.out.println(newSelectionParent);
         System.out.println(oldSelectionParent);
@@ -482,5 +492,10 @@ public class StoryEditorPreview extends javax.swing.JFrame
                 pack();
                 break;
         }
+    }
+    
+    private void updateToolTree()
+    {
+        //TODO
     }
 }

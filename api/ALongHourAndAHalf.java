@@ -70,6 +70,11 @@
 
 package api;
 
+import static api.ALongHourAndAHalf.GameStage.*;
+import static api.ALongHourAndAHalf.Gender.*;
+import static api.ALongHourAndAHalf.generator;
+import static api.Wear.WearType.*;
+import gui.preview.SetupFramePreview;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
@@ -82,11 +87,6 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileFilter;
-import static api.ALongHourAndAHalf.GameStage.*;
-import static api.ALongHourAndAHalf.Gender.*;
-import static api.ALongHourAndAHalf.generator;
-import static api.Wear.WearType.*;
-import gui.preview.SetupFramePreview;
 
 /**
  * Describes an underwear of an outerwear of a character.
@@ -666,13 +666,13 @@ public class ALongHourAndAHalf extends JFrame
                     {
                         JOptionPane.showMessageDialog(null, "This isn't an underwear.", "Wrong wear type", JOptionPane.ERROR_MESSAGE);
                         dispose();
-                        SetupFramePreview.main();
+                        SetupFramePreview.main(new String[0]);
                     }
                 } catch (IOException | ClassNotFoundException e)
                 {
                     JOptionPane.showMessageDialog(null, "File error.", "Error", JOptionPane.ERROR_MESSAGE);
                     dispose();
-                    SetupFramePreview.main();
+                    SetupFramePreview.main(new String[0]);
                 }
             }
         }
@@ -738,13 +738,13 @@ public class ALongHourAndAHalf extends JFrame
                     {
                         JOptionPane.showMessageDialog(null, "This isn't an outerwear.", "Wrong wear type", JOptionPane.ERROR_MESSAGE);
                         dispose();
-                        SetupFramePreview.main();
+                        SetupFramePreview.main(new String[0]);
                     }
                 } catch (IOException | ClassNotFoundException e)
                 {
                     JOptionPane.showMessageDialog(null, "File error.", "Error", JOptionPane.ERROR_MESSAGE);
                     dispose();
-                    SetupFramePreview.main();
+                    SetupFramePreview.main(new String[0]);
                 }
             }
         }
