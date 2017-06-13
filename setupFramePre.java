@@ -8,6 +8,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.Random;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -15,6 +18,7 @@ import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -27,7 +31,6 @@ import javax.swing.WindowConstants;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-import omo.ALongHourAndAHalf.*;
 import omo.ALongHourAndAHalf.Gender;
 
 /**
@@ -39,27 +42,24 @@ public class setupFramePre extends javax.swing.JFrame {
     private static final long serialVersionUID = 1L;
     private String undiesColor = "Random";
     private String lowerColor = "Random";
-    JFileChooser fc;
-    private Wear customUnderwear;
-    private Wear customOuterwear;
-    
+    JFileChooser fcWear;
+    JFileChooser fcGame;
+    Save game;
 
     /**
      * Creates new form setupFrame
      */
     public setupFramePre() {
-        this.fc = new JFileChooser();
-        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        fc.setFileFilter(new FileFilter()
-        {
+		fcWear = new JFileChooser();
+        fcWear.setFileFilter(new FileFilter() {
             @Override
-            public boolean accept(File pathname)
+            public boolean accept(File f)
             {
                 String extension = "";
-                int i = pathname.getName().lastIndexOf('.');
+                int i = f.getName().lastIndexOf('.');
                 if (i > 0)
                 {
-                    extension = pathname.getName().substring(i + 1);
+                    extension = f.getName().substring(i + 1);
                 }
                 return extension.equals("lhhwear");
             }
@@ -67,7 +67,28 @@ public class setupFramePre extends javax.swing.JFrame {
             @Override
             public String getDescription()
             {
-                return "A Long Hour and a Half Custom wear";
+                return "A Long Hour and a Half Saved game";
+            }
+        });
+        
+        fcGame = new JFileChooser();
+        fcGame.setFileFilter(new FileFilter() {
+            @Override
+            public boolean accept(File f)
+            {
+                String extension = "";
+                int i = f.getName().lastIndexOf('.');
+                if (i > 0)
+                {
+                    extension = f.getName().substring(i + 1);
+                }
+                return extension.equals("lhhsav");
+            }
+
+            @Override
+            public String getDescription()
+            {
+                return "A Long Hour and a Half Saved game";
             }
         });
         initComponents();
@@ -131,6 +152,7 @@ public class setupFramePre extends javax.swing.JFrame {
         undiesColor_random = new JPanel();
         lowerColor_random1 = new JPanel();
         wearEditorButton = new JButton();
+        loadGame = new JButton();
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -890,6 +912,16 @@ public class setupFramePre extends javax.swing.JFrame {
             }
         });
 
+        loadGame.setText("Load game...");
+        loadGame.setName("loadGame"); // NOI18N
+        loadGame.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent evt)
+            {
+                loadGameActionPerformed(evt);
+            }
+        });
+
         GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -977,7 +1009,9 @@ public class setupFramePre extends javax.swing.JFrame {
                                         .addComponent(lowerColor_random1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
                                 .addGap(0, 0, Short.MAX_VALUE))))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(start, GroupLayout.PREFERRED_SIZE, 590, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(loadGame, GroupLayout.PREFERRED_SIZE, 129, GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(start, GroupLayout.PREFERRED_SIZE, 455, GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(wearEditorButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
@@ -1044,7 +1078,8 @@ public class setupFramePre extends javax.swing.JFrame {
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
                     .addComponent(start, GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
-                    .addComponent(wearEditorButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(wearEditorButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(loadGame, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -1141,8 +1176,7 @@ public class setupFramePre extends javax.swing.JFrame {
                             new ALongHourAndAHalf(nameField.getText(),
                             gnd,
                             diff,
-                            incont,
-                            bas,
+                            incont, (short) bas,
                             underwearToAssign,
                             outerwearToAssign,
                             undiesColor,
@@ -1600,6 +1634,36 @@ public class setupFramePre extends javax.swing.JFrame {
         WearEditor.main(new String[0]);
     }//GEN-LAST:event_wearEditorButtonActionPerformed
 
+    private void wearEditorActionPerformed(ActionEvent evt)//GEN-FIRST:event_wearEditorActionPerformed
+    {//GEN-HEADEREND:event_wearEditorActionPerformed
+
+    }//GEN-LAST:event_wearEditorActionPerformed
+
+    private void loadGameButtonActionPerformed(ActionEvent evt)//GEN-FIRST:event_loadGameButtonActionPerformed
+    {//GEN-HEADEREND:event_loadGameButtonActionPerformed
+        
+    }//GEN-LAST:event_loadGameButtonActionPerformed
+
+    private void loadGameActionPerformed(ActionEvent evt)//GEN-FIRST:event_loadGameActionPerformed
+    {//GEN-HEADEREND:event_loadGameActionPerformed
+        if (fcGame.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
+        {
+            File file = fcGame.getSelectedFile();
+            try
+            {
+                FileInputStream fin = new FileInputStream(file);
+                ObjectInputStream ois = new ObjectInputStream(fin);
+                Save save = (Save) ois.readObject();
+                new ALongHourAndAHalf(save);
+                dispose();
+            } catch (IOException | ClassNotFoundException e)
+            {
+                JOptionPane.showMessageDialog(this, "File error.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_loadGameActionPerformed
+
+
     /**
      * @param args the command line arguments
      */
@@ -1647,6 +1711,7 @@ public class setupFramePre extends javax.swing.JFrame {
     private JScrollPane jScrollPane2;
     private JScrollPane jScrollPane3;
     private JTextPane jTextPane1;
+    private JButton loadGame;
     private JPanel lowerColor_black1;
     private JPanel lowerColor_blue1;
     private JPanel lowerColor_darkBlue1;
