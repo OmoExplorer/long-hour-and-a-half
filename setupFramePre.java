@@ -151,7 +151,7 @@ public class setupFramePre extends javax.swing.JFrame {
         lowerColor_purple1 = new JPanel();
         undiesColor_random = new JPanel();
         lowerColor_random1 = new JPanel();
-        loadGame = new JButton();
+        wearEditor = new JButton();
         loadGameButton = new JButton();
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -898,13 +898,14 @@ public class setupFramePre extends javax.swing.JFrame {
             .addGap(0, 18, Short.MAX_VALUE)
         );
 
-        loadGame.setText("Load game...");
-        loadGame.setName("loadGame"); // NOI18N
-        loadGame.addActionListener(new ActionListener()
+        wearEditor.setText("Wear editor");
+        wearEditor.setActionCommand("Wear editor");
+        wearEditor.setName("wearEditor"); // NOI18N
+        wearEditor.addActionListener(new ActionListener()
         {
             public void actionPerformed(ActionEvent evt)
             {
-                loadGameActionPerformed(evt);
+                wearEditorActionPerformed(evt);
             }
         });
 
@@ -1009,7 +1010,7 @@ public class setupFramePre extends javax.swing.JFrame {
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(start, GroupLayout.PREFERRED_SIZE, 427, GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(loadGame, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(wearEditor, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -1074,7 +1075,7 @@ public class setupFramePre extends javax.swing.JFrame {
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
                     .addComponent(start, GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
-                    .addComponent(loadGame, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(wearEditor, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(loadGameButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -1170,8 +1171,7 @@ public class setupFramePre extends javax.swing.JFrame {
                             new ALongHourAndAHalf(nameField.getText(),
                             gnd,
                             diff,
-                            incont,
-                            bas,
+                            incont, (short) bas,
                             underwearToAssign,
                             outerwearToAssign,
                             undiesColor,
@@ -1624,24 +1624,10 @@ public class setupFramePre extends javax.swing.JFrame {
         lowerColor = "Random";
     }//GEN-LAST:event_lowerColor_random1MouseClicked
 
-    private void loadGameActionPerformed(ActionEvent evt)//GEN-FIRST:event_loadGameActionPerformed
-    {//GEN-HEADEREND:event_loadGameActionPerformed
-        if(fcWear.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
-        {
-            try
-            {
-                File file = fcWear.getSelectedFile();
-                FileInputStream fin = new FileInputStream(file);
-                ObjectInputStream ois = new ObjectInputStream(fin);
-                game = (Save) ois.readObject();
-                
-                
-            } catch (IOException | ClassNotFoundException e)
-            {
-                JOptionPane.showMessageDialog(this, "File error.", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        }
-    }//GEN-LAST:event_loadGameActionPerformed
+    private void wearEditorActionPerformed(ActionEvent evt)//GEN-FIRST:event_wearEditorActionPerformed
+    {//GEN-HEADEREND:event_wearEditorActionPerformed
+        WearEditor.main(new String[0]);
+    }//GEN-LAST:event_wearEditorActionPerformed
 
     private void loadGameButtonActionPerformed(ActionEvent evt)//GEN-FIRST:event_loadGameButtonActionPerformed
     {//GEN-HEADEREND:event_loadGameButtonActionPerformed
@@ -1709,7 +1695,6 @@ public class setupFramePre extends javax.swing.JFrame {
     private JScrollPane jScrollPane2;
     private JScrollPane jScrollPane3;
     private JTextPane jTextPane1;
-    private JButton loadGame;
     private JButton loadGameButton;
     private JPanel lowerColor_black1;
     private JPanel lowerColor_blue1;
@@ -1743,5 +1728,6 @@ public class setupFramePre extends javax.swing.JFrame {
     private JPanel undiesColor_random;
     private JPanel undiesColor_red;
     private JPanel undiesColor_yellow;
+    private JButton wearEditor;
     // End of variables declaration//GEN-END:variables
 }

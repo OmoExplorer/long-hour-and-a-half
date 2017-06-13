@@ -134,7 +134,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="start" min="-2" pref="427" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="loadGame" max="32767" attributes="0"/>
+                      <Component id="wearEditor" max="32767" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -210,7 +210,7 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                   <Component id="start" pref="117" max="32767" attributes="0"/>
-                  <Component id="loadGame" max="32767" attributes="0"/>
+                  <Component id="wearEditor" max="32767" attributes="0"/>
                   <Component id="loadGameButton" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -1186,13 +1186,14 @@
         </DimensionLayout>
       </Layout>
     </Container>
-    <Component class="javax.swing.JButton" name="loadGame">
+    <Component class="javax.swing.JButton" name="wearEditor">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Load game..."/>
-        <Property name="name" type="java.lang.String" value="loadGame" noResource="true"/>
+        <Property name="text" type="java.lang.String" value="Wear editor"/>
+        <Property name="actionCommand" type="java.lang.String" value="Wear editor"/>
+        <Property name="name" type="java.lang.String" value="wearEditor" noResource="true"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="loadGameActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="wearEditorActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JButton" name="loadGameButton">
