@@ -20,18 +20,18 @@ class Save implements Serializable
     String name; //Already has been given to the constructor
     boolean hardcore; //Already has been given to the constructor
     Gender gender; //Already has been given to the constructor
-    float bladder; //Already has been given to the constructor
+    short bladder; //Already has been given to the constructor
     float incontinence; //Already has been given to the constructor
-    float belly; //Already has been given to the constructor
-    byte embarassment;
-    byte dryness;
-    byte maxSphincterPower;
-    byte sphincterPower;
+    short belly; //Already has been given to the constructor
+    short embarassment;
+    float dryness;
+    short maxSphincterPower;
+    short sphincterPower;
     Wear underwear;
     Wear outerwear;
     byte time;
     GameStage stage;
-    short score;
+    int score;
     String scoreText;
     byte timesPeeDenied;
     byte timesCaught;

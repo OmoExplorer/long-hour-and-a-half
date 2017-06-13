@@ -76,8 +76,11 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -92,7 +95,7 @@ import static omo.Wear.WearType.*;
  *
  * @author JavaBird
  */
-class Wear
+class Wear implements Serializable
 {
     /**
      * List of all colors that clothes may have.
@@ -101,6 +104,7 @@ class Wear
     {
         "Black", "Gray", "Red", "Orange", "Yellow", "Green", "Blue", "Dark blue", "Purple", "Pink"
     };
+    private static final long serialVersionUID = 1L;
 
     /**
      * The wear name (e. g. "Regular panties")
@@ -291,7 +295,7 @@ public class ALongHourAndAHalf extends JFrame
     static Gender gndrParam;
     static boolean diffParam;
     static float incParam;
-    static int bladderParam;
+    static short bladderParam;
     static String underParam;
     static String outerParam;
     static String underColorParam;
@@ -482,7 +486,7 @@ public class ALongHourAndAHalf extends JFrame
     /**
      * Current bladdder fulness.
      */
-    public float bladder = 5.0F;
+    public short bladder = 5;
 
     /**
      * Maximal bladder fulness.
@@ -493,12 +497,12 @@ public class ALongHourAndAHalf extends JFrame
      * Makes the wetting chance higher after reaching 100% of the bladder
      * fulness.
      */
-    public byte embarassment = 0;
+    public short embarassment = 0;
 
     /**
      * Amount of a water in a belly.
      */
-    public double belly = 5.0;
+    public short belly = 5;
 
     /**
      * Before 1.1:<br>
@@ -507,23 +511,23 @@ public class ALongHourAndAHalf extends JFrame
      * 1.1 and after:<br>
      * defines the sphincter weakening speed.
      */
-    public float incon = 1.0F;
+    public float incon = 1;
 
     /**
      * Maximal time without squirming and leaking.
      */
-    public double maxSphincterPower;
+    public short maxSphincterPower;
 
     /**
      * Current sphincter power. The higher bladder level, the faster power
      * consumption.
      */
-    public double sphincterPower;
+    public short sphincterPower;
 
     /**
      * Amount of pee that clothes can store.
      */
-    public double dryness;
+    public float dryness;
 
     /**
      * The class time.
@@ -550,7 +554,7 @@ public class ALongHourAndAHalf extends JFrame
     /**
      * Amount of embarassment raising every time character caught holding pee.
      */
-    public int classmatesAwareness = 0;
+    public short classmatesAwareness = 0;
 
     /**
      * Whether or not charecter has to stay 30 minutes after class.
@@ -587,6 +591,8 @@ public class ALongHourAndAHalf extends JFrame
     public boolean cheatsUsed = false;
     private JFileChooser fcWear;
     private JFileChooser fcGame;
+    private JButton btnSave;
+    private JButton btnLoad;
 
     /**
      * Launch the application.
@@ -601,7 +607,7 @@ public class ALongHourAndAHalf extends JFrame
      * @param undiesColor the underwear color
      * @param lowerColor the outerwear color
      */
-    void preConstructor(String name, Gender gndr, boolean diff, float inc, int bladder)
+    void preConstructor(String name, Gender gndr, boolean diff, float inc, short bladder)
     {
         //Saving parameters for the reset
         nameParam = name;
@@ -615,15 +621,10 @@ public class ALongHourAndAHalf extends JFrame
         hardcore = diff;
         incon = inc;
         this.bladder = bladder;
-        maxSphincterPower = 100 / incon;
+        maxSphincterPower = (short)Math.round(100 / incon);
         sphincterPower = maxSphincterPower;
 
-        //Making bladder smaller in the hardcore mode, adding hardcore label
-        if (diff)
-        {
-            maxBladder = 100;
-            name += " [Hardcore]";
-        }
+        
 
         //Assigning the boy's name
         boyName = names[generator.nextInt(names.length)];
@@ -689,7 +690,7 @@ public class ALongHourAndAHalf extends JFrame
         setResizable(false);
         setTitle("A Long Hour and a Half");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 640, 540);
+        setBounds(100, 100, 770, 540);
         setLocationRelativeTo(null);
 
         contentPane = new JPanel();
@@ -700,12 +701,12 @@ public class ALongHourAndAHalf extends JFrame
 
         //Text panel setup
         textPanel = new JPanel();
-        textPanel.setBounds(10, 11, 614, 150);
+        textPanel.setBounds(10, 11, 740, 150);
         contentPane.add(textPanel);
         textPanel.setLayout(null);
         textLabel = new JLabel("");
         textLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        textLabel.setBounds(0, 0, 614, 150);
+        textLabel.setBounds(0, 0, 740, 150);
         textPanel.add(textLabel);
 
         //"Next" button setup
@@ -720,7 +721,7 @@ public class ALongHourAndAHalf extends JFrame
             }
         });
 
-        btnNext.setBounds((textPanel.getWidth() / 2) + 25, 460, 280, 43);
+        btnNext.setBounds(470, 460, 280, 43);
         contentPane.add(btnNext);
 
         //"Quit" button setup
@@ -733,9 +734,35 @@ public class ALongHourAndAHalf extends JFrame
                 System.exit(0);
             }
         });
-        btnQuit.setBounds((textPanel.getWidth() / 2) - 120, 480, 89, 23);
+        btnQuit.setBounds(192, 480, 89, 23);
         contentPane.add(btnQuit);
 
+        //"Save" button setup
+        btnSave = new JButton("Save");
+        btnSave.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseClicked(MouseEvent arg0)
+            {
+                save();
+            }
+        });
+        btnSave.setBounds(284, 480, 89, 23);
+        contentPane.add(btnSave);
+        
+        //"Load" button setup
+        btnLoad = new JButton("Load");
+        btnLoad.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseClicked(MouseEvent arg0)
+            {
+                load();
+            }
+        });
+        btnLoad.setBounds(376, 480, 89, 23);
+        contentPane.add(btnLoad);
+        
         //"Reset" button setup
         btnReset = new JButton("Reset");
         btnReset.addMouseListener(new MouseAdapter()
@@ -747,7 +774,7 @@ public class ALongHourAndAHalf extends JFrame
                 dispose();
             }
         });
-        btnReset.setBounds((textPanel.getWidth() / 2) - 300, 480, 89, 23);
+        btnReset.setBounds(10, 480, 89, 23);
         contentPane.add(btnReset);
 
         //"New game" button setup
@@ -761,7 +788,7 @@ public class ALongHourAndAHalf extends JFrame
                 dispose();
             }
         });
-        btnNewGame.setBounds((textPanel.getWidth() / 2) - 210, 480, 89, 23);
+        btnNewGame.setBounds(102, 480, 89, 23);
         contentPane.add(btnNewGame);
 
         //Name label setup
@@ -820,7 +847,7 @@ public class ALongHourAndAHalf extends JFrame
         //Choice label ("What to do?") setup
         lblChoice = new JLabel();
         lblChoice.setFont(new Font("Tahoma", Font.BOLD, 12));
-        lblChoice.setBounds(320, 162, 280, 32);
+        lblChoice.setBounds(480, 162, 280, 32);
         lblChoice.setVisible(false);
         contentPane.add(lblChoice);
 
@@ -830,28 +857,28 @@ public class ALongHourAndAHalf extends JFrame
         listChoice.setLayoutOrientation(JList.VERTICAL);
 
         listScroller = new JScrollPane(listChoice);
-        listScroller.setBounds(320, 194, 300, 300);
+        listScroller.setBounds(472, 194, 280, 270);
         listScroller.setVisible(false);
         contentPane.add(listScroller);
 
         //Bladder bar setup
         bladderBar = new JProgressBar();
-        bladderBar.setBounds(16, 212, 300, 25);
+        bladderBar.setBounds(16, 212, 455, 25);
         bladderBar.setMaximum(130);
         bladderBar.setValue(bladder);
         contentPane.add(bladderBar);
 
         //Sphincter bar setup
         sphincterBar = new JProgressBar();
-        sphincterBar.setBounds(16, 362, 300, 25);
-        sphincterBar.setMaximum((int) Math.round(maxSphincterPower));
-        sphincterBar.setValue((int) Math.round(sphincterPower));
+        sphincterBar.setBounds(16, 362, 455, 25);
+        sphincterBar.setMaximum(Math.round(maxSphincterPower));
+        sphincterBar.setValue(Math.round(sphincterPower));
         sphincterBar.setVisible(false);
         contentPane.add(sphincterBar);
 
         //Dryness bar setup
         drynessBar = new JProgressBar();
-        drynessBar.setBounds(16, 392, 300, 25);
+        drynessBar.setBounds(16, 392, 455, 25);
         drynessBar.setMaximum((int) dryness);
         drynessBar.setValue((int) dryness);
         drynessBar.setMinimum(MINIMAL_DRYNESS);
@@ -860,21 +887,53 @@ public class ALongHourAndAHalf extends JFrame
 
         //Time bar setup
         timeBar = new JProgressBar();
-        timeBar.setBounds(16, 332, 300, 25);
+        timeBar.setBounds(16, 332, 455, 25);
         timeBar.setMaximum(90);
         timeBar.setValue(time);
         timeBar.setVisible(false);
         contentPane.add(timeBar);
+        
+        //Coloring the name label according to the gender
+                if (isFemale())
+                {
+                    lblName.setForeground(Color.MAGENTA);
+                } else
+                {
+                    lblName.setForeground(Color.CYAN);
+                }
 
-        //Displaying the frame
-        setVisible(true);
+                //Assigning the blank name if player didn't selected the name
+                if (name.isEmpty())
+                {
+                    if (isFemale())
+                    {
+                        name = "Mrs. Nobody";
+                    } else
+                    {
+                        name = "Mr. Nobody";
+                    }
+                }
 
-        //Starting the game
-        nextStage = LEAVE_BED;
-        handleNextClicked();
+                //Scoring bladder at start
+                score("Bladder at start - " + bladder + "%", '+', Math.round(bladder));
+
+                //Scoring incontinence
+                score("Incontinence - " + Math.round(incon) + "x", '*', Math.round(incon));
+
+                /*
+                    Hardcore, it will be harder to hold pee:
+                    Teacher will never let character to go pee
+                    Character's bladder will have less capacity
+                    Character may get caught holding pee
+                 */
+                if (hardcore)
+                {
+                    score("Hardcore", '*', 2F);
+                }
+
     }
 
-    ALongHourAndAHalf(String name, Gender gndr, boolean diff, float inc, int bladder, String under, String outer, String undiesColor, String lowerColor)
+    ALongHourAndAHalf(String name, Gender gndr, boolean diff, float inc, short bladder, String under, String outer, String undiesColor, String lowerColor)
     {
         preConstructor(name, gndr, diff, inc, bladder);
         
@@ -1015,12 +1074,22 @@ public class ALongHourAndAHalf extends JFrame
             lower.setColor("");
         }
         
-        
+        postConstructor();
+        //Displaying all values
+        lblMinutes.setVisible(true);
+        lblSphPower.setVisible(true);
+        lblDryness.setVisible(true);
+        sphincterBar.setVisible(true);
+        drynessBar.setVisible(true);
+        timeBar.setVisible(true);
+        //Starting the game
+        nextStage = LEAVE_BED;
+        handleNextClicked();
     }
     
     ALongHourAndAHalf(Save save)
     {
-        preConstructor(save.name,save.gender,save.hardcore,save.incontinence,(int)save.bladder);
+        preConstructor(save.name,save.gender,save.hardcore,save.incontinence,save.bladder);
         undies = save.underwear;
         lower = save.outerwear;
         embarassment = save.embarassment;
@@ -1065,6 +1134,16 @@ public class ALongHourAndAHalf extends JFrame
         lblLower.setFont(new Font("Tahoma", Font.PLAIN, 15));
         lblLower.setBounds(20, 450, 400, 32);
         contentPane.add(lblLower);
+        
+        //Making bladder smaller in the hardcore mode, adding hardcore label
+        if (hardcore)
+        {
+            maxBladder = 100;
+            lblName.setName(lblName.getName()+" [Hardcore]");
+        }
+        
+        //Displaying the frame
+        setVisible(true);
     }
     
     /**
@@ -1090,44 +1169,7 @@ public class ALongHourAndAHalf extends JFrame
         switch (nextStage)
         {
             case LEAVE_BED:
-                //Coloring the name label according to the gender
-                if (isFemale())
-                {
-                    lblName.setForeground(Color.MAGENTA);
-                } else
-                {
-                    lblName.setForeground(Color.CYAN);
-                }
-
-                //Assigning the blank name if player didn't selected the name
-                if (name.isEmpty())
-                {
-                    if (isFemale())
-                    {
-                        name = "Mrs. Nobody";
-                    } else
-                    {
-                        name = "Mr. Nobody";
-                    }
-                }
-
-                //Scoring bladder at start
-                score("Bladder at start - " + bladder + "%", '+', Math.round(bladder));
-
-                //Scoring incontinence
-                score("Incontinence - " + Math.round(incon) + "x", '*', Math.round(incon));
-
-                /*
-                    Hardcore, it will be harder to hold pee:
-                    Teacher will never let character to go pee
-                    Character's bladder will have less capacity
-                    Character may get caught holding pee
-                 */
-                if (hardcore)
-                {
-                    score("Hardcore", '*', 2F);
-                }
-
+                
                 //Making line 1 italic
                 setLinesAsDialogue(1);
                 if (!lower.isMissing())
@@ -1732,7 +1774,7 @@ public class ALongHourAndAHalf extends JFrame
                     case 7:
                         setText("A friend in the desk next to you hands you a familiar",
                                 "looking pill, and you take it.");
-                        incon = Float.parseFloat(JOptionPane.showInputDialog("How incontinent are you now?"));
+                        incon = Short.parseShort(JOptionPane.showInputDialog("How incontinent are you now?"));
                         lblIncon.setText("Incontinence: " + incon + "x");
                         nextStage = ASK_ACTION;
                         break;
@@ -1746,7 +1788,7 @@ public class ALongHourAndAHalf extends JFrame
 
                     case 9:
                         setText("Suddenly you felt something going on in your bladder.");
-                        incon = Float.parseFloat(JOptionPane.showInputDialog("How your bladder is full now?"));
+                        incon = Short.parseShort(JOptionPane.showInputDialog("How your bladder is full now?"));
                         lblIncon.setText("Bladder: " + bladder + "%");
                         nextStage = ASK_ACTION;
                         break;
@@ -2519,7 +2561,7 @@ public class ALongHourAndAHalf extends JFrame
 
         //Updating labels
         lblSphPower.setText("Pee holding ability: " + Math.round(sphincterPower) + "%");
-        sphincterBar.setValue((int) Math.round(sphincterPower));
+        sphincterBar.setValue(Math.round(sphincterPower));
         lblDryness.setText("Clothes dryness: " + Math.round(dryness));
 //        drynessBar.setValue((int)Math.round(sphincterPower));
     }
@@ -2834,6 +2876,76 @@ public class ALongHourAndAHalf extends JFrame
         }
     }
 
+    void save()
+    {
+        fcGame.setSelectedFile(new File(name));
+        if (fcGame.showSaveDialog(this) == JFileChooser.APPROVE_OPTION)
+        {
+            File file = new File(fcGame.getSelectedFile().getAbsolutePath() + ".lhhsav");
+//            PrintStream writer;
+            FileOutputStream fout;
+            ObjectOutputStream oos;
+            try
+            {
+                Save save = new Save();
+                save.name = name;
+                save.gender = gender;
+                save.hardcore  =hardcore;
+                save.incontinence = incon;
+                save.bladder = bladder;
+                save.underwear = undies;
+                save.outerwear = lower;
+                save.embarassment = embarassment;
+                save.dryness = dryness;
+                save.maxSphincterPower = maxSphincterPower;
+                save.sphincterPower = sphincterPower;
+                save.time = time;
+                save.stage = nextStage;
+                save.score = score;
+                save.scoreText = scoreText;
+                save.timesPeeDenied = timesPeeDenied;
+                save.timesCaught = timesCaught;
+                save.classmatesAwareness = classmatesAwareness;
+                save.stay = stay;
+                save.cornered = cornered;
+                save.drain = drain;
+                save.cheatsUsed = cheatsUsed;
+                save.boyName = boyName;
+
+//                writer = new PrintStream(file);
+                fout = new FileOutputStream(file);
+                oos = new ObjectOutputStream(fout);
+                oos.writeObject(save);
+            } catch (IOException ex)
+            {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(this, "File error.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+
+        }
+    }
+    
+    @SuppressWarnings("ResultOfObjectAllocationIgnored")
+    void load()
+    {
+        if (fcGame.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
+        {
+            File file = fcGame.getSelectedFile();
+            try
+            {
+                FileInputStream fin = new FileInputStream(file);
+                ObjectInputStream ois = new ObjectInputStream(fin);
+                Save save = (Save) ois.readObject();
+                new ALongHourAndAHalf(save);
+                dispose();
+            } catch (IOException | ClassNotFoundException e)
+            {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "File error.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+    
     enum GameStage
     {
         LEAVE_BED,
