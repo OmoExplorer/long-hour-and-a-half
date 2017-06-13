@@ -8,13 +8,11 @@ package omo;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import javax.swing.filechooser.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.PrintStream;
 import java.util.Scanner;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.GroupLayout;
@@ -28,6 +26,7 @@ import javax.swing.JTextField;
 import javax.swing.LayoutStyle;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.WindowConstants;
+import javax.swing.filechooser.FileFilter;
 import static omo.Wear.WearType.*;
 
 /**
@@ -41,7 +40,7 @@ public class WearEditor extends javax.swing.JFrame
 
     JFileChooser fc;
     Scanner fs;
-    PrintStream writer;
+//    PrintStream writer;
     Wear wear;
 
     /**
@@ -249,7 +248,7 @@ public class WearEditor extends javax.swing.JFrame
                         break;
                 }
 
-                writer = new PrintStream(file);
+//                writer = new PrintStream(file);
                 fout = new FileOutputStream(file);
                 oos = new ObjectOutputStream(fout);
                 oos.writeObject(wear);
@@ -318,8 +317,6 @@ public class WearEditor extends javax.swing.JFrame
         }
         //</editor-fold>
 
-        //</editor-fold>
-        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() ->
