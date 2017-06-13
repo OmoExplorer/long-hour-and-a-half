@@ -2970,9 +2970,9 @@ public class ALongHourAndAHalf extends JFrame
                 fout = new FileOutputStream(file);
                 oos = new ObjectOutputStream(fout);
                 oos.writeObject(save);
-            } catch (IOException ex)
+            } catch (IOException e)
             {
-                ex.printStackTrace();
+                e.printStackTrace();
                 JOptionPane.showMessageDialog(this, "File error.", "Error", JOptionPane.ERROR_MESSAGE);
             }
 
