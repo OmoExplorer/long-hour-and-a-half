@@ -596,7 +596,7 @@ public class ALongHourAndAHalf extends JFrame
     private boolean specialHardcoreStage = false;
     private final JLabel lblThirst;
     private final JProgressBar thirstBar;
-    private float MAXIMAL_THIRST;
+    private final float MAXIMAL_THIRST = 30;
 
     /**
      * Launch the application.
@@ -628,12 +628,7 @@ public class ALongHourAndAHalf extends JFrame
         maxSphincterPower = 100 / incon;
         sphincterPower = maxSphincterPower;
 
-        //Making bladder smaller in the hardcore mode, adding hardcore label
-        if (hardcore)
-        {
-            maxBladder = 100;
-            this.name += " [Hardcore]";
-        }
+        
 
         //Assigning the boy's name
         boyName = names[generator.nextInt(names.length)];
@@ -945,11 +940,11 @@ public class ALongHourAndAHalf extends JFrame
         //Thirst bar setup
         thirstBar = new JProgressBar();
         thirstBar.setBounds(16, 482, 300, 25);
-        thirstBar.setMaximum(60);
+        thirstBar.setMaximum((int) MAXIMAL_THIRST);
         thirstBar.setValue((int) thirst);
         if(hardcore)
         {
-        contentPane.add(thirstBar);
+            contentPane.add(thirstBar);
         }
         
         //Incontinence label setup
@@ -1083,6 +1078,13 @@ public class ALongHourAndAHalf extends JFrame
             score("Hardcore", '*', 2F);
         }
 
+        //Making bladder smaller in the hardcore mode, adding hardcore label
+        if (hardcore)
+        {
+            maxBladder = 100;
+            lblName.setText(lblName.getText()+" [Hardcore]");
+        }
+        
         //Starting the game
         nextStage = LEAVE_BED;
         handleNextClicked();
@@ -1505,10 +1507,7 @@ public class ALongHourAndAHalf extends JFrame
                     case 4:
                         setText("Feeling a tad bit thirsty,",
                         "You decide to take a small sip of water from your bottle to get rid of it.");
-                        offsetBelly(thirst);
-                        thirst = 0;
-                        passTime();
-                        nextStage = ASK_ACTION;
+                        nextStage = DRINK;
                         break;
                     /*
                      * Wait
@@ -2645,10 +2644,11 @@ public class ALongHourAndAHalf extends JFrame
                 break;
 
             case DRINK:
-                setText("Feeling a tad bit thirsty,",
-                        "You decide to take a small sip of water from your bottle to get rid of it.");
+                setText("You take your bottle with water,",
+                        "open it and take a small sip of water.");
                 offsetBelly(thirst);
                 thirst = 0;
+                nextStage = ASK_ACTION;
                 break;
                 
             default:
