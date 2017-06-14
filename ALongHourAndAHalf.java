@@ -4,22 +4,26 @@
 *Dev: Rosalie Elodie, JavaBird
 *
 *Version History:
-*0.1: Default game mechanics shown, non interactable. No playability, no customization. Not all game mechanics even implemented, purely a showcase program.
-*0.2: MASSIVE REWRITE! (Thanks to Anna May! This is definitely the format I want!)
-*1.0 Added interactivity, improved code, added hardcore mode(this isn't working now) and... cheats!
-*1.1 Reintegrated the two versions
-*1.2 New hardcore features:
-*       Classmates can be aware that you've to go
-*       Less bladder capacity
-*    Improved bladder: it's more realistic now
-*    Balanced pee holding methods
-*    New game options frame
-*    Even more clothes
-*    Cleaned and documented code a bit
-*1.3 Bug fixes
-*    Interface improvements
-*    Game text refining
-*
+*0.1    Default game mechanics shown, non interactable. No playability, no customization. Not all game mechanics even implemented, purely a showcase program.
+*0.2    MASSIVE REWRITE! (Thanks to Anna May! This is definitely the format I want!)
+*1.0    Added interactivity, improved code, added hardcore mode(this isn't working now) and... cheats!
+*1.1    Reintegrated the two versions
+*1.2    New hardcore features:
+*           Classmates can be aware that you've to go
+*           Less bladder capacity
+*       Improved bladder: it's more realistic now
+*       Balanced pee holding methods
+*       New game options frame
+*       Even more clothes
+*       Cleaned and documented code a bit
+*1.3    Bug fixes
+*       Interface improvements
+*       Game text refining
+*1.3.1  Bug fixes
+*1.4    Character can drink during the class
+*       Saving/loading games
+*       Bug fixes
+*1.4.1  Bug fixes
 *
 *A Long Hour and a Half (ALongHourAndAHalf) is a game where
 *one must make it through class with a rather full bladder.
@@ -694,10 +698,10 @@ public class ALongHourAndAHalf extends JFrame
         }
 
         //Game window setup
-        setResizable(false);
+        setResizable(true);
         setTitle("A Long Hour and a Half");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 770, 574);
+        setBounds(100, 100, 770, 594);
         setLocationRelativeTo(null);
 
         contentPane = new JPanel();
@@ -844,7 +848,7 @@ public class ALongHourAndAHalf extends JFrame
         }
         
         //Incontinence label setup
-        lblIncon = new JLabel("Incontinence: " + inc + "x");
+        lblIncon = new JLabel("Incontinence: " + incon + "x");
         lblIncon.setFont(new Font("Tahoma", Font.PLAIN, 15));
         lblIncon.setBounds(20, 300, 200, 32);
         contentPane.add(lblIncon);
@@ -891,7 +895,7 @@ public class ALongHourAndAHalf extends JFrame
         bladderBar = new JProgressBar();
         bladderBar.setBounds(16, 212, 455, 25);
         bladderBar.setMaximum(130);
-        bladderBar.setValue(bladder);
+        bladderBar.setValue(this.bladder);
         contentPane.add(bladderBar);
 
         //Sphincter bar setup
@@ -905,7 +909,6 @@ public class ALongHourAndAHalf extends JFrame
         //Dryness bar setup
         drynessBar = new JProgressBar();
         drynessBar.setBounds(16, 392, 455, 25);
-        drynessBar.setMaximum((int) dryness);
         drynessBar.setValue((int) dryness);
         drynessBar.setMinimum(MINIMAL_DRYNESS);
         drynessBar.setVisible(false);
@@ -1157,7 +1160,9 @@ public class ALongHourAndAHalf extends JFrame
         //Calculating dryness and maximal bladder capacity values
         dryness = lower.getAbsorption() + undies.getAbsorption();
         maxBladder -= lower.getPressure() + undies.getPressure();
-
+        
+        drynessBar.setMaximum((int) dryness);
+        
         //Finishing saving parameters for game reset
         outerParam = lower.getName();
         underParam = undies.getName();
@@ -1268,7 +1273,6 @@ public class ALongHourAndAHalf extends JFrame
                 passTime((byte) 1);
                 offsetEmbarassment(3);
                 offsetBelly(10);
-                bladderBar.setValue(Math.round(bladder));
 
                 nextStage = GO_TO_CLASS;
                 break;
@@ -2823,7 +2827,7 @@ public class ALongHourAndAHalf extends JFrame
     {
         bladder = 0;
         lblBladder.setText("Bladder: " + (int) bladder + "%");
-        bladderBar.setValue(0);
+        updateUI();
     }
 
     /**
@@ -2834,8 +2838,6 @@ public class ALongHourAndAHalf extends JFrame
     public void offsetBladder(double amount)
     {
         bladder += amount/* * incon*/;//Incontinence does another job after 1.1
-        lblBladder.setText("Bladder: " + Math.round(bladder) + "%");
-        bladderBar.setValue(Math.round(bladder));
         if ((bladder > 100 && !hardcore) || (bladder > 80 && hardcore))
         {
             lblBladder.setForeground(Color.RED);
@@ -2843,7 +2845,7 @@ public class ALongHourAndAHalf extends JFrame
         {
             lblBladder.setForeground(lblDefaultColor);
         }
-
+        updateUI();
     }
 
     /**
@@ -2861,7 +2863,7 @@ public class ALongHourAndAHalf extends JFrame
         {
             belly = 0;
         }
-        lblBelly.setText("Belly: " + Math.round(belly) + "%");
+        updateUI();
     }
 
     public void offsetEmbarassment(int amount)
@@ -2871,19 +2873,17 @@ public class ALongHourAndAHalf extends JFrame
         {
             embarassment = 0;
         }
-        lblEmbarassment.setVisible(true);
-        lblEmbarassment.setText("Embarassment: " + embarassment + " pts");
+        updateUI();
     }
 
     public void offsetTime(int amount)
     {
         time += amount;
-        lblMinutes.setText("Minutes: " + time + " of " + (stay ? "120" : "90"));
-        timeBar.setValue(time);
         if (drain & (time % 15) == 0)
         {
             emptyBladder();
         }
+        updateUI();
     }
 
     /**
@@ -2971,10 +2971,7 @@ public class ALongHourAndAHalf extends JFrame
                 }
             }
         }
-        lblBladder.setText("Bladder: " + (int) bladder + "%");
-        bladderBar.setValue(Math.round(bladder));
-        lblDryness.setText("Clothes dryness: " + Math.round(dryness));
-        drynessBar.setValue((int) dryness);
+        updateUI();
     }
 
     /**
@@ -2989,6 +2986,7 @@ public class ALongHourAndAHalf extends JFrame
         {
             sphincterPower = maxSphincterPower;
         }
+        updateUI();
     }
 
     private void setLinesAsDialogue(int... lines)
@@ -3106,21 +3104,21 @@ public class ALongHourAndAHalf extends JFrame
         try
         {
             lblName.setText(name);
-        lblBladder.setText("Bladder: " + Math.round(this.bladder) + "%");
-        lblEmbarassment.setText("Embarassment: " + embarassment);
-        lblBelly.setText("Belly: " + Math.round(belly) + "%");
-        lblIncon.setText("Incontinence: " + incon + "x");
-        lblMinutes.setText("Minutes: " + time + " of 90");
-        lblSphPower.setText("Pee holding ability: " + Math.round(sphincterPower) + "%");
-        lblDryness.setText("Clothes dryness: " + Math.round(dryness));
-        lblUndies.setText("Undies: " + undies.getColor() + " " + undies.getName().toLowerCase());
-        lblLower.setText("Lower: " + lower.getColor() + " " + lower.getName().toLowerCase());
-        bladderBar.setValue(bladder);
-        sphincterBar.setValue(Math.round(sphincterPower));
-        drynessBar.setValue((int) dryness);
-        timeBar.setValue(time);
-        lblThirst.setText("Thirst: " + Math.round(thirst) + "%");
-        thirstBar.setValue((int) thirst);
+            lblBladder.setText("Bladder: " + Math.round(this.bladder) + "%");
+            lblEmbarassment.setText("Embarassment: " + embarassment);
+            lblBelly.setText("Belly: " + Math.round(belly) + "%");
+            lblIncon.setText("Incontinence: " + incon + "x");
+            lblMinutes.setText("Minutes: " + time + " of 90");
+            lblSphPower.setText("Pee holding ability: " + Math.round(sphincterPower) + "%");
+            lblDryness.setText("Clothes dryness: " + Math.round(dryness));
+            lblUndies.setText("Undies: " + undies.getColor() + " " + undies.getName().toLowerCase());
+            lblLower.setText("Lower: " + lower.getColor() + " " + lower.getName().toLowerCase());
+            bladderBar.setValue(bladder);
+            sphincterBar.setValue(Math.round(sphincterPower));
+            drynessBar.setValue((int) dryness);
+            timeBar.setValue(time);
+            lblThirst.setText("Thirst: " + Math.round(thirst) + "%");
+            thirstBar.setValue((int) thirst);
         }
         catch (Exception e)
         {
