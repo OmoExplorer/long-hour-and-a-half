@@ -507,13 +507,12 @@ public class ALongHourAndAHalf extends JFrame
      * Amount of a water in a belly.
      */
     public double belly = 5.0;
-    
+
     /**
-     * Amount of the character thirstiness.
-     * Used only in hardcore mode.
+     * Amount of the character thirstiness. Used only in hardcore mode.
      */
     public float thirst = 0;
-    
+
     /**
      * Before 1.1:<br>
      * simply multiplies a bladder increasement.<br>
@@ -608,6 +607,8 @@ public class ALongHourAndAHalf extends JFrame
     private JLabel lblThirst;
     private JProgressBar thirstBar;
     private final float MAXIMAL_THIRST = 30;
+    private int busTime;
+    private boolean traffic;
 
     /**
      * Launch the application.
@@ -832,21 +833,21 @@ public class ALongHourAndAHalf extends JFrame
         lblThirst = new JLabel("Thirst: " + Math.round(thirst) + "%");
         lblThirst.setFont(new Font("Tahoma", Font.PLAIN, 15));
         lblThirst.setBounds(20, 480, 200, 32);
-        if(hardcore)
+        if (hardcore)
         {
             contentPane.add(lblThirst);
         }
-        
+
         //Thirst bar setup
         thirstBar = new JProgressBar();
         thirstBar.setBounds(16, 482, 455, 25);
         thirstBar.setMaximum((int) MAXIMAL_THIRST);
         thirstBar.setValue((int) thirst);
-        if(hardcore)
+        if (hardcore)
         {
             contentPane.add(thirstBar);
         }
-        
+
         //Incontinence label setup
         lblIncon = new JLabel("Incontinence: " + incon + "x");
         lblIncon.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -1114,7 +1115,7 @@ public class ALongHourAndAHalf extends JFrame
         if (hardcore)
         {
             maxBladder = 100;
-            lblName.setText(lblName.getText()+" [Hardcore]");
+            lblName.setText(lblName.getText() + " [Hardcore]");
         }
         //Starting the game
         nextStage = LEAVE_BED;
@@ -1160,9 +1161,9 @@ public class ALongHourAndAHalf extends JFrame
         //Calculating dryness and maximal bladder capacity values
         dryness = lower.getAbsorption() + undies.getAbsorption();
         maxBladder -= lower.getPressure() + undies.getPressure();
-        
+
         drynessBar.setMaximum((int) dryness);
-        
+
         //Finishing saving parameters for game reset
         outerParam = lower.getName();
         underParam = undies.getName();
@@ -1483,11 +1484,10 @@ public class ALongHourAndAHalf extends JFrame
                 {
                     actionList.add("[Unavailable]");
                 }
-                if(hardcore)
+                if (hardcore)
                 {
-                actionList.add("Drink water");
-                }
-                else
+                    actionList.add("Drink water");
+                } else
                 {
                     actionList.add("[Unavailable]");
                 }
@@ -1590,11 +1590,11 @@ public class ALongHourAndAHalf extends JFrame
                                 "defeat and get rid of the painful ache in your bladder.");
                         nextStage = GIVE_UP;
                         break;
-                        
+
                     //Drink water
                     case 4:
                         setText("Feeling a tad bit thirsty,",
-                        "You decide to take a small sip of water from your bottle to get rid of it.");
+                                "You decide to take a small sip of water from your bottle to get rid of it.");
                         nextStage = DRINK;
                         break;
                     /*
@@ -2690,6 +2690,314 @@ public class ALongHourAndAHalf extends JFrame
                 thirst = 0;
                 nextStage = ASK_ACTION;
                 break;
+            case WHERE_TO_GO:
+                setLinesAsDialogue(4);
+                setText("Lesson is over, and you're running to the restroom as fast as you can.",
+                        "Trying to get into the restroom,",
+                        "You find with fear that restroom is locked for some reason.",
+                        "Damnit... Seems that I have to pee somewhere else...");
+                lblChoice.setText("Where to go?");
+                listScroller.setVisible(true);
+                lblChoice.setVisible(true);
+
+                actionList.clear();
+                actionList.add("Mall (5 minutes)");
+                actionList.add("Bus stop (1 minute)");
+                actionList.add("Directly to home (15 minutes)");
+                listChoice.setListData(actionList.toArray());
+
+//                if (!listChoice.isSelectionEmpty())
+//                {
+                nextStage = GameStage.WHERE_TO_GO_CHOSE;
+                passTime();
+                break;
+//                }
+//            break;
+
+            case WHERE_TO_GO_CHOSE:
+//                actionName = (String) listChoice.getSelectedValue();
+//                if (actionName.equals("[Unavailable]"))
+//                {
+//                    listChoice.clearSelection();
+//                    setText("You've spent a few minutes doing nothing.");
+//                    break;
+//                }
+                switch (hideActionUI())
+                {
+                    case 0:
+                        nextStage = GOING_TO_MALL;
+                        setLinesAsDialogue(2);
+                        setText("You decided to go to mall.",
+                                "Probably, there will be a restroom.");
+                        break;
+                    case 1:
+                        nextStage = GOING_TO_BUS_STOP;
+                        setLinesAsDialogue(2);
+                        setText("You decided to go to the bus stop.",
+                                "I'll try to hold it till home.");
+                        break;
+                    case 2:
+                        nextStage = GOING_TO_HOME;
+                        setLinesAsDialogue(2);
+                        setText("You decided to go to home on foot.",
+                                "I may get stuck on the bus stop for a lot.");
+                        break;
+                }
+                break;
+                
+            case GOING_TO_MALL:
+                passTime((byte) 5);
+
+                //That tricky code saves a lot of space
+                boolean publicRestroomFound = generator.nextBoolean();
+                boolean queue = generator.nextInt(100) < 30;
+                boolean allowedToUseEmployeeRestroom = generator.nextInt(100) < 15;
+
+                setText((bladder < 80) ? "You came to the mall without any problems." : "You finally made it to the mall. Ah, that was the hard road...",
+                        publicRestroomFound
+                                ? "You've found a public restroom."
+                                : "Strangely, you couldn't find a public restroom, but you've found a restroom for employees.",
+                        publicRestroomFound
+                                ? queue
+                                        ? "There's a line! You've to wait!"
+                                        : ""
+                                : allowedToUseEmployeeRestroom
+                                        ? "<i>Can I use this restroom, please?</i>\n<i>Yes, you can.</i>"
+                                        : "<i>Can I use this restroom, please?</i>\n<i>Sorry, I can't let you in. This restroom is for employees only.</i>",
+                        (publicRestroomFound && !queue) || (!publicRestroomFound && allowedToUseEmployeeRestroom)
+                                ? !lower.getName().equals("No outerwear")
+                                ? !undies.getName().equals("No underwear")
+                                ? "You enter it, pulled down your " + lower.insert() + " and " + undies.insert() + ",\nwearily flop down on the toilet and start peeing."
+                                : "You enter it, pulled down your " + lower.insert() + ",\nwearily flop down on the toilet and start peeing."
+                                : !undies.getName().equals("No underwear")
+                                ? "You enter it, pulled down your " + undies.insert() + ",\nwearily flop down on the toilet and start peeing."
+                                : "You enter it, wearily flop down on the toilet and start peeing."
+                                : "Damn it..."
+                );
+
+                if ((publicRestroomFound && !queue) || (!publicRestroomFound && allowedToUseEmployeeRestroom))
+                {
+                    nextStage = GameStage.END_GAME;
+                } else
+                {
+                    if (publicRestroomFound && queue)
+                    {
+                        passTime();
+                        nextStage = GameStage.END_GAME;
+                    } else
+                    {
+                        if (!publicRestroomFound && !allowedToUseEmployeeRestroom)
+                        {
+                            nextStage = GameStage.WHERE_TO_GO_MALL;
+                        }
+                    }
+                }
+                break;
+
+            case WHERE_TO_GO_MALL:
+                setText("Why do there is no public restrooms!?",
+                        "Anyway, you've to go somewhere else.");
+
+                actionList.clear();
+                actionList.add("Bus stop (1 minute)");
+                actionList.add("Directly to home (15 minutes)");
+                listChoice.setListData(actionList.toArray());
+                listScroller.setVisible(true);
+                lblChoice.setVisible(true);
+
+                if (!listChoice.isSelectionEmpty())
+                {
+                    nextStage = GameStage.WHERE_TO_GO_MALL_CHOSE;
+                }
+                break;
+
+            case WHERE_TO_GO_MALL_CHOSE:
+                lblChoice.setVisible(false);
+                listScroller.setVisible(false);
+
+//                actionName = (String) listChoice.getSelectedValue();
+//                if (actionName.equals("[Unavailable]"))
+//                {
+//                    listChoice.clearSelection();
+//                    setText("You've spent a few minutes doing nothing.");
+//                    break;
+//                }
+                switch (hideActionUI())
+                {
+                    case 0:
+                        nextStage = GOING_TO_BUS_STOP;
+                        setLinesAsDialogue(2);
+                        setText("You decided to go to the bus stop.",
+                                "I'll try to hold it till home.");
+                        break;
+                    case 1:
+                        nextStage = GOING_TO_HOME;
+                        setLinesAsDialogue(2);
+                        setText("You decided to go to home on foot.",
+                                "I may get stuck on the bus stop for a lot.");
+                }
+                break;
+
+            case GOING_TO_BUS_STOP:
+                busTime = generator.nextInt(17) + 3;
+                passTime((byte) 1);
+                setText("You came to the bus stop,",
+                        "Sat on the bench and started waiting for a bus.");
+                nextStage = BUS_STOP;
+                break;
+
+            case BUS_STOP:
+                if (busTime > 0)
+                {
+                    setText("Sitting on the bench,",
+                            "You're waiting the bus to come.");
+                    passTime();
+                    busTime -= 3;
+                } else
+                {
+                    setText("Finally, you see the bus coming to the stop.",
+                            "You enter it.");
+                    nextStage = IN_BUS;
+
+                    //Stuck in traffic
+                    if (generator.nextInt(100) < 10)
+                    {
+                        busTime = generator.nextInt(20) + 5;
+                        traffic = true;
+                    } else //No traffic
+                    {
+                        passTime((byte) 5);
+
+                        //Forgot keys in school
+                        if (generator.nextInt(100) < 7)
+                        {
+                            nextStage = HOME_LOST_KEYS;
+                        } else
+                        {
+                            nextStage = HOME;
+                        }
+                    }
+                }
+                break;
+
+            case IN_BUS:
+                if (busTime > 0)
+                {
+                    setText("It seems that bus is stuck in traffic.",
+                            "No, please... Why me?..");
+                    passTime();
+                    busTime -= 3;
+                } else
+                {
+                    setText("Finally, bus managed to arrive to your stop.");
+                    //Forgot keys in school
+                    if (generator.nextInt(100) < 7)
+                    {
+                        nextStage = HOME_LOST_KEYS;
+                    } else
+                    {
+                        nextStage = HOME;
+                    }
+                }
+                break;
+                
+            case HOME:
+                setText("You run to your house, open the door with keys,",
+                        "Run to the bathroom,",
+                        "Flop to the toilet and start peeing.",
+                        "You're so happy that you made it to home with dry clothes.");
+                nextStage = END_GAME;
+                break;
+
+            case HOME_LOST_KEYS:
+                setLinesAsDialogue(4);
+                setText("You run to your house.",
+                        "You're trying to find the keys, but",
+                        "You just remembered that you forgot them in the school.",
+                        "Nooooooo...");
+                passTime();
+                nextStage = WHERE_TO_GO_BACK;
+                break;
+
+            case WHERE_TO_GO_BACK:
+                lblChoice.setText("How to get to school?");
+                listScroller.setVisible(true);
+                lblChoice.setVisible(true);
+
+                actionList.clear();
+                actionList.add("To bus stop (1 minute)");
+                actionList.add("On foot (15 minutes)");
+
+                if (!listChoice.isSelectionEmpty())
+                {
+                    nextStage = GameStage.WHERE_TO_GO_BACK_CHOSE;
+                    passTime();
+                }
+                break;
+            case WHERE_TO_GO_BACK_CHOSE:
+                lblChoice.setVisible(false);
+                listScroller.setVisible(false);
+
+//                actionName = (String) listChoice.getSelectedValue();
+//                if (actionName.equals("[Unavailable]"))
+//                {
+//                    listChoice.clearSelection();
+//                    setText("You've spent a few minutes doing nothing.");
+//                    break;
+//                }
+
+                switch (hideActionUI())
+                {
+                    case 0:
+                        setText("You decided to get back to school on bus.");
+                        nextStage = BACK_TO_SCHOOL_BUS_STOP;
+                        break;
+                    case 1:
+                        setText("You decided to get back to school on foot");
+                        nextStage = BACK_TO_SCHOOL;
+                }
+                break;
+
+            case BACK_TO_SCHOOL_BUS_STOP:
+                if (busTime > 0)
+                {
+                    setText("Sitting on the bench,",
+                            "You're waiting the bus to come.");
+                    passTime();
+                    busTime -= 3;
+                } else
+                {
+                    setText("Finally, you see the bus coming to the stop.",
+                            "You enter it.");
+                    nextStage = SCHOOL_BACK;
+
+                    passTime((byte) 5);
+                }
+                break;
+
+            case BACK_TO_SCHOOL:
+                setText("You're going back to school.");
+                passTime((byte) 15);
+                nextStage = SCHOOL_BACK;
+                break;
+
+            case GOING_TO_HOME:
+                setText("You're going to home.");
+                passTime((byte) 15);
+                //Forgot keys in school
+                if (generator.nextInt(100) < 7)
+                {
+                    nextStage = HOME_LOST_KEYS;
+                } else
+                {
+                    nextStage = HOME;
+                }
+                break;
+                
+            case SCHOOL_BACK:
+                setText("You entered the school, took the keys and turned back.");
+                nextStage = WHERE_TO_GO;
+                break;
                 
             default:
                 setText("Error parsing button. Next text is unavailable, text #" + nextStage);
@@ -2745,16 +3053,16 @@ public class ALongHourAndAHalf extends JFrame
                 }
             }
         }
-        if(hardcore)
+        if (hardcore)
         {
-        thirst+=2;
-        if(thirst>MAXIMAL_THIRST)
-        {
-            nextStage = DRINK;
-        }
+            thirst += 2;
+            if (thirst > MAXIMAL_THIRST)
+            {
+                nextStage = DRINK;
+            }
         }
         //Updating labels
-		updateUI();
+        updateUI();
     }
 
     /**
@@ -3119,8 +3427,7 @@ public class ALongHourAndAHalf extends JFrame
             timeBar.setValue(time);
             lblThirst.setText("Thirst: " + Math.round(thirst) + "%");
             thirstBar.setValue((int) thirst);
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             e.printStackTrace();
         }
@@ -3214,28 +3521,30 @@ public class ALongHourAndAHalf extends JFrame
 
     enum GameStage
     {
-        LEAVE_BED,
-        LEAVE_HOME,
-        GO_TO_CLASS,
-        WALK_IN,
-        SIT_DOWN,
-        ASK_ACTION,
-        CHOSE_ACTION,
-        ASK_TO_PEE,
-        CALLED_ON,
-        CAUGHT,
-        USE_BOTTLE,
-        ASK_CHEAT,
-        CHOSE_CHEAT,
-        CLASS_OVER,
-        AFTER_CLASS,
-        ACCIDENT,
+        DRINK,
+        LEAVE_BED, //Home
+        LEAVE_HOME, //Home
+        GO_TO_CLASS, //Home -> school
+        WALK_IN, //School
+        SIT_DOWN, //School
+        ASK_ACTION, //School, waiting for player to select an action
+        CHOSE_ACTION, //TODO: Rework
+        ASK_TO_PEE, //School, asking a teacher to pee
+        CALLED_ON, //School, teacher asked character a question
+        CAUGHT, //School, classmates have spotted that character has to pee (hardcore only)
+        USE_BOTTLE, //School, cheat, peeing in a bottle
+        ASK_CHEAT, //School, waiting for player to select a cheat 
+        CHOSE_CHEAT, //TODO: Rework
+        CLASS_OVER, //School, class over
+        AFTER_CLASS, //School, writing lines if character has failed to ask teacher to go to the restroom for three times
+        ACCIDENT, //School, leaking
         GIVE_UP,
-        WET,
-        POST_WET,
-        GAME_OVER,
-        END_GAME,
-        SURPRISE,
+        WET, //School, wetting
+        POST_WET, //School, being made fun of
+        POST_WET_BUS, //Bus, passangers around can't understand how did character pee in a bus
+        POST_WET_STREET, //Street, passersby confusedly look at character
+        GAME_OVER, //Wetting
+        SURPRISE, //Hidden gameplay after passing through the class in the hardcore mode
         SURPRISE_2,
         SURPRISE_ACCIDENT,
         SURPRISE_DIALOGUE,
@@ -3244,8 +3553,24 @@ public class ALongHourAndAHalf extends JFrame
         PERSUADE,
         SURPRISE_WET_VOLUNTARY,
         SURPRISE_WET_VOLUNTARY2,
-        SURPRISE_WET_PRESSURE,
-        DRINK
+        SURPRISE_WET_PRESSURE, //End of the hidden gameplay stages 
+        WHERE_TO_GO, //Asking the player where to go after the lessons if all restrooms are locked
+        GOING_TO_MALL, //Street, going to the mall to find a restroom (5 minutes)
+        GOING_TO_BUS_STOP, //Street, going to the bus stop (1 minute, then waiting for a bus for 3 - 20 minutes)
+        GOING_TO_HOME, //Street, going to home on foot (15 minutes)
+        HOME, //Made it to home
+        HOME_LOST_KEYS, //Forgot keys at school (chance 12%)
+        BACK_TO_SCHOOL, //Going back to school on foot (15 minutes)
+        BACK_TO_SCHOOL_BUS_STOP, //Waiting for a bus to school (3 - 15 minutes)
+        IN_BUS, //In a bus (3 minutes, 5% chance to get stuck in traffic (5 - 25 minutes)
+        END_GAME, //Good ending, showing score
+        WHERE_TO_GO_CHOSE,
+        WHERE_TO_GO_MALL, //Failed to pee in mall, going to somewhere else
+        WHERE_TO_GO_MALL_CHOSE,
+        BUS_STOP, //Waiting for a bus for 3 - 20 minutes
+        WHERE_TO_GO_BACK, //Going back to school to take the keys
+        WHERE_TO_GO_BACK_CHOSE,
+        SCHOOL_BACK
     }
 
     enum Gender
