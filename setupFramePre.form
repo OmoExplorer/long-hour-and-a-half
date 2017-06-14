@@ -132,7 +132,10 @@
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="loadGame" min="-2" pref="129" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="start" min="-2" pref="455" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="start" max="32767" attributes="0"/>
+                          <Component id="syncMode" pref="455" max="32767" attributes="0"/>
+                      </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="wearEditorButton" max="32767" attributes="0"/>
                   </Group>
@@ -208,10 +211,13 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jScrollPane3" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                  <Component id="start" pref="117" max="32767" attributes="0"/>
-                  <Component id="wearEditorButton" max="32767" attributes="0"/>
-                  <Component id="loadGame" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="1" attributes="0">
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Component id="wearEditorButton" pref="117" max="32767" attributes="0"/>
+                      <Component id="loadGame" max="32767" attributes="0"/>
+                      <Component id="start" alignment="0" min="-2" pref="87" max="-2" attributes="0"/>
+                  </Group>
+                  <Component id="syncMode" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -1203,6 +1209,12 @@
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="loadGameActionPerformed"/>
       </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="syncMode">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Sync mode"/>
+        <Property name="name" type="java.lang.String" value="syncMode" noResource="true"/>
+      </Properties>
     </Component>
   </SubComponents>
 </Form>

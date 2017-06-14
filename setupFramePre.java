@@ -153,6 +153,7 @@ public class setupFramePre extends javax.swing.JFrame {
         lowerColor_random1 = new JPanel();
         wearEditorButton = new JButton();
         loadGame = new JButton();
+        syncMode = new JButton();
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -922,6 +923,9 @@ public class setupFramePre extends javax.swing.JFrame {
             }
         });
 
+        syncMode.setText("Sync mode");
+        syncMode.setName("syncMode"); // NOI18N
+
         GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -1011,7 +1015,9 @@ public class setupFramePre extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(loadGame, GroupLayout.PREFERRED_SIZE, 129, GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(start, GroupLayout.PREFERRED_SIZE, 455, GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                            .addComponent(start, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(syncMode, GroupLayout.DEFAULT_SIZE, 455, Short.MAX_VALUE))
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(wearEditorButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
@@ -1076,10 +1082,12 @@ public class setupFramePre extends javax.swing.JFrame {
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                    .addComponent(start, GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
-                    .addComponent(wearEditorButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(loadGame, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                        .addComponent(wearEditorButton, GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
+                        .addComponent(loadGame, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(start, GroupLayout.PREFERRED_SIZE, 87, GroupLayout.PREFERRED_SIZE))
+                    .addComponent(syncMode))
                 .addContainerGap())
         );
 
@@ -1731,6 +1739,7 @@ public class setupFramePre extends javax.swing.JFrame {
     private JTree outerwearTree;
     private JRadioButton randomBasSlider;
     private JButton start;
+    private JButton syncMode;
     private JLabel underwearLabel;
     private JTree underwearTree;
     private JPanel undiesColor_black;
