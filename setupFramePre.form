@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<Form version="1.7" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
+<Form version="1.8" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
   <NonVisualComponents>
     <Component class="javax.swing.ButtonGroup" name="buttonGroup1">
     </Component>
@@ -222,7 +222,7 @@
     <Component class="javax.swing.JTextField" name="nameField">
       <Properties>
         <Property name="text" type="java.lang.String" value="Mrs. Nobody"/>
-        <Property name="toolTipText" type="java.lang.String" value=""/>
+        <Property name="toolTipText" type="java.lang.String" value="Your character&apos;s name"/>
         <Property name="name" type="java.lang.String" value="nameField" noResource="true"/>
       </Properties>
     </Component>
@@ -303,6 +303,7 @@
               <ComponentRef name="buttonGroup2"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Hardcore"/>
+            <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;Teacher never lets you pee&lt;br&gt;&#xa;Harder to hold pee&lt;br&gt;&#xa;You may get caught holding pee&lt;br&gt;&#xa;&lt;i&gt;Thirst&lt;/i&gt; parameter&#xa;&lt;/html&gt;"/>
             <Property name="name" type="java.lang.String" value="hardDiffRadio" noResource="true"/>
           </Properties>
         </Component>
@@ -311,13 +312,14 @@
     <Component class="javax.swing.JLabel" name="incontLabel">
       <Properties>
         <Property name="text" type="java.lang.String" value="Incontinence"/>
+        <Property name="toolTipText" type="java.lang.String" value="How incontinent are you?"/>
         <Property name="name" type="java.lang.String" value="incontLabel" noResource="true"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JSlider" name="incontSlider">
       <Properties>
         <Property name="minimum" type="int" value="5"/>
-        <Property name="toolTipText" type="java.lang.String" value="How incontinent are you? Default = 10"/>
+        <Property name="toolTipText" type="java.lang.String" value="How incontinent are you?"/>
         <Property name="value" type="int" value="10"/>
         <Property name="name" type="java.lang.String" value="incontSlider" noResource="true"/>
       </Properties>
@@ -325,12 +327,13 @@
     <Component class="javax.swing.JLabel" name="bladAtStartLabel">
       <Properties>
         <Property name="text" type="java.lang.String" value="Bladder at start"/>
+        <Property name="toolTipText" type="java.lang.String" value="How much you have to pee on wake?"/>
         <Property name="name" type="java.lang.String" value="bladAtStartLabel" noResource="true"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JSlider" name="basSlider">
       <Properties>
-        <Property name="toolTipText" type="java.lang.String" value="How much you have to pee on wake?"/>
+        <Property name="toolTipText" type="java.lang.String" value="Defined value"/>
         <Property name="value" type="int" value="0"/>
         <Property name="name" type="java.lang.String" value="basSlider" noResource="true"/>
       </Properties>
@@ -338,12 +341,14 @@
     <Component class="javax.swing.JLabel" name="underwearLabel">
       <Properties>
         <Property name="text" type="java.lang.String" value="Underwear:"/>
+        <Property name="toolTipText" type="java.lang.String" value="Select your underwear"/>
         <Property name="name" type="java.lang.String" value="underwearLabel" noResource="true"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="outerwearLabel">
       <Properties>
         <Property name="text" type="java.lang.String" value="Outerwear:"/>
+        <Property name="toolTipText" type="java.lang.String" value="Select your outerwear"/>
         <Property name="name" type="java.lang.String" value="outerwearLabel" noResource="true"/>
       </Properties>
     </Component>
@@ -353,6 +358,7 @@
           <Font name="sansserif" size="12" style="1"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Start"/>
+        <Property name="toolTipText" type="java.lang.String" value="Start new game"/>
         <Property name="name" type="java.lang.String" value="start" noResource="true"/>
       </Properties>
       <Events>
@@ -373,6 +379,7 @@
         <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
           <ComponentRef name="buttonGroup3"/>
         </Property>
+        <Property name="toolTipText" type="java.lang.String" value="Defined value"/>
         <Property name="name" type="java.lang.String" value="basSliderRadio" noResource="true"/>
       </Properties>
       <Events>
@@ -386,6 +393,7 @@
         </Property>
         <Property name="selected" type="boolean" value="true"/>
         <Property name="text" type="java.lang.String" value="Random"/>
+        <Property name="toolTipText" type="java.lang.String" value="Random value between 0% and 100%"/>
         <Property name="name" type="java.lang.String" value="randomBasSlider" noResource="true"/>
       </Properties>
       <Events>
@@ -1189,6 +1197,7 @@
     <Component class="javax.swing.JButton" name="wearEditorButton">
       <Properties>
         <Property name="text" type="java.lang.String" value="Wear editor"/>
+        <Property name="toolTipText" type="java.lang.String" value="Create your own wear and use it in game."/>
         <Property name="name" type="java.lang.String" value="wearEditorButton" noResource="true"/>
       </Properties>
       <Events>
@@ -1198,6 +1207,7 @@
     <Component class="javax.swing.JButton" name="loadGame">
       <Properties>
         <Property name="text" type="java.lang.String" value="Load game..."/>
+        <Property name="toolTipText" type="java.lang.String" value="Load a paused game"/>
         <Property name="name" type="java.lang.String" value="loadGame" noResource="true"/>
       </Properties>
       <Events>

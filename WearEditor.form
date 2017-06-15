@@ -103,17 +103,20 @@
     <Component class="javax.swing.JLabel" name="nameLabel">
       <Properties>
         <Property name="text" type="java.lang.String" value="Wear name"/>
+        <Property name="toolTipText" type="java.lang.String" value="Your wear name (e. g. &quot;Beautiful skirt&quot;)"/>
         <Property name="name" type="java.lang.String" value="nameLabel" noResource="true"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="nameField">
       <Properties>
+        <Property name="toolTipText" type="java.lang.String" value="Your wear name (e. g. &quot;Beautiful skirt&quot;)"/>
         <Property name="name" type="java.lang.String" value="nameField" noResource="true"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="typeLabel">
       <Properties>
         <Property name="text" type="java.lang.String" value="Wear type"/>
+        <Property name="toolTipText" type="java.lang.String" value="Type of your wear: undies or lower."/>
         <Property name="name" type="java.lang.String" value="typeLabel" noResource="true"/>
       </Properties>
     </Component>
@@ -136,6 +139,7 @@
     <Component class="javax.swing.JLabel" name="pressureLabel">
       <Properties>
         <Property name="text" type="java.lang.String" value="Pressure"/>
+        <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;Decreases the maximal bladder capacity.&lt;br&gt;&#xa;&lt;b&gt;1 point = -1% of max. bladder capacity.&lt;/b&gt;&#xa;&lt;/html&gt;"/>
         <Property name="name" type="java.lang.String" value="pressureLabel" noResource="true"/>
       </Properties>
     </Component>
@@ -144,12 +148,14 @@
         <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
           <SpinnerModel initial="0.0" maximum="300.0" minimum="0.0" numberType="java.lang.Float" stepSize="1.0" type="number"/>
         </Property>
+        <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt; Decreases the maximal bladder capacity.&lt;br&gt; &lt;b&gt;1 point = -1% of max. bladder capacity.&lt;/b&gt; &lt;/html&gt;"/>
         <Property name="name" type="java.lang.String" value="pressureSpinner" noResource="true"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="absorptionLabe">
       <Properties>
         <Property name="text" type="java.lang.String" value="Absorption"/>
+        <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;Absorbs the leaked pee.&lt;br&gt;&#xa;&lt;b&gt;1 point = 0.5% of pee.&lt;/b&gt;&#xa;&lt;/html&gt;&#xa;"/>
         <Property name="name" type="java.lang.String" value="absorptionLabe" noResource="true"/>
       </Properties>
     </Component>
@@ -158,12 +164,14 @@
         <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
           <SpinnerModel initial="0.0" maximum="300.0" minimum="0.0" numberType="java.lang.Float" stepSize="1.0" type="number"/>
         </Property>
+        <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt; Absorbs the leaked pee.&lt;br&gt; &lt;b&gt;1 point = 0.5% of pee.&lt;/b&gt; &lt;/html&gt; "/>
         <Property name="name" type="java.lang.String" value="absorptionSpinner" noResource="true"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="dotLabel">
       <Properties>
         <Property name="text" type="java.lang.String" value="Drying over time"/>
+        <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;Speed of wear drying.&lt;br&gt;&#xa;&lt;b&gt;1 point = -1% of absorbed pee per 3 minutes.&lt;/b&gt;&#xa;&lt;/html&gt;"/>
         <Property name="name" type="java.lang.String" value="dotLabel" noResource="true"/>
       </Properties>
     </Component>
@@ -172,6 +180,7 @@
         <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
           <SpinnerModel initial="0.0" maximum="100.0" minimum="0.0" numberType="java.lang.Float" stepSize="1.0" type="number"/>
         </Property>
+        <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt; Speed of wear drying.&lt;br&gt; &lt;b&gt;1 point = -1% of absorbed pee per 3 minutes.&lt;/b&gt; &lt;/html&gt;"/>
         <Property name="name" type="java.lang.String" value="dotSpinner" noResource="true"/>
       </Properties>
     </Component>
@@ -196,11 +205,13 @@
     <Component class="javax.swing.JLabel" name="insertNameLabel">
       <Properties>
         <Property name="text" type="java.lang.String" value="Wear insert name"/>
+        <Property name="toolTipText" type="java.lang.String" value="Your wear name which is inserted in the game text (e. g. &quot;skirt&quot;)"/>
         <Property name="name" type="java.lang.String" value="insertNameLabel" noResource="true"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="insertNameField">
       <Properties>
+        <Property name="toolTipText" type="java.lang.String" value="Your wear name which is inserted in the game text (e. g. &quot;skirt&quot;)"/>
         <Property name="name" type="java.lang.String" value="insertNameField" noResource="true"/>
       </Properties>
     </Component>
