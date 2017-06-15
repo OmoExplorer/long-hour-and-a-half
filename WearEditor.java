@@ -103,11 +103,14 @@ public class WearEditor extends javax.swing.JFrame
         setTitle("Wear editor");
 
         nameLabel.setText("Wear name");
+        nameLabel.setToolTipText("Your wear name (e. g. \"Beautiful skirt\")");
         nameLabel.setName("nameLabel"); // NOI18N
 
+        nameField.setToolTipText("Your wear name (e. g. \"Beautiful skirt\")");
         nameField.setName("nameField"); // NOI18N
 
         typeLabel.setText("Wear type");
+        typeLabel.setToolTipText("Type of your wear: undies or lower.");
         typeLabel.setName("typeLabel"); // NOI18N
 
         typeComboBox.setModel(new DefaultComboBoxModel<>(new String[] { "Underwear", "Outerwear", "Both are suitable" }));
@@ -115,21 +118,27 @@ public class WearEditor extends javax.swing.JFrame
         typeComboBox.setName("typeComboBox"); // NOI18N
 
         pressureLabel.setText("Pressure");
+        pressureLabel.setToolTipText("<html>\nDecreases the maximal bladder capacity.<br>\n<b>1 point = -1% of max. bladder capacity.</b>\n</html>");
         pressureLabel.setName("pressureLabel"); // NOI18N
 
         pressureSpinner.setModel(new SpinnerNumberModel(Float.valueOf(0.0f), Float.valueOf(0.0f), Float.valueOf(300.0f), Float.valueOf(1.0f)));
+        pressureSpinner.setToolTipText("<html> Decreases the maximal bladder capacity.<br> <b>1 point = -1% of max. bladder capacity.</b> </html>");
         pressureSpinner.setName("pressureSpinner"); // NOI18N
 
         absorptionLabe.setText("Absorption");
+        absorptionLabe.setToolTipText("<html>\nAbsorbs the leaked pee.<br>\n<b>1 point = 0.5% of pee.</b>\n</html>\n");
         absorptionLabe.setName("absorptionLabe"); // NOI18N
 
         absorptionSpinner.setModel(new SpinnerNumberModel(Float.valueOf(0.0f), Float.valueOf(0.0f), Float.valueOf(300.0f), Float.valueOf(1.0f)));
+        absorptionSpinner.setToolTipText("<html> Absorbs the leaked pee.<br> <b>1 point = 0.5% of pee.</b> </html> ");
         absorptionSpinner.setName("absorptionSpinner"); // NOI18N
 
         dotLabel.setText("Drying over time");
+        dotLabel.setToolTipText("<html>\nSpeed of wear drying.<br>\n<b>1 point = -1% of absorbed pee per 3 minutes.</b>\n</html>");
         dotLabel.setName("dotLabel"); // NOI18N
 
         dotSpinner.setModel(new SpinnerNumberModel(Float.valueOf(0.0f), Float.valueOf(0.0f), Float.valueOf(100.0f), Float.valueOf(1.0f)));
+        dotSpinner.setToolTipText("<html> Speed of wear drying.<br> <b>1 point = -1% of absorbed pee per 3 minutes.</b> </html>");
         dotSpinner.setName("dotSpinner"); // NOI18N
 
         saveButton.setText("Save...");
@@ -153,8 +162,10 @@ public class WearEditor extends javax.swing.JFrame
         });
 
         insertNameLabel.setText("Wear insert name");
+        insertNameLabel.setToolTipText("Your wear name which is inserted in the game text (e. g. \"skirt\")");
         insertNameLabel.setName("insertNameLabel"); // NOI18N
 
+        insertNameField.setToolTipText("Your wear name which is inserted in the game text (e. g. \"skirt\")");
         insertNameField.setName("insertNameField"); // NOI18N
 
         GroupLayout layout = new GroupLayout(getContentPane());

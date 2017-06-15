@@ -158,7 +158,7 @@ public class setupFramePre extends javax.swing.JFrame {
         setResizable(false);
 
         nameField.setText("Mrs. Nobody");
-        nameField.setToolTipText("");
+        nameField.setToolTipText("Your character's name");
         nameField.setName("nameField"); // NOI18N
 
         buttonGroup1.add(maleRadio);
@@ -202,6 +202,7 @@ public class setupFramePre extends javax.swing.JFrame {
 
         buttonGroup2.add(hardDiffRadio);
         hardDiffRadio.setText("Hardcore");
+        hardDiffRadio.setToolTipText("<html>\nTeacher never lets you pee<br>\nHarder to hold pee<br>\nYou may get caught holding pee<br>\n<i>Thirst</i> parameter\n</html>");
         hardDiffRadio.setName("hardDiffRadio"); // NOI18N
 
         GroupLayout difficultyPanelLayout = new GroupLayout(difficultyPanel);
@@ -221,28 +222,33 @@ public class setupFramePre extends javax.swing.JFrame {
         );
 
         incontLabel.setText("Incontinence");
+        incontLabel.setToolTipText("How incontinent are you?");
         incontLabel.setName("incontLabel"); // NOI18N
 
         incontSlider.setMinimum(5);
-        incontSlider.setToolTipText("How incontinent are you? Default = 10");
+        incontSlider.setToolTipText("How incontinent are you?");
         incontSlider.setValue(10);
         incontSlider.setName("incontSlider"); // NOI18N
 
         bladAtStartLabel.setText("Bladder at start");
+        bladAtStartLabel.setToolTipText("How much you have to pee on wake?");
         bladAtStartLabel.setName("bladAtStartLabel"); // NOI18N
 
-        basSlider.setToolTipText("How much you have to pee on wake?");
+        basSlider.setToolTipText("Defined value");
         basSlider.setValue(0);
         basSlider.setName("basSlider"); // NOI18N
 
         underwearLabel.setText("Underwear:");
+        underwearLabel.setToolTipText("Select your underwear");
         underwearLabel.setName("underwearLabel"); // NOI18N
 
         outerwearLabel.setText("Outerwear:");
+        outerwearLabel.setToolTipText("Select your outerwear");
         outerwearLabel.setName("outerwearLabel"); // NOI18N
 
         start.setFont(new Font("sansserif", 1, 12)); // NOI18N
         start.setText("Start");
+        start.setToolTipText("Start new game");
         start.setName("start"); // NOI18N
         start.addActionListener(new ActionListener()
         {
@@ -257,6 +263,7 @@ public class setupFramePre extends javax.swing.JFrame {
         nameLabel.setName("nameLabel"); // NOI18N
 
         buttonGroup3.add(basSliderRadio);
+        basSliderRadio.setToolTipText("Defined value");
         basSliderRadio.setName("basSliderRadio"); // NOI18N
         basSliderRadio.addActionListener(new ActionListener()
         {
@@ -269,6 +276,7 @@ public class setupFramePre extends javax.swing.JFrame {
         buttonGroup3.add(randomBasSlider);
         randomBasSlider.setSelected(true);
         randomBasSlider.setText("Random");
+        randomBasSlider.setToolTipText("Random value between 0% and 100%");
         randomBasSlider.setName("randomBasSlider"); // NOI18N
         randomBasSlider.addActionListener(new ActionListener()
         {
@@ -903,6 +911,7 @@ public class setupFramePre extends javax.swing.JFrame {
         );
 
         wearEditorButton.setText("Wear editor");
+        wearEditorButton.setToolTipText("Create your own wear and use it in game.");
         wearEditorButton.setName("wearEditorButton"); // NOI18N
         wearEditorButton.addActionListener(new ActionListener()
         {
@@ -913,6 +922,7 @@ public class setupFramePre extends javax.swing.JFrame {
         });
 
         loadGame.setText("Load game...");
+        loadGame.setToolTipText("Load a paused game");
         loadGame.setName("loadGame"); // NOI18N
         loadGame.addActionListener(new ActionListener()
         {

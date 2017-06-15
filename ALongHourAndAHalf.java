@@ -786,6 +786,7 @@ public class ALongHourAndAHalf extends JFrame
             }
         });
         btnReset.setBounds(10, ACTION_BUTTONS_TOP_BORDER, ACTION_BUTTONS_WIDTH, ACTION_BUTTONS_HEIGHT);
+        btnReset.setToolTipText("Start the game over with the same parameters.");
         contentPane.add(btnReset);
 
         //"New game" button setup
@@ -800,6 +801,7 @@ public class ALongHourAndAHalf extends JFrame
             }
         });
         btnNewGame.setBounds(102, ACTION_BUTTONS_TOP_BORDER, ACTION_BUTTONS_WIDTH, ACTION_BUTTONS_HEIGHT);
+        btnNewGame.setToolTipText("Start the game over with the another parameters.");
         contentPane.add(btnNewGame);
 
         //Name label setup
@@ -810,7 +812,7 @@ public class ALongHourAndAHalf extends JFrame
 
         //Bladder label setup
         lblBladder = new JLabel("Bladder: " + Math.round(this.bladder) + "%");
-        lblBladder.setToolTipText("<html>Normal game:<br>100% = need to hold<br>130% = peeing(game over)<br><br>Hardcore:<br>80% = need to hold<br>100% = peeing(game over)</html>");
+        lblBladder.setToolTipText("<html>Normal game:<br>100% = need to hold, regular leaks<br>130% = peeing(game over)<br><br>Hardcore:<br>80% = need to hold, regular leaks<br>100% = peeing(game over)</html>");
         lblBladder.setFont(new Font("Tahoma", Font.PLAIN, 15));
         lblBladder.setBounds(20, 210, 200, 32);
         contentPane.add(lblBladder);
@@ -820,18 +822,21 @@ public class ALongHourAndAHalf extends JFrame
         lblEmbarassment = new JLabel("Embarassment: " + embarassment);
         lblEmbarassment.setFont(new Font("Tahoma", Font.PLAIN, 15));
         lblEmbarassment.setBounds(20, 240, 200, 32);
+        lblEmbarassment.setToolTipText("Makes leaks more frequent");
         contentPane.add(lblEmbarassment);
 
         //Belly label setup
         lblBelly = new JLabel("Belly: " + Math.round(belly) + "%");
         lblBelly.setFont(new Font("Tahoma", Font.PLAIN, 15));
         lblBelly.setBounds(20, 270, 200, 32);
+        lblBelly.setToolTipText("<html>The water in your belly.<br>Any amount of water speeds the bladder filling up.</html>");
         contentPane.add(lblBelly);
 
         //Thirst label setup
         lblThirst = new JLabel("Thirst: " + Math.round(thirst) + "%");
         lblThirst.setFont(new Font("Tahoma", Font.PLAIN, 15));
         lblThirst.setBounds(20, 480, 200, 32);
+        lblThirst.setToolTipText("Character will automatically drink water at 30% of thirst.");
         if(hardcore)
         {
             contentPane.add(lblThirst);
@@ -842,6 +847,7 @@ public class ALongHourAndAHalf extends JFrame
         thirstBar.setBounds(16, 482, 455, 25);
         thirstBar.setMaximum((int) MAXIMAL_THIRST);
         thirstBar.setValue((int) thirst);
+        thirstBar.setToolTipText("Character will automatically drink water at 30% of thirst.");
         if(hardcore)
         {
             contentPane.add(thirstBar);
@@ -851,6 +857,7 @@ public class ALongHourAndAHalf extends JFrame
         lblIncon = new JLabel("Incontinence: " + incon + "x");
         lblIncon.setFont(new Font("Tahoma", Font.PLAIN, 15));
         lblIncon.setBounds(20, 300, 200, 32);
+        lblIncon.setToolTipText("Makes your bladder weaker");
         contentPane.add(lblIncon);
 
         //Time label setup
@@ -865,6 +872,7 @@ public class ALongHourAndAHalf extends JFrame
         lblSphPower.setFont(new Font("Tahoma", Font.PLAIN, 15));
         lblSphPower.setBounds(20, 360, 200, 32);
         lblSphPower.setVisible(false);
+        lblSphPower.setToolTipText("<html>Ability to hold pee.<br>Drains faster on higher bladder fulnesses.<br>Leaking when 0%.<br>Refill it by holding crotch and rubbing thigs.</html>");
         contentPane.add(lblSphPower);
 
         //Clothing dryness label setup
@@ -872,6 +880,7 @@ public class ALongHourAndAHalf extends JFrame
         lblDryness.setFont(new Font("Tahoma", Font.PLAIN, 15));
         lblDryness.setBounds(20, 390, 200, 32);
         lblDryness.setVisible(false);
+        lblDryness.setToolTipText("<html>Estimating dryness to absorb leaked pee.<br>Refills by itself with the time.</html>");
         contentPane.add(lblDryness);
 
         //Choice label ("What to do?") setup
@@ -896,6 +905,7 @@ public class ALongHourAndAHalf extends JFrame
         bladderBar.setBounds(16, 212, 455, 25);
         bladderBar.setMaximum(130);
         bladderBar.setValue(this.bladder);
+        bladderBar.setToolTipText("<html>Normal game:<br>100% = need to hold, regular leaks<br>130% = peeing(game over)<br><br>Hardcore:<br>80% = need to hold, regular leaks<br>100% = peeing(game over)</html>");
         contentPane.add(bladderBar);
 
         //Sphincter bar setup
@@ -904,6 +914,7 @@ public class ALongHourAndAHalf extends JFrame
         sphincterBar.setMaximum(Math.round(maxSphincterPower));
         sphincterBar.setValue(Math.round(sphincterPower));
         sphincterBar.setVisible(false);
+        sphincterBar.setToolTipText("<html>Ability to hold pee.<br>Drains faster on higher bladder fulnesses.<br>Leaking when 0%.<br>Refill it by holding crotch and rubbing thigs.</html>");
         contentPane.add(sphincterBar);
 
         //Dryness bar setup
@@ -912,6 +923,7 @@ public class ALongHourAndAHalf extends JFrame
         drynessBar.setValue((int) dryness);
         drynessBar.setMinimum(MINIMAL_DRYNESS);
         drynessBar.setVisible(false);
+        drynessBar.setToolTipText("<html>Estimating dryness to absorb leaked pee.<br>Refills by itself with the time.</html>");
         contentPane.add(drynessBar);
 
         //Time bar setup
@@ -2783,7 +2795,7 @@ public class ALongHourAndAHalf extends JFrame
             {
                 if (!hardcore)
                 {
-                    byte wetChance = (byte) (3 * (bladder - 100));
+                    short wetChance = (short) ( 3 * (bladder - 100) + embarassment);
                     if (generator.nextInt(100) < wetChance)
                     {
                         sphincterPower = 0;
@@ -2883,6 +2895,16 @@ public class ALongHourAndAHalf extends JFrame
         {
             emptyBladder();
         }
+        //Clothes drying over time
+        if (dryness < lower.getAbsorption() + undies.getAbsorption())
+        {
+            dryness += lower.getDryingOverTime() + undies.getDryingOverTime()*(amount/3);
+        }
+
+        if (dryness > lower.getAbsorption() + undies.getAbsorption())
+        {
+            dryness = lower.getAbsorption() + undies.getAbsorption();
+        }
         updateUI();
     }
 
@@ -2891,17 +2913,6 @@ public class ALongHourAndAHalf extends JFrame
      */
     public void decaySphPower()
     {
-        //Clothes drying over time
-        if (dryness < lower.getAbsorption() + undies.getAbsorption())
-        {
-            dryness += lower.getDryingOverTime() + undies.getDryingOverTime();
-        }
-
-        if (dryness > lower.getAbsorption() + undies.getAbsorption())
-        {
-            dryness = lower.getAbsorption() + undies.getAbsorption();
-        }
-
         sphincterPower -= bladder / 30;
         if (sphincterPower < 0)
         {
