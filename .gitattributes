@@ -1,2 +1,3 @@
 *.form binary
 *.java text
+setupFramePre.java binary
