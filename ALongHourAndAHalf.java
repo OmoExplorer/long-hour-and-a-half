@@ -1505,10 +1505,9 @@ nextStage = WHERE_TO_GO;
                 break;
 
             case CHOSE_ACTION:
-                System.out.println();
-                nextStage = ASK_ACTION;
                 if (listChoice.isSelectionEmpty() || listChoice.getSelectedValue().equals("[Unavailable]"))
                 {
+                    nextStage = ASK_ACTION;
 //                    setText("You spent a few minutes doing nothing.");
                     break;
                 }
@@ -2700,8 +2699,6 @@ nextStage = WHERE_TO_GO;
                         "You find with fear that restroom is locked for some reason.",
                         "Damnit... Seems that I have to pee somewhere else...");
                 
-                
-                
                 actionList.clear();
                 actionList.add("Mall (5 minutes)");
                 actionList.add("Bus stop (1 minute)");
@@ -2744,7 +2741,7 @@ nextStage = WHERE_TO_GO;
                         setLinesAsDialogue(2);
                         setText("You decided to go to home on foot.",
                                 "I may get stuck on the bus stop for a lot.");
-                        nextStage = GOING_TO_HOME;
+                        nextStage = GOING_TO_HOME_ASK_ACTION;
                         break;
                     default:
                         nextStage = WHERE_TO_GO;
@@ -2756,9 +2753,9 @@ nextStage = WHERE_TO_GO;
                 passTime((byte) 5);
 
                 //That tricky code saves a lot of space
-                boolean publicRestroomFound = generator.nextBoolean();
-                boolean queue = generator.nextInt(100) < 30;
-                boolean allowedToUseEmployeeRestroom = generator.nextInt(100) < 15;
+                boolean publicRestroomFound = generator.nextInt(100) < 20;
+                boolean queue = generator.nextInt(100) < 20;
+                boolean allowedToUseEmployeeRestroom = generator.nextInt(100) < 10;
 
                 setText((bladder < 80) ? "You came to the mall without any problems." : "You finally made it to the mall. Ah, that was the hard road...",
                         publicRestroomFound
@@ -2810,16 +2807,9 @@ nextStage = WHERE_TO_GO;
                 actionList.add("Bus stop (1 minute)");
                 actionList.add("Directly to home (15 minutes)");
                 listChoice.setListData(actionList.toArray());
-                
-                if (!listChoice.isSelectionEmpty())
-                {
-                    nextStage = GameStage.WHERE_TO_GO_MALL_CHOSE;
-                }
-                else
-                {
-                    nextStage = GameStage.WHERE_TO_GO_MALL;
-                }
+                nextStage = WHERE_TO_GO_MALL_CHOSE;
                 break;
+                
 
             case WHERE_TO_GO_MALL_CHOSE:
 //                actionName = (String) listChoice.getSelectedValue();
@@ -2829,6 +2819,12 @@ nextStage = WHERE_TO_GO;
 //                    setText("You've spent a few minutes doing nothing.");
 //                    break;
 //                }
+                if (listChoice.isSelectionEmpty())
+                {
+                    nextStage = GameStage.WHERE_TO_GO_MALL;
+                    break;
+                }
+                
                 switch (hideActionUI())
                 {
                     case 0:
@@ -2841,7 +2837,7 @@ nextStage = WHERE_TO_GO;
                         setLinesAsDialogue(2);
                         setText("You decided to go to home on foot.",
                                 "I may get stuck on the bus stop for a lot.");
-                        nextStage = GOING_TO_HOME;
+                        nextStage = GOING_TO_HOME_ASK_ACTION;
                 }
                 break;
 
@@ -2850,21 +2846,43 @@ nextStage = WHERE_TO_GO;
                 passTime((byte) 1);
                 setText("You came to the bus stop,",
                         "Sat on the bench and started waiting for a bus.");
-                nextStage = BUS_STOP;
+                nextStage = BUS_STOP_ASK_ACTION;
                 break;
 
-            case BUS_STOP:
+            case BUS_STOP_ASK_ACTION: //TODO: Implement holding system here
                 if (busTime > 0)
                 {
                     setText("Sitting on the bench,",
                             "You're waiting the bus to come.");
                     passTime();
                     busTime -= 3;
+                    
+                    showActionUI("What to do?");
+                    actionList.add("Hold crotch");
+                    actionList.add("Rub thigs");
+                    if(bladder>100)
+                    {
+                        actionList.add("Give up");
+                    }
+                    else
+                    {
+                        actionList.add("[Unavailable]");
+                    }
+                    if(hardcore)
+                    {
+                        actionList.add("Drink water");
+                    }
+                    else
+                    {
+                        actionList.add("[Unavailable]");
+                    }
+                    actionList.add("Cheat (will reset your score)");
+                    nextStage = BUS_STOP_CHOSE_ACTION;
                 } else
                 {
                     setText("Finally, you see the bus coming to the stop.",
                             "You enter it.");
-                    nextStage = IN_BUS;
+                    nextStage = IN_BUS_ASK_ACTION;
 
                     //Stuck in traffic
                     if (generator.nextInt(100) < 10)
@@ -2887,13 +2905,117 @@ nextStage = WHERE_TO_GO;
                 }
                 break;
 
-            case IN_BUS:
+            case BUS_STOP_CHOSE_ACTION:
+                if (listChoice.isSelectionEmpty() || listChoice.getSelectedValue().equals("[Unavailable]"))
+                {
+                    nextStage = BUS_STOP_ASK_ACTION;
+//                    setText("You spent a few minutes doing nothing.");
+                    break;
+                }
+
+                //Hiding the action selector and doing action job
+                switch (hideActionUI())
+                {
+                    /*
+                     * Press on crotch/squeeze penis
+                     * 3 minutes
+                     * -2 bladder
+                     * Detection chance: 15
+                     * Effectiveness: 0.4
+                     * =========================
+                     * 3 minutes
+                     * +20 sph. power
+                     * Detection chance: 15
+                     * Future effectiveness: 4
+                     */
+                    case 0:
+                        setText("You don't think anyone will see you doing it,",
+                                "so you take your hand and hold yourself down there.",
+                                "It feels a little better for now.");
+                        rechargeSphPower(20);
+                        offsetTime(3);
+                        nextStage = BUS_STOP_ASK_ACTION;
+                        break;
+
+                    /*
+                     * Rub thighs
+                     * 3 + 3 = 6 minutes
+                     * -0.2 bladder
+                     * Detection chance: 3
+                     * Effectiveness: 6
+                     * =========================
+                     * 3 + 3 = 6 minutes
+                     * +2 sph. power
+                     * Detection chance: 3
+                     * Future effectiveness: 4
+                     */
+                    case 1:
+                        setText("You need to go, and it hurts, but you just",
+                                "can't bring yourself to risk getting caught with your hand between",
+                                "your legs. You rub your thighs hard but it doesn't really help.");
+                        rechargeSphPower(2);
+                        offsetTime(3);
+                        nextStage = BUS_STOP_ASK_ACTION;
+                        break;
+
+                    //Give up
+                    case 2:
+                        setText("You're absolutely desperate to pee, and you think you'll",
+                                "end up peeing yourself anyway, so it's probably best to admit",
+                                "defeat and get rid of the painful ache in your bladder.");
+                        nextStage = GIVE_UP;
+                        break;
+
+                    //Drink water
+                    case 3:
+                        setText("Feeling a tad bit thirsty,",
+                                "You decide to take a small sip of water from your bottle to get rid of it.");
+                        nextStage = DRINK;
+                        break;
+                    
+                    //Cheat
+                    case 4:
+                        setText("You've got to go so bad!",
+                                "There must be something you can do, right?");
+                        //Zeroing points
+                        cheatsUsed = true;
+                        nextStage = ASK_CHEAT;
+                        break;
+
+                    case -1:
+                        setText("Bugs.");
+                }
+                break;
+                
+            case IN_BUS_ASK_ACTION: //TODO: Implement holding system here
                 if (traffic)
                 {
                     setText("It seems that bus is stuck in traffic.",
                             "No, please... Why me?..");
                     passTime();
                     busTime -= 3;
+                    
+                    showActionUI("What to do?");
+                    actionList.add("Hold crotch");
+                    actionList.add("Rub thigs");
+                    if(bladder>100)
+                    {
+                        actionList.add("Give up");
+                    }
+                    else
+                    {
+                        actionList.add("[Unavailable]");
+                    }
+                    if(hardcore)
+                    {
+                        actionList.add("Drink water");
+                    }
+                    else
+                    {
+                        actionList.add("[Unavailable]");
+                    }
+                    actionList.add("Cheat (will reset your score)");
+                    nextStage = IN_BUS_CHOSE_ACTION;
                 } else
                 {
                     setText("Finally, bus managed to arrive to your stop.");
@@ -2905,6 +3027,89 @@ nextStage = WHERE_TO_GO;
                     {
                         nextStage = HOME;
                     }
+                }
+                break;
+                
+            case IN_BUS_CHOSE_ACTION:
+                if (listChoice.isSelectionEmpty() || listChoice.getSelectedValue().equals("[Unavailable]"))
+                {
+                    nextStage = IN_BUS_ASK_ACTION;
+//                    setText("You spent a few minutes doing nothing.");
+                    break;
+                }
+
+                //Hiding the action selector and doing action job
+                switch (hideActionUI())
+                {
+                    /*
+                     * Press on crotch/squeeze penis
+                     * 3 minutes
+                     * -2 bladder
+                     * Detection chance: 15
+                     * Effectiveness: 0.4
+                     * =========================
+                     * 3 minutes
+                     * +20 sph. power
+                     * Detection chance: 15
+                     * Future effectiveness: 4
+                     */
+                    case 0:
+                        setText("You don't think anyone will see you doing it,",
+                                "so you take your hand and hold yourself down there.",
+                                "It feels a little better for now.");
+                        nextStage = IN_BUS_ASK_ACTION;
+                        rechargeSphPower(20);
+                        offsetTime(3);
+                        break;
+
+                    /*
+                     * Rub thighs
+                     * 3 + 3 = 6 minutes
+                     * -0.2 bladder
+                     * Detection chance: 3
+                     * Effectiveness: 6
+                     * =========================
+                     * 3 + 3 = 6 minutes
+                     * +2 sph. power
+                     * Detection chance: 3
+                     * Future effectiveness: 4
+                     */
+                    case 1:
+                        setText("You need to go, and it hurts, but you just",
+                                "can't bring yourself to risk getting caught with your hand between",
+                                "your legs. You rub your thighs hard but it doesn't really help.");
+                        nextStage = IN_BUS_ASK_ACTION;
+                        rechargeSphPower(2);
+                        offsetTime(3);
+                        break;
+
+                    //Give up
+                    case 2:
+                        setText("You're absolutely desperate to pee, and you think you'll",
+                                "end up peeing yourself anyway, so it's probably best to admit",
+                                "defeat and get rid of the painful ache in your bladder.");
+                        nextStage = GIVE_UP;
+                        break;
+
+                    //Drink water
+                    case 3:
+                        setText("Feeling a tad bit thirsty,",
+                                "You decide to take a small sip of water from your bottle to get rid of it.");
+                        nextStage = DRINK;
+                        break;
+                    
+                    //Cheat
+                    case 4:
+                        setText("You've got to go so bad!",
+                                "There must be something you can do, right?");
+
+                        //Zeroing points
+                        cheatsUsed = true;
+                        nextStage = ASK_CHEAT;
+                        break;
+
+                    case -1:
+                        setText("Bugs.");
                 }
                 break;
                 
@@ -2933,15 +3138,6 @@ nextStage = WHERE_TO_GO;
                 actionList.add("To bus stop (1 minute)");
                 actionList.add("On foot (15 minutes)");
                 showActionUI("How to get to school?");
-                
-                if (!listChoice.isSelectionEmpty())
-                {
-                    nextStage = GameStage.WHERE_TO_GO_BACK_CHOSE;
-                }
-                else
-                {
-                    nextStage = GameStage.WHERE_TO_GO_BACK;
-                }
                 break;
                 
             case WHERE_TO_GO_BACK_CHOSE:
@@ -2952,20 +3148,24 @@ nextStage = WHERE_TO_GO;
 //                    setText("You've spent a few minutes doing nothing.");
 //                    break;
 //                }
-
+                if (listChoice.isSelectionEmpty())
+                {
+                    nextStage = GameStage.WHERE_TO_GO_BACK;
+                    break;
+                }
                 switch (hideActionUI())
                 {
                     case 0:
                         setText("You decided to get back to school on bus.");
-                        nextStage = BACK_TO_SCHOOL_BUS_STOP;
+                        nextStage = BACK_TO_SCHOOL_BUS_STOP_ASK_ACTION;
                         break;
                     case 1:
                         setText("You decided to get back to school on foot");
-                        nextStage = BACK_TO_SCHOOL;
+                        nextStage = BACK_TO_SCHOOL_ASK_ACTION;
                 }
                 break;
 
-            case BACK_TO_SCHOOL_BUS_STOP:
+            case BACK_TO_SCHOOL_BUS_STOP_ASK_ACTION: //TODO: Implement holding system here
                 if (busTime > 0)
                 {
                     setText("Sitting on the bench,",
@@ -2981,13 +3181,179 @@ nextStage = WHERE_TO_GO;
                 }
                 break;
 
-            case BACK_TO_SCHOOL:
+            case BACK_TO_SCHOOL_BUS_STOP_CHOSE_ACTION:    
+                if (listChoice.isSelectionEmpty() || listChoice.getSelectedValue().equals("[Unavailable]"))
+                {
+                    nextStage = BACK_TO_SCHOOL_BUS_STOP_ASK_ACTION;
+//                    setText("You spent a few minutes doing nothing.");
+                    break;
+                }
+
+                //Hiding the action selector and doing action job
+                switch (hideActionUI())
+                {
+                    /*
+                     * Press on crotch/squeeze penis
+                     * 3 minutes
+                     * -2 bladder
+                     * Detection chance: 15
+                     * Effectiveness: 0.4
+                     * =========================
+                     * 3 minutes
+                     * +20 sph. power
+                     * Detection chance: 15
+                     * Future effectiveness: 4
+                     */
+                    case 0:
+                        setText("You don't think anyone will see you doing it,",
+                                "so you take your hand and hold yourself down there.",
+                                "It feels a little better for now.");
+
+                        rechargeSphPower(20);
+                        offsetTime(3);
+                        break;
+
+                    /*
+                     * Rub thighs
+                     * 3 + 3 = 6 minutes
+                     * -0.2 bladder
+                     * Detection chance: 3
+                     * Effectiveness: 6
+                     * =========================
+                     * 3 + 3 = 6 minutes
+                     * +2 sph. power
+                     * Detection chance: 3
+                     * Future effectiveness: 4
+                     */
+                    case 1:
+                        setText("You need to go, and it hurts, but you just",
+                                "can't bring yourself to risk getting caught with your hand between",
+                                "your legs. You rub your thighs hard but it doesn't really help.");
+
+                        rechargeSphPower(2);
+                        offsetTime(3);
+                        break;
+
+                    //Give up
+                    case 2:
+                        setText("You're absolutely desperate to pee, and you think you'll",
+                                "end up peeing yourself anyway, so it's probably best to admit",
+                                "defeat and get rid of the painful ache in your bladder.");
+                        nextStage = GIVE_UP;
+                        break;
+
+                    //Drink water
+                    case 3:
+                        setText("Feeling a tad bit thirsty,",
+                                "You decide to take a small sip of water from your bottle to get rid of it.");
+                        nextStage = DRINK;
+                        break;
+                    
+                    //Cheat
+                    case 4:
+                        setText("You've got to go so bad!",
+                                "There must be something you can do, right?");
+
+                        //Zeroing points
+                        cheatsUsed = true;
+                        nextStage = ASK_CHEAT;
+                        break;
+
+                    case -1:
+                        setText("Bugs.");
+                }
+                break;
+                
+            case BACK_TO_SCHOOL_ASK_ACTION: //TODO: Implement holding system here
                 setText("You're going back to school.");
                 passTime((byte) 15);
                 nextStage = SCHOOL_BACK;
                 break;
 
-            case GOING_TO_HOME:
+            case BACK_TO_SCHOOL_CHOSE_ACTION:
+                if (listChoice.isSelectionEmpty() || listChoice.getSelectedValue().equals("[Unavailable]"))
+                {
+                    nextStage = BACK_TO_SCHOOL_ASK_ACTION;
+//                    setText("You spent a few minutes doing nothing.");
+                    break;
+                }
+
+                //Hiding the action selector and doing action job
+                switch (hideActionUI())
+                {
+                    /*
+                     * Press on crotch/squeeze penis
+                     * 3 minutes
+                     * -2 bladder
+                     * Detection chance: 15
+                     * Effectiveness: 0.4
+                     * =========================
+                     * 3 minutes
+                     * +20 sph. power
+                     * Detection chance: 15
+                     * Future effectiveness: 4
+                     */
+                    case 0:
+                        setText("You don't think anyone will see you doing it,",
+                                "so you take your hand and hold yourself down there.",
+                                "It feels a little better for now.");
+
+                        rechargeSphPower(20);
+                        offsetTime(3);
+                        break;
+
+                    /*
+                     * Rub thighs
+                     * 3 + 3 = 6 minutes
+                     * -0.2 bladder
+                     * Detection chance: 3
+                     * Effectiveness: 6
+                     * =========================
+                     * 3 + 3 = 6 minutes
+                     * +2 sph. power
+                     * Detection chance: 3
+                     * Future effectiveness: 4
+                     */
+                    case 1:
+                        setText("You need to go, and it hurts, but you just",
+                                "can't bring yourself to risk getting caught with your hand between",
+                                "your legs. You rub your thighs hard but it doesn't really help.");
+
+                        rechargeSphPower(2);
+                        offsetTime(3);
+                        break;
+
+                    //Give up
+                    case 2:
+                        setText("You're absolutely desperate to pee, and you think you'll",
+                                "end up peeing yourself anyway, so it's probably best to admit",
+                                "defeat and get rid of the painful ache in your bladder.");
+                        nextStage = GIVE_UP;
+                        break;
+
+                    //Drink water
+                    case 3:
+                        setText("Feeling a tad bit thirsty,",
+                                "You decide to take a small sip of water from your bottle to get rid of it.");
+                        nextStage = DRINK;
+                        break;
+                    
+                    //Cheat
+                    case 4:
+                        setText("You've got to go so bad!",
+                                "There must be something you can do, right?");
+
+                        //Zeroing points
+                        cheatsUsed = true;
+                        nextStage = ASK_CHEAT;
+                        break;
+
+                    case -1:
+                        setText("Bugs.");
+                }
+                break;
+                
+            case GOING_TO_HOME_ASK_ACTION: //TODO: Implement holding system here
                 setText("You're going to home.");
                 passTime((byte) 15);
                 //Forgot keys in school
@@ -2997,6 +3363,89 @@ nextStage = WHERE_TO_GO;
                 } else
                 {
                     nextStage = HOME;
+                }
+                break;
+                
+            case GOING_TO_HOME_CHOSE_ACTION:
+                if (listChoice.isSelectionEmpty() || listChoice.getSelectedValue().equals("[Unavailable]"))
+                {
+                    nextStage = GOING_TO_HOME_ASK_ACTION;
+//                    setText("You spent a few minutes doing nothing.");
+                    break;
+                }
+
+                //Hiding the action selector and doing action job
+                switch (hideActionUI())
+                {
+                    /*
+                     * Press on crotch/squeeze penis
+                     * 3 minutes
+                     * -2 bladder
+                     * Detection chance: 15
+                     * Effectiveness: 0.4
+                     * =========================
+                     * 3 minutes
+                     * +20 sph. power
+                     * Detection chance: 15
+                     * Future effectiveness: 4
+                     */
+                    case 0:
+                        setText("You don't think anyone will see you doing it,",
+                                "so you take your hand and hold yourself down there.",
+                                "It feels a little better for now.");
+
+                        rechargeSphPower(20);
+                        offsetTime(3);
+                        break;
+
+                    /*
+                     * Rub thighs
+                     * 3 + 3 = 6 minutes
+                     * -0.2 bladder
+                     * Detection chance: 3
+                     * Effectiveness: 6
+                     * =========================
+                     * 3 + 3 = 6 minutes
+                     * +2 sph. power
+                     * Detection chance: 3
+                     * Future effectiveness: 4
+                     */
+                    case 1:
+                        setText("You need to go, and it hurts, but you just",
+                                "can't bring yourself to risk getting caught with your hand between",
+                                "your legs. You rub your thighs hard but it doesn't really help.");
+
+                        rechargeSphPower(2);
+                        offsetTime(3);
+                        break;
+
+                    //Give up
+                    case 2:
+                        setText("You're absolutely desperate to pee, and you think you'll",
+                                "end up peeing yourself anyway, so it's probably best to admit",
+                                "defeat and get rid of the painful ache in your bladder.");
+                        nextStage = GIVE_UP;
+                        break;
+
+                    //Drink water
+                    case 3:
+                        setText("Feeling a tad bit thirsty,",
+                                "You decide to take a small sip of water from your bottle to get rid of it.");
+                        nextStage = DRINK;
+                        break;
+                    
+                    //Cheat
+                    case 4:
+                        setText("You've got to go so bad!",
+                                "There must be something you can do, right?");
+
+                        //Zeroing points
+                        cheatsUsed = true;
+                        nextStage = ASK_CHEAT;
+                        break;
+
+                    case -1:
+                        setText("Bugs.");
                 }
                 break;
                 
@@ -3072,8 +3521,7 @@ nextStage = WHERE_TO_GO;
     }
 
     /**
-     * Checks the wetting conditions, and if they are met, wetting TODO in v1.4:
-     * add diapers and pads support
+     * Checks the wetting conditions, and if they are met, wetting
      */
     public void testWet()
     {
@@ -3450,6 +3898,7 @@ nextStage = WHERE_TO_GO;
 
     void showActionUI(String actionGroupName)
     {
+        actionList.clear();
         lblChoice.setVisible(true);
         lblChoice.setText(actionGroupName);
         listScroller.setVisible(true);
@@ -3563,17 +4012,22 @@ nextStage = WHERE_TO_GO;
         WHERE_TO_GO, //Asking the player where to go after the lessons if all restrooms are locked
         GOING_TO_MALL, //Street, going to the mall to find a restroom (5 minutes)
         GOING_TO_BUS_STOP, //Street, going to the bus stop (1 minute, then waiting for a bus for 3 - 20 minutes)
-        GOING_TO_HOME, //Street, going to home on foot (15 minutes)
+        GOING_TO_HOME_ASK_ACTION, //Street, going to home on foot (15 minutes)
+        GOING_TO_HOME_CHOSE_ACTION,
         HOME, //Made it to home
         HOME_LOST_KEYS, //Forgot keys at school (chance 12%)
-        BACK_TO_SCHOOL, //Going back to school on foot (15 minutes)
-        BACK_TO_SCHOOL_BUS_STOP, //Waiting for a bus to school (3 - 15 minutes)
-        IN_BUS, //In a bus (3 minutes, 5% chance to get stuck in traffic (5 - 25 minutes)
+        BACK_TO_SCHOOL_ASK_ACTION, //Going back to school on foot (15 minutes)
+        BACK_TO_SCHOOL_CHOSE_ACTION,
+        BACK_TO_SCHOOL_BUS_STOP_ASK_ACTION, //Waiting for a bus to school (3 - 15 minutes)
+        BACK_TO_SCHOOL_BUS_STOP_CHOSE_ACTION,
+        IN_BUS_ASK_ACTION, //In a bus (3 minutes, 5% chance to get stuck in traffic (5 - 25 minutes)
+        IN_BUS_CHOSE_ACTION,
         END_GAME, //Good ending, showing score
         WHERE_TO_GO_CHOSE,
         WHERE_TO_GO_MALL, //Failed to pee in mall, going to somewhere else
         WHERE_TO_GO_MALL_CHOSE,
-        BUS_STOP, //Waiting for a bus for 3 - 20 minutes
+        BUS_STOP_ASK_ACTION, //Waiting for a bus for 3 - 20 minutes
+        BUS_STOP_CHOSE_ACTION,
         WHERE_TO_GO_BACK, //Going back to school to take the keys
         WHERE_TO_GO_BACK_CHOSE,
         SCHOOL_BACK
