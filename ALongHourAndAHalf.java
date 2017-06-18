@@ -1515,11 +1515,11 @@ public class ALongHourAndAHalf extends JFrame
                 break;
 
             case CHOSE_ACTION:
-                System.out.println();
                 nextStage = ASK_ACTION;
                 if (listChoice.isSelectionEmpty() || listChoice.getSelectedValue().equals("[Unavailable]"))
                 {
 //                    setText("You spent a few minutes doing nothing.");
+                    handleNextClicked();
                     break;
                 }
 
@@ -1659,6 +1659,7 @@ public class ALongHourAndAHalf extends JFrame
                         break;
 
                     case -1:
+                    default:
                         setText("Bugs.");
                 }
                 break;
@@ -1707,7 +1708,7 @@ public class ALongHourAndAHalf extends JFrame
                             }
 //                            score *= 0.2;
 //                            scoreText = scoreText.concat("\nRestroom usage during the lesson: -80% of points");
-                            score("Restroom usage during the lesson", '/', 1.25F);
+                            score("Restroom usage during the lesson", '/', 5);
                             emptyBladder();
                             nextStage = ASK_ACTION;
                             //Fail
@@ -1759,8 +1760,8 @@ public class ALongHourAndAHalf extends JFrame
                                 }
                             }
 //                            score *= 0.22;
-//                            scoreText = scoreText.concat("\nRestroom usage during the lesson: -78% of points");
-                            score("Restroom usage during the lesson", '/', 1.25F);
+//                            scoreText = scoreText.concat("\nRestroom usage during the lesson: -70% of points");
+                            score("Restroom usage during the lesson", '/', 3.3F);
                             emptyBladder();
                             nextStage = ASK_ACTION;
                         } else
@@ -1811,8 +1812,8 @@ public class ALongHourAndAHalf extends JFrame
                                 }
                             }
 //                            score *= 0.23;
-//                            scoreText = scoreText.concat("\nRestroom usage during the lesson: -77% of points");
-                            score("Restroom usage during the lesson", '/', 1.25F);
+//                            scoreText = scoreText.concat("\nRestroom usage during the lesson: -60% of points");
+                            score("Restroom usage during the lesson", '/', 2.5F);
                             emptyBladder();
                             nextStage = ASK_ACTION;
                         } else
@@ -1863,8 +1864,8 @@ public class ALongHourAndAHalf extends JFrame
                                 }
                             }
 //                            score *= 0.3;
-//                            scoreText = scoreText.concat("\nRestroom usage during the lesson: -70% of points");
-                            score("Restroom usage during the lesson", '/', 1.25F);
+//                            scoreText = scoreText.concat("\nRestroom usage during the lesson: -50% of points");
+                            score("Restroom usage during the lesson", '/', 2F);
                             emptyBladder();
                             nextStage = ASK_ACTION;
                         } else
@@ -3047,11 +3048,11 @@ public class ALongHourAndAHalf extends JFrame
     }
 
     /**
-     * Adds/substracts the player score
+     * Operates the player score.
      *
      * @param message the reason to manipulate score
-     * @param mode add or substract
-     * @param points points to add/substract
+     * @param mode add, substract, divide or multiply
+     * @param points amount of points to operate
      */
     public void score(String message, char mode, int points)
     {
@@ -3059,19 +3060,19 @@ public class ALongHourAndAHalf extends JFrame
         {
             case '+':
                 score += points;
-                scoreText = scoreText + "\n" + message + ": +" + points + " points";
+                scoreText += "\n" + message + ": +" + points + " points";
                 break;
             case '-':
                 score -= points;
-                scoreText = scoreText + "\n" + message + ": -" + points + " points";
+                scoreText += "\n" + message + ": -" + points + " points";
                 break;
             case '*':
                 score *= points;
-                scoreText = scoreText + "\n" + message + ": +" + points * 100 + "% of points";
+                scoreText += "\n" + message + ": +" + points * 100 + "% of points";
                 break;
             case '/':
                 score /= points;
-                scoreText = scoreText + "\n" + message + ": -" + 100 / points + "% of points";
+                scoreText += "\n" + message + ": -" + 100 / points + "% of points";
                 break;
             default:
                 System.err.println("score() method used incorrectly, message: \"" + message + "\"");
@@ -3079,11 +3080,11 @@ public class ALongHourAndAHalf extends JFrame
     }
 
     /**
-     * Multiplies/divides the player score
+     * Operates the player score.
      *
      * @param message the reason to manipulate score
-     * @param mode multiply or divide
-     * @param points points to multiply/divide
+     * @param mode add, substract, divide or multiply
+     * @param points amount of points to operate
      */
     public void score(String message, char mode, float points)
     {
@@ -3091,19 +3092,19 @@ public class ALongHourAndAHalf extends JFrame
         {
             case '+':
                 score += points;
-                scoreText = scoreText + "\n" + message + ": +" + points + " points";
+                scoreText += "\n" + message + ": +" + points + " points";
                 break;
             case '-':
                 score -= points;
-                scoreText = scoreText + "\n" + message + ": -" + points + " points";
+                scoreText += "\n" + message + ": -" + points + " points";
                 break;
             case '*':
                 score *= points;
-                scoreText = scoreText + "\n" + message + ": +" + points * 100 + "% of points";
+                scoreText += "\n" + message + ": +" + points * 100 + "% of points";
                 break;
             case '/':
                 score /= points;
-                scoreText = scoreText + "\n" + message + ": -" + 100 / points + "% of points";
+                scoreText += "\n" + message + ": -" + 100 / points + "% of points";
                 break;
             default:
                 System.err.println("score() method used incorrectly, message: \"" + message + "\"");
