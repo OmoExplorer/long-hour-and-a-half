@@ -430,7 +430,7 @@ public class ALongHourAndAHalf extends JFrame
             {
                 "Go to the corner", "Stay after class", "Pee in a bottle", "End class right now",
                 "Calm the teacher down", "Raise your hand", "Make your pee disappear regularly",
-                "Set your incontinence level", "Toggle hardcore mode", "Set bladder fulness"
+                "Set your incontinence level", "Toggle hardcore mode", "Set bladder fulness", "Go to extended game"
             };
     
     /**
@@ -623,6 +623,8 @@ public class ALongHourAndAHalf extends JFrame
     private boolean traffic;
     private int walkTime = 15;
     private Location currentLocation = SCHOOL;
+    private GameStage previousStage = ASK_ACTION;
+    private boolean tookKeys = false;
 
     /**
      * Launch the application.
@@ -1216,8 +1218,8 @@ public class ALongHourAndAHalf extends JFrame
         setVisible(true);
 
         //Starting the game
-//        nextStage = LEAVE_BED;
-        nextStage = WHERE_TO_GO;
+        nextStage = LEAVE_BED;
+//        nextStage = WHERE_TO_GO;
         handleNextClicked();
     }
 
@@ -2035,6 +2037,10 @@ public class ALongHourAndAHalf extends JFrame
                         incon = Float.parseFloat(JOptionPane.showInputDialog("How your bladder is full now?"));
                         nextStage = ASK_ACTION;
                         break;
+                        
+                    case 10:
+                        setText("Suddenly the bell rang and everybody left the class.");
+                        nextStage = WHERE_TO_GO;
                 }
                 break;
 
@@ -2066,7 +2072,7 @@ public class ALongHourAndAHalf extends JFrame
                                 "but you don't feel any wetness. It's not something you'd",
                                 "want to question, right?");
                         drain = true;
-                        nextStage = ;
+                        nextStage = previousStage;
                         break;
 
                     case 2:
@@ -2075,19 +2081,19 @@ public class ALongHourAndAHalf extends JFrame
                         incon = Float.parseFloat(JOptionPane.showInputDialog("How incontinent are you now?"));
                         maxSphincterPower = (short) (100 / incon);
                         sphincterPower = maxSphincterPower;
-                        nextStage = ;
+                        nextStage = previousStage;
                         break;
 
                     case 3:
                         setText("Hardcore toggled.");
                         hardcore = !hardcore;
-                        nextStage = ;
+                        nextStage = previousStage;
                         break;
 
                     case 4:
                         setText("Suddenly you felt something going on in your bladder.");
                         incon = Float.parseFloat(JOptionPane.showInputDialog("How your bladder is full now?"));
-                        nextStage = ;
+                        nextStage = previousStage;
                         break;
                 }
                 break;
@@ -2099,7 +2105,7 @@ public class ALongHourAndAHalf extends JFrame
                         "As quietly as you can, you put it in position and let go into it.",
                         "Ahhhhh...",
                         "You can't help but show a face of pure relief as your pee trickles down into it.");
-                nextStage = ASK_ACTION; //TODO: Add extended game support
+                nextStage = previousStage; //TODO: Add extended game support
                 break;
 
             case CALLED_ON:
@@ -2115,6 +2121,10 @@ public class ALongHourAndAHalf extends JFrame
                 break;
 
             case CLASS_OVER:
+                if(generator.nextInt(100)<= 20)
+                {
+                    nextStage = WHERE_TO_GO;
+                }
                 //Special hardcore scene trigger
                 if (generator.nextInt(100) <= 10 && hardcore & isFemale())
                 {
@@ -3092,7 +3102,7 @@ public class ALongHourAndAHalf extends JFrame
                         passTime((byte) 5);
 
                         //Forgot keys in school
-                        if (generator.nextInt(100) < 7)
+                        if (generator.nextInt(100) < 7&&!tookKeys)
                         {
                             nextStage = HOME_LOST_KEYS;
                         }
@@ -3178,6 +3188,7 @@ public class ALongHourAndAHalf extends JFrame
                                 "There must be something you can do, right?");
                         //Zeroing points
                         cheatsUsed = true;
+                        previousStage = BUS_STOP_ASK_ACTION;
                         nextStage = ASK_CHEAT_STREET; //TODO: Make extended game support
                         break;
 
@@ -3223,7 +3234,7 @@ public class ALongHourAndAHalf extends JFrame
                     hideActionUI();
                     setText("Finally, bus managed to arrive to your stop.");
                     //Forgot keys in school
-                    if (generator.nextInt(100) < 7)
+                    if (generator.nextInt(100) < 7&&!tookKeys)
                     {
                         nextStage = HOME_LOST_KEYS;
                     }
@@ -3309,6 +3320,7 @@ public class ALongHourAndAHalf extends JFrame
 
                         //Zeroing points
                         cheatsUsed = true;
+                        previousStage = IN_BUS_ASK_ACTION;
                         nextStage = ASK_CHEAT_STREET;
                         break;
 
@@ -3488,6 +3500,7 @@ public class ALongHourAndAHalf extends JFrame
 
                         //Zeroing points
                         cheatsUsed = true;
+                        previousStage = BACK_TO_SCHOOL_BUS_STOP_ASK_ACTION;
                         nextStage = ASK_CHEAT_STREET;
                         break;
 
@@ -3598,6 +3611,7 @@ public class ALongHourAndAHalf extends JFrame
 
                         //Zeroing points
                         cheatsUsed = true;
+                        previousStage = BACK_TO_SCHOOL_ASK_ACTION;
                         nextStage = ASK_CHEAT_STREET;
                         break;
 
@@ -3611,6 +3625,7 @@ public class ALongHourAndAHalf extends JFrame
                 if (walkTime > 0)
                 {
                     passTime();
+                    walkTime -= 3;
                     showActionUI("What to do?");
                     actionList.add("Hold crotch");
                     actionList.add("Rub thigs");
@@ -3636,10 +3651,11 @@ public class ALongHourAndAHalf extends JFrame
                 }
                 else
                 {
+                    hideActionUI();
                     setText("You've arrived to the home.");
 
                     //Forgot keys in school
-                    if (generator.nextInt(100) < 7)
+                    if (generator.nextInt(100) < 7&&!tookKeys)
                     {
                         nextStage = HOME_LOST_KEYS;
                     }
@@ -3725,6 +3741,7 @@ public class ALongHourAndAHalf extends JFrame
 
                         //Zeroing points
                         cheatsUsed = true;
+                        previousStage = GOING_TO_HOME_ASK_ACTION;
                         nextStage = ASK_CHEAT_STREET;
                         break;
 
@@ -3735,9 +3752,30 @@ public class ALongHourAndAHalf extends JFrame
 
             case SCHOOL_BACK:
                 setText("You entered the school, took the keys and turned back.");
-                nextStage = WHERE_TO_GO;
+                tookKeys = true;
+                nextStage = WHERE_TO_GO_FROM_SCHOOL;
                 break;
 
+            case WHERE_TO_GO_FROM_SCHOOL:
+                setLinesAsDialogue(4);
+
+                actionList.clear();
+                actionList.add("Mall (5 minutes)");
+                actionList.add("Bus stop (1 minute)");
+                actionList.add("Directly to home (15 minutes)");
+                updateChoiceList();
+                showActionUI("Where to go?");
+                if (!listChoice.isSelectionEmpty())
+                {
+                    nextStage = WHERE_TO_GO_FROM_SCHOOL;
+                }
+                else
+                {
+                    nextStage = WHERE_TO_GO_CHOSE;
+                }
+                passTime();
+                break;
+                
             default:
                 setText("Error parsing button. Next text is unavailable, text #" + nextStage);
                 break;
@@ -4337,7 +4375,8 @@ public class ALongHourAndAHalf extends JFrame
         BUS_STOP_CHOSE_ACTION,
         WHERE_TO_GO_BACK, //Going back to school to take the keys
         WHERE_TO_GO_BACK_CHOSE,
-        SCHOOL_BACK
+        SCHOOL_BACK,
+        WHERE_TO_GO_FROM_SCHOOL
     }
 
     enum Location
