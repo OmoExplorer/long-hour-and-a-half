@@ -89,9 +89,12 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileFilter;
-import static omo.ALongHourAndAHalf.GameStage.*;
-import static omo.ALongHourAndAHalf.Gender.*;
-import static omo.ALongHourAndAHalf.generator;
+import static omo.Bladder.*;
+import static omo.Gender.*;
+import static omo.NarrativeEngine.*;
+import omo.NarrativeEngine.GameStage;
+import static omo.NarrativeEngine.GameStage.*;
+import static omo.UI.*;
 import static omo.Wear.WearType.*;
 
 /**
@@ -147,12 +150,12 @@ class Wear implements Serializable
      * Whether or not certain wear equals "No under/outerwear".
      */
     private boolean missing;
-    
+
     /**
      * Underwear or outerwear?
      */
     private WearType type;
-    
+
     private void setFieldValuesInConstructor(String name, String insertName, float pressure, float absorption, float dryingOverTime)
     {
         this.name = name;
@@ -162,7 +165,7 @@ class Wear implements Serializable
         this.dryingOverTime = dryingOverTime;
         missing = name.equals("No underwear") || name.equals("No outerwear");
     }
-    
+
     /**
      * @param name the wear name (e. g. "Regular panties")
      * @param insertName the insert name used in the game text (e. g. "panties")
@@ -289,31 +292,2102 @@ class Wear implements Serializable
     }
 }
 
-//TODO: Refactor, too long class
-@SuppressWarnings("serial")
-public class ALongHourAndAHalf extends JFrame
+class Bladder
 {
-    //Maximal lines of a text
-    private final static int MAX_LINES = 9;
-
-    //Random stuff generator
-    public static Random generator = new Random();
-
-    //Parameters used for a game reset
-    static String nameParam;
-    static Gender gndrParam;
-    static boolean diffParam;
-    static float incParam;
-    static short bladderParam;
-    static String underParam;
-    static String outerParam;
-    static String underColorParam;
-    static String outerColorParam;
 
     /**
      * The dryness game over minimal threshold.
      */
     private static final int MINIMAL_DRYNESS = 0;
+    
+    /**
+     * Maximal time without squirming and leaking.
+     */
+    static short maxSphincterPower;
+    
+    /**
+     * List of all underwear types.
+     */
+    Wear[] underwearList =
+    {
+        //        Name      Insert name     Pressure, Absotption, Drying over time
+        new Wear("Random", NarrativeEngine.showError((byte) 0) + "</i></b>", 0, 0, 0),
+        new Wear("No underwear", showError((byte) 0), 0, 0, 1),
+        new Wear("Strings", "panties", 1, 2, 1),
+        new Wear("Tanga panties", "panties", 1.5F, 3, 1),
+        new Wear("Regular panties", "panties", 2, 4, 1),
+        new Wear("\"Boy shorts\" panties", "panties", 4, 7, 1),
+        new Wear("String bikini", "bikini panties", 1, 1, 2),
+        new Wear("Regular bikini", "bikini panties", 2, 2, 2),
+        new Wear("Swimsuit", "swimsuit", 4, 2.5F, 2.5F),
+        new Wear("Light diaper", "diaper", 9, 50, 0),
+        new Wear("Normal diaper", "diaper", 18, 100, 0),
+        new Wear("Heavy diaper", "diaper", 25, 175, 0),
+        new Wear("Light pad", "pad", 2, 16, 0.25F),
+        new Wear("Normal pad", "pad", 3, 24, 0.25F),
+        new Wear("Big pad", "pad", 4, 32, 0.25F),
+        new Wear("Pants", "pants", 2.5F, 5, 1),
+        new Wear("Shorts-alike pants", "pants", 3.75F, 7.5F, 1),
+        new Wear("Anti-gravity pants", "pants", 0, 4, 1),
+        new Wear("Super-absorbing diaper", "diaper", 18, 600, 0)
+    };
+    
+    /**
+     * Amount of pee that clothes can store.
+     */
+    static float dryness;
+    
+    /**
+     * Maximal bladder fulness.
+     */
+    static short maxBladder = 130;
+    
+    /**
+     * Current sphincter power. The higher bladder level, the faster power
+     * consumption.
+     */
+    static short sphincterPower;
+    
+    /**
+     * The class time.
+     */
+    static byte time = 0;
+    
+    /**
+     * Current bladdder fulness.
+     */
+    static short bladder;
+    
+    /**
+     * Amount of a water in a belly.
+     */
+    static double belly;
+    
+    /**
+     * Character's undies.
+     */
+    static Wear undies;
+    
+    private final float MAXIMAL_THIRST = 30;
+    
+    /**
+     * Character's lower body clothing.
+     */
+    static Wear lower;
+    
+    /**
+     * Amount of the character thirstiness. Used only in hardcore mode.
+     */
+    static float thirst = 0;
+    
+    /**
+     * Makes the wetting chance higher after reaching 100% of the bladder
+     * fulness.
+     */
+    static short embarassment;
+    
+    /**
+     * Before 1.1:<br>
+     * simply multiplies a bladder increasement.<br>
+     * <br>
+     * 1.1 and after:<br>
+     * defines the sphincter weakening speed.
+     */
+    static float incontinence;
+
+    /**
+     *
+     * @param amount the value of amount
+     * @param  the value of 
+     */
+    public void offsetTime(int amount)
+    {
+        time += amount;
+        if (NarrativeEngine.drain & (time % 15) == 0)
+        {
+            emptyBladder();
+        }
+        //Clothes drying over time
+        if (dryness < lower.getAbsorption() + undies.getAbsorption())
+        {
+            dryness += lower.getDryingOverTime() + undies.getDryingOverTime() * (amount / 3);
+        }
+        if (dryness > lower.getAbsorption() + undies.getAbsorption())
+        {
+            dryness = lower.getAbsorption() + undies.getAbsorption();
+        }
+        UI.update();
+    }
+
+    /**
+     * Offsets bladder fulness by a specified amount.
+     *
+     * @param amount the amount to offset bladder fulness
+     */
+    public void offsetBladder(double amount)
+    {
+        bladder += amount; //Incontinence does another job after 1.1
+        if ((bladder > 100 && !NarrativeEngine.hardcore) || (bladder > 80 && hardcore))
+        {
+            UI.lblBladder.setForeground(Color.RED);
+        } else
+        {
+            UI.lblBladder.setForeground(UI.lblDefaultColor);
+        }
+        UI.update();
+    }
+
+    /**
+     *
+     * @param  the value of 
+     * @return the boolean
+     */
+    private boolean isCriticalBladder()
+    {
+        return (bladder > maxBladder - 30 & !hardcore) | (bladder > maxBladder - 20 & hardcore);
+    }
+
+    /**
+     * Replenishes the sphincter power.
+     *
+     * @param amount the sphincter recharge amount
+     */
+    public void rechargeSphPower(int amount)
+    {
+        sphincterPower += amount;
+        if (sphincterPower > maxSphincterPower)
+        {
+            sphincterPower = maxSphincterPower;
+        }
+        UI.update();
+    }
+
+    /**
+     * Checks the wetting conditions, and if they are met, wetting TODO in v1.4:
+     * add diapers and pads support
+     *
+     */
+    public void testWet()
+    {
+        //If bladder is filled more than 130 points in the normal mode and 100 points in the hardcore mode, forcing wetting
+        if (bladder >= maxBladder & !hardcore)
+        {
+            sphincterPower = 0;
+            if (dryness < MINIMAL_DRYNESS)
+            {
+                if (NarrativeEngine.specialHardcoreStage)
+                {
+                    NarrativeEngine.setNextStage(NarrativeEngine.GameStage.SURPRISE_ACCIDENT);
+                } else
+                {
+                    NarrativeEngine.setNextStage(NarrativeEngine.GameStage.ACCIDENT);
+                }
+            }
+        } else //If bladder is filled more than 100 points in the normal mode and 50 points in the hardcore mode, character has a chance to wet
+        {
+            if (isCriticalBladder())
+            {
+                wetIfUnlucky(!hardcore ? ((short) (5 * (bladder - 80))) : ((short) (3 * (bladder - 100) + embarassment)));
+            }
+        }
+    }
+
+    /**
+     * Empties the belly.
+     *
+     */
+    public void emptyBelly()
+    {
+        offsetBelly(-belly);
+    }
+
+    /**
+     *
+     * @param wetChance the value of wetChance
+     * @param  the value of 
+     */
+    private void wetIfUnlucky(short wetChance)
+    {
+        if (NarrativeEngine.chance((byte) wetChance))
+        {
+            sphincterPower = 0;
+            if (dryness < MINIMAL_DRYNESS)
+            {
+                if (specialHardcoreStage)
+                {
+                    setNextStage(NarrativeEngine.GameStage.SURPRISE_ACCIDENT);
+                } else
+                {
+                    setNextStage(NarrativeEngine.GameStage.ACCIDENT);
+                }
+            }
+        }
+    }
+
+    /**
+     * Increments the time by 3 minutes and all time-related parameters.
+     *
+     */
+    public void passTime()
+    {
+        passTime((byte) 3);
+    }
+
+    /**
+     * Increments the time by # minutes and all time-related parameters.
+     *
+     * @param time #
+     */
+    public void passTime(byte time)
+    {
+        offsetTime(time);
+        offsetBladder(time * 1.5);
+        offsetBelly(-time * 1.5);
+        if (Bladder.time >= 88)
+        {
+            NarrativeEngine.setText("You hear the bell finally ring.");
+            setNextStage(NarrativeEngine.GameStage.CLASS_OVER);
+        }
+        testWet();
+        //Decrementing sphincter power for every 3 minutes
+        for (int i = 0; i < time; i++)
+        {
+            decaySphPower();
+            if (belly != 0)
+            {
+                if (belly > 3)
+                {
+                    offsetBladder(2);
+                } else
+                {
+                    offsetBladder(belly);
+                    emptyBelly();
+                }
+            }
+        }
+        if (hardcore)
+        {
+            thirst += 2;
+            if (thirst > MAXIMAL_THIRST)
+            {
+                setNextStage(NarrativeEngine.GameStage.DRINK);
+            }
+        }
+        //Updating labels
+        UI.update();
+    }
+
+    /**
+     *
+     * @param amount the value of amount
+     * @param  the value of 
+     */
+    public void offsetBelly(double amount)
+    {
+        belly += amount;
+        if (belly < 0)
+        {
+            belly = 0;
+        }
+        UI.update();
+    }
+
+    /**
+     *
+     * @param amount the value of amount
+     * @param  the value of 
+     */
+    public void offsetEmbarassment(int amount)
+    {
+        embarassment += amount;
+        if (embarassment < 0)
+        {
+            embarassment = 0;
+        }
+        UI.update();
+    }
+
+    //TODO: Refactor
+    /**
+     * Decreases the sphincter power.
+     */
+    /**
+     *
+     * @param  the value of 
+     */
+    public void decaySphPower()
+    {
+        sphincterPower -= bladder / 30;
+        if (sphincterPower < 0)
+        {
+            dryness -= 5; //Decreasing dryness
+            bladder -= 2.5; //Decreasing bladder level
+            sphincterPower = 0;
+            if (dryness > MINIMAL_DRYNESS)
+            {
+                //Naked
+                if (lower.isMissing() && undies.isMissing())
+                {
+                    setText("You feel the leak running down your thighs...", "You're about to pee! You must stop it!");
+                } else //Outerwear
+                {
+                    if (!lower.isMissing())
+                    {
+                        setText("You see the wet spot expand on your " + lower.insert() + "!", "You're about to pee! You must stop it!");
+                    } else //Underwear
+                    {
+                        if (!undies.isMissing())
+                        {
+                            setText("You see the wet spot expand on your " + undies.insert() + "!", "You're about to pee! You must stop it!");
+                        }
+                    }
+                }
+            }
+            if (dryness < MINIMAL_DRYNESS)
+            {
+                if (lower.isMissing() && undies.isMissing())
+                {
+                    if (cornered)
+                    {
+                        setText("You see a puddle forming on the floor beneath you, you're peeing!", "It's too much...");
+                        setNextStage(ACCIDENT);
+                        handleNextClicked();
+                    } else
+                    {
+                        setText("Feeling the pee hit the chair and soon fall over the sides,", "you see a puddle forming under your chair, you're peeing!", "It's too much...");
+                        setNextStage(ACCIDENT);
+                        handleNextClicked();
+                    }
+                } else
+                {
+                    if (!lower.isMissing())
+                    {
+                        setText("You see the wet spot expanding on your " + lower.insert() + "!", "It's too much...");
+                        setNextStage(ACCIDENT);
+                        handleNextClicked();
+                    } else
+                    {
+                        if (!undies.isMissing())
+                        {
+                            setText("You see the wet spot expanding on your " + undies.insert() + "!", "It's too much...");
+                            setNextStage(ACCIDENT);
+                            handleNextClicked();
+                        }
+                    }
+                }
+            }
+        }
+        UI.update();
+    }
+
+    /**
+     * Empties the bladder.
+     *
+     */
+    public void emptyBladder()
+    {
+        bladder = 0;
+        lblBladder.setText("Bladder: " + (int) bladder + "%");
+        UI.update();
+    }
+
+}
+
+class NarrativeEngine
+{
+
+    /**
+     * @return the nextStage
+     */
+    static GameStage getNextStage()
+    {
+        return nextStage;
+    }
+    
+    //Maximal lines of a text
+    private static final int MAX_LINES = 9;
+    
+    //Random stuff generator
+    public static final Random RANDOM = new Random();
+
+    static boolean chance(byte chance)
+    {
+        return RANDOM.nextInt(100) <= chance;
+    }
+    
+    /**
+     * List of all outerwear types.
+     */
+    final Wear[] outerwearList =
+    {
+        //        Name      Insert name     Pressure, Absotption, Drying over time
+        new Wear("Random", showError((byte) 0), 0, 0, 0),
+        new Wear("No outerwear", showError((byte) 0), 0, 0, 1),
+        new Wear("Long jeans", "jeans", 7, 12, 1.2F),
+        new Wear("Knee-length jeans", "jeans", 6, 10, 1.2F),
+        new Wear("Short jeans", "shorts", 5, 8.5F, 1.2F),
+        new Wear("Very short jeans", "shorts", 4, 7, 1.2F),
+        new Wear("Long trousers", "trousers", 9, 15.75F, 1.4F),
+        new Wear("Knee-length trousers", "trousers", 8, 14, 1.4F),
+        new Wear("Short trousers", "shorts", 7, 12.25F, 1.4F),
+        new Wear("Very short trousers", "shorts", 6, 10.5F, 1.4F),
+        new Wear("Long skirt", "skirt", 5, 6, 1.7F),
+        new Wear("Knee-length skirt", "skirt", 4, 4.8F, 1.7F),
+        new Wear("Short skirt", "skirt", 3, 3.6F, 1.7F),
+        new Wear("Mini skirt", "skirt", 2, 2.4F, 1.7F),
+        new Wear("Micro skirt", "skirt", 1, 1.2F, 1.7F),
+        new Wear("Long skirt and tights", "skirt and tights", 6, 7.5F, 1.6F),
+        new Wear("Knee-length skirt and tights", "skirt and tights", 5, 8.75F, 1.6F),
+        new Wear("Short skirt and tights", "skirt and tights", 4, 7, 1.6F),
+        new Wear("Mini skirt and tights", "skirt and tights", 3, 5.25F, 1.6F),
+        new Wear("Micro skirt and tights", "skirt and tights", 2, 3.5F, 1.6F),
+        new Wear("Leggings", "leggings", 10, 11, 1.8F),
+        new Wear("Short male jeans", "jeans", 5, 8.5F, 1.2F),
+        new Wear("Normal male jeans", "jeans", 7, 12, 1.2F),
+        new Wear("Male trousers", "trousers", 9, 15.75F, 1.4F)
+    };
+    
+    /**
+     * Times teacher denied character to go out.
+     */
+    static byte timesPeeDenied = 0;
+    
+    /**
+     * Whether or not hardcore mode enabled: teacher never lets you pee, it's
+     * harder to hold pee, you may get caught holding pee
+     */
+    static boolean hardcore = false;
+    
+    /**
+     * An array that contains boolean values that define <i>dialogue lines</i>.
+     * Dialogue lines, unlike normal lines, are <i>italic</i>.
+     */
+    private static boolean[] dialogueLines = new boolean[MAX_LINES];
+    
+    /**
+     * Actions list.
+     */
+    static ArrayList<String> actionList = new ArrayList<>();
+    
+    /**
+     * Amount of embarassment raising every time character caught holding pee.
+     */
+    static short classmatesAwareness = 0;
+    
+    /**
+     * Current character gender.
+     */
+    static Gender gender;
+    
+    /**
+     * List of all cheats.
+     */
+    final String[] cheatList =
+    {
+        "Go to the corner", "Stay after class", "Pee in a bottle", "End class right now",
+        "Calm the teacher down", "Raise your hand", "Make your pee disappear regularly",
+        "Set your incontinence level", "Toggle hardcore mode", "Set bladder fulness"
+    };
+    /**
+     * A stage after the current stage.
+     */
+    private static GameStage nextStage;
+    
+    static boolean specialHardcoreStage = false;
+    /**
+     * List of all boy names for special hardcore scene.
+     */
+    static final String[] BOY_NAMES =
+    {
+        "Mark",
+        "Mike",
+        "Jim",
+        "Alex",
+        "Ben",
+        "Bill",
+        "Dan"
+    };
+    private static final String[] ERRORS =
+    {
+        "LACK OF WEAR HANDLING",
+        "NOT OVERRIDDEN"
+    };
+    
+    /**
+     * Whether or not pee drain cheat enabled: pee mysteriously vanishes every
+     * 15 minutes.
+     */
+    public static boolean drain = false;
+    
+    /**
+     * Special hardcore scene boy name.
+     */
+    static String boyName = BOY_NAMES[RANDOM.nextInt(BOY_NAMES.length)];
+    
+    /**
+     * Character's name.
+     */
+    static String name;
+    
+    /**
+     * Whether or not charecter has to stay 30 minutes after class.
+     */
+    static boolean stay = false;
+    
+    /**
+     * Whether or not player has used cheats.
+     */
+    static boolean cheatsUsed = false;
+    
+    /**
+     * Number of times player got caught holding pee.
+     */
+    static byte timesCaught = 0;
+    
+    /**
+     * Whether or not character currently stands in the corner and unable to
+     * hold crotch.
+     */
+    static boolean cornered = false;
+    
+    private final String[] askToPeeSuccessText =
+    {
+        "You ask the teacher if you can go out to the restroom.",
+        "Yes, you may.",
+        "says the teacher. You run to the restroom,",
+        showError((byte) 1),
+        "wearily flop down on the toilet and start peeing."
+    };
+    
+    /**
+     * Text to be displayed after the game which shows how many {@link score}
+     * did you get.
+     */
+    static String scoreText = "";
+    
+    /**
+     * A number that shows a game difficulty - the higher score, the harder was
+     * the game. Specific actions (for example, peeing in a restroom during a
+     * lesson) reduce score points. Using the cheats will zero the score points.
+     */
+    static int score = 0;
+
+    /**
+     *
+     * @return the boolean
+     */
+    private boolean linesAreTooLong()
+    {
+        if (time >= 120)
+        {
+            stay = false;
+            setNextStage(CLASS_OVER);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     *
+     * @param lines the value of lines
+     */
+    private void setLinesAsDialogue(int... lines)
+    {
+        for (int i : lines)
+        {
+            dialogueLines[i - 1] = true;
+        }
+    }
+
+    /**
+     *
+     * @param  the value of 
+     * @return the boolean
+     */
+    private boolean triggerClsasOverScene()
+    {
+        //Special hardcore scene trigger
+        if (RANDOM.nextInt(100) <= 10 && hardcore & isFemale())
+        {
+            setNextStage(SURPRISE);
+            return true;
+        }
+        if (stay)
+        {
+            setNextStage(AFTER_CLASS);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     *
+     * @param nextStage the value of nextStage
+     */
+    static void setNextStage(GameStage nextStage)
+    {
+        NarrativeEngine.nextStage = nextStage;
+    }
+
+    /**
+     *
+     */
+    private void getCaughtByClassmates()
+    {
+        //Chance to be caught by classmates in hardcore mode
+        if (RANDOM.nextInt(100) <= 15 + classmatesAwareness & hardcore)
+        {
+            setNextStage(CAUGHT);
+        } else
+        {
+            setNextStage(ASK_ACTION);
+        }
+    }
+
+    /**
+     *
+     * @param  the value of 
+     */
+    private void displayDesperationStatus()
+    {
+        //Bladder: 0-20
+        if (bladder <= 20)
+        {
+            setText("Feeling bored about the day, and not really caring about the class too much,", "you look to the clock, watching the minutes tick by.");
+        }
+        //Bladder: 20-40
+        if (bladder > 20 && bladder <= 40)
+        {
+            setText("Having to pee a little bit,", "you look to the clock, watching the minutes tick by and wishing the lesson to get over faster.");
+        }
+        //Bladder: 40-60
+        if (bladder > 40 && bladder <= 60)
+        {
+            setText("Clearly having to pee,", "you impatiently wait for the lesson end.");
+        }
+        //Bladder: 60-80
+        if (bladder > 60 && bladder <= 80)
+        {
+            setLinesAsDialogue(2);
+            setText("You feel the rather strong pressure in your bladder, and you're starting to get even more desperate.", "Maybe I should ask teacher to go to the restroom? It hurts a bit...");
+        }
+        //Bladder: 80-100
+        if (bladder > 80 && bladder <= 100)
+        {
+            setLinesAsDialogue(1, 3);
+            setText("Keeping all that urine inside will become impossible very soon.", "You feel the terrible pain and pressure in your bladder, and you can almost definitely say you haven't needed to pee this badly in your life.", "Ouch, it hurts a lot... I must do something about it now, or else...");
+        }
+        //Bladder: 100-130
+        if (bladder > 100 && bladder <= 130)
+        {
+            setLinesAsDialogue(1, 3);
+            if (isFemale())
+            {
+                setText("This is really bad...", "You know that you can't keep it any longer and you may wet yourself in any moment and oh,", "You can clearly see your bladder as it bulging.", "Ahhh... I cant hold it anymore!!!", "Even holding your crotch doesn't seems to help you to keep it in.");
+            } else
+            {
+                setText("This is really bad...", "You know that you can't keep it any longer and you may wet yourself in any moment and oh,", "You can clearly see your bladder as it bulging.", "Ahhh... I cant hold it anymore!!!", "Even squeezing your penis doesn't seems to help you to keep it in.");
+            }
+        }
+    }
+
+    /**
+     *
+     * @param  the value of 
+     */
+    private void offerHoldingChoices()
+    {
+        //Adding action choices
+        switch (timesPeeDenied)
+        {
+            case 0:
+                actionList.add("Ask the teacher to go pee");
+                break;
+            case 1:
+                actionList.add("Ask the teacher to go pee again");
+                break;
+            case 2:
+                actionList.add("Try to ask the teacher again");
+                break;
+            case 3:
+                actionList.add("Take a chance and ask the teacher (RISKY)");
+                break;
+            default:
+                actionList.add("[Unavailable]");
+        }
+        if (!cornered)
+        {
+            if (isFemale())
+            {
+                actionList.add("Press on your crotch");
+            } else
+            {
+                actionList.add("Squeeze your penis");
+            }
+        } else
+        {
+            actionList.add("[Unavailable]");
+        }
+        actionList.add("Rub thighs");
+        if (bladder >= 100)
+        {
+            actionList.add("Give up and pee yourself");
+        } else
+        {
+            actionList.add("[Unavailable]");
+        }
+        if (hardcore)
+        {
+            actionList.add("Drink water");
+        } else
+        {
+            actionList.add("[Unavailable]");
+        }
+        actionList.add("Just wait");
+        actionList.add("Cheat (will reset your score)");
+    }
+
+    /**
+     *
+     * @param errorIndex the value of errorIndex
+     */
+    static String showError(byte errorIndex)
+    {
+        return "<b><i>" + ERRORS[errorIndex] + "@" + Thread.currentThread().getStackTrace()[1].getLineNumber() + "</i></b>";
+    }
+
+    /**
+     *
+     * @return the boolean
+     */
+    private boolean gotCalledByTeacher()
+    {
+        //Called by teacher if unlucky
+        if (RANDOM.nextInt(20) == 5)
+        {
+            setText("Suddenly, you hear the teacher call your name.");
+            setNextStage(CALLED_ON);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Sets the in-game text.
+     *
+     * @param lines the in-game text to set
+     */
+    @SuppressWarnings(value = "UseOfSystemOutOrSystemErr")
+    static void setText(String... lines)
+    {
+        if (lines.length > MAX_LINES)
+        {
+            System.err.println("You can't have more than " + MAX_LINES + " lines at a time!");
+            return;
+        }
+        if (lines.length <= 0)
+        {
+            UI.textLabel.setText("");
+            return;
+        }
+        String toSend = "<html><center>";
+        for (int i = 0; i < lines.length; i++)
+        {
+            if (dialogueLines[i])
+            {
+                toSend += "<i>\"" + lines[i] + "\"</i>";
+            } else
+            {
+                toSend += lines[i];
+            }
+            toSend += "<br>";
+        }
+        toSend += "</center></html>";
+        UI.textLabel.setText(toSend);
+        NarrativeEngine.dialogueLines = new boolean[MAX_LINES];
+    }
+
+    /**
+     *
+     * @param femaleText the value of femaleText
+     * @param maleText the value of maleText
+     * @param  the value of 
+     */
+    String[] getGenderDependentText(String[] femaleText, String[] maleText )
+    {
+        if (isFemale())
+        {
+            return femaleText;
+        } else
+        {
+            return maleText;
+        }
+    }
+
+    /**
+     *
+     * @param bothWear the value of bothWear
+     * @param lowerOnly the value of lowerOnly
+     * @param undiesOnly the value of undiesOnly
+     * @param noWear the value of noWear
+     */
+    String[] getWearDependentText(String[] bothWear, String[] lowerOnly, String[] undiesOnly, String[] noWear)
+    {
+        if (lower.isMissing())
+        {
+            if (undies.isMissing())
+            {
+                return bothWear;
+            } else
+            {
+                return lowerOnly;
+            }
+        } else
+        {
+            if (undies.isMissing())
+            {
+                return undiesOnly;
+            } else
+            {
+                return noWear;
+            }
+        }
+    }
+
+    /**
+     * Operates the player score.
+     *
+     * @param message the reason to manipulate score
+     * @param mode add, substract, divide or multiply
+     * @param points amount of points to operate
+     */
+    public void score(String message, char mode, float points)
+    {
+        switch (mode)
+        {
+            case '+':
+                score += points;
+                scoreText += "\n" + message + ": +" + points + " points";
+                break;
+            case '-':
+                score -= points;
+                scoreText += "\n" + message + ": -" + points + " points";
+                break;
+            case '*':
+                score *= points;
+                scoreText += "\n" + message + ": +" + points * 100 + "% of points";
+                break;
+            case '/':
+                score /= points;
+                scoreText += "\n" + message + ": -" + 100 / points + "% of points";
+                break;
+            default:
+                System.err.println("score() method used incorrectly, message: \"" + message + "\"");
+        }
+    }
+
+    /**
+     * @return TRUE - if character's gender is female<br>FALSE - if character's
+     * gender is male
+     */
+    public boolean isFemale()
+    {
+        return gender == FEMALE;
+    }
+
+    /**
+     * @return TRUE - if character's gender is male<br>FALSE - if character's
+     * gender is female
+     */
+    public boolean isMale()
+    {
+        return gender == MALE;
+    }
+
+    enum GameStage
+    {
+        LEAVE_BED,
+        LEAVE_HOME,
+        GO_TO_CLASS,
+        WALK_IN,
+        SIT_DOWN,
+        ASK_ACTION,
+        CHOSE_ACTION,
+        ASK_TO_PEE,
+        CALLED_ON,
+        CAUGHT,
+        USE_BOTTLE,
+        ASK_CHEAT,
+        CHOSE_CHEAT,
+        CLASS_OVER,
+        AFTER_CLASS,
+        ACCIDENT,
+        GIVE_UP,
+        WET,
+        POST_WET,
+        GAME_OVER,
+        END_GAME,
+        SURPRISE,
+        SURPRISE_2,
+        SURPRISE_ACCIDENT,
+        SURPRISE_DIALOGUE,
+        SURPRISE_CHOSE,
+        HIT,
+        PERSUADE,
+        SURPRISE_WET_VOLUNTARY,
+        SURPRISE_WET_VOLUNTARY2,
+        SURPRISE_WET_PRESSURE,
+        DRINK
+    }
+}
+
+enum Gender
+{
+    MALE, FEMALE
+}
+
+class UI extends JFrame
+{
+
+    private static final long serialVersionUID = 1L;
+    private static final int ACTION_BUTTONS_HEIGHT = 35;
+    private static final int ACTION_BUTTONS_WIDTH = 89;
+    private static final int ACTION_BUTTONS_TOP_BORDER = 510;
+    static JLabel lblLower;
+    static JLabel lblThirst;
+    static JLabel lblMinutes;
+    static JLabel lblName;
+    private static JProgressBar sphincterBar;
+    private static JScrollPane listScroller;
+    private static JButton btnNewGame;
+    static Color lblDefaultColor;
+    private JLabel lblSphPower;
+    private JList<Object> listChoice;
+    private JButton btnLoad;
+    private JLabel lblIncon;
+    private JLabel lblUndies;
+    JFileChooser fcWear;
+    static private JLabel lblEmbarassment;
+    private JLabel lblDryness;
+    private JProgressBar thirstBar;
+    private JLabel lblChoice;
+    static JFileChooser fcGame;
+    private JPanel textPanel;
+    private JButton btnQuit;
+    static private JLabel lblBelly;
+    private JProgressBar bladderBar;
+    private JProgressBar drynessBar;
+    private JButton btnReset;
+    static JLabel textLabel;
+    private JProgressBar timeBar;
+    //Game frame variables declaration
+    private JPanel contentPane;
+    private JButton btnNext;
+    static JLabel lblBladder;
+    private JButton btnSave;
+
+    /**
+     *
+     * @param  the value of 
+     * @throws HeadlessException
+     */
+    private void showScore() throws HeadlessException
+    {
+        if (cheatsUsed)
+        {
+            score = 0;
+            scoreText = "\nYou've used the cheats, so you've got no score.";
+        }
+        String scoreText2 = "Your score: " + score + "\n" + scoreText;
+        JOptionPane.showMessageDialog(null, scoreText2);
+    }
+
+    /**
+     *
+     * @return the boolean
+     */
+    private boolean inappropriateSelection()
+    {
+        return listChoice.isSelectionEmpty() || listChoice.getSelectedValue().equals("[Unavailable]");
+    }
+
+    /**
+     *
+     * @param actionGroupName the value of actionGroupName
+     * @param  the value of 
+     */
+    void showActionUI(String actionGroupName )
+    {
+        listChoice.setListData(NarrativeEngine.actionList.toArray());
+        lblChoice.setVisible(true);
+        lblChoice.setText(actionGroupName);
+        listScroller.setVisible(true);
+    }
+
+    /**
+     *
+     * @throws NumberFormatException
+     * @throws HeadlessException
+     */
+    private void askNewBladderLevel() throws NumberFormatException, HeadlessException
+    {
+        short newBladder = Short.parseShort(JOptionPane.showInputDialog("How your bladder is full now?"));
+        if (newBladder > 0 || newBladder < 150)
+        {
+            bladder = newBladder;
+        }
+    }
+
+    //TODO: Refactor
+    //This method is monstrously huge
+    //Introduce Stage class
+    /**
+     *
+     * @param  the value of 
+     */
+    static void handleNextClicked()
+    {
+        update();
+        switch (nextStage)
+        {
+            case LEAVE_BED:
+                //Making line 1 italic
+                setLinesAsDialogue(1);
+                if (!lower.isMissing())
+                {
+                    if (!undies.isMissing()) //Both lower clothes and undies
+                    {
+                        setText("Wh-what? Did I forget to set my alarm?!", "You cry, tumbling out of bed and feeling an instant jolt from your bladder.", "You hurriedly slip on some " + undies.insert() + " and " + lower.insert() + ",", "not even worrying about what covers your chest.");
+                    } else //Lower clothes only
+                    {
+                        setText("Wh-what? Did I forget to set my alarm?!", "You cry, tumbling out of bed and feeling an instant jolt from your bladder.", "You hurriedly slip on some " + lower.insert() + ", quick to cover your " + undies.insert() + ",", "not even worrying about what covers your chest.");
+                    }
+                } else
+                {
+                    if (!undies.isMissing()) //Undies only
+                    {
+                        setText("Wh-what? Did I forget to set my alarm?!", "You cry, tumbling out of bed and feeling an instant jolt from your bladder.", "You hurriedly slip on " + undies.insert() + ",", "not even worrying about what covers your chest and legs.");
+                    } else //No clothes at all
+                    {
+                        setText("Wh-what? Did I forget to set my alarm?!", "You cry, tumbling out of bed and feeling an instant jolt from your bladder.", "You are running downstairs fully naked.");
+                    }
+                }
+                passTime((byte) 1, );
+                //Setting the next stage to "Leaving home"
+                setNextStage(LEAVE_HOME);
+                break;
+            case LEAVE_HOME:
+                setText("Just looking at the clock again in disbelief adds a redder tint to your cheeks.", "", "Paying much less attention to your daily routine, you quickly run down the stairs, get a small glass of orange juice and chug it.", "", "The cold drink brings a chill down your spine as you collect your things and rush out the door to school.");
+                passTime((byte) 1, );
+                offsetEmbarassment(3, );
+                offsetBelly(10, );
+                setNextStage(GO_TO_CLASS);
+                break;
+            case GO_TO_CLASS:
+                //Displaying all values
+                lblMinutes.setVisible(true);
+                lblSphPower.setVisible(true);
+                lblDryness.setVisible(true);
+                sphincterBar.setVisible(true);
+                drynessBar.setVisible(true);
+                timeBar.setVisible(true);
+                if (!lower.isMissing())
+                {
+                    //Skirt blowing in the wind
+                    if (lower.insert().equals("skirt"))
+                    {
+                        setText("You rush into class, your " + lower.insert() + " blowing in the wind.", "", "Normally, you'd be worried your " + undies.insert() + " would be seen, but you can't worry about it right now.", "You make it to your seat without a minute to spare.");
+                    } else
+                    {
+                        //Nothing is blowing in wind
+                        setText("Trying your best to make up lost time, you rush into class and sit down to your seat without a minute to spare.");
+                    }
+                } else
+                {
+                    if (!undies.isMissing())
+                    {
+                        setText("You rush into class; your classmates are looking at your " + undies.insert() + ".", "You can't understand how you forgot to even put on any lower clothing,", "and you know that your " + undies.insert() + " have definitely been seen.", "You make it to your seat without a minute to spare.");
+                    } else
+                    {
+                        if (isFemale())
+                        {
+                            setText("You rush into class; your classmates are looking at your pussy and boobs.", "Guys are going mad and doing nothing except looking at you.", "You can't understand how you dared to come to school naked.", "You make it to your seat without a minute to spare.");
+                        } else
+                        {
+                            setText("You rush into class; your classmates are looking at your penis.", "Girls are really going mad and doing nothing except looking at you.", "You can't understand how you dared to come to school naked.", "You make it to your seat without a minute to spare.");
+                        }
+                    }
+                }
+                offsetEmbarassment(2, );
+                setNextStage(WALK_IN);
+                break;
+            case WALK_IN:
+                //If lower clothes is a skirt
+                if (lower.insert().equals("skirt") || lower.insert().equals("skirt and tights") || lower.insert().equals("skirt and tights"))
+                {
+                    setLinesAsDialogue(1, 3);
+                    setText("Next time you run into class, " + name + ",", "your teacher says,", "make sure you're wearing something less... revealing!", "A chuckle passes over the classroom, and you can't help but feel a", "tad bit embarrassed about your rush into class.");
+                    offsetEmbarassment(5, );
+                } else //No outerwear
+                {
+                    if (lower.isMissing())
+                    {
+                        setLinesAsDialogue(1);
+                        setText("WHAT!? YOU CAME TO SCHOOL NAKED!?", "your teacher shouts in disbelief.", "", "A chuckle passes over the classroom, and you can't help but feel extremely embarrassed", "about your rush into class, let alone your nudity");
+                        offsetEmbarassment(25, );
+                    } else
+                    {
+                        setLinesAsDialogue(1, 3);
+                        setText("Sit down, " + name + ". You're running late.", "your teacher says,", "And next time, don't make so much noise entering the classroom!", "A chuckle passes over the classroom, and you can't help but feel a tad bit embarrassed", "about your rush into class.");
+                    }
+                }
+                setNextStage(SIT_DOWN);
+                break;
+            case SIT_DOWN:
+                setText("Subconsciously rubbing your thighs together, you feel the uncomfortable feeling of", "your bladder filling as the liquids you drank earlier start to make their way down.");
+                passTime();
+                setNextStage(ASK_ACTION);
+                score("Embarassment at start - " + incontinence + " pts", '+', embarassment);
+                break;
+            case ASK_ACTION:
+                if (gotCalledByTeacher())
+                {
+                    break;
+                }
+                displayDesperationStatus();
+                offerHoldingChoices();
+                showActionUI("What now?");
+                //Loading the choice array into the action selector
+                setNextStage(CHOSE_ACTION);
+                passTime();
+                //Don't go further if player selected no or unavailable action
+//                }while(listChoice.isSelectionEmpty()||listChoice.getSelectedValue().equals("[Unavailable]"));
+                break;
+            case CHOSE_ACTION:
+                if (inappropriateSelection())
+                {
+                    setNextStage(ASK_ACTION);
+                    break;
+                }
+                //Hiding the action selector and doing action job
+                switch (hideActionUI())
+                {
+                    //Ask the teacher to go pee
+                    case 0:
+                        setNextStage(ASK_TO_PEE);
+                        setLinesAsDialogue(2, 3);
+                        setText("You think to yourself:", "I don't think I can hold it until class ends!", "I don't have a choice, I have to ask the teacher...");
+                        break;
+                    /*
+                 * Press on crotch/squeeze penis
+                 * 3 minutes
+                 * -2 bladder
+                 * Detection chance: 15
+                 * Effectiveness: 0.4
+                 * =========================
+                 * 3 minutes
+                 * +20 sph. power
+                 * Detection chance: 15
+                 * Future effectiveness: 4
+                     */
+                    case 1:
+                        setText("You don't think anyone will see you doing it,", "so you take your hand and hold yourself down there.", "It feels a little better for now.");
+                        rechargeSphPower(20, );
+                        offsetTime(3, );
+                        getCaughtByClassmates();
+                        break;
+                    /*
+                 * Rub thighs
+                 * 3 + 3 = 6 minutes
+                 * -0.2 bladder
+                 * Detection chance: 3
+                 * Effectiveness: 6
+                 * =========================
+                 * 3 + 3 = 6 minutes
+                 * +2 sph. power
+                 * Detection chance: 3
+                 * Future effectiveness: 4
+                     */
+                    case 2:
+                        setText("You need to go, and it hurts, but you just", "can't bring yourself to risk getting caught with your hand between", "your legs. You rub your thighs hard but it doesn't really help.");
+                        rechargeSphPower(2, );
+                        offsetTime(3, );
+                        //Chance to be caught by classmates in hardcore mode
+                        getCaughtByClassmates();
+                        break;
+                    //Give up
+                    case 3:
+                        setText("You're absolutely desperate to pee, and you think you'll", "end up peeing yourself anyway, so it's probably best to admit", "defeat and get rid of the painful ache in your bladder.");
+                        setNextStage(GIVE_UP);
+                        break;
+                    //Drink water
+                    case 4:
+                        setText("Feeling a tad bit thirsty,", "You decide to take a small sip of water from your bottle to get rid of it.");
+                        setNextStage(DRINK);
+                        break;
+                    /*
+                 * Wait
+                 * =========================
+                 * 3 + 2 + n minutes
+                 * +(2.5n) bladder
+                 * Detection chance: 1
+                 * Future effectiveness: 2.4(1), 0.4(2), 0.47(30)
+                     */
+                    case 5:
+                        byte timeOffset;
+                        //Asking player how much to wait
+                        try
+                        {
+                            timeOffset = askPlayerHowMuchToWait();
+                        } //Ignoring invalid output
+                        catch (NumberFormatException | NullPointerException e)
+                        {
+                            setNextStage(ASK_ACTION);
+                            break;
+                        }
+                        passTime(timeOffset, );
+                        //Chance to be caught by classmates in hardcore mode
+                        getCaughtByClassmates();
+                        break;
+                    //Cheat
+                    case 6:
+                        setText("You've got to go so bad!", "There must be something you can do, right?");
+                        //Zeroing points
+                        cheatsUsed = true;
+                        setNextStage(ASK_CHEAT);
+                        break;
+                    case -1:
+                    default:
+                        setText("Bugs.");
+                }
+                break;
+            //TODO: Refactor
+            case ASK_TO_PEE:
+                switch (timesPeeDenied)
+                {
+                    case 0:
+                        //Success
+                        if (NarrativeEngine.chance((byte) 40) & !hardcore)
+                        {
+                            if (!lower.isMissing())
+                            {
+                                if (!undies.isMissing())
+                                {
+                                    setText("You ask the teacher if you can go out to the restroom.", "Yes, you may.", "says the teacher. You run to the restroom. Thank god, one cabin is free!", "You enter it, pulled down your " + lower.insert() + " and " + undies.insert() + ",", "wearily flop down on the toilet and start peeing.");
+                                } else
+                                {
+                                    setText("You ask the teacher if you can go out to the restroom.", "Yes, you may.", "says the teacher. You run to the restroom. Thank god, one cabin is free!", "You enter it, pulled down your " + lower.insert() + ",", "wearily flop down on the toilet and start peeing.");
+                                }
+                            } else
+                            {
+                                if (!undies.isMissing())
+                                {
+                                    setText("You ask the teacher if you can go out to the restroom.", "Yes, you may.", "says the teacher. You run to the restroom. Thank god, one cabin is free!", "You enter it, pulled down your " + undies.insert() + ",", "wearily flop down on the toilet and start peeing.");
+                                } else
+                                {
+                                    setText("You ask the teacher if you can go out to the restroom.", "Yes, you may.", "says the teacher. You run to the restroom. Thank god, one cabin is free!", "You enter it,", "wearily flop down on the toilet and start peeing.");
+                                }
+                            }
+//                            score *= 0.2;
+//                            scoreText = scoreText.concat("\nRestroom usage during the lesson: -80% of points");
+                            score("Restroom usage during the lesson", '/', 5);
+                            emptyBladder();
+                            setNextStage(ASK_ACTION);
+                            //Fail
+                        } else
+                        {
+                            setText("You ask the teacher if you can go out to the restroom.", "No, you can't go out, the director prohibited it.", "says the teacher.");
+                            timesPeeDenied++;
+                        }
+                        break;
+                    case 1:
+                        if (NarrativeEngine.RANDOM.nextInt(100) <= 10 & !hardcore)
+                        {
+                            if (!lower.isMissing())
+                            {
+                                if (!undies.isMissing())
+                                {
+                                    setText("You ask the teacher again if you can go out to the restroom.", "Yes, you may.", "says the teacher. You run to the restroom. Thank god, one cabin is free!", "You enter it, pulled down your " + lower.insert() + " and " + undies.insert() + ",", "wearily flop down on the toilet and start peeing.");
+                                } else
+                                {
+                                    setText("You ask the teacher again if you can go out to the restroom.", "Yes, you may.", "says the teacher. You run to the restroom. Thank god, one cabin is free!", "You enter it, pulled down your " + lower.insert() + ",", "wearily flop down on the toilet and start peeing.");
+                                }
+                            } else
+                            {
+                                if (!undies.isMissing())
+                                {
+                                    setText("You ask the teacher again if you can go out to the restroom.", "Yes, you may.", "says the teacher. You run to the restroom. Thank god, one cabin is free!", "You enter it, pulled down your " + undies.insert() + ",", "wearily flop down on the toilet and start peeing.");
+                                } else
+                                {
+                                    setText("You ask the teacher again if you can go out to the restroom.", "Yes, you may.", "says the teacher. You run to the restroom. Thank god, one cabin is free!", "You enter it,", "wearily flop down on the toilet and start peeing.");
+                                }
+                            }
+//                            score *= 0.22;
+//                            scoreText = scoreText.concat("\nRestroom usage during the lesson: -70% of points");
+                            score("Restroom usage during the lesson", '/', 3.3F);
+                            emptyBladder();
+                            setNextStage(ASK_ACTION);
+                        } else
+                        {
+                            setText("You ask the teacher again if you can go out to the restroom.", "No, you can't! I already told you that the director prohibited it!", "says the teacher.");
+                            timesPeeDenied++;
+                        }
+                        break;
+                    case 2:
+                        if (NarrativeEngine.RANDOM.nextInt(100) <= 30 & !hardcore)
+                        {
+                            if (!lower.isMissing())
+                            {
+                                if (!undies.isMissing())
+                                {
+                                    setText("You ask the teacher again if you can go out to the restroom.", "Yes, you may.", "says the teacher. You run to the restroom. Thank god, one cabin is free!", "You enter it, pulled down your " + lower.insert() + " and " + undies.insert() + ",", "wearily flop down on the toilet and start peeing.");
+                                } else
+                                {
+                                    setText("You ask the teacher again if you can go out to the restroom.", "Yes, you may.", "says the teacher. You run to the restroom. Thank god, one cabin is free!", "You enter it, pulled down your " + lower.insert() + ",", "wearily flop down on the toilet and start peeing.");
+                                }
+                            } else
+                            {
+                                if (!undies.isMissing())
+                                {
+                                    setText("You ask the teacher again if you can go out to the restroom.", "Yes, you may.", "says the teacher. You run to the restroom. Thank god, one cabin is free!", "You enter it, pulled down your " + undies.insert() + ",", "wearily flop down on the toilet and start peeing.");
+                                } else
+                                {
+                                    setText("You ask the teacher again if you can go out to the restroom.", "Yes, you may.", "says the teacher. You run to the restroom. Thank god, one cabin is free!", "You enter it,", "wearily flop down on the toilet and start peeing.");
+                                }
+                            }
+//                            score *= 0.23;
+//                            scoreText = scoreText.concat("\nRestroom usage during the lesson: -60% of points");
+                            score("Restroom usage during the lesson", '/', 2.5F);
+                            emptyBladder();
+                            setNextStage(ASK_ACTION);
+                        } else
+                        {
+                            setText("You ask the teacher once more if you can go out to the restroom.", "No, you can't! Stop asking me or there will be consequences!", "says the teacher.");
+                            timesPeeDenied++;
+                        }
+                        break;
+                    case 3:
+                        if (NarrativeEngine.RANDOM.nextInt(100) <= 7 & !hardcore)
+                        {
+                            if (!lower.isMissing())
+                            {
+                                if (!undies.isMissing())
+                                {
+                                    setText("Desperately, you ask the teacher if you can go out to the restroom.", "Yes, you may.", "says the teacher. You run to the restroom. Thank god, one cabin is free!", "You enter it, pulled down your " + lower.insert() + " and " + undies.insert() + ",", "wearily flop down on the toilet and start peeing.");
+                                } else
+                                {
+                                    setText("Desperately, you ask the teacher if you can go out to the restroom.", "Yes, you may.", "says the teacher. You run to the restroom. Thank god, one cabin is free!", "You enter it, pulled down your " + lower.insert() + ",", "wearily flop down on the toilet and start peeing.");
+                                }
+                            } else
+                            {
+                                if (!undies.isMissing())
+                                {
+                                    setText("Desperately, you ask the teacher if you can go out to the restroom.", "Yes, you may.", "says the teacher. You run to the restroom. Thank god, one cabin is free!", "You enter it, pulled down your " + undies.insert() + ",", "wearily flop down on the toilet and start peeing.");
+                                } else
+                                {
+                                    setText("Desperately, you ask the teacher if you can go out to the restroom.", "Yes, you may.", "says the teacher. You run to the restroom. Thank god, one cabin is free!", "You enter it,", "wearily flop down on the toilet and start peeing.");
+                                }
+                            }
+//                            score *= 0.3;
+//                            scoreText = scoreText.concat("\nRestroom usage during the lesson: -50% of points");
+                            score("Restroom usage during the lesson", '/', 2F);
+                            emptyBladder();
+                            setNextStage(ASK_ACTION);
+                        } else
+                        {
+                            if (NarrativeEngine.RANDOM.nextBoolean())
+                            {
+                                setText("Desperately, you ask the teacher if you can go out to the restroom.", "NO!! NO!! NO!!! YOU CAN'T GO OUT!!! STAY IN THAT CORNER!!!,", "yells the teacher.");
+                                cornered = true;
+//                            score += 1.3 * (90 - min / 3);
+//                            scoreText = scoreText.concat("\nStayed on corner " + (90 - min) + " minutes: +" + 1.3 * (90 - min / 3) + " score");
+                                score("Stayed on corner " + (90 - time) + " minutes", '+', 1.3F * (90 - time / 3));
+                                offsetEmbarassment(5, );
+                            } else
+                            {
+                                setText("Desperately, you ask the teacher if you can go out to the restroom.", "NO!! NO!! NO!!! YOU CAN'T GO OUT!!! YOU WILL WRITE LINES AFTER THE LESSON!!!,", "yells the teacher.");
+                                offsetEmbarassment(5, );
+                                stay = true;
+                                timeBar.setMaximum(120);
+//                            scoreText = scoreText.concat("\nWrote lines after the lesson: +60% score");
+//                            score *= 1.6;
+                                score("Wrote lines after the lesson", '*', 1.6F);
+                            }
+                        }
+                        timesPeeDenied++;
+                        break;
+                }
+                setNextStage(ASK_ACTION);
+                break;
+            case ASK_CHEAT:
+                listChoice.setListData(cheatList);
+                showActionUI("Select a cheat:");
+                setNextStage(CHOSE_CHEAT);
+                break;
+            case CHOSE_CHEAT:
+                if (inappropriateSelection())
+                {
+                    setNextStage(ASK_CHEAT);
+                    break;
+                }
+                switch (hideActionUI())
+                {
+                    case 0:
+                        setText("You walk to the front corner of the classroom.");
+                        cornered = true;
+                        setNextStage(ASK_ACTION);
+                        break;
+                    case 1:
+                        setText("You decide to stay after class.");
+                        stay = true;
+                        timeBar.setMaximum(120);
+                        setNextStage(ASK_ACTION);
+                        break;
+                    case 2:
+                        setText("You see something out of the corner of your eye,", "just within your reach.");
+                        setNextStage(USE_BOTTLE);
+                        break;
+                    case 3:
+                        setLinesAsDialogue(2);
+                        setText("A voice comes over the loudspeaker:", "All classes are now dismissed for no reason at all! Bye!", "Looks like your luck changed for the better.");
+                        time = 89;
+                        setNextStage(CLASS_OVER);
+                        break;
+                    case 4:
+                        setText("The teacher feels sorry for you. Try asking to pee.");
+                        timesPeeDenied = 0;
+                        stay = false;
+                        timeBar.setMaximum(90);
+                        cornered = false;
+                        setNextStage(ASK_ACTION);
+                        break;
+                    case 5:
+                        setText("You decide to raise your hand.");
+                        setNextStage(CALLED_ON);
+                        break;
+                    case 6:
+                        setText("Suddenly, you feel like you're peeing...", "but you don't feel any wetness. It's not something you'd", "want to question, right?");
+                        drain = true;
+                        setNextStage(ASK_ACTION);
+                        break;
+                    case 7:
+                        setText("A friend in the desk next to you hands you a familiar", "looking pill, and you take it.");
+                        askNewIncontinenceLevel();
+                        setNextStage(ASK_ACTION);
+                        break;
+                    case 8:
+                        setText("The teacher suddenly looks like they've had enough", "of people having to pee.");
+                        hardcore = !hardcore;
+                        setNextStage(ASK_ACTION);
+                        break;
+                    case 9:
+                        setText("Suddenly you felt something going on in your bladder.");
+                        askNewBladderLevel();
+                        setNextStage(ASK_ACTION);
+                        break;
+                }
+                break;
+            case USE_BOTTLE:
+                setLinesAsDialogue(3);
+                setText("Luckily for you, you happen to have brought an empty bottle to pee in.", "As quietly as you can, you put it in position and let go into it.", "Ahhhhh...", "You can't help but show a face of pure relief as your pee trickles down into it.");
+                emptyBladder();
+                setNextStage(ASK_ACTION);
+                break;
+            case CALLED_ON:
+                setLinesAsDialogue(1);
+                setText("" + name + ", why don't you come up to the board and solve this problem?,", "says the teacher. Of course, you don't have a clue how to solve it.", "You make your way to the front of the room and act lost, knowing you'll be stuck", "up there for a while as the teacher explains it.", "Well, you can't dare to hold yourself now...");
+                passTime((byte) 5, );
+                score("Called on the lesson", '+', 5);
+                setNextStage(ASK_ACTION);
+                break;
+            case CLASS_OVER:
+                if (triggerClsasOverScene())
+                {
+                    break;
+                }
+                if (NarrativeEngine.RANDOM.nextBoolean())
+                {
+                    setText("Lesson is finally over, and you're running to the restroom as fast as you can.", "No, please... All cabins are occupied, and there's a line. You have to wait!");
+                    score("Waited for a free cabin in the restroom", '+', 3);
+                    passTime();
+                    break;
+                } else
+                {
+                    //TODO: Refactor
+                    if (!lower.isMissing())
+                    {
+                        if (!undies.isMissing())
+                        {
+                            setText("Lesson is over, and you're running to the restroom as fast as you can.", "Thank god, one cabin is free!", "You enter it, pulled down your " + lower.insert() + " and " + undies.insert() + ",", "wearily flop down on the toilet and start peeing.");
+                        } else
+                        {
+                            setText("Lesson is over, and you're running to the restroom as fast as you can.", "Thank god, one cabin is free!", "You enter it, pulled down your " + lower.insert() + ",", "wearily flop down on the toilet and start peeing.");
+                        }
+                    } else
+                    {
+                        if (!undies.isMissing())
+                        {
+                            setText("Lesson is over, and you're running to the restroom as fast as you can.", "Thank god, one cabin is free!", "You enter it, pulled down your " + undies.insert() + ",", "wearily flop down on the toilet and start peeing.");
+                        } else
+                        {
+                            setText("Lesson is over, and you're running to the restroom as fast as you can.", "Thank god, one cabin is free!", "You enter it,", "wearily flop down on the toilet and start peeing.");
+                        }
+                    }
+                    setNextStage(END_GAME);
+                }
+                break;
+            case AFTER_CLASS:
+                if (linesAreTooLong())
+                {
+                    break;
+                }
+                setLinesAsDialogue(1, 2, 3, 4);
+                setText("Hey, " + name + ", you wanted to escape? You must stay after classes!", "Please... let me go to the restroom... I can't hold it...", "No, " + name + ", you can't go to the restroom now! This will be as punishment.", "And don't think you can hold yourself either! I'm watching you...");
+                passTime();
+                break;
+            case ACCIDENT:
+                hideActionUI();
+                setText("You can't help it.. No matter how much pressure you use, the leaks won't stop.", "Despite all this, you try your best, but suddenly you're forced to stop.", "You can't move, or you risk peeing yourself. Heck, the moment you stood up you thought you could barely move for risk of peeing everywhere.", "But now.. a few seconds tick by as you try to will yourself to move, but soon, the inevitable happens anyways.");
+                setNextStage(WET);
+                break;
+            case GIVE_UP:
+                //TODO: Refactor
+                if (!lower.isMissing())
+                {
+                    if (!undies.isMissing())
+                    {
+                        setText("You get tired of holding all the urine in your aching bladder,", "and you decide to give up and pee in your " + undies.insert() + ".");
+                    } else
+                    {
+                        setText("You get tired of holding all the urine in your aching bladder,", "and you decided to pee in your " + lower.insert() + ".");
+                    }
+                } else
+                {
+                    if (!undies.isMissing())
+                    {
+                        setText("You get tired of holding all the urine in your aching bladder,", "and you decide to give up and pee in your " + undies.insert() + ".");
+                    } else
+                    {
+                        setText("You get tired of holding all the urine in your aching bladder,", "and you decide to give up and pee where you are.");
+                    }
+                }
+                offsetEmbarassment(80, );
+                setNextStage(WET);
+                break;
+            case WET:
+                if (!lower.isMissing())
+                {
+                    if (!undies.isMissing())
+                    {
+                        setText("Before you can move an inch, pee quickly soaks through your " + undies.insert() + ",", "floods your " + lower.insert() + ", and streaks down your legs.", "A large puddle quickly forms, and you can't stop tears from falling down your cheeks.");
+                    } else
+                    {
+                        setText("Before you can move an inch, pee quickly darkens your " + lower.insert() + " and streaks down your legs.", "A large puddle quickly forms, and you can't stop tears from falling down your cheeks.");
+                    }
+                } else
+                {
+                    if (!undies.isMissing())
+                    {
+                        setText("Before you can move an inch, pee quickly soaks through your " + undies.insert() + ", and streaks down your legs.", "A large puddle quickly forms, and you can't stop tears from falling down your cheeks.");
+                    } else
+                    {
+                        if (!cornered)
+                        {
+                            setText("The heavy pee jets are hitting the seat and loudly leaking out from your " + undies.insert() + ".", "A large puddle quickly forms, and you can't stop tears from falling down your cheeks.");
+                        } else
+                        {
+                            setText("The heavy pee jets are hitting the floor and loudly leaking out from your " + undies.insert() + ".", "A large puddle quickly forms, and you can't stop tears from falling down your cheeks.");
+                        }
+                    }
+                }
+                emptyBladder();
+                embarassment = 100;
+                setNextStage(POST_WET);
+                break;
+            case POST_WET:
+                setLinesAsDialogue(2);
+                if (!stay)
+                {
+                    if (lower.isMissing())
+                    {
+                        if (isFemale() && undies.isMissing())
+                        {
+                            setText("People around you are laughing loudly.", name + " peed herself! Ahaha!!!");
+                        } else
+                        {
+                            if (isMale() && undies.isMissing())
+                            {
+                                setText("People around you are laughing loudly.", name + " peed himself! Ahaha!!!");
+                            } else
+                            {
+                                setText("People around you are laughing loudly.", name + " wet h" + (isFemale() ? "er " : "is ") + undies.insert() + "! Ahaha!!");
+                            }
+                        }
+                    } else
+                    {
+                        if (isFemale())
+                        {
+                            setText("People around you are laughing loudly.", name + " peed her " + lower.insert() + "! Ahaha!!");
+                        } else
+                        {
+                            setText("People around you are laughing loudly.", " peed his " + lower.insert() + "! Ahaha!!");
+                        }
+                    }
+                } else
+                {
+                    setText("Teacher is laughing loudly.", "Oh, you peed yourself? This is a great punishment.", "I hope you will no longer get in the way of the lesson.");
+                }
+                setNextStage(GAME_OVER);
+                break;
+            case GAME_OVER:
+                if (lower.isMissing())
+                {
+                    if (undies.isMissing())
+                    {
+                        setText("No matter how hard you tried... It doesn't seem to matter, even to think about it...", "No, nobody would be as sadistic as that, especially to themselves...", "Game over!");
+                    } else
+                    {
+                        setText("No matter how hard you tried... It doesn't seem to matter, even to think about it...", "Your " + undies.insert() + " are clinging to your skin, a sign of your failure...", "...unless, of course, you meant for this to happen?", "No, nobody would be as sadistic as that, especially to themselves...", "Game over!");
+                    }
+                } else
+                {
+                    if (undies.isMissing())
+                    {
+                        setText("No matter how hard you tried... It doesn't seem to matter, even to think about it...", "Your " + lower.insert() + " is clinging to your skin, a sign of your failure...", //TODO: Add "is/are" depending on lower clothes type
+                                "...unless, of course, you meant for this to happen?", "No, nobody would be as sadistic as that, especially to themselves...", "Game over!");
+                    } else
+                    {
+                        setText("No matter how hard you tried... It doesn't seem to matter, even to think about it...", "Your " + lower.insert() + " and " + undies.insert() + " are both clinging to your skin, a sign of your failure...", "...unless, of course, you meant for this to happen?", "No, nobody would be as sadistic as that, especially to themselves...", "Game over!");
+                    }
+                }
+                gameOver();
+                break;
+            case END_GAME:
+                showScore();
+                gameOver();
+                break;
+            case CAUGHT:
+                switch (timesCaught)
+                {
+                    case 0:
+                        setText("It looks like a classmate has spotted that you've got to go badly.", "Damn, he may spread that fact...");
+                        offsetEmbarassment(3, );
+                        classmatesAwareness += 5;
+                        score("Caught holding pee", '+', 3);
+                        timesCaught++;
+                        break;
+                    case 1:
+                        setLinesAsDialogue(3);
+                        setText("You'he heard a suspicious whisper behind you.", "Listening to the whisper, you've found out that they're saying that you need to go.", "If I hold it until the lesson ends, I will beat them.");
+                        offsetEmbarassment(8, );
+                        classmatesAwareness += 5;
+                        score("Caught holding pee", '+', 8);
+                        timesCaught++;
+                        break;
+                    case 2:
+                        if (isFemale())
+                        {
+                            setLinesAsDialogue(2);
+                            setText("The most handsome boy in your class, " + boyName + ", is calling you:", "Hey there, don't wet yourself!", "Oh no, he knows it...");
+                        } else
+                        {
+                            setLinesAsDialogue(2, 3);
+                            setText("The most nasty boy in your class, " + boyName + ", is calling you:", "Hey there, don't wet yourself! Ahahahaa!", "\"Shut up...\"", ", you think to yourself.");
+                        }
+                        offsetEmbarassment(12, );
+                        classmatesAwareness += 5;
+                        score("Caught holding pee", '+', 12);
+                        timesCaught++;
+                        break;
+                    default:
+                        setText("The chuckles are continiously passing over the classroom.", "Everyone is watching you.", "Oh god... this is so embarassing...");
+                        offsetEmbarassment(20, );
+                        classmatesAwareness += 5;
+                        score("Caught holding pee", '+', 20);
+                        timesCaught++;
+                }
+                setNextStage(ASK_ACTION);
+                break;
+            //The special hardcore scene
+            /*
+         * "Surprise" is an additional scene after the lesson where player is being caught by her classmate. He wants her to wet herself.
+         * Triggering conditions: female, hardcore
+         * Triggering chance: 10%
+             */
+            case SURPRISE:
+                //Resetting timesPeeDenied to use for that boy
+                timesPeeDenied = 0;
+                specialHardcoreStage = true;
+                score("Got the \"surprise\" by " + boyName, '+', 70);
+                setText("The lesson is finally over, and you're running to the restroom as fast as you can.", "But... You see " + boyName + " staying in front of the restroom.", "Suddenly, he takes you, not letting you to escape.");
+                offsetEmbarassment(10, );
+                setNextStage(SURPRISE_2);
+                break;
+            case SURPRISE_2:
+                setLinesAsDialogue(1);
+                setText("What do you want from me?!", "He has brought you in the restroom and quickly put you on the windowsill.", boyName + " has locked the restroom door (seems he has stolen the key), then he puts his palm on your belly and says:", "I want you to wet yourself.");
+                offsetEmbarassment(10, );
+                setNextStage(SURPRISE_DIALOGUE);
+                break;
+            case SURPRISE_DIALOGUE:
+                setLinesAsDialogue(1);
+                setText("No, please, don't do it, no...", "I want to see you wet...", "He slightly presses your belly again, you shook from the terrible pain", "in your bladder and subconsciously rubbed your crotch. You have to do something!");
+                offsetEmbarassment(10, );
+                actionList.add("Hit him");
+                switch (timesPeeDenied)
+                {
+                    case 0:
+                        actionList.add("Try to persuade him to let you pee");
+                        break;
+                    case 1:
+                        actionList.add("Try to persuade him to let you pee again");
+                        break;
+                    case 2:
+                        actionList.add("Take a chance and try to persuade him (RISKY)");
+                        break;
+                }
+                actionList.add("Pee yourself");
+                listChoice.setListData(actionList.toArray());
+                showActionUI("Don't let him to do it!");
+                setNextStage(SURPRISE_CHOSE);
+                break;
+            case SURPRISE_CHOSE:
+                if (listChoice.isSelectionEmpty())
+                {
+                    //No idling
+                    setText("You will wet yourself right now,", boyName + " demands.", "Then " + boyName + " presses your bladder...");
+                    setNextStage(SURPRISE_WET_PRESSURE);
+                }
+//                actionNum = listChoice.getSelectedIndex();
+                if (listChoice.getSelectedValue().equals("[Unavailable]"))
+                {
+                    //No idling
+                    setText("You will wet yourself right now,", boyName + " demands.", "Then " + boyName + " presses your bladder...");
+                    setNextStage(SURPRISE_WET_PRESSURE);
+                }
+                switch (hideActionUI())
+                {
+                    case 0:
+                        setNextStage(HIT);
+                        break;
+                    case 1:
+                        setNextStage(PERSUADE);
+                        break;
+                    case 2:
+                        setNextStage(SURPRISE_WET_VOLUNTARY);
+                }
+                break;
+            case HIT:
+                if (NarrativeEngine.RANDOM.nextInt(100) <= 20)
+                {
+                    setLinesAsDialogue(2);
+                    setNextStage(END_GAME);
+                    score("Successful hit on " + boyName + "'s groin", '+', 40F);
+                    if (!lower.isMissing())
+                    {
+                        if (!undies.isMissing())
+                        {
+                            setText("You hit " + boyName + "'s groin.", "Ouch!.. You, little bitch...", "Then he left the restroom quickly.", "You got off from the windowsill while holding your crotch,", "opened the cabin door, entered it, pulled down your " + lower.insert() + " and " + undies.insert() + ",", "wearily flop down on the toilet and start peeing.");
+                        } else
+                        {
+                            setText("You hit " + boyName + "'s groin.", "Ouch!.. You, little bitch...", "Then he left the restroom quickly.", "You got off from the windowsill while holding your crotch,", "opened the cabin door, entered it, pulled down your " + lower.insert() + ",", "wearily flop down on the toilet and start peeing.");
+                        }
+                    } else
+                    {
+                        if (!undies.isMissing())
+                        {
+                            setText("You hit " + boyName + "'s groin.", "Ouch!.. You, little bitch...", "Then he left the restroom quickly.", "You got off from the windowsill while holding your crotch,", "opened the cabin door, entered it, pulled down your " + undies.insert() + ",", "wearily flop down on the toilet and start peeing.");
+                        } else
+                        {
+                            setText("You hit " + boyName + "'s groin.", "Ouch!.. You, little bitch...", "Then he left the restroom quickly.", "You got off from the windowsill while holding your crotch,", "opened the cabin door, entered it,", "wearily flop down on the toilet and start peeing.");
+                        }
+                    }
+                } else
+                {
+                    setNextStage(SURPRISE_WET_PRESSURE);
+                    setLinesAsDialogue(2, 3);
+                    setText("You hit " + boyName + "'s hand. Damn, you'd meant to hit his groin...", "You're braver than I expected;", "now let's check the strength of your bladder!", boyName + " pressed your bladder violently...");
+                }
+                break;
+            case PERSUADE:
+                switch (timesPeeDenied)
+                {
+                    case 0:
+                        if (NarrativeEngine.RANDOM.nextInt(100) <= 10)
+                        {
+                            setLinesAsDialogue(1);
+                            if (!lower.isMissing())
+                            {
+                                if (!undies.isMissing())
+                                {
+                                    setText("Ok, you may, but you'll let me watch you pee.", "states " + boyName + ". You enter the cabin,", "pull down your " + lower.insert() + " and " + undies.insert() + ",", "stand over the toilet and start peeing under " + boyName + "'s spectation.");
+                                } else
+                                {
+                                    setText("Ok, you may, but you'll let me watch you pee.", "states " + boyName + ". You enter the cabin,", "pull down your " + lower.insert() + ",", "stand over the toilet and start peeing under " + boyName + "'s spectation.");
+                                }
+                            } else
+                            {
+                                if (!undies.isMissing())
+                                {
+                                    setText("Ok, you may, but you'll let me watch you pee.", "states " + boyName + ". You enter the cabin,", "pull down your " + undies.insert() + ",", "stand over the toilet and start peeing under " + boyName + "'s spectation.");
+                                } else
+                                {
+                                    setText("Ok, you may, but you'll let me watch you pee.", "states " + boyName + ". You enter the cabin,", "stand over the toilet and start peeing under " + boyName + "'s spectation.");
+                                }
+                            }
+                            score("Persuaded " + boyName + " to pee", '+', 40);
+                            emptyBladder();
+                            setNextStage(END_GAME);
+                        } else
+                        {
+                            setText("You ask " + boyName + " if you can pee.", "No, you can't pee in a cabin. I want you to wet yourself.,", boyName + " says.");
+                            timesPeeDenied++;
+                            setNextStage(SURPRISE_DIALOGUE);
+                        }
+                        break;
+                    case 1:
+                        if (NarrativeEngine.RANDOM.nextInt(100) <= 5)
+                        {
+                            if (!lower.isMissing())
+                            {
+                                if (!undies.isMissing())
+                                {
+                                    setText("Ok, you may, but you'll let me watch you pee.", "states " + boyName + ". You enter the cabin,", "pull down your " + lower.insert() + " and " + undies.insert() + ",", "stand over the toilet and start peeing under " + boyName + "'s spectation.");
+                                } else
+                                {
+                                    setText("Ok, you may, but you'll let me watch you pee.", "states " + boyName + ". You enter the cabin,", "pull down your " + lower.insert() + ",", "stand over the toilet and start peeing under " + boyName + "'s spectation.");
+                                }
+                            } else
+                            {
+                                if (!undies.isMissing())
+                                {
+                                    setText("Ok, you may, but you'll let me watch you pee.", "states " + boyName + ". You enter the cabin,", "pull down your " + undies.insert() + ",", "stand over the toilet and start peeing under " + boyName + "'s spectation.");
+                                } else
+                                {
+                                    setText("Ok, you may, but you'll let me watch you pee.", "states " + boyName + ". You enter the cabin,", "stand over the toilet and start peeing under " + boyName + "'s spectation.");
+                                }
+                            }
+                            score("Persuaded " + boyName + " to pee", '+', 60);
+                            emptyBladder();
+                            setNextStage(END_GAME);
+                        } else
+                        {
+                            setText("You ask " + boyName + " if you can pee again.", "No, you can't pee in a cabin. I want you to wet yourself. You're doing it now.", boyName + " demands.");
+                            timesPeeDenied++;
+                            setNextStage(SURPRISE_DIALOGUE);
+                        }
+                        break;
+                    case 2:
+                        if (NarrativeEngine.RANDOM.nextInt(100) <= 2)
+                        {
+                            if (!lower.isMissing())
+                            {
+                                if (!undies.isMissing())
+                                {
+                                    setText("Ok, you may, but you'll let me watch you pee.", "states " + boyName + ". You enter the cabin,", "pull down your " + lower.insert() + " and " + undies.insert() + ",", "stand over the toilet and start peeing under " + boyName + "'s spectation.");
+                                } else
+                                {
+                                    setText("Ok, you may, but you'll let me watch you pee.", "states " + boyName + ". You enter the cabin,", "pull down your " + lower.insert() + ",", "stand over the toilet and start peeing under " + boyName + "'s spectation.");
+                                }
+                            } else
+                            {
+                                if (!undies.isMissing())
+                                {
+                                    setText("Ok, you may, but you'll let me watch you pee.", "states " + boyName + ". You enter the cabin,", "pull down your " + undies.insert() + ",", "stand over the toilet and start peeing under " + boyName + "'s spectation.");
+                                } else
+                                {
+                                    setText("Ok, you may, but you'll let me watch you pee.", "states " + boyName + ". You enter the cabin,", "stand over the toilet and start peeing under " + boyName + "'s spectation.");
+                                }
+                            }
+                            score("Persuaded " + boyName + " to pee", '+', 80);
+                            emptyBladder();
+                            setNextStage(END_GAME);
+                        } else
+                        {
+                            setText("You ask " + boyName + " if you can pee again desperately.", "No, you can't pee in a cabin. You will wet yourself right now,", boyName + " demands.", "Then " + boyName + " pressed your bladder...");
+                            setNextStage(SURPRISE_WET_PRESSURE);
+                        }
+                        break;
+                }
+                break;
+            case SURPRISE_WET_VOLUNTARY:
+                setLinesAsDialogue(1, 3);
+                setText("Alright, as you say.,", "you say to " + boyName + " with a defeated sigh.", "Whatever, I really can't hold it anymore anyways...");
+                emptyBladder();
+                setNextStage(SURPRISE_WET_VOLUNTARY2);
+                break;
+            case SURPRISE_WET_VOLUNTARY2:
+                if (!undies.isMissing())
+                {
+                    if (!lower.isMissing())
+                    {
+                        setText("You feel the warm pee stream", "filling your " + undies.insert() + " and darkening your " + lower.insert() + ".", "You close your eyes and ease your sphincter off.", "You feel the pee stream become much stronger.");
+                    } else
+                    {
+                        setText("You feel the warm pee stream", "filling your " + undies.insert() + ".", "You close your eyes and ease your sphincter off.", "You feel the pee stream become much stronger.");
+                    }
+                } else
+                {
+                    if (!lower.isMissing())
+                    {
+                        setText("You feel the warm pee stream", "filling your " + lower.insert() + ".", "You close your eyes and ease your sphincter off.", "You feel the pee stream become much stronger.");
+                    } else
+                    {
+                        setText("You feel the warm pee stream", "running down your legs.", "You close your eyes and ease your sphincter off.", "You feel the pee stream become much stronger.");
+                    }
+                }
+                emptyBladder();
+                setNextStage(END_GAME);
+                break;
+            case SURPRISE_WET_PRESSURE:
+                if (!undies.isMissing())
+                {
+                    if (!lower.isMissing())
+                    {
+                        setText("Ouch... The sudden pain flash passes through your bladder...", "You try to hold the pee back, but you just can't.", "You feel the warm pee stream", "filling your " + undies.insert() + " and darkening your " + lower.insert() + ".", "You close your eyes and ease your sphincter off.", "You feel the pee stream become much stronger.");
+                    } else
+                    {
+                        setText("Ouch... The sudden pain flash passes through your bladder...", "You try to hold the pee back, but you just can't.", "You feel the warm pee stream", "filling your " + undies.insert() + ".", "You close your eyes and ease your sphincter off.", "You feel the pee stream become much stronger.");
+                    }
+                } else
+                {
+                    if (!lower.isMissing())
+                    {
+                        setText("Ouch... The sudden pain flash passes through your bladder...", "You try to hold the pee back, but you just can't.", "You feel the warm pee stream", "filling your " + lower.insert() + ".", "You close your eyes and ease your sphincter off.", "You feel the pee stream become much stronger.");
+                    } else
+                    {
+                        setText("Ouch... The sudden pain flash passes through your bladder...", "You try to hold the pee back, but you just can't.", "You feel the warm pee stream", "running down your legs.", "You close your eyes and ease your sphincter off.", "You feel the pee stream become much stronger.");
+                    }
+                }
+                emptyBladder();
+                setNextStage(END_GAME);
+                break;
+            case DRINK:
+                setText("You take your bottle with water,", "open it and take a small sip of water.");
+                offsetBelly(thirst, );
+                thirst = 0;
+                setNextStage(ASK_ACTION);
+                break;
+            default:
+                setText("Error parsing button. Next text is unavailable, text #" + nextStage);
+                break;
+            //case template
+            //      case 4:
+            //   setText("");
+            //   setNextStage(;
+            //   break;                //case template
+            //      case 4:
+            //   setText("");
+            //   setNextStage(;
+            //   break;
+        }
+    }
+
+    /**
+     *
+     * @param  the value of 
+     */
+    static void update()
+    {
+        try
+        {
+            lblName.setText(name);
+            lblBladder.setText("Bladder: " + Math.round(bladder) + "%");
+            lblEmbarassment.setText("Embarassment: " + embarassment);
+            lblBelly.setText("Belly: " + Math.round(belly) + "%");
+            lblIncon.setText("Incontinence: " + incontinence + "x");
+            lblMinutes.setText("Minutes: " + time + " of 90");
+            lblSphPower.setText("Pee holding ability: " + Math.round(sphincterPower) + "%");
+            lblDryness.setText("Clothes dryness: " + Math.round(dryness));
+            lblUndies.setText("Undies: " + undies.getColor() + " " + undies.getName().toLowerCase());
+            lblLower.setText("Lower: " + lower.getColor() + " " + lower.getName().toLowerCase());
+            bladderBar.setValue(bladder);
+            sphincterBar.setValue(Math.round(sphincterPower));
+            drynessBar.setValue((int) dryness);
+            timeBar.setValue(time);
+            lblThirst.setText("Thirst: " + Math.round(thirst) + "%");
+            thirstBar.setValue((int) thirst);
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     *
+     */
+    private void gameOver()
+    {
+        btnNext.setVisible(false);
+    }
+
+    /**
+     *
+     * @param  the value of 
+     * @return the byte
+     */
+    byte hideActionUI()
+    {
+        byte choice = (byte) listChoice.getSelectedIndex();
+        actionList.clear();
+        lblChoice.setVisible(false);
+        listScroller.setVisible(false);
+        return choice;
+    }
+
+    /**
+     *
+     * @return the byte
+     * @throws NumberFormatException
+     */
+    byte askPlayerHowMuchToWait() throws NumberFormatException
+    {
+        byte timeOffset;
+        timeOffset = Byte.parseByte(JOptionPane.showInputDialog("How much to wait?"));
+        if (time < 1 || time > 125)
+        {
+            throw new NumberFormatException();
+        }
+        return timeOffset;
+    }
+
+    /**
+     *
+     * @param  the value of 
+     * @throws HeadlessException
+     * @throws NumberFormatException
+     */
+    private void askNewIncontinenceLevel() throws HeadlessException, NumberFormatException
+    {
+        float newIncontinence = Float.parseFloat(JOptionPane.showInputDialog("How incontinent are you now?"));
+        if (newIncontinence >= 0.1)
+        {
+            incontinence = newIncontinence;
+            maxSphincterPower = (short) (100 / incontinence);
+            sphincterPower = maxSphincterPower;
+        }
+    }
+}
+
+class ResetParametersStorage
+{
+
+    static String underColorParam;
+    static String outerColorParam;
+    static String outerParam;
+    //Parameters used for a game reset
+    static String nameParam;
+    static short bladderParam;
+    static Gender gndrParam;
+    static String underParam;
+    static boolean diffParam;
+    static float incParam;
+}
+
+//TODO: Refactor, too long class
+@SuppressWarnings("serial")
+public class ALongHourAndAHalf extends JFrame
+{
 
     /**
      * Resets the game and values, optionally letting player to select new
@@ -329,314 +2403,9 @@ public class ALongHourAndAHalf extends JFrame
             new setupFramePre().setVisible(true);
         } else
         {
-            new ALongHourAndAHalf(nameParam, gndrParam, diffParam, incParam, bladderParam, underParam, outerParam, underColorParam, outerColorParam);
+            new ALongHourAndAHalf(ResetParametersStorage.nameParam, ResetParametersStorage.gndrParam, ResetParametersStorage.diffParam, ResetParametersStorage.incParam, ResetParametersStorage.bladderParam, ResetParametersStorage.underParam, ResetParametersStorage.outerParam, ResetParametersStorage.underColorParam, ResetParametersStorage.outerColorParam);
         }
     }
-
-    //Game frame variables declaration
-    private JPanel contentPane;
-    private JPanel textPanel;
-
-    private JButton btnNext;
-    private JButton btnReset;
-    private JButton btnQuit;
-
-    private JLabel textLabel;
-    private JLabel lblBelly;
-    private JLabel lblBladder;
-    private JLabel lblChoice;
-    private JLabel lblEmbarassment;
-    private JLabel lblIncon;
-    private JLabel lblMinutes;
-    private JLabel lblName;
-    private JButton btnNewGame;
-    private JLabel lblUndies;
-    private JLabel lblLower;
-    private JLabel lblSphPower;
-    private JLabel lblDryness;
-    private Color lblDefaultColor;
-    private JList<Object> listChoice;
-
-    private JScrollPane listScroller;
-
-    private JProgressBar bladderBar;
-    private JProgressBar sphincterBar;
-    private JProgressBar drynessBar;
-    private JProgressBar timeBar;
-    private final String[] askToPeeSuccessText = 
-    {
-        "You ask the teacher if you can go out to the restroom.",
-        "Yes, you may.",
-        "says the teacher. You run to the restroom,",
-        showError((byte)1),
-        "wearily flop down on the toilet and start peeing."
-    };
-
-    String showError(byte errorIndex)
-    {
-        return "<b><i>"+ERRORS[errorIndex]+"@"+Thread.currentThread().getStackTrace()[1].getLineNumber()+"</i></b>";
-    }
-    
-    final String[] ERRORS =
-    {
-        "LACK OF WEAR HANDLING",
-        "NOT OVERRIDDEN"
-    };
-    
-    /**
-     * List of all underwear types.
-     */
-    Wear[] underwearList
-            =
-            {
-                //        Name      Insert name     Pressure, Absotption, Drying over time
-                new Wear("Random", showError((byte)0) + "</i></b>", 0, 0, 0),
-                new Wear("No underwear", showError((byte)0) , 0, 0, 1),
-                new Wear("Strings", "panties", 1, 2, 1),
-                new Wear("Tanga panties", "panties", 1.5F, 3, 1),
-                new Wear("Regular panties", "panties", 2, 4, 1),
-                new Wear("\"Boy shorts\" panties", "panties", 4, 7, 1),
-                new Wear("String bikini", "bikini panties", 1, 1, 2),
-                new Wear("Regular bikini", "bikini panties", 2, 2, 2),
-                new Wear("Swimsuit", "swimsuit", 4, 2.5F, 2.5F),
-                new Wear("Light diaper", "diaper", 9, 50, 0),
-                new Wear("Normal diaper", "diaper", 18, 100, 0),
-                new Wear("Heavy diaper", "diaper", 25, 175, 0),
-                new Wear("Light pad", "pad", 2, 16, 0.25F),
-                new Wear("Normal pad", "pad", 3, 24, 0.25F),
-                new Wear("Big pad", "pad", 4, 32, 0.25F),
-                new Wear("Pants", "pants", 2.5F, 5, 1),
-                new Wear("Shorts-alike pants", "pants", 3.75F, 7.5F, 1),
-                new Wear("Anti-gravity pants", "pants", 0, 4, 1),
-                new Wear("Super-absorbing diaper", "diaper", 18, 600, 0)
-            };
-
-    /**
-     * List of all outerwear types.
-     */
-    final Wear[] outerwearList
-            =
-            {
-                //        Name      Insert name     Pressure, Absotption, Drying over time
-                new Wear("Random", showError((byte)0), 0, 0, 0),
-                new Wear("No outerwear", showError((byte)0), 0, 0, 1),
-                new Wear("Long jeans", "jeans", 7, 12, 1.2F),
-                new Wear("Knee-length jeans", "jeans", 6, 10, 1.2F),
-                new Wear("Short jeans", "shorts", 5, 8.5F, 1.2F),
-                new Wear("Very short jeans", "shorts", 4, 7, 1.2F),
-                new Wear("Long trousers", "trousers", 9, 15.75F, 1.4F),
-                new Wear("Knee-length trousers", "trousers", 8, 14, 1.4F),
-                new Wear("Short trousers", "shorts", 7, 12.25F, 1.4F),
-                new Wear("Very short trousers", "shorts", 6, 10.5F, 1.4F),
-                new Wear("Long skirt", "skirt", 5, 6, 1.7F),
-                new Wear("Knee-length skirt", "skirt", 4, 4.8F, 1.7F),
-                new Wear("Short skirt", "skirt", 3, 3.6F, 1.7F),
-                new Wear("Mini skirt", "skirt", 2, 2.4F, 1.7F),
-                new Wear("Micro skirt", "skirt", 1, 1.2F, 1.7F),
-                new Wear("Long skirt and tights", "skirt and tights", 6, 7.5F, 1.6F),
-                new Wear("Knee-length skirt and tights", "skirt and tights", 5, 8.75F, 1.6F),
-                new Wear("Short skirt and tights", "skirt and tights", 4, 7, 1.6F),
-                new Wear("Mini skirt and tights", "skirt and tights", 3, 5.25F, 1.6F),
-                new Wear("Micro skirt and tights", "skirt and tights", 2, 3.5F, 1.6F),
-                new Wear("Leggings", "leggings", 10, 11, 1.8F),
-                new Wear("Short male jeans", "jeans", 5, 8.5F, 1.2F),
-                new Wear("Normal male jeans", "jeans", 7, 12, 1.2F),
-                new Wear("Male trousers", "trousers", 9, 15.75F, 1.4F)
-            };
-
-    /**
-     * List of all cheats.
-     */
-    final String[] cheatList
-            =
-            {
-                "Go to the corner", "Stay after class", "Pee in a bottle", "End class right now",
-                "Calm the teacher down", "Raise your hand", "Make your pee disappear regularly",
-                "Set your incontinence level", "Toggle hardcore mode", "Set bladder fulness"
-            };
-
-    /**
-     * List of all boy names for special hardcore scene.
-     */
-    final String names[]
-            =
-            {
-                "Mark",
-                "Mike",
-                "Jim",
-                "Alex",
-                "Ben",
-                "Bill",
-                "Dan"
-            };
-
-    /**
-     * Special hardcore scene boy name.
-     */
-    String boyName = names[generator.nextInt(names.length)];
-
-    /**
-     * Actions list.
-     */
-    ArrayList<String> actionList = new ArrayList<>();
-
-    /**
-     * A stage after the current stage.
-     */
-    private GameStage nextStage;
-    
-    void setNextStage(GameStage nextStage)
-    {
-        this.nextStage = nextStage;
-    }
-
-    /**
-     * Character's name.
-     */
-    public String name;
-
-    /**
-     * Character's lower body clothing.
-     */
-    public Wear lower;
-
-    /**
-     * Character's undies.
-     */
-    public Wear undies;
-
-    /**
-     * Current character gender.
-     */
-    public Gender gender;
-
-    /**
-     * Text to be displayed after the game which shows how many {@link score}
-     * did you get.
-     */
-    public String scoreText = "";
-
-    /**
-     * Current bladdder fulness.
-     */
-    public short bladder;
-
-    /**
-     * Maximal bladder fulness.
-     */
-    public short maxBladder = 130;
-
-    /**
-     * Makes the wetting chance higher after reaching 100% of the bladder
-     * fulness.
-     */
-    public short embarassment;
-
-    /**
-     * Amount of a water in a belly.
-     */
-    public double belly;
-    
-    /**
-     * Amount of the character thirstiness.
-     * Used only in hardcore mode.
-     */
-    public float thirst = 0;
-    
-    /**
-     * Before 1.1:<br>
-     * simply multiplies a bladder increasement.<br>
-     * <br>
-     * 1.1 and after:<br>
-     * defines the sphincter weakening speed.
-     */
-    public float incontinence;
-
-    /**
-     * Maximal time without squirming and leaking.
-     */
-    public short maxSphincterPower;
-
-    /**
-     * Current sphincter power. The higher bladder level, the faster power
-     * consumption.
-     */
-    public short sphincterPower;
-
-    /**
-     * Amount of pee that clothes can store.
-     */
-    public float dryness;
-
-    /**
-     * The class time.
-     */
-    public byte time = 0;
-
-    /**
-     * Times teacher denied character to go out.
-     */
-    public byte timesPeeDenied = 0;
-
-    /**
-     * A number that shows a game difficulty - the higher score, the harder was
-     * the game. Specific actions (for example, peeing in a restroom during a
-     * lesson) reduce score points. Using the cheats will zero the score points.
-     */
-    public int score = 0;
-
-    /**
-     * Number of times player got caught holding pee.
-     */
-    public byte timesCaught = 0;
-
-    /**
-     * Amount of embarassment raising every time character caught holding pee.
-     */
-    public short classmatesAwareness = 0;
-
-    /**
-     * Whether or not charecter has to stay 30 minutes after class.
-     */
-    public boolean stay = false;
-
-    /**
-     * Whether or not character currently stands in the corner and unable to
-     * hold crotch.
-     */
-    public boolean cornered = false;
-
-    /**
-     * Whether or not pee drain cheat enabled: pee mysteriously vanishes every
-     * 15 minutes.
-     */
-    public boolean drain = false;
-
-    /**
-     * Whether or not hardcore mode enabled: teacher never lets you pee, it's
-     * harder to hold pee, you may get caught holding pee
-     */
-    public boolean hardcore = false;
-
-    /**
-     * An array that contains boolean values that define <i>dialogue lines</i>.
-     * Dialogue lines, unlike normal lines, are <i>italic</i>.
-     */
-    private boolean[] dialogueLines = new boolean[MAX_LINES];
-
-    /**
-     * Whether or not player has used cheats.
-     */
-    public boolean cheatsUsed = false;
-    private boolean specialHardcoreStage = false;
-
-    private JFileChooser fcWear;
-    private JFileChooser fcGame;
-    private JButton btnSave;
-    private JButton btnLoad;
-    private JLabel lblThirst;
-    private JProgressBar thirstBar;
-    private final float MAXIMAL_THIRST = 30;
 
     /**
      * Launch the application.
@@ -654,26 +2423,26 @@ public class ALongHourAndAHalf extends JFrame
     void preConstructor(String name, Gender gndr, boolean diff, float inc, short bladder)
     {
         //Saving parameters for the reset
-        nameParam = name;
-        gndrParam = gndr;
-        incParam = inc;
-        bladderParam = bladder;
+        ResetParametersStorage.nameParam = name;
+        ResetParametersStorage.gndrParam = gndr;
+        ResetParametersStorage.incParam = inc;
+        ResetParametersStorage.bladderParam = bladder;
 
         //Assigning constructor parameters to values
-        this.name = name;
+        NarrativeEngine.name = name;
         gender = gndr;
         hardcore = diff;
         incontinence = inc;
-        this.bladder = bladder;
+        Bladder.bladder = bladder;
         maxSphincterPower = (short) Math.round(100 / incontinence);
         sphincterPower = maxSphincterPower;
 
         //Assigning the boy's name
-        boyName = names[generator.nextInt(names.length)];
+        boyName = BOY_NAMES[NarrativeEngine.RANDOM.nextInt(BOY_NAMES.length)];
 
         //Setting up custom wear file chooser
-        fcWear = new JFileChooser();
-        fcWear.setFileFilter(new FileFilter()
+        UI.fcWear = new JFileChooser();
+        UI.fcWear.setFileFilter(new FileFilter()
         {
             @Override
             public boolean accept(File pathname)
@@ -761,7 +2530,7 @@ public class ALongHourAndAHalf extends JFrame
             }
         });
 
-        btnNext.setBounds(470, ACTION_BUTTONS_TOP_BORDER, 285, 35);
+        btnNext.setBounds(470, UI.ACTION_BUTTONS_TOP_BORDER, 285, 35);
         contentPane.add(btnNext);
 
         //"Quit" button setup
@@ -774,7 +2543,7 @@ public class ALongHourAndAHalf extends JFrame
                 System.exit(0);
             }
         });
-        btnQuit.setBounds(192, ACTION_BUTTONS_TOP_BORDER, ACTION_BUTTONS_WIDTH, ACTION_BUTTONS_HEIGHT);
+        btnQuit.setBounds(192, UI.ACTION_BUTTONS_TOP_BORDER, UI.ACTION_BUTTONS_WIDTH, UI.ACTION_BUTTONS_HEIGHT);
         contentPane.add(btnQuit);
 
         //"Save" button setup
@@ -787,7 +2556,7 @@ public class ALongHourAndAHalf extends JFrame
                 save();
             }
         });
-        btnSave.setBounds(284, ACTION_BUTTONS_TOP_BORDER, ACTION_BUTTONS_WIDTH, ACTION_BUTTONS_HEIGHT);
+        btnSave.setBounds(284, UI.ACTION_BUTTONS_TOP_BORDER, UI.ACTION_BUTTONS_WIDTH, UI.ACTION_BUTTONS_HEIGHT);
         contentPane.add(btnSave);
 
         //"Load" button setup
@@ -800,7 +2569,7 @@ public class ALongHourAndAHalf extends JFrame
                 load();
             }
         });
-        btnLoad.setBounds(376, ACTION_BUTTONS_TOP_BORDER, ACTION_BUTTONS_WIDTH, ACTION_BUTTONS_HEIGHT);
+        btnLoad.setBounds(376, UI.ACTION_BUTTONS_TOP_BORDER, UI.ACTION_BUTTONS_WIDTH, UI.ACTION_BUTTONS_HEIGHT);
         contentPane.add(btnLoad);
 
         //"Reset" button setup
@@ -814,7 +2583,7 @@ public class ALongHourAndAHalf extends JFrame
                 dispose();
             }
         });
-        btnReset.setBounds(10, ACTION_BUTTONS_TOP_BORDER, ACTION_BUTTONS_WIDTH, ACTION_BUTTONS_HEIGHT);
+        btnReset.setBounds(10, UI.ACTION_BUTTONS_TOP_BORDER, UI.ACTION_BUTTONS_WIDTH, UI.ACTION_BUTTONS_HEIGHT);
         btnReset.setToolTipText("Start the game over with the same parameters.");
         contentPane.add(btnReset);
 
@@ -829,7 +2598,7 @@ public class ALongHourAndAHalf extends JFrame
                 dispose();
             }
         });
-        btnNewGame.setBounds(102, ACTION_BUTTONS_TOP_BORDER, ACTION_BUTTONS_WIDTH, ACTION_BUTTONS_HEIGHT);
+        btnNewGame.setBounds(102, UI.ACTION_BUTTONS_TOP_BORDER, UI.ACTION_BUTTONS_WIDTH, UI.ACTION_BUTTONS_HEIGHT);
         btnNewGame.setToolTipText("Start the game over with the another parameters.");
         contentPane.add(btnNewGame);
 
@@ -866,22 +2635,22 @@ public class ALongHourAndAHalf extends JFrame
         lblThirst.setFont(new Font("Tahoma", Font.PLAIN, 15));
         lblThirst.setBounds(20, 480, 200, 32);
         lblThirst.setToolTipText("Character will automatically drink water at 30% of thirst.");
-        if(hardcore)
+        if (hardcore)
         {
             contentPane.add(lblThirst);
         }
-        
+
         //Thirst bar setup
         thirstBar = new JProgressBar();
         thirstBar.setBounds(16, 482, 455, 25);
         thirstBar.setMaximum((int) MAXIMAL_THIRST);
         thirstBar.setValue((int) thirst);
         thirstBar.setToolTipText("Character will automatically drink water at 30% of thirst.");
-        if(hardcore)
+        if (hardcore)
         {
             contentPane.add(thirstBar);
         }
-        
+
         //Incontinence label setup
         lblIncon = new JLabel("Incontinence: " + incontinence + "x");
         lblIncon.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -950,7 +2719,7 @@ public class ALongHourAndAHalf extends JFrame
         drynessBar = new JProgressBar();
         drynessBar.setBounds(16, 392, 455, 25);
         drynessBar.setValue((int) dryness);
-        drynessBar.setMinimum(MINIMAL_DRYNESS);
+        drynessBar.setMinimum(Bladder.MINIMAL_DRYNESS);
         drynessBar.setVisible(false);
         drynessBar.setToolTipText("<html>Estimating dryness to absorb leaked pee.<br>Refills by itself with the time.</html>");
         contentPane.add(drynessBar);
@@ -1034,11 +2803,11 @@ public class ALongHourAndAHalf extends JFrame
 
         if (under.equals("Random"))
         {
-            undies = underwearList[generator.nextInt(underwearList.length)];
+            undies = underwearList[NarrativeEngine.RANDOM.nextInt(underwearList.length)];
             while (undies.getName().equals("Random"))
             //...selecting random undies from the undies array.
             {
-                undies = underwearList[generator.nextInt(underwearList.length)];
+                undies = underwearList[NarrativeEngine.RANDOM.nextInt(underwearList.length)];
             }
             //If random undies weren't chosen...
         } else
@@ -1059,7 +2828,7 @@ public class ALongHourAndAHalf extends JFrame
         if (undies == null)
         {
             JOptionPane.showMessageDialog(null, "Incorrect underwear selected. Setting random instead.", "Incorrect underwear", JOptionPane.WARNING_MESSAGE);
-            undies = underwearList[generator.nextInt(underwearList.length)];
+            undies = underwearList[NarrativeEngine.RANDOM.nextInt(underwearList.length)];
         }
 
         //Assigning color
@@ -1070,7 +2839,7 @@ public class ALongHourAndAHalf extends JFrame
                 undies.setColor(undiesColor);
             } else
             {
-                undies.setColor(Wear.COLOR_LIST[generator.nextInt(Wear.COLOR_LIST.length)]);
+                undies.setColor(Wear.COLOR_LIST[NarrativeEngine.RANDOM.nextInt(Wear.COLOR_LIST.length)]);
             }
         } else
         {
@@ -1106,10 +2875,10 @@ public class ALongHourAndAHalf extends JFrame
         //Same with the lower clothes
         if (outer.equals("Random"))
         {
-            lower = outerwearList[generator.nextInt(outerwearList.length)];
+            lower = outerwearList[NarrativeEngine.RANDOM.nextInt(outerwearList.length)];
             while (lower.getName().equals("Random"))
             {
-                lower = outerwearList[generator.nextInt(outerwearList.length)];
+                lower = outerwearList[NarrativeEngine.RANDOM.nextInt(outerwearList.length)];
             }
         } else
         {
@@ -1125,7 +2894,7 @@ public class ALongHourAndAHalf extends JFrame
         if (lower == null)
         {
             JOptionPane.showMessageDialog(null, "Incorrect outerwear selected. Setting random instead.", "Incorrect outerwear", JOptionPane.WARNING_MESSAGE);
-            lower = outerwearList[generator.nextInt(outerwearList.length)];
+            lower = outerwearList[NarrativeEngine.RANDOM.nextInt(outerwearList.length)];
         }
 
         //Assigning color
@@ -1136,7 +2905,7 @@ public class ALongHourAndAHalf extends JFrame
                 lower.setColor(lowerColor);
             } else
             {
-                lower.setColor(Wear.COLOR_LIST[generator.nextInt(Wear.COLOR_LIST.length)]);
+                lower.setColor(Wear.COLOR_LIST[NarrativeEngine.RANDOM.nextInt(Wear.COLOR_LIST.length)]);
             }
         } else
         {
@@ -1155,7 +2924,7 @@ public class ALongHourAndAHalf extends JFrame
         if (hardcore)
         {
             maxBladder = 100;
-            lblName.setText(lblName.getText()+" [Hardcore]");
+            lblName.setText(lblName.getText() + " [Hardcore]");
         }
         //Starting the game
         setNextStage(LEAVE_BED);
@@ -1198,2045 +2967,98 @@ public class ALongHourAndAHalf extends JFrame
 
     void postConstructor()
     {
+        calculateCaps();
+
+        stashParametersForReset();
+
+        setupWearLabels();
+
+        initHardcoreMode();
+
+        UI.handleNextClicked();
+
+        //Displaying the frame
+        setVisible(true);
+    }
+
+    private void initHardcoreMode()
+    {
+        //Making bladder smaller in the hardcore mode, adding hardcore label
+        if (hardcore)
+        {
+            Bladder.maxBladder = 100;
+            UI.lblName.setName(UI.lblName.getName() + " [Hardcore]");
+        }
+    }
+
+    private void calculateCaps()
+    {
         //Calculating dryness and maximal bladder capacity values
+        //TODO: Move to Bladder
         dryness = lower.getAbsorption() + undies.getAbsorption();
         maxBladder -= lower.getPressure() + undies.getPressure();
-        
         drynessBar.setMaximum((int) dryness);
-        
-        //Finishing saving parameters for game reset
-        outerParam = lower.getName();
-        underParam = undies.getName();
-        underColorParam = undies.getColor();
-        outerColorParam = lower.getColor();
+    }
 
+    private void setupWearLabels()
+    {
         //Undies label setup
         lblUndies = new JLabel("Undies: " + undies.getColor() + " " + undies.getName().toLowerCase());
         lblUndies.setFont(new Font("Tahoma", Font.PLAIN, 15));
         lblUndies.setBounds(20, 420, 400, 32);
         contentPane.add(lblUndies);
-
+        
         //Lower label setup
         lblLower = new JLabel("Lower: " + lower.getColor() + " " + lower.getName().toLowerCase());
         lblLower.setFont(new Font("Tahoma", Font.PLAIN, 15));
         lblLower.setBounds(20, 450, 400, 32);
         contentPane.add(lblLower);
-
-        //Making bladder smaller in the hardcore mode, adding hardcore label
-        if (hardcore)
-        {
-            maxBladder = 100;
-            lblName.setName(lblName.getName() + " [Hardcore]");
-        }
-
-        handleNextClicked();
-
-        //Displaying the frame
-        setVisible(true);
-    }
-    
-    private static final int ACTION_BUTTONS_HEIGHT = 35;
-    private static final int ACTION_BUTTONS_WIDTH = 89;
-    private static final int ACTION_BUTTONS_TOP_BORDER = 510;
-
-    /**
-     * @return TRUE - if character's gender is female<br>FALSE - if character's
-     * gender is male
-     */
-    public boolean isFemale()
-    {
-        return gender == FEMALE;
     }
 
-    /**
-     * @return TRUE - if character's gender is male<br>FALSE - if character's
-     * gender is female
-     */
-    public boolean isMale()
+    private void stashParametersForReset()
     {
-        return gender == MALE;
-    }
-
-    //TODO: Refactor
-    //This method is monstrously huge
-    //Introduce Stage class
-    private void handleNextClicked()
-    {
-        updateUI();
-        switch (nextStage)
-        {
-            case LEAVE_BED:
-                //Making line 1 italic
-                setLinesAsDialogue(1);
-                if (!lower.isMissing())
-                {
-                    if (!undies.isMissing())
-                    //Both lower clothes and undies
-                    {
-                        setText("Wh-what? Did I forget to set my alarm?!",
-                                "You cry, tumbling out of bed and feeling an instant jolt from your bladder.",
-                                "You hurriedly slip on some " + undies.insert() + " and " + lower.insert() + ",",
-                                "not even worrying about what covers your chest.");
-                    } else
-                    //Lower clothes only
-                    {
-                        setText("Wh-what? Did I forget to set my alarm?!",
-                                "You cry, tumbling out of bed and feeling an instant jolt from your bladder.",
-                                "You hurriedly slip on some " + lower.insert() + ", quick to cover your " + undies.insert() + ",",
-                                "not even worrying about what covers your chest.");
-                    }
-                } else
-                {
-                    if (!undies.isMissing())
-                    //Undies only
-                    {
-                        setText("Wh-what? Did I forget to set my alarm?!",
-                                "You cry, tumbling out of bed and feeling an instant jolt from your bladder.",
-                                "You hurriedly slip on " + undies.insert() + ",",
-                                "not even worrying about what covers your chest and legs.");
-                    } else
-                    //No clothes at all
-                    {
-                        setText("Wh-what? Did I forget to set my alarm?!",
-                                "You cry, tumbling out of bed and feeling an instant jolt from your bladder.",
-                                "You are running downstairs fully naked.");
-                    }
-                }
-                passTime((byte) 1);
-
-                //Setting the next stage to "Leaving home"
-                setNextStage(LEAVE_HOME);
-                break;
-
-            case LEAVE_HOME:
-                setText("Just looking at the clock again in disbelief adds a redder tint to your cheeks.",
-                        "",
-                        "Paying much less attention to your daily routine, you quickly run down the stairs, get a small glass of orange juice and chug it.",
-                        "",
-                        "The cold drink brings a chill down your spine as you collect your things and rush out the door to school.");
-
-                passTime((byte) 1);
-                offsetEmbarassment(3);
-                offsetBelly(10);
-
-                setNextStage(GO_TO_CLASS);
-                break;
-
-            case GO_TO_CLASS:
-                //Displaying all values
-                lblMinutes.setVisible(true);
-                lblSphPower.setVisible(true);
-                lblDryness.setVisible(true);
-                sphincterBar.setVisible(true);
-                drynessBar.setVisible(true);
-                timeBar.setVisible(true);
-                
-                if (!lower.isMissing())
-                {
-                    //Skirt blowing in the wind
-                    if (lower.insert().equals("skirt"))
-                    {
-                        setText("You rush into class, your " + lower.insert() + " blowing in the wind.",
-                                "",
-                                "Normally, you'd be worried your " + undies.insert() + " would be seen, but you can't worry about it right now.",
-                                "You make it to your seat without a minute to spare.");
-                    } else
-                    {
-                        //Nothing is blowing in wind
-                        setText("Trying your best to make up lost time, you rush into class and sit down to your seat without a minute to spare.");
-                    }
-                } else
-                {
-                    if (!undies.isMissing())
-                    {
-                        setText("You rush into class; your classmates are looking at your " + undies.insert() + ".",
-                                "You can't understand how you forgot to even put on any lower clothing,",
-                                "and you know that your " + undies.insert() + " have definitely been seen.",
-                                "You make it to your seat without a minute to spare.");
-                    } else
-                    {
-                        if (isFemale())
-                        {
-                            setText("You rush into class; your classmates are looking at your pussy and boobs.",
-                                    "Guys are going mad and doing nothing except looking at you.",
-                                    "You can't understand how you dared to come to school naked.",
-                                    "You make it to your seat without a minute to spare.");
-                        } else
-                        {
-                            setText("You rush into class; your classmates are looking at your penis.",
-                                    "Girls are really going mad and doing nothing except looking at you.",
-                                    "You can't understand how you dared to come to school naked.",
-                                    "You make it to your seat without a minute to spare.");
-                        }
-                    }
-                }
-
-                offsetEmbarassment(2);
-                setNextStage(WALK_IN);
-                break;
-
-            case WALK_IN:
-                //If lower clothes is a skirt
-                if (lower.insert().equals("skirt") || lower.insert().equals("skirt and tights") || lower.insert().equals("skirt and tights"))
-                {
-                    setLinesAsDialogue(1, 3);
-                    setText("Next time you run into class, " + name + ",",
-                            "your teacher says,",
-                            "make sure you're wearing something less... revealing!",
-                            "A chuckle passes over the classroom, and you can't help but feel a",
-                            "tad bit embarrassed about your rush into class.");
-                    offsetEmbarassment(5);
-                } else //No outerwear
-                {
-                    if (lower.isMissing())
-                    {
-                        setLinesAsDialogue(1);
-                        setText("WHAT!? YOU CAME TO SCHOOL NAKED!?",
-                                "your teacher shouts in disbelief.",
-                                "",
-                                "A chuckle passes over the classroom, and you can't help but feel extremely embarrassed",
-                                "about your rush into class, let alone your nudity");
-                        offsetEmbarassment(25);
-                    } else
-                    {
-                        setLinesAsDialogue(1, 3);
-                        setText("Sit down, " + name + ". You're running late.",
-                                "your teacher says,",
-                                "And next time, don't make so much noise entering the classroom!",
-                                "A chuckle passes over the classroom, and you can't help but feel a tad bit embarrassed",
-                                "about your rush into class.");
-                    }
-                }
-                setNextStage(SIT_DOWN);
-                break;
-
-            case SIT_DOWN:
-                setText("Subconsciously rubbing your thighs together, you feel the uncomfortable feeling of",
-                        "your bladder filling as the liquids you drank earlier start to make their way down.");
-                passTime();
-                setNextStage(ASK_ACTION);
-                score("Embarassment at start - " + incontinence + " pts", '+', embarassment);
-                break;
-
-            case ASK_ACTION:
-                if (gotCalledByTeacher())
-                {
-                    break;
-                }
-
-                displayDesperationStatus();
-                offerHoldingChoices();
-                showActionUI("What now?");
-                
-                //Loading the choice array into the action selector
-                setNextStage(CHOSE_ACTION);
-                passTime();
-                //Don't go further if player selected no or unavailable action
-//                }while(listChoice.isSelectionEmpty()||listChoice.getSelectedValue().equals("[Unavailable]"));
-                break;
-
-            case CHOSE_ACTION:
-                if (inappropriateSelection())
-                {
-                    setNextStage(ASK_ACTION);
-                    break;
-                }
-
-                //Hiding the action selector and doing action job
-                switch (hideActionUI())
-                {
-                    //Ask the teacher to go pee
-                    case 0:
-                        setNextStage(ASK_TO_PEE);
-                        setLinesAsDialogue(2, 3);
-                        setText("You think to yourself:",
-                                "I don't think I can hold it until class ends!",
-                                "I don't have a choice, I have to ask the teacher...");
-                        break;
-
-                    /*
-                     * Press on crotch/squeeze penis
-                     * 3 minutes
-                     * -2 bladder
-                     * Detection chance: 15
-                     * Effectiveness: 0.4
-                     * =========================
-                     * 3 minutes
-                     * +20 sph. power
-                     * Detection chance: 15
-                     * Future effectiveness: 4
-                     */
-                    case 1:
-                        setText("You don't think anyone will see you doing it,",
-                                "so you take your hand and hold yourself down there.",
-                                "It feels a little better for now.");
-
-                        rechargeSphPower(20);
-                        offsetTime(3);
-
-                        getCaughtByClassmates();
-                        break;
-
-                    /*
-                     * Rub thighs
-                     * 3 + 3 = 6 minutes
-                     * -0.2 bladder
-                     * Detection chance: 3
-                     * Effectiveness: 6
-                     * =========================
-                     * 3 + 3 = 6 minutes
-                     * +2 sph. power
-                     * Detection chance: 3
-                     * Future effectiveness: 4
-                     */
-                    case 2:
-                        setText("You need to go, and it hurts, but you just",
-                                "can't bring yourself to risk getting caught with your hand between",
-                                "your legs. You rub your thighs hard but it doesn't really help.");
-
-                        rechargeSphPower(2);
-                        offsetTime(3);
-
-                        //Chance to be caught by classmates in hardcore mode
-                        getCaughtByClassmates();
-                        break;
-
-                    //Give up
-                    case 3:
-                        setText("You're absolutely desperate to pee, and you think you'll",
-                                "end up peeing yourself anyway, so it's probably best to admit",
-                                "defeat and get rid of the painful ache in your bladder.");
-                        setNextStage(GIVE_UP);
-                        break;
-                        
-                    //Drink water
-                    case 4:
-                        setText("Feeling a tad bit thirsty,",
-                        "You decide to take a small sip of water from your bottle to get rid of it.");
-                        setNextStage(DRINK);
-                        break;
-                    /*
-                     * Wait
-                     * =========================
-                     * 3 + 2 + n minutes
-                     * +(2.5n) bladder
-                     * Detection chance: 1
-                     * Future effectiveness: 2.4(1), 0.4(2), 0.47(30)
-                     */
-                    case 5:
-
-                        byte timeOffset;
-                        //Asking player how much to wait
-                        try
-                        {
-                            timeOffset = askPlayerHowMuchToWait();
-                        } //Ignoring invalid output
-                        catch (NumberFormatException | NullPointerException e)
-                        {
-                            setNextStage(ASK_ACTION);
-                            break;
-                        }
-
-                        passTime(timeOffset);
-
-                        //Chance to be caught by classmates in hardcore mode
-                        getCaughtByClassmates();
-                        break;
-
-                    //Cheat
-                    case 6:
-                        setText("You've got to go so bad!",
-                                "There must be something you can do, right?");
-
-                        //Zeroing points
-                        cheatsUsed = true;
-                        setNextStage(ASK_CHEAT);
-                        break;
-
-                    case -1:
-                    default:
-                        setText("Bugs.");
-                }
-                break;
-
-            //TODO: Refactor
-            case ASK_TO_PEE:
-                switch (timesPeeDenied)
-                {
-                    case 0:
-                        //Success
-                        if (chance((byte)40) & !hardcore)
-                        {
-                            if (!lower.isMissing())
-                                    {
-                                if (!undies.isMissing())
-                                    {
-                                    setText("You ask the teacher if you can go out to the restroom.",
-                                            "Yes, you may.",
-                                            "says the teacher. You run to the restroom. Thank god, one cabin is free!",
-                                            "You enter it, pulled down your " + lower.insert() + " and " + undies.insert() + ",",
-                                            "wearily flop down on the toilet and start peeing.");
-                                } else
-                                {
-                                    setText("You ask the teacher if you can go out to the restroom.",
-                                            "Yes, you may.",
-                                            "says the teacher. You run to the restroom. Thank god, one cabin is free!",
-                                        "You enter it, pulled down your " + lower.insert() + ",",
-                                            "wearily flop down on the toilet and start peeing.");
-                                }
-                            } else
-                                    {
-                                if (!undies.isMissing())
-                                {
-                                    setText("You ask the teacher if you can go out to the restroom.",
-                                        "Yes, you may.",
-                                        "says the teacher. You run to the restroom. Thank god, one cabin is free!",
-                                        "You enter it, pulled down your " + undies.insert() + ",",
-                                            "wearily flop down on the toilet and start peeing.");
-                                } else
-                                    {
-                                    setText("You ask the teacher if you can go out to the restroom.",
-                                        "Yes, you may.",
-                                        "says the teacher. You run to the restroom. Thank god, one cabin is free!",
-                                        "You enter it,",
-                                            "wearily flop down on the toilet and start peeing.");
-                                }
-                            }
-//                            score *= 0.2;
-//                            scoreText = scoreText.concat("\nRestroom usage during the lesson: -80% of points");
-                            score("Restroom usage during the lesson", '/', 5);
-                            emptyBladder();
-                            setNextStage(ASK_ACTION);
-                            //Fail
-                        } else
-                        {
-                            setText("You ask the teacher if you can go out to the restroom.",
-                                    "No, you can't go out, the director prohibited it.",
-                                    "says the teacher.");
-                            timesPeeDenied++;
-                        }
-                        break;
-
-                    case 1:
-                        if (generator.nextInt(100) <= 10 & !hardcore)
-                        {
-                            if (!lower.isMissing())
-                            {
-                                if (!undies.isMissing())
-                                {
-                                    setText("You ask the teacher again if you can go out to the restroom.",
-                                            "Yes, you may.",
-                                            "says the teacher. You run to the restroom. Thank god, one cabin is free!",
-                                            "You enter it, pulled down your " + lower.insert() + " and " + undies.insert() + ",",
-                                            "wearily flop down on the toilet and start peeing.");
-                                } else
-                                {
-                                    setText("You ask the teacher again if you can go out to the restroom.",
-                                            "Yes, you may.",
-                                            "says the teacher. You run to the restroom. Thank god, one cabin is free!",
-                                            "You enter it, pulled down your " + lower.insert() + ",",
-                                            "wearily flop down on the toilet and start peeing.");
-                                }
-                            } else
-                            {
-                                if (!undies.isMissing())
-                                {
-                                    setText("You ask the teacher again if you can go out to the restroom.",
-                                            "Yes, you may.",
-                                            "says the teacher. You run to the restroom. Thank god, one cabin is free!",
-                                            "You enter it, pulled down your " + undies.insert() + ",",
-                                            "wearily flop down on the toilet and start peeing.");
-                                } else
-                                {
-                                    setText("You ask the teacher again if you can go out to the restroom.",
-                                            "Yes, you may.",
-                                            "says the teacher. You run to the restroom. Thank god, one cabin is free!",
-                                            "You enter it,",
-                                            "wearily flop down on the toilet and start peeing.");
-                                }
-                            }
-//                            score *= 0.22;
-//                            scoreText = scoreText.concat("\nRestroom usage during the lesson: -70% of points");
-                            score("Restroom usage during the lesson", '/', 3.3F);
-                            emptyBladder();
-                            setNextStage(ASK_ACTION);
-                        } else
-                        {
-                            setText("You ask the teacher again if you can go out to the restroom.",
-                                    "No, you can't! I already told you that the director prohibited it!",
-                                    "says the teacher.");
-                            timesPeeDenied++;
-                        }
-                        break;
-
-                    case 2:
-                        if (generator.nextInt(100) <= 30 & !hardcore)
-                        {
-                            if (!lower.isMissing())
-                            {
-                                if (!undies.isMissing())
-                                {
-                                    setText("You ask the teacher again if you can go out to the restroom.",
-                                            "Yes, you may.",
-                                            "says the teacher. You run to the restroom. Thank god, one cabin is free!",
-                                            "You enter it, pulled down your " + lower.insert() + " and " + undies.insert() + ",",
-                                            "wearily flop down on the toilet and start peeing.");
-                                } else
-                                {
-                                    setText("You ask the teacher again if you can go out to the restroom.",
-                                            "Yes, you may.",
-                                            "says the teacher. You run to the restroom. Thank god, one cabin is free!",
-                                            "You enter it, pulled down your " + lower.insert() + ",",
-                                            "wearily flop down on the toilet and start peeing.");
-                                }
-                            } else
-                            {
-                                if (!undies.isMissing())
-                                {
-                                    setText("You ask the teacher again if you can go out to the restroom.",
-                                            "Yes, you may.",
-                                            "says the teacher. You run to the restroom. Thank god, one cabin is free!",
-                                            "You enter it, pulled down your " + undies.insert() + ",",
-                                            "wearily flop down on the toilet and start peeing.");
-                                } else
-                                {
-                                    setText("You ask the teacher again if you can go out to the restroom.",
-                                            "Yes, you may.",
-                                            "says the teacher. You run to the restroom. Thank god, one cabin is free!",
-                                            "You enter it,",
-                                            "wearily flop down on the toilet and start peeing.");
-                                }
-                            }
-//                            score *= 0.23;
-//                            scoreText = scoreText.concat("\nRestroom usage during the lesson: -60% of points");
-                            score("Restroom usage during the lesson", '/', 2.5F);
-                            emptyBladder();
-                            setNextStage(ASK_ACTION);
-                        } else
-                        {
-                            setText("You ask the teacher once more if you can go out to the restroom.",
-                                    "No, you can't! Stop asking me or there will be consequences!",
-                                    "says the teacher.");
-                            timesPeeDenied++;
-                        }
-                        break;
-
-                    case 3:
-                        if (generator.nextInt(100) <= 7 & !hardcore)
-                        {
-                            if (!lower.isMissing())
-                            {
-                                if (!undies.isMissing())
-                                {
-                                    setText("Desperately, you ask the teacher if you can go out to the restroom.",
-                                            "Yes, you may.",
-                                            "says the teacher. You run to the restroom. Thank god, one cabin is free!",
-                                            "You enter it, pulled down your " + lower.insert() + " and " + undies.insert() + ",",
-                                            "wearily flop down on the toilet and start peeing.");
-                                } else
-                                {
-                                    setText("Desperately, you ask the teacher if you can go out to the restroom.",
-                                            "Yes, you may.",
-                                            "says the teacher. You run to the restroom. Thank god, one cabin is free!",
-                                            "You enter it, pulled down your " + lower.insert() + ",",
-                                            "wearily flop down on the toilet and start peeing.");
-                                }
-                            } else
-                            {
-                                if (!undies.isMissing())
-                                {
-                                    setText("Desperately, you ask the teacher if you can go out to the restroom.",
-                                            "Yes, you may.",
-                                            "says the teacher. You run to the restroom. Thank god, one cabin is free!",
-                                            "You enter it, pulled down your " + undies.insert() + ",",
-                                            "wearily flop down on the toilet and start peeing.");
-                                } else
-                                {
-                                    setText("Desperately, you ask the teacher if you can go out to the restroom.",
-                                            "Yes, you may.",
-                                            "says the teacher. You run to the restroom. Thank god, one cabin is free!",
-                                            "You enter it,",
-                                            "wearily flop down on the toilet and start peeing.");
-                                }
-                            }
-//                            score *= 0.3;
-//                            scoreText = scoreText.concat("\nRestroom usage during the lesson: -50% of points");
-                            score("Restroom usage during the lesson", '/', 2F);
-                            emptyBladder();
-                            setNextStage(ASK_ACTION);
-                        } else
-                        {
-                            if (generator.nextBoolean())
-                            {
-                                setText("Desperately, you ask the teacher if you can go out to the restroom.",
-                                        "NO!! NO!! NO!!! YOU CAN'T GO OUT!!! STAY IN THAT CORNER!!!,",
-                                        "yells the teacher.");
-                                cornered = true;
-//                            score += 1.3 * (90 - min / 3);
-//                            scoreText = scoreText.concat("\nStayed on corner " + (90 - min) + " minutes: +" + 1.3 * (90 - min / 3) + " score");
-                                score("Stayed on corner " + (90 - time) + " minutes", '+', 1.3F * (90 - time / 3));
-                                offsetEmbarassment(5);
-                            } else
-                            {
-                                setText("Desperately, you ask the teacher if you can go out to the restroom.",
-                                        "NO!! NO!! NO!!! YOU CAN'T GO OUT!!! YOU WILL WRITE LINES AFTER THE LESSON!!!,",
-                                        "yells the teacher.");
-                                offsetEmbarassment(5);
-                                stay = true;
-                                timeBar.setMaximum(120);
-//                            scoreText = scoreText.concat("\nWrote lines after the lesson: +60% score");
-//                            score *= 1.6;
-                                score("Wrote lines after the lesson", '*', 1.6F);
-                            }
-                        }
-                        timesPeeDenied++;
-
-                        break;
-                }
-                setNextStage(ASK_ACTION);
-                break;
-
-            case ASK_CHEAT:
-                listChoice.setListData(cheatList);
-                showActionUI("Select a cheat:");
-                setNextStage(CHOSE_CHEAT);
-                break;
-
-            case CHOSE_CHEAT:
-                if (inappropriateSelection())
-                {
-                    setNextStage(ASK_CHEAT);
-                    break;
-                }
-                switch (hideActionUI())
-                {
-                    case 0:
-                        setText("You walk to the front corner of the classroom.");
-                        cornered = true;
-                        setNextStage(ASK_ACTION);
-                        break;
-
-                    case 1:
-                        setText("You decide to stay after class.");
-                        stay = true;
-                        timeBar.setMaximum(120);
-                        setNextStage(ASK_ACTION);
-                        break;
-
-                    case 2:
-                        setText("You see something out of the corner of your eye,",
-                                "just within your reach.");
-                        setNextStage(USE_BOTTLE);
-                        break;
-
-                    case 3:
-                        setLinesAsDialogue(2);
-                        setText("A voice comes over the loudspeaker:",
-                                "All classes are now dismissed for no reason at all! Bye!",
-                                "Looks like your luck changed for the better.");
-                        time = 89;
-                        setNextStage(CLASS_OVER);
-                        break;
-
-                    case 4:
-                        setText("The teacher feels sorry for you. Try asking to pee.");
-                        timesPeeDenied = 0;
-                        stay = false;
-                        timeBar.setMaximum(90);
-                        cornered = false;
-                        setNextStage(ASK_ACTION);
-                        break;
-
-                    case 5:
-                        setText("You decide to raise your hand.");
-                        setNextStage(CALLED_ON);
-                        break;
-
-                    case 6:
-                        setText("Suddenly, you feel like you're peeing...",
-                                "but you don't feel any wetness. It's not something you'd",
-                                "want to question, right?");
-                        drain = true;
-                        setNextStage(ASK_ACTION);
-                        break;
-
-                    case 7:
-                        setText("A friend in the desk next to you hands you a familiar",
-                                "looking pill, and you take it.");
-                        askNewIncontinenceLevel();
-                        setNextStage(ASK_ACTION);
-                        break;
-
-                    case 8:
-                        setText("The teacher suddenly looks like they've had enough",
-                                "of people having to pee.");
-                        hardcore = !hardcore;
-                        setNextStage(ASK_ACTION);
-                        break;
-
-                    case 9:
-                        setText("Suddenly you felt something going on in your bladder.");
-                        askNewBladderLevel();
-                        setNextStage(ASK_ACTION);
-                        break;
-                }
-                break;
-
-            case USE_BOTTLE:
-                setLinesAsDialogue(3);
-                setText("Luckily for you, you happen to have brought an empty bottle to pee in.",
-                        "As quietly as you can, you put it in position and let go into it.",
-                        "Ahhhhh...",
-                        "You can't help but show a face of pure relief as your pee trickles down into it.");
-                emptyBladder();
-                setNextStage(ASK_ACTION);
-                break;
-
-            case CALLED_ON:
-                setLinesAsDialogue(1);
-                setText("" + name + ", why don't you come up to the board and solve this problem?,",
-                        "says the teacher. Of course, you don't have a clue how to solve it.",
-                        "You make your way to the front of the room and act lost, knowing you'll be stuck",
-                        "up there for a while as the teacher explains it.",
-                        "Well, you can't dare to hold yourself now...");
-                passTime((byte) 5);
-                score("Called on the lesson", '+', 5);
-                setNextStage(ASK_ACTION);
-                break;
-
-            case CLASS_OVER:
-                if (triggerClsasOverScene())
-                {
-                    break;
-                }
-
-                if (generator.nextBoolean())
-                {
-                    setText("Lesson is finally over, and you're running to the restroom as fast as you can.",
-                            "No, please... All cabins are occupied, and there's a line. You have to wait!");
-
-                    score("Waited for a free cabin in the restroom", '+', 3);
-                    passTime();
-                    break;
-                } else
-                {
-                    //TODO: Refactor
-                    if (!lower.isMissing())
-                    {
-                        if (!undies.isMissing())
-                        {
-                            setText("Lesson is over, and you're running to the restroom as fast as you can.",
-                                    "Thank god, one cabin is free!",
-                                    "You enter it, pulled down your " + lower.insert() + " and " + undies.insert() + ",",
-                                    "wearily flop down on the toilet and start peeing.");
-                        } else
-                        {
-                            setText("Lesson is over, and you're running to the restroom as fast as you can.",
-                                    "Thank god, one cabin is free!",
-                                    "You enter it, pulled down your " + lower.insert() + ",",
-                                    "wearily flop down on the toilet and start peeing.");
-                        }
-                    } else
-                    {
-                        if (!undies.isMissing())
-                        {
-                            setText("Lesson is over, and you're running to the restroom as fast as you can.",
-                                    "Thank god, one cabin is free!",
-                                    "You enter it, pulled down your " + undies.insert() + ",",
-                                    "wearily flop down on the toilet and start peeing.");
-                        } else
-                        {
-                            setText("Lesson is over, and you're running to the restroom as fast as you can.",
-                                    "Thank god, one cabin is free!",
-                                    "You enter it,",
-                                    "wearily flop down on the toilet and start peeing.");
-                        }
-                    }
-                    setNextStage(END_GAME);
-                }
-                break;
-
-            case AFTER_CLASS:
-                if (linesAreTooLong())
-                {
-                    break;
-                }
-
-                setLinesAsDialogue(1, 2, 3, 4);
-                setText("Hey, " + name + ", you wanted to escape? You must stay after classes!",
-                        "Please... let me go to the restroom... I can't hold it...",
-                        "No, " + name + ", you can't go to the restroom now! This will be as punishment.",
-                        "And don't think you can hold yourself either! I'm watching you...");
-
-                passTime();
-                break;
-
-            case ACCIDENT:
-                hideActionUI();
-                setText("You can't help it.. No matter how much pressure you use, the leaks won't stop.",
-                        "Despite all this, you try your best, but suddenly you're forced to stop.",
-                        "You can't move, or you risk peeing yourself. Heck, the moment you stood up you thought you could barely move for risk of peeing everywhere.",
-                        "But now.. a few seconds tick by as you try to will yourself to move, but soon, the inevitable happens anyways.");
-                setNextStage(WET);
-                break;
-
-            case GIVE_UP:
-                
-                //TODO: Refactor
-                if (!lower.isMissing())
-                {
-                    if (!undies.isMissing())
-                    {
-                        setText("You get tired of holding all the urine in your aching bladder,",
-                                "and you decide to give up and pee in your " + undies.insert() + ".");
-                    } else
-                    {
-                        setText("You get tired of holding all the urine in your aching bladder,",
-                                "and you decided to pee in your " + lower.insert() + ".");
-                    }
-                } else
-                {
-                    if (!undies.isMissing())
-                    {
-                        setText("You get tired of holding all the urine in your aching bladder,",
-                                "and you decide to give up and pee in your " + undies.insert() + ".");
-                    } else
-                    {
-                        setText("You get tired of holding all the urine in your aching bladder,",
-                                "and you decide to give up and pee where you are.");
-                    }
-                }
-                offsetEmbarassment(80);
-                setNextStage(WET);
-                break;
-
-            case WET:
-                if (!lower.isMissing())
-                {
-                    if (!undies.isMissing())
-                    {
-                        setText("Before you can move an inch, pee quickly soaks through your " + undies.insert() + ",",
-                                "floods your " + lower.insert() + ", and streaks down your legs.",
-                                "A large puddle quickly forms, and you can't stop tears from falling down your cheeks.");
-                    } else
-                    {
-                        setText("Before you can move an inch, pee quickly darkens your " + lower.insert() + " and streaks down your legs.",
-                                "A large puddle quickly forms, and you can't stop tears from falling down your cheeks.");
-                    }
-                } else
-                {
-                    if (!undies.isMissing())
-                    {
-                        setText("Before you can move an inch, pee quickly soaks through your " + undies.insert() + ", and streaks down your legs.",
-                                "A large puddle quickly forms, and you can't stop tears from falling down your cheeks.");
-                    } else
-                    {
-                        if (!cornered)
-                        {
-                            setText("The heavy pee jets are hitting the seat and loudly leaking out from your " + undies.insert() + ".",
-                                    "A large puddle quickly forms, and you can't stop tears from falling down your cheeks.");
-                        } else
-                        {
-                            setText("The heavy pee jets are hitting the floor and loudly leaking out from your " + undies.insert() + ".",
-                                    "A large puddle quickly forms, and you can't stop tears from falling down your cheeks.");
-                        }
-                    }
-                }
-                emptyBladder();
-                embarassment = 100;
-                setNextStage(POST_WET);
-                break;
-
-            case POST_WET:
-                setLinesAsDialogue(2);
-                if (!stay)
-                {
-                    if (lower.isMissing())
-                    {
-                        if (isFemale() && undies.isMissing())
-                        {
-                            setText("People around you are laughing loudly.",
-                                    name + " peed herself! Ahaha!!!");
-                        } else
-                        {
-                            if (isMale() && undies.isMissing())
-                            {
-                                setText("People around you are laughing loudly.",
-                                        name + " peed himself! Ahaha!!!");
-                            } else
-                            {
-                                setText("People around you are laughing loudly.",
-                                        name + " wet h" + (isFemale() ? "er " : "is ") + undies.insert() + "! Ahaha!!");
-                            }
-                        }
-                    } else
-                    {
-                        if (isFemale())
-                        {
-                            setText("People around you are laughing loudly.",
-                                    name + " peed her " + lower.insert() + "! Ahaha!!");
-                        } else
-                        {
-                            setText("People around you are laughing loudly.",
-                                    " peed his " + lower.insert() + "! Ahaha!!");
-                        }
-                    }
-                } else
-                {
-                    setText("Teacher is laughing loudly.",
-                            "Oh, you peed yourself? This is a great punishment.",
-                            "I hope you will no longer get in the way of the lesson.");
-                }
-                setNextStage(GAME_OVER);
-                break;
-
-            case GAME_OVER:
-                if (lower.isMissing())
-                {
-                    if (undies.isMissing())
-                    {
-                        setText("No matter how hard you tried... It doesn't seem to matter, even to think about it...",
-                                "No, nobody would be as sadistic as that, especially to themselves...",
-                                "Game over!");
-                    } else
-                    {
-                        setText("No matter how hard you tried... It doesn't seem to matter, even to think about it...",
-                                "Your " + undies.insert() + " are clinging to your skin, a sign of your failure...",
-                                "...unless, of course, you meant for this to happen?",
-                                "No, nobody would be as sadistic as that, especially to themselves...",
-                                "Game over!");
-                    }
-                } else
-                {
-                    if (undies.isMissing())
-                    {
-                        setText("No matter how hard you tried... It doesn't seem to matter, even to think about it...",
-                                "Your " + lower.insert() + " is clinging to your skin, a sign of your failure...",//TODO: Add "is/are" depending on lower clothes type
-                                "...unless, of course, you meant for this to happen?",
-                                "No, nobody would be as sadistic as that, especially to themselves...",
-                                "Game over!");
-                    } else
-                    {
-                        setText("No matter how hard you tried... It doesn't seem to matter, even to think about it...",
-                                "Your " + lower.insert() + " and " + undies.insert() + " are both clinging to your skin, a sign of your failure...",
-                                "...unless, of course, you meant for this to happen?",
-                                "No, nobody would be as sadistic as that, especially to themselves...",
-                                "Game over!");
-                    }
-                }
-                gameOver();
-                break;
-
-            case END_GAME:
-                showScore();
-                gameOver();
-                break;
-
-            case CAUGHT:
-                switch (timesCaught)
-                {
-                    case 0:
-                        setText("It looks like a classmate has spotted that you've got to go badly.",
-                                "Damn, he may spread that fact...");
-                        offsetEmbarassment(3);
-                        classmatesAwareness += 5;
-                        score("Caught holding pee", '+', 3);
-                        timesCaught++;
-                        break;
-
-                    case 1:
-                        setLinesAsDialogue(3);
-                        setText("You'he heard a suspicious whisper behind you.",
-                                "Listening to the whisper, you've found out that they're saying that you need to go.",
-                                "If I hold it until the lesson ends, I will beat them.");
-                        offsetEmbarassment(8);
-                        classmatesAwareness += 5;
-                        score("Caught holding pee", '+', 8);
-                        timesCaught++;
-                        break;
-
-                    case 2:
-                        if (isFemale())
-                        {
-                            setLinesAsDialogue(2);
-                            setText("The most handsome boy in your class, " + boyName + ", is calling you:",
-                                    "Hey there, don't wet yourself!",
-                                    "Oh no, he knows it...");
-                        } else
-                        {
-                            setLinesAsDialogue(2, 3);
-                            setText("The most nasty boy in your class, " + boyName + ", is calling you:",
-                                    "Hey there, don't wet yourself! Ahahahaa!",
-                                    "\"Shut up...\"",
-                                    ", you think to yourself.");
-                        }
-                        offsetEmbarassment(12);
-                        classmatesAwareness += 5;
-                        score("Caught holding pee", '+', 12);
-                        timesCaught++;
-                        break;
-
-                    default:
-                        setText("The chuckles are continiously passing over the classroom.",
-                                "Everyone is watching you.",
-                                "Oh god... this is so embarassing...");
-                        offsetEmbarassment(20);
-                        classmatesAwareness += 5;
-                        score("Caught holding pee", '+', 20);
-                        timesCaught++;
-                }
-                setNextStage(ASK_ACTION);
-                break;
-
-            //The special hardcore scene
-            /*
-             * "Surprise" is an additional scene after the lesson where player is being caught by her classmate. He wants her to wet herself.
-             * Triggering conditions: female, hardcore
-             * Triggering chance: 10%
-             */
-            case SURPRISE:
-
-                //Resetting timesPeeDenied to use for that boy
-                timesPeeDenied = 0;
-
-                specialHardcoreStage = true;
-
-                score("Got the \"surprise\" by " + boyName, '+', 70);
-                setText("The lesson is finally over, and you're running to the restroom as fast as you can.",
-                        "But... You see " + boyName + " staying in front of the restroom.",
-                        "Suddenly, he takes you, not letting you to escape.");
-                offsetEmbarassment(10);
-                setNextStage(SURPRISE_2);
-                break;
-
-            case SURPRISE_2:
-                setLinesAsDialogue(1);
-                setText("What do you want from me?!",
-                        "He has brought you in the restroom and quickly put you on the windowsill.",
-                        boyName + " has locked the restroom door (seems he has stolen the key), then he puts his palm on your belly and says:",
-                        "I want you to wet yourself.");
-                offsetEmbarassment(10);
-                setNextStage(SURPRISE_DIALOGUE);
-                break;
-
-            case SURPRISE_DIALOGUE:
-                setLinesAsDialogue(1);
-                setText("No, please, don't do it, no...",
-                        "I want to see you wet...",
-                        "He slightly presses your belly again, you shook from the terrible pain",
-                        "in your bladder and subconsciously rubbed your crotch. You have to do something!");
-                offsetEmbarassment(10);
-
-                actionList.add("Hit him");
-                switch (timesPeeDenied)
-                {
-                    case 0:
-                        actionList.add("Try to persuade him to let you pee");
-                        break;
-                    case 1:
-                        actionList.add("Try to persuade him to let you pee again");
-                        break;
-                    case 2:
-                        actionList.add("Take a chance and try to persuade him (RISKY)");
-                        break;
-                }
-                actionList.add("Pee yourself");
-
-                listChoice.setListData(actionList.toArray());
-                showActionUI("Don't let him to do it!");
-                setNextStage(SURPRISE_CHOSE);
-                break;
-
-            case SURPRISE_CHOSE:
-                if (listChoice.isSelectionEmpty())
-                {
-                    //No idling
-                    setText("You will wet yourself right now,",
-                            boyName + " demands.",
-                            "Then " + boyName + " presses your bladder...");
-                    setNextStage(SURPRISE_WET_PRESSURE);
-                }
-
-//                actionNum = listChoice.getSelectedIndex();
-                if (listChoice.getSelectedValue().equals("[Unavailable]"))
-                {
-                    //No idling
-                    setText("You will wet yourself right now,",
-                            boyName + " demands.",
-                            "Then " + boyName + " presses your bladder...");
-                    setNextStage(SURPRISE_WET_PRESSURE);
-                }
-
-                switch (hideActionUI())
-                {
-                    case 0:
-                        setNextStage(HIT);
-                        break;
-                    case 1:
-                        setNextStage(PERSUADE);
-                        break;
-                    case 2:
-                        setNextStage(SURPRISE_WET_VOLUNTARY);
-                }
-                break;
-
-            case HIT:
-                if (generator.nextInt(100) <= 20)
-                {
-                    setLinesAsDialogue(2);
-                    setNextStage(END_GAME);
-                    score("Successful hit on " + boyName + "'s groin", '+', 40F);
-                    if (!lower.isMissing())
-                    {
-                        if (!undies.isMissing())
-                        {
-                            setText("You hit " + boyName + "'s groin.",
-                                    "Ouch!.. You, little bitch...",
-                                    "Then he left the restroom quickly.",
-                                    "You got off from the windowsill while holding your crotch,",
-                                    "opened the cabin door, entered it, pulled down your " + lower.insert() + " and " + undies.insert() + ",",
-                                    "wearily flop down on the toilet and start peeing.");
-                        } else
-                        {
-                            setText("You hit " + boyName + "'s groin.",
-                                    "Ouch!.. You, little bitch...",
-                                    "Then he left the restroom quickly.",
-                                    "You got off from the windowsill while holding your crotch,",
-                                    "opened the cabin door, entered it, pulled down your " + lower.insert() + ",",
-                                    "wearily flop down on the toilet and start peeing.");
-                        }
-                    } else
-                    {
-                        if (!undies.isMissing())
-                        {
-                            setText("You hit " + boyName + "'s groin.",
-                                    "Ouch!.. You, little bitch...",
-                                    "Then he left the restroom quickly.",
-                                    "You got off from the windowsill while holding your crotch,",
-                                    "opened the cabin door, entered it, pulled down your " + undies.insert() + ",",
-                                    "wearily flop down on the toilet and start peeing.");
-                        } else
-                        {
-                            setText("You hit " + boyName + "'s groin.",
-                                    "Ouch!.. You, little bitch...",
-                                    "Then he left the restroom quickly.",
-                                    "You got off from the windowsill while holding your crotch,",
-                                    "opened the cabin door, entered it,",
-                                    "wearily flop down on the toilet and start peeing.");
-                        }
-                    }
-                } else
-                {
-                    setNextStage(SURPRISE_WET_PRESSURE);
-                    setLinesAsDialogue(2, 3);
-                    setText("You hit " + boyName + "'s hand. Damn, you'd meant to hit his groin...",
-                            "You're braver than I expected;",
-                            "now let's check the strength of your bladder!",
-                            boyName + " pressed your bladder violently...");
-                }
-                break;
-
-            case PERSUADE:
-                switch (timesPeeDenied)
-                {
-                    case 0:
-                        if (generator.nextInt(100) <= 10)
-                        {
-                            setLinesAsDialogue(1);
-                            if (!lower.isMissing())
-                            {
-                                if (!undies.isMissing())
-                                {
-                                    setText("Ok, you may, but you'll let me watch you pee.",
-                                            "states " + boyName + ". You enter the cabin,",
-                                            "pull down your " + lower.insert() + " and " + undies.insert() + ",",
-                                            "stand over the toilet and start peeing under " + boyName + "'s spectation.");
-                                } else
-                                {
-                                    setText("Ok, you may, but you'll let me watch you pee.",
-                                            "states " + boyName + ". You enter the cabin,",
-                                            "pull down your " + lower.insert() + ",",
-                                            "stand over the toilet and start peeing under " + boyName + "'s spectation.");
-                                }
-                            } else
-                            {
-                                if (!undies.isMissing())
-                                {
-                                    setText("Ok, you may, but you'll let me watch you pee.",
-                                            "states " + boyName + ". You enter the cabin,",
-                                            "pull down your " + undies.insert() + ",",
-                                            "stand over the toilet and start peeing under " + boyName + "'s spectation.");
-                                } else
-                                {
-                                    setText("Ok, you may, but you'll let me watch you pee.",
-                                            "states " + boyName + ". You enter the cabin,",
-                                            "stand over the toilet and start peeing under " + boyName + "'s spectation.");
-                                }
-                            }
-                            score("Persuaded " + boyName + " to pee", '+', 40);
-                            emptyBladder();
-                            setNextStage(END_GAME);
-                        } else
-                        {
-                            setText("You ask " + boyName + " if you can pee.",
-                                    "No, you can't pee in a cabin. I want you to wet yourself.,",
-                                    boyName + " says.");
-                            timesPeeDenied++;
-                            setNextStage(SURPRISE_DIALOGUE);
-                        }
-                        break;
-
-                    case 1:
-                        if (generator.nextInt(100) <= 5)
-                        {
-                            if (!lower.isMissing())
-                            {
-                                if (!undies.isMissing())
-                                {
-                                    setText("Ok, you may, but you'll let me watch you pee.",
-                                            "states " + boyName + ". You enter the cabin,",
-                                            "pull down your " + lower.insert() + " and " + undies.insert() + ",",
-                                            "stand over the toilet and start peeing under " + boyName + "'s spectation.");
-                                } else
-                                {
-                                    setText("Ok, you may, but you'll let me watch you pee.",
-                                            "states " + boyName + ". You enter the cabin,",
-                                            "pull down your " + lower.insert() + ",",
-                                            "stand over the toilet and start peeing under " + boyName + "'s spectation.");
-                                }
-                            } else
-                            {
-                                if (!undies.isMissing())
-                                {
-                                    setText("Ok, you may, but you'll let me watch you pee.",
-                                            "states " + boyName + ". You enter the cabin,",
-                                            "pull down your " + undies.insert() + ",",
-                                            "stand over the toilet and start peeing under " + boyName + "'s spectation.");
-                                } else
-                                {
-                                    setText("Ok, you may, but you'll let me watch you pee.",
-                                            "states " + boyName + ". You enter the cabin,",
-                                            "stand over the toilet and start peeing under " + boyName + "'s spectation.");
-                                }
-                            }
-                            score("Persuaded " + boyName + " to pee", '+', 60);
-                            emptyBladder();
-                            setNextStage(END_GAME);
-                        } else
-                        {
-                            setText("You ask " + boyName + " if you can pee again.",
-                                    "No, you can't pee in a cabin. I want you to wet yourself. You're doing it now.",
-                                    boyName + " demands.");
-                            timesPeeDenied++;
-                            setNextStage(SURPRISE_DIALOGUE);
-                        }
-                        break;
-
-                    case 2:
-                        if (generator.nextInt(100) <= 2)
-                        {
-                            if (!lower.isMissing())
-                            {
-                                if (!undies.isMissing())
-                                {
-                                    setText("Ok, you may, but you'll let me watch you pee.",
-                                            "states " + boyName + ". You enter the cabin,",
-                                            "pull down your " + lower.insert() + " and " + undies.insert() + ",",
-                                            "stand over the toilet and start peeing under " + boyName + "'s spectation.");
-                                } else
-
-                                {
-                                    setText("Ok, you may, but you'll let me watch you pee.",
-                                            "states " + boyName + ". You enter the cabin,",
-                                            "pull down your " + lower.insert() + ",",
-                                            "stand over the toilet and start peeing under " + boyName + "'s spectation.");
-                                }
-                            } else
-                            {
-                                if (!undies.isMissing())
-
-                                {
-                                    setText("Ok, you may, but you'll let me watch you pee.",
-                                            "states " + boyName + ". You enter the cabin,",
-                                            "pull down your " + undies.insert() + ",",
-                                            "stand over the toilet and start peeing under " + boyName + "'s spectation.");
-                                } else
-
-                                {
-                                    setText("Ok, you may, but you'll let me watch you pee.",
-                                            "states " + boyName + ". You enter the cabin,",
-                                            "stand over the toilet and start peeing under " + boyName + "'s spectation.");
-                                }
-                            }
-
-                            score("Persuaded " + boyName + " to pee", '+', 80);
-                            emptyBladder();
-                            setNextStage(END_GAME);
-                        } else
-                        {
-                            setText("You ask " + boyName + " if you can pee again desperately.",
-                                    "No, you can't pee in a cabin. You will wet yourself right now,",
-                                    boyName + " demands.",
-                                    "Then " + boyName + " pressed your bladder...");
-                            setNextStage(SURPRISE_WET_PRESSURE);
-                        }
-                        break;
-                }
-                break;
-
-            case SURPRISE_WET_VOLUNTARY:
-                setLinesAsDialogue(1, 3);
-                setText("Alright, as you say.,",
-                        "you say to " + boyName + " with a defeated sigh.",
-                        "Whatever, I really can't hold it anymore anyways...");
-                emptyBladder();
-                setNextStage(SURPRISE_WET_VOLUNTARY2);
-                break;
-
-            case SURPRISE_WET_VOLUNTARY2:
-                if (!undies.isMissing())
-                {
-                    if (!lower.isMissing())
-                    {
-                        setText("You feel the warm pee stream",
-                                "filling your " + undies.insert() + " and darkening your " + lower.insert() + ".",
-                                "You close your eyes and ease your sphincter off.",
-                                "You feel the pee stream become much stronger.");
-                    } else
-                    {
-                        setText("You feel the warm pee stream",
-                                "filling your " + undies.insert() + ".",
-                                "You close your eyes and ease your sphincter off.",
-                                "You feel the pee stream become much stronger.");
-                    }
-                } else
-                {
-                    if (!lower.isMissing())
-                    {
-                        setText("You feel the warm pee stream",
-                                "filling your " + lower.insert() + ".",
-                                "You close your eyes and ease your sphincter off.",
-                                "You feel the pee stream become much stronger.");
-                    } else
-                    {
-                        setText("You feel the warm pee stream",
-                                "running down your legs.",
-                                "You close your eyes and ease your sphincter off.",
-                                "You feel the pee stream become much stronger.");
-                    }
-                }
-                emptyBladder();
-                setNextStage(END_GAME);
-                break;
-
-            case SURPRISE_WET_PRESSURE:
-                if (!undies.isMissing())
-                {
-                    if (!lower.isMissing())
-                    {
-                        setText("Ouch... The sudden pain flash passes through your bladder...",
-                                "You try to hold the pee back, but you just can't.",
-                                "You feel the warm pee stream",
-                                "filling your " + undies.insert() + " and darkening your " + lower.insert() + ".",
-                                "You close your eyes and ease your sphincter off.",
-                                "You feel the pee stream become much stronger.");
-                    } else
-                    {
-                        setText("Ouch... The sudden pain flash passes through your bladder...",
-                                "You try to hold the pee back, but you just can't.",
-                                "You feel the warm pee stream",
-                                "filling your " + undies.insert() + ".",
-                                "You close your eyes and ease your sphincter off.",
-                                "You feel the pee stream become much stronger.");
-                    }
-                } else
-                {
-                    if (!lower.isMissing())
-                    {
-                        setText("Ouch... The sudden pain flash passes through your bladder...",
-                                "You try to hold the pee back, but you just can't.",
-                                "You feel the warm pee stream",
-                                "filling your " + lower.insert() + ".",
-                                "You close your eyes and ease your sphincter off.",
-                                "You feel the pee stream become much stronger.");
-                    } else
-                    {
-                        setText("Ouch... The sudden pain flash passes through your bladder...",
-                                "You try to hold the pee back, but you just can't.",
-                                "You feel the warm pee stream",
-                                "running down your legs.",
-                                "You close your eyes and ease your sphincter off.",
-                                "You feel the pee stream become much stronger.");
-                    }
-                }
-                emptyBladder();
-                setNextStage(END_GAME);
-                break;
-
-            case DRINK:
-                setText("You take your bottle with water,",
-                        "open it and take a small sip of water.");
-                offsetBelly(thirst);
-                thirst = 0;
-                setNextStage(ASK_ACTION);
-                break;
-                
-            default:
-                setText("Error parsing button. Next text is unavailable, text #" + nextStage);
-                break;
-            //case template
-            //      case 4:
-            //   setText("");
-            //   setNextStage(;
-            //   break;
-        }
-    }
-
-    private void showScore() throws HeadlessException
-    {
-        if (cheatsUsed)
-        {
-            score = 0;
-            scoreText = "\nYou've used the cheats, so you've got no score.";
-        }
-        String scoreText2 = "Your score: " + score + "\n" + scoreText;
-        
-        JOptionPane.showMessageDialog(this, scoreText2);
-    }
-
-    private void gameOver()
-    {
-        btnNext.setVisible(false);
-    }
-
-    private boolean linesAreTooLong()
-    {
-        if (time >= 120)
-        {
-            stay = false;
-            setNextStage(CLASS_OVER);
-            return true;
-        }
-        return false;
-    }
-
-    private boolean triggerClsasOverScene()
-    {
-        //Special hardcore scene trigger
-        if (generator.nextInt(100) <= 10 && hardcore & isFemale())
-        {
-            setNextStage(SURPRISE);
-            return true;
-        }
-        if (stay)
-        {
-            setNextStage(AFTER_CLASS);
-            return true;
-        }
-        return false;
-    }
-
-    private void askNewBladderLevel() throws NumberFormatException, HeadlessException
-    {
-        short newBladder = Short.parseShort(JOptionPane.showInputDialog("How your bladder is full now?"));
-        if (newBladder>0||newBladder<150)
-        {
-            bladder = newBladder;
-        }
-    }
-
-    private void askNewIncontinenceLevel() throws HeadlessException, NumberFormatException
-    {
-        float newIncontinence = Float.parseFloat(JOptionPane.showInputDialog("How incontinent are you now?"));
-        if(newIncontinence>=0.1)
-        {
-            incontinence = newIncontinence;
-            maxSphincterPower = (short) (100 / incontinence);
-            sphincterPower = maxSphincterPower;
-        }
-        
-    }
-
-    private static boolean chance(byte chance)
-    {
-        return generator.nextInt(100) <= chance;
-    }
-
-    private void getCaughtByClassmates()
-    {
-        //Chance to be caught by classmates in hardcore mode
-        if (generator.nextInt(100) <= 15 + classmatesAwareness & hardcore)
-        {
-            setNextStage(CAUGHT);
-        } else
-        {
-            setNextStage(ASK_ACTION);
-        }
-    }
-
-    private boolean inappropriateSelection()
-    {
-        return listChoice.isSelectionEmpty() || listChoice.getSelectedValue().equals("[Unavailable]");
-    }
-
-    private void offerHoldingChoices()
-    {
-        //Adding action choices
-        switch (timesPeeDenied)
-        {
-            case 0:
-                actionList.add("Ask the teacher to go pee");
-                break;
-            case 1:
-                actionList.add("Ask the teacher to go pee again");
-                break;
-            case 2:
-                actionList.add("Try to ask the teacher again");
-                break;
-            case 3:
-                actionList.add("Take a chance and ask the teacher (RISKY)");
-                break;
-            default:
-                actionList.add("[Unavailable]");
-        }
-        
-        if (!cornered)
-        {
-            if (isFemale())
-            {
-                actionList.add("Press on your crotch");
-            } else
-            {
-                actionList.add("Squeeze your penis");
-            }
-        } else
-        {
-            actionList.add("[Unavailable]");
-        }
-        
-        actionList.add("Rub thighs");
-        
-        if (bladder >= 100)
-        {
-            actionList.add("Give up and pee yourself");
-        } else
-        {
-            actionList.add("[Unavailable]");
-        }
-        if(hardcore)
-        {
-            actionList.add("Drink water");
-        }
-        else
-        {
-            actionList.add("[Unavailable]");
-        }
-        actionList.add("Just wait");
-        actionList.add("Cheat (will reset your score)");
-    }
-
-    private boolean gotCalledByTeacher()
-    {
-        //Called by teacher if unlucky
-        if (generator.nextInt(20) == 5)
-        {
-            setText("Suddenly, you hear the teacher call your name.");
-            setNextStage(CALLED_ON);
-            return true;
-        }
-        return false;
-    }
-
-    private void displayDesperationStatus()
-    {
-        //Bladder: 0-20
-        if (bladder <= 20)
-        {
-            setText("Feeling bored about the day, and not really caring about the class too much,",
-                    "you look to the clock, watching the minutes tick by.");
-        }
-        //Bladder: 20-40
-        if (bladder > 20 && bladder <= 40)
-        {
-            setText("Having to pee a little bit,",
-                    "you look to the clock, watching the minutes tick by and wishing the lesson to get over faster.");
-        }
-        //Bladder: 40-60
-        if (bladder > 40 && bladder <= 60)
-        {
-            setText("Clearly having to pee,",
-                    "you impatiently wait for the lesson end.");
-        }
-        //Bladder: 60-80
-        if (bladder > 60 && bladder <= 80)
-        {
-            setLinesAsDialogue(2);
-            setText("You feel the rather strong pressure in your bladder, and you're starting to get even more desperate.",
-                    "Maybe I should ask teacher to go to the restroom? It hurts a bit...");
-        }
-        //Bladder: 80-100
-        if (bladder > 80 && bladder <= 100)
-        {
-            setLinesAsDialogue(1, 3);
-            setText("Keeping all that urine inside will become impossible very soon.",
-                    "You feel the terrible pain and pressure in your bladder, and you can almost definitely say you haven't needed to pee this badly in your life.",
-                    "Ouch, it hurts a lot... I must do something about it now, or else...");
-        }
-        //Bladder: 100-130
-        if (bladder > 100 && bladder <= 130)
-        {
-            setLinesAsDialogue(1, 3);
-            if (isFemale())
-            {
-                setText("This is really bad...",
-                        "You know that you can't keep it any longer and you may wet yourself in any moment and oh,",
-                        "You can clearly see your bladder as it bulging.",
-                        "Ahhh... I cant hold it anymore!!!",
-                        "Even holding your crotch doesn't seems to help you to keep it in.");
-            } else
-            {
-                setText("This is really bad...",
-                        "You know that you can't keep it any longer and you may wet yourself in any moment and oh,",
-                        "You can clearly see your bladder as it bulging.",
-                        "Ahhh... I cant hold it anymore!!!",
-                        "Even squeezing your penis doesn't seems to help you to keep it in.");
-            }
-        }
-    }
-
-    /**
-     * Increments the time by 3 minutes and all time-related parameters.
-     */
-    public void passTime()
-    {
-        passTime((byte) 3);
-    }
-
-    /**
-     * Increments the time by # minutes and all time-related parameters.
-     *
-     * @param time #
-     */
-    public void passTime(byte time)
-    {
-        offsetTime(time);
-        offsetBladder(time * 1.5);
-        offsetBelly(-time * 1.5);
-
-        if (this.time >= 88)
-        {
-            setText("You hear the bell finally ring.");
-            setNextStage(CLASS_OVER);
-        }
-
-        testWet();
-
-        //Decrementing sphincter power for every 3 minutes
-        for (int i = 0; i < time; i++)
-        {
-            decaySphPower();
-            if (belly != 0)
-            {
-                if (belly > 3)
-                {
-                    offsetBladder(2);
-                } else
-                {
-                    offsetBladder(belly);
-                    emptyBelly();
-                }
-            }
-        }
-        if(hardcore)
-        {
-        thirst+=2;
-        if(thirst>MAXIMAL_THIRST)
-        {
-            setNextStage(DRINK);
-        }
-        }
-        //Updating labels
-		updateUI();
-    }
-
-    /**
-     * Checks the wetting conditions, and if they are met, wetting TODO in v1.4:
-     * add diapers and pads support
-     */
-    public void testWet()
-    {
-        //If bladder is filled more than 130 points in the normal mode and 100 points in the hardcore mode, forcing wetting
-        if (bladder >= maxBladder & !hardcore)
-        {
-            sphincterPower = 0;
-            if (dryness < MINIMAL_DRYNESS)
-            {
-                if (specialHardcoreStage)
-                {
-                    setNextStage(SURPRISE_ACCIDENT);
-                } else
-                {
-                    setNextStage(ACCIDENT);
-                }
-            }
-        } else //If bladder is filled more than 100 points in the normal mode and 50 points in the hardcore mode, character has a chance to wet
-        {
-            if (isCriticalBladder())
-            {
-                wetIfUnlucky(!hardcore ? ((short) (5 * (bladder - 80))):((short) ( 3 * (bladder - 100) + embarassment)));
-            }
-        }
-    }
-
-    private boolean isCriticalBladder()
-    {
-        return (bladder > maxBladder - 30 & !hardcore) | (bladder > maxBladder - 20 & hardcore);
-    }
-
-    private void wetIfUnlucky(short wetChance)
-    {
-        if (generator.nextInt(100) < wetChance)
-        {
-            sphincterPower = 0;
-            if (dryness < MINIMAL_DRYNESS)
-            {
-                if (specialHardcoreStage)
-                {
-                    setNextStage(SURPRISE_ACCIDENT);
-                } else
-                {
-                    setNextStage(ACCIDENT);
-                }
-            }
-        }
-    }
-
-    /**
-     * Empties the bladder.
-     */
-    public void emptyBladder()
-    {
-        bladder = 0;
-        lblBladder.setText("Bladder: " + (int) bladder + "%");
-        updateUI();
-    }
-
-    /**
-     * Offsets bladder fulness by a specified amount.
-     *
-     * @param amount the amount to offset bladder fulness
-     */
-    public void offsetBladder(double amount)
-    {
-        bladder += amount/* * incon*/;//Incontinence does another job after 1.1
-        if ((bladder > 100 && !hardcore) || (bladder > 80 && hardcore))
-        {
-            lblBladder.setForeground(Color.RED);
-        } else
-        {
-            lblBladder.setForeground(lblDefaultColor);
-        }
-        updateUI();
-    }
-
-    /**
-     * Empties the belly.
-     */
-    public void emptyBelly()
-    {
-        offsetBelly(-belly);
-    }
-
-    public void offsetBelly(double amount)
-    {
-        belly += amount;
-        if (belly < 0)
-        {
-            belly = 0;
-        }
-        updateUI();
-    }
-
-    public void offsetEmbarassment(int amount)
-    {
-        embarassment += amount;
-        if (embarassment < 0)
-        {
-            embarassment = 0;
-        }
-        updateUI();
-    }
-
-    public void offsetTime(int amount)
-    {
-        time += amount;
-        if (drain & (time % 15) == 0)
-        {
-            emptyBladder();
-        }
-        //Clothes drying over time
-        if (dryness < lower.getAbsorption() + undies.getAbsorption())
-        {
-            dryness += lower.getDryingOverTime() + undies.getDryingOverTime()*(amount/3);
-        }
-
-        if (dryness > lower.getAbsorption() + undies.getAbsorption())
-        {
-            dryness = lower.getAbsorption() + undies.getAbsorption();
-        }
-        updateUI();
-    }
-
-    //TODO: Refactor
-    /**
-     * Decreases the sphincter power.
-     */
-    public void decaySphPower()
-    {
-        sphincterPower -= bladder / 30;
-        if (sphincterPower < 0)
-        {
-            dryness -= 5; //Decreasing dryness
-            bladder -= 2.5; //Decreasing bladder level
-            sphincterPower = 0;
-            if (dryness > MINIMAL_DRYNESS)
-            {
-                //Naked
-                if (lower.isMissing() && undies.isMissing())
-                {
-                    setText("You feel the leak running down your thighs...",
-                            "You're about to pee! You must stop it!");
-                } else //Outerwear
-                {
-                    if (!lower.isMissing())
-                    {
-                        setText("You see the wet spot expand on your " + lower.insert() + "!",
-                                "You're about to pee! You must stop it!");
-                    } else //Underwear
-                    {
-                        if (!undies.isMissing())
-                        {
-                            setText("You see the wet spot expand on your " + undies.insert() + "!",
-                                    "You're about to pee! You must stop it!");
-                        }
-                    }
-                }
-            }
-
-            if (dryness < MINIMAL_DRYNESS)
-            {
-                if (lower.isMissing() && undies.isMissing())
-                {
-                    if (cornered)
-                    {
-                        setText("You see a puddle forming on the floor beneath you, you're peeing!",
-                                "It's too much...");
-                        setNextStage(ACCIDENT);
-                        handleNextClicked();
-                    } else
-                    {
-                        setText("Feeling the pee hit the chair and soon fall over the sides,",
-                                "you see a puddle forming under your chair, you're peeing!",
-                                "It's too much...");
-                        setNextStage(ACCIDENT);
-                        handleNextClicked();
-                    }
-                } else
-                {
-                    if (!lower.isMissing())
-                    {
-                        setText("You see the wet spot expanding on your " + lower.insert() + "!",
-                                "It's too much...");
-                        setNextStage(ACCIDENT);
-                        handleNextClicked();
-                    } else
-                    {
-                        if (!undies.isMissing())
-                        {
-                            setText("You see the wet spot expanding on your " + undies.insert() + "!",
-                                    "It's too much...");
-                            setNextStage(ACCIDENT);
-                            handleNextClicked();
-                        }
-                    }
-                }
-            }
-        }
-        updateUI();
-    }
-
-    /**
-     * Replenishes the sphincter power.
-     *
-     * @param amount the sphincter recharge amount
-     */
-    public void rechargeSphPower(int amount)
-    {
-        sphincterPower += amount;
-        if (sphincterPower > maxSphincterPower)
-        {
-            sphincterPower = maxSphincterPower;
-        }
-        updateUI();
-    }
-
-    private void setLinesAsDialogue(int... lines)
-    {
-        for (int i : lines)
-        {
-            dialogueLines[i - 1] = true;
-        }
-    }
-
-    /**
-     * Sets the in-game text.
-     *
-     * @param lines the in-game text to set
-     */
-    @SuppressWarnings("UseOfSystemOutOrSystemErr")
-    private void setText(String... lines)
-    {
-        if (lines.length > MAX_LINES)
-        {
-            System.err.println("You can't have more than " + MAX_LINES + " lines at a time!");
-            return;
-        }
-        if (lines.length <= 0)
-        {
-            textLabel.setText("");
-            return;
-        }
-
-        String toSend = "<html><center>";
-
-        for (int i = 0; i < lines.length; i++)
-        {
-            if (dialogueLines[i])
-            {
-                toSend += "<i>\"" + lines[i] + "\"</i>";
-            } else
-            {
-                toSend += lines[i];
-            }
-            toSend += "<br>";
-
-        }
-        toSend += "</center></html>";
-        textLabel.setText(toSend);
-        this.dialogueLines = new boolean[MAX_LINES];
-    }
-
-    /**
-     * Operates the player score.
-     *
-     * @param message the reason to manipulate score
-     * @param mode add, substract, divide or multiply
-     * @param points amount of points to operate
-     */
-    public void score(String message, char mode, float points)
-    {
-        switch (mode)
-        {
-            case '+':
-                score += points;
-                scoreText += "\n" + message + ": +" + points + " points";
-                break;
-            case '-':
-                score -= points;
-                scoreText += "\n" + message + ": -" + points + " points";
-                break;
-            case '*':
-                score *= points;
-                scoreText += "\n" + message + ": +" + points * 100 + "% of points";
-                break;
-            case '/':
-                score /= points;
-                scoreText += "\n" + message + ": -" + 100 / points + "% of points";
-                break;
-            default:
-                System.err.println("score() method used incorrectly, message: \"" + message + "\"");
-        }
-    }
-
-    void updateUI()
-    {
-        try
-        {
-            lblName.setText(name);
-            lblBladder.setText("Bladder: " + Math.round(this.bladder) + "%");
-            lblEmbarassment.setText("Embarassment: " + embarassment);
-            lblBelly.setText("Belly: " + Math.round(belly) + "%");
-            lblIncon.setText("Incontinence: " + incontinence + "x");
-            lblMinutes.setText("Minutes: " + time + " of 90");
-            lblSphPower.setText("Pee holding ability: " + Math.round(sphincterPower) + "%");
-            lblDryness.setText("Clothes dryness: " + Math.round(dryness));
-            lblUndies.setText("Undies: " + undies.getColor() + " " + undies.getName().toLowerCase());
-            lblLower.setText("Lower: " + lower.getColor() + " " + lower.getName().toLowerCase());
-            bladderBar.setValue(bladder);
-            sphincterBar.setValue(Math.round(sphincterPower));
-            drynessBar.setValue((int) dryness);
-            timeBar.setValue(time);
-            lblThirst.setText("Thirst: " + Math.round(thirst) + "%");
-            thirstBar.setValue((int) thirst);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
-
-    byte hideActionUI()
-    {
-        byte choice = (byte) listChoice.getSelectedIndex();
-        actionList.clear();
-        lblChoice.setVisible(false);
-        listScroller.setVisible(false);
-        return choice;
-    }
-
-    void showActionUI(String actionGroupName)
-    {
-        listChoice.setListData(actionList.toArray());
-        lblChoice.setVisible(true);
-        lblChoice.setText(actionGroupName);
-        listScroller.setVisible(true);
+        //Finishing saving parameters for game reset
+        ResetParametersStorage.outerParam = lower.getName();
+        ResetParametersStorage.underParam = undies.getName();
+        ResetParametersStorage.underColorParam = undies.getColor();
+        ResetParametersStorage.outerColorParam = lower.getColor();
     }
 
     void save()
     {
-        fcGame.setSelectedFile(new File(name));
-        if (fcGame.showSaveDialog(this) == JFileChooser.APPROVE_OPTION)
+        UI.fcGame.setSelectedFile(new File(name));
+        if (UI.fcGame.showSaveDialog(this) == JFileChooser.APPROVE_OPTION)
         {
-            File file = new File(fcGame.getSelectedFile().getAbsolutePath() + ".lhhsav");
+            File file = new File(UI.fcGame.getSelectedFile().getAbsolutePath() + ".lhhsav");
 //            PrintStream writer;
             FileOutputStream fout;
             ObjectOutputStream oos;
             try
             {
                 Save save = new Save();
-                save.name = name;
-                save.gender = gender;
-                save.hardcore = hardcore;
-                save.incontinence = incontinence;
-                save.bladder = bladder;
-                save.underwear = undies;
-                save.outerwear = lower;
-                save.embarassment = embarassment;
-                save.dryness = dryness;
-                save.maxSphincterPower = maxSphincterPower;
-                save.sphincterPower = sphincterPower;
-                save.time = time;
-                save.stage = nextStage;
-                save.score = score;
-                save.scoreText = scoreText;
-                save.timesPeeDenied = timesPeeDenied;
-                save.timesCaught = timesCaught;
-                save.classmatesAwareness = classmatesAwareness;
-                save.stay = stay;
-                save.cornered = cornered;
-                save.drain = drain;
-                save.cheatsUsed = cheatsUsed;
-                save.boyName = boyName;
+                save.name = NarrativeEngine.name;
+                save.gender = NarrativeEngine.gender;
+                save.hardcore = NarrativeEngine.hardcore; //TODO
+                save.incontinence = Bladder.incontinence;
+                save.bladder = Bladder.bladder;
+                save.underwear = Bladder.undies;
+                save.outerwear = Bladder.lower;
+                save.embarassment = Bladder.embarassment;
+                save.dryness = Bladder.dryness;
+                save.maxSphincterPower = Bladder.maxSphincterPower;
+                save.sphincterPower = Bladder.sphincterPower;
+                save.time = Bladder.time;
+                save.stage = NarrativeEngine.getNextStage();
+                save.score = NarrativeEngine.score;
+                save.scoreText = NarrativeEngine.scoreText;
+                save.timesPeeDenied = NarrativeEngine.timesPeeDenied;
+                save.timesCaught = NarrativeEngine.timesCaught;
+                save.classmatesAwareness = NarrativeEngine.classmatesAwareness;
+                save.stay = NarrativeEngine.stay;
+                save.cornered = NarrativeEngine.cornered;
+                save.drain = NarrativeEngine.drain;
+                save.cheatsUsed = NarrativeEngine.cheatsUsed;
+                save.boyName = NarrativeEngine.boyName;
 
 //                writer = new PrintStream(file);
                 fout = new FileOutputStream(file);
@@ -3254,9 +3076,9 @@ public class ALongHourAndAHalf extends JFrame
     @SuppressWarnings("ResultOfObjectAllocationIgnored")
     void load()
     {
-        if (fcGame.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
+        if (UI.fcGame.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
         {
-            File file = fcGame.getSelectedFile();
+            File file = UI.fcGame.getSelectedFile();
             try
             {
                 FileInputStream fin = new FileInputStream(file);
@@ -3270,93 +3092,5 @@ public class ALongHourAndAHalf extends JFrame
                 JOptionPane.showMessageDialog(this, "File error.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
-    }
-
-    enum GameStage
-    {
-        LEAVE_BED,
-        LEAVE_HOME,
-        GO_TO_CLASS,
-        WALK_IN,
-        SIT_DOWN,
-        ASK_ACTION,
-        CHOSE_ACTION,
-        ASK_TO_PEE,
-        CALLED_ON,
-        CAUGHT,
-        USE_BOTTLE,
-        ASK_CHEAT,
-        CHOSE_CHEAT,
-        CLASS_OVER,
-        AFTER_CLASS,
-        ACCIDENT,
-        GIVE_UP,
-        WET,
-        POST_WET,
-        GAME_OVER,
-        END_GAME,
-        SURPRISE,
-        SURPRISE_2,
-        SURPRISE_ACCIDENT,
-        SURPRISE_DIALOGUE,
-        SURPRISE_CHOSE,
-        HIT,
-        PERSUADE,
-        SURPRISE_WET_VOLUNTARY,
-        SURPRISE_WET_VOLUNTARY2,
-        SURPRISE_WET_PRESSURE,
-        DRINK
-    }
-
-    enum Gender
-    {
-        MALE, FEMALE
-    }
-    
-    String[] getGenderDependentText(String[] femaleText, String[] maleText)
-    {
-        if(isFemale())
-        {
-            return femaleText;
-        }
-        else
-        {
-            return maleText;
-        }
-    }
-    
-    String[] getWearDependentText(String[] bothWear, String[] lowerOnly, String[] undiesOnly, String[] noWear)
-    {
-        if (lower.isMissing())
-        {
-            if (undies.isMissing())
-            {
-                return bothWear;
-            }
-            else
-            {
-                return lowerOnly;
-            }
-        }
-        else if (undies.isMissing())
-        {
-            return undiesOnly;
-        }
-        else
-        {
-            return noWear;
-        }
-    }
-    
-    byte askPlayerHowMuchToWait() throws NumberFormatException
-    {
-        byte timeOffset;
-        
-        timeOffset = Byte.parseByte((JOptionPane.showInputDialog("How much to wait?")));
-        if (time < 1 || time > 125)
-        {
-            throw new NumberFormatException();
-        }
-        return timeOffset;
     }
 }
