@@ -84,22 +84,22 @@ public class WearEditor extends javax.swing.JFrame
     private void initComponents()
     {
 
-        nameLabel = new JLabel();
-        nameField = new JTextField();
-        typeLabel = new JLabel();
-        typeComboBox = new JComboBox<>();
-        pressureLabel = new JLabel();
-        pressureSpinner = new JSpinner();
-        absorptionLabe = new JLabel();
-        absorptionSpinner = new JSpinner();
-        dotLabel = new JLabel();
-        dotSpinner = new JSpinner();
-        saveButton = new JButton();
-        openButton = new JButton();
-        insertNameLabel = new JLabel();
-        insertNameField = new JTextField();
+        nameLabel = new javax.swing.JLabel();
+        nameField = new javax.swing.JTextField();
+        typeLabel = new javax.swing.JLabel();
+        typeComboBox = new javax.swing.JComboBox<>();
+        pressureLabel = new javax.swing.JLabel();
+        pressureSpinner = new javax.swing.JSpinner();
+        absorptionLabe = new javax.swing.JLabel();
+        absorptionSpinner = new javax.swing.JSpinner();
+        dotLabel = new javax.swing.JLabel();
+        dotSpinner = new javax.swing.JSpinner();
+        saveButton = new javax.swing.JButton();
+        openButton = new javax.swing.JButton();
+        insertNameLabel = new javax.swing.JLabel();
+        insertNameField = new javax.swing.JTextField();
 
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Wear editor");
 
         nameLabel.setText("Wear name");
@@ -110,33 +110,33 @@ public class WearEditor extends javax.swing.JFrame
         typeLabel.setText("Wear type");
         typeLabel.setName("typeLabel"); // NOI18N
 
-        typeComboBox.setModel(new DefaultComboBoxModel<>(new String[] { "Underwear", "Outerwear", "Both are suitable" }));
+        typeComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Underwear", "Outerwear", "Both are suitable" }));
         typeComboBox.setSelectedIndex(2);
         typeComboBox.setName("typeComboBox"); // NOI18N
 
         pressureLabel.setText("Pressure");
         pressureLabel.setName("pressureLabel"); // NOI18N
 
-        pressureSpinner.setModel(new SpinnerNumberModel(Float.valueOf(0.0f), Float.valueOf(0.0f), Float.valueOf(300.0f), Float.valueOf(1.0f)));
+        pressureSpinner.setModel(new javax.swing.SpinnerNumberModel(Float.valueOf(0.0f), Float.valueOf(0.0f), Float.valueOf(300.0f), Float.valueOf(1.0f)));
         pressureSpinner.setName("pressureSpinner"); // NOI18N
 
         absorptionLabe.setText("Absorption");
         absorptionLabe.setName("absorptionLabe"); // NOI18N
 
-        absorptionSpinner.setModel(new SpinnerNumberModel(Float.valueOf(0.0f), Float.valueOf(0.0f), Float.valueOf(300.0f), Float.valueOf(1.0f)));
+        absorptionSpinner.setModel(new javax.swing.SpinnerNumberModel(Float.valueOf(0.0f), Float.valueOf(0.0f), Float.valueOf(300.0f), Float.valueOf(1.0f)));
         absorptionSpinner.setName("absorptionSpinner"); // NOI18N
 
         dotLabel.setText("Drying over time");
         dotLabel.setName("dotLabel"); // NOI18N
 
-        dotSpinner.setModel(new SpinnerNumberModel(Float.valueOf(0.0f), Float.valueOf(0.0f), Float.valueOf(100.0f), Float.valueOf(1.0f)));
+        dotSpinner.setModel(new javax.swing.SpinnerNumberModel(Float.valueOf(0.0f), Float.valueOf(0.0f), Float.valueOf(100.0f), Float.valueOf(1.0f)));
         dotSpinner.setName("dotSpinner"); // NOI18N
 
         saveButton.setText("Save...");
         saveButton.setName("saveButton"); // NOI18N
-        saveButton.addActionListener(new ActionListener()
+        saveButton.addActionListener(new java.awt.event.ActionListener()
         {
-            public void actionPerformed(ActionEvent evt)
+            public void actionPerformed(java.awt.event.ActionEvent evt)
             {
                 saveButtonActionPerformed(evt);
             }
@@ -144,9 +144,9 @@ public class WearEditor extends javax.swing.JFrame
 
         openButton.setText("Open...");
         openButton.setName("openButton"); // NOI18N
-        openButton.addActionListener(new ActionListener()
+        openButton.addActionListener(new java.awt.event.ActionListener()
         {
-            public void actionPerformed(ActionEvent evt)
+            public void actionPerformed(java.awt.event.ActionEvent evt)
             {
                 openButtonActionPerformed(evt);
             }
@@ -157,68 +157,70 @@ public class WearEditor extends javax.swing.JFrame
 
         insertNameField.setName("insertNameField"); // NOI18N
 
-        GroupLayout layout = new GroupLayout(getContentPane());
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(nameLabel)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(nameField, GroupLayout.PREFERRED_SIZE, 166, GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(nameField, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(insertNameLabel)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(insertNameField)
                         .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(typeLabel)
                         .addGap(18, 18, 18)
-                        .addComponent(typeComboBox, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(typeComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(pressureLabel)
                         .addGap(18, 18, 18)
-                        .addComponent(pressureSpinner, GroupLayout.PREFERRED_SIZE, 72, GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(pressureSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(absorptionLabe)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(absorptionSpinner, GroupLayout.PREFERRED_SIZE, 72, GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(absorptionSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(dotLabel)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(dotSpinner, GroupLayout.PREFERRED_SIZE, 95, GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(dotSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(saveButton, GroupLayout.PREFERRED_SIZE, 250, GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(openButton, GroupLayout.PREFERRED_SIZE, 250, GroupLayout.PREFERRED_SIZE))))
+                        .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(openButton, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
-        layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nameLabel)
-                    .addComponent(nameField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(nameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(insertNameLabel)
-                    .addComponent(insertNameField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(insertNameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(typeLabel)
-                    .addComponent(typeComboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(typeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(pressureLabel)
-                    .addComponent(pressureSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(pressureSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(absorptionLabe)
-                    .addComponent(absorptionSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(absorptionSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(dotLabel)
-                    .addComponent(dotSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(dotSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(saveButton)
                     .addComponent(openButton))
-                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -326,19 +328,19 @@ public class WearEditor extends javax.swing.JFrame
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private JLabel absorptionLabe;
-    private JSpinner absorptionSpinner;
-    private JLabel dotLabel;
-    private JSpinner dotSpinner;
-    private JTextField insertNameField;
-    private JLabel insertNameLabel;
-    private JTextField nameField;
-    private JLabel nameLabel;
-    private JButton openButton;
-    private JLabel pressureLabel;
-    private JSpinner pressureSpinner;
-    private JButton saveButton;
-    private JComboBox<String> typeComboBox;
-    private JLabel typeLabel;
+    private javax.swing.JLabel absorptionLabe;
+    private javax.swing.JSpinner absorptionSpinner;
+    private javax.swing.JLabel dotLabel;
+    private javax.swing.JSpinner dotSpinner;
+    private javax.swing.JTextField insertNameField;
+    private javax.swing.JLabel insertNameLabel;
+    private javax.swing.JTextField nameField;
+    private javax.swing.JLabel nameLabel;
+    private javax.swing.JButton openButton;
+    private javax.swing.JLabel pressureLabel;
+    private javax.swing.JSpinner pressureSpinner;
+    private javax.swing.JButton saveButton;
+    private javax.swing.JComboBox<String> typeComboBox;
+    private javax.swing.JLabel typeLabel;
     // End of variables declaration//GEN-END:variables
 }

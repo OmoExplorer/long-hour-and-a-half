@@ -104,57 +104,57 @@ public class setupFramePre extends javax.swing.JFrame {
     private void initComponents()
     {
 
-        buttonGroup1 = new ButtonGroup();
-        buttonGroup2 = new ButtonGroup();
-        buttonGroup3 = new ButtonGroup();
-        nameField = new JTextField();
-        maleRadio = new JRadioButton();
-        femaleRadio = new JRadioButton();
-        difficultyPanel = new JPanel();
-        normalDiffRadio = new JRadioButton();
-        hardDiffRadio = new JRadioButton();
-        incontLabel = new JLabel();
-        incontSlider = new JSlider();
-        bladAtStartLabel = new JLabel();
-        basSlider = new JSlider();
-        underwearLabel = new JLabel();
-        outerwearLabel = new JLabel();
-        start = new JButton();
-        nameLabel = new JLabel();
-        basSliderRadio = new JRadioButton();
-        randomBasSlider = new JRadioButton();
-        jScrollPane1 = new JScrollPane();
-        underwearTree = new JTree();
-        jScrollPane2 = new JScrollPane();
-        outerwearTree = new JTree();
-        jScrollPane3 = new JScrollPane();
-        jTextPane1 = new JTextPane();
-        undiesColor_black = new JPanel();
-        undiesColor_gray = new JPanel();
-        undiesColor_red = new JPanel();
-        undiesColor_orange = new JPanel();
-        undiesColor_yellow = new JPanel();
-        undiesColor_green = new JPanel();
-        undiesColor_blue = new JPanel();
-        undiesColor_darkBlue = new JPanel();
-        undiesColor_purple = new JPanel();
-        undiesColor_pink = new JPanel();
-        lowerColor_pink1 = new JPanel();
-        lowerColor_black1 = new JPanel();
-        lowerColor_gray1 = new JPanel();
-        lowerColor_red1 = new JPanel();
-        lowerColor_orange1 = new JPanel();
-        lowerColor_yellow1 = new JPanel();
-        lowerColor_green1 = new JPanel();
-        lowerColor_blue1 = new JPanel();
-        lowerColor_darkBlue1 = new JPanel();
-        lowerColor_purple1 = new JPanel();
-        undiesColor_random = new JPanel();
-        lowerColor_random1 = new JPanel();
-        wearEditorButton = new JButton();
-        loadGame = new JButton();
+        buttonGroup1 = new javax.swing.ButtonGroup();
+        buttonGroup2 = new javax.swing.ButtonGroup();
+        buttonGroup3 = new javax.swing.ButtonGroup();
+        nameField = new javax.swing.JTextField();
+        maleRadio = new javax.swing.JRadioButton();
+        femaleRadio = new javax.swing.JRadioButton();
+        difficultyPanel = new javax.swing.JPanel();
+        normalDiffRadio = new javax.swing.JRadioButton();
+        hardDiffRadio = new javax.swing.JRadioButton();
+        incontLabel = new javax.swing.JLabel();
+        incontSlider = new javax.swing.JSlider();
+        bladAtStartLabel = new javax.swing.JLabel();
+        basSlider = new javax.swing.JSlider();
+        underwearLabel = new javax.swing.JLabel();
+        outerwearLabel = new javax.swing.JLabel();
+        start = new javax.swing.JButton();
+        nameLabel = new javax.swing.JLabel();
+        basSliderRadio = new javax.swing.JRadioButton();
+        randomBasSlider = new javax.swing.JRadioButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        underwearTree = new javax.swing.JTree();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        outerwearTree = new javax.swing.JTree();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTextPane1 = new javax.swing.JTextPane();
+        undiesColor_black = new javax.swing.JPanel();
+        undiesColor_gray = new javax.swing.JPanel();
+        undiesColor_red = new javax.swing.JPanel();
+        undiesColor_orange = new javax.swing.JPanel();
+        undiesColor_yellow = new javax.swing.JPanel();
+        undiesColor_green = new javax.swing.JPanel();
+        undiesColor_blue = new javax.swing.JPanel();
+        undiesColor_darkBlue = new javax.swing.JPanel();
+        undiesColor_purple = new javax.swing.JPanel();
+        undiesColor_pink = new javax.swing.JPanel();
+        lowerColor_pink1 = new javax.swing.JPanel();
+        lowerColor_black1 = new javax.swing.JPanel();
+        lowerColor_gray1 = new javax.swing.JPanel();
+        lowerColor_red1 = new javax.swing.JPanel();
+        lowerColor_orange1 = new javax.swing.JPanel();
+        lowerColor_yellow1 = new javax.swing.JPanel();
+        lowerColor_green1 = new javax.swing.JPanel();
+        lowerColor_blue1 = new javax.swing.JPanel();
+        lowerColor_darkBlue1 = new javax.swing.JPanel();
+        lowerColor_purple1 = new javax.swing.JPanel();
+        undiesColor_random = new javax.swing.JPanel();
+        lowerColor_random1 = new javax.swing.JPanel();
+        wearEditorButton = new javax.swing.JButton();
+        loadGame = new javax.swing.JButton();
 
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
 
         nameField.setText("Mrs. Nobody");
@@ -164,9 +164,9 @@ public class setupFramePre extends javax.swing.JFrame {
         buttonGroup1.add(maleRadio);
         maleRadio.setText("Male");
         maleRadio.setName("maleRadio"); // NOI18N
-        maleRadio.addActionListener(new ActionListener()
+        maleRadio.addActionListener(new java.awt.event.ActionListener()
         {
-            public void actionPerformed(ActionEvent evt)
+            public void actionPerformed(java.awt.event.ActionEvent evt)
             {
                 maleRadioActionPerformed(evt);
             }
@@ -176,15 +176,15 @@ public class setupFramePre extends javax.swing.JFrame {
         femaleRadio.setSelected(true);
         femaleRadio.setText("Female");
         femaleRadio.setName("femaleRadio"); // NOI18N
-        femaleRadio.addActionListener(new ActionListener()
+        femaleRadio.addActionListener(new java.awt.event.ActionListener()
         {
-            public void actionPerformed(ActionEvent evt)
+            public void actionPerformed(java.awt.event.ActionEvent evt)
             {
                 femaleRadioActionPerformed(evt);
             }
         });
 
-        difficultyPanel.setBorder(BorderFactory.createTitledBorder("Difficulty"));
+        difficultyPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Difficulty"));
         difficultyPanel.setToolTipText("");
         difficultyPanel.setName("difficultyPanel"); // NOI18N
 
@@ -192,9 +192,9 @@ public class setupFramePre extends javax.swing.JFrame {
         normalDiffRadio.setSelected(true);
         normalDiffRadio.setText("Normal");
         normalDiffRadio.setName("normalDiffRadio"); // NOI18N
-        normalDiffRadio.addActionListener(new ActionListener()
+        normalDiffRadio.addActionListener(new java.awt.event.ActionListener()
         {
-            public void actionPerformed(ActionEvent evt)
+            public void actionPerformed(java.awt.event.ActionEvent evt)
             {
                 normalDiffRadioActionPerformed(evt);
             }
@@ -204,18 +204,20 @@ public class setupFramePre extends javax.swing.JFrame {
         hardDiffRadio.setText("Hardcore");
         hardDiffRadio.setName("hardDiffRadio"); // NOI18N
 
-        GroupLayout difficultyPanelLayout = new GroupLayout(difficultyPanel);
+        javax.swing.GroupLayout difficultyPanelLayout = new javax.swing.GroupLayout(difficultyPanel);
         difficultyPanel.setLayout(difficultyPanelLayout);
-        difficultyPanelLayout.setHorizontalGroup(difficultyPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        difficultyPanelLayout.setHorizontalGroup(
+            difficultyPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(difficultyPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(normalDiffRadio, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(normalDiffRadio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(100, 100, 100)
                 .addComponent(hardDiffRadio)
                 .addContainerGap())
         );
-        difficultyPanelLayout.setVerticalGroup(difficultyPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(difficultyPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+        difficultyPanelLayout.setVerticalGroup(
+            difficultyPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(difficultyPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(normalDiffRadio)
                 .addComponent(hardDiffRadio))
         );
@@ -241,26 +243,26 @@ public class setupFramePre extends javax.swing.JFrame {
         outerwearLabel.setText("Outerwear:");
         outerwearLabel.setName("outerwearLabel"); // NOI18N
 
-        start.setFont(new Font("sansserif", 1, 12)); // NOI18N
+        start.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
         start.setText("Start");
         start.setName("start"); // NOI18N
-        start.addActionListener(new ActionListener()
+        start.addActionListener(new java.awt.event.ActionListener()
         {
-            public void actionPerformed(ActionEvent evt)
+            public void actionPerformed(java.awt.event.ActionEvent evt)
             {
                 startActionPerformed(evt);
             }
         });
 
-        nameLabel.setFont(new Font("sansserif", 1, 12)); // NOI18N
+        nameLabel.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
         nameLabel.setText("Name");
         nameLabel.setName("nameLabel"); // NOI18N
 
         buttonGroup3.add(basSliderRadio);
         basSliderRadio.setName("basSliderRadio"); // NOI18N
-        basSliderRadio.addActionListener(new ActionListener()
+        basSliderRadio.addActionListener(new java.awt.event.ActionListener()
         {
-            public void actionPerformed(ActionEvent evt)
+            public void actionPerformed(java.awt.event.ActionEvent evt)
             {
                 basSliderRadioActionPerformed(evt);
             }
@@ -270,9 +272,9 @@ public class setupFramePre extends javax.swing.JFrame {
         randomBasSlider.setSelected(true);
         randomBasSlider.setText("Random");
         randomBasSlider.setName("randomBasSlider"); // NOI18N
-        randomBasSlider.addActionListener(new ActionListener()
+        randomBasSlider.addActionListener(new java.awt.event.ActionListener()
         {
-            public void actionPerformed(ActionEvent evt)
+            public void actionPerformed(java.awt.event.ActionEvent evt)
             {
                 randomBasSliderActionPerformed(evt);
             }
@@ -280,132 +282,132 @@ public class setupFramePre extends javax.swing.JFrame {
 
         jScrollPane1.setName("jScrollPane1"); // NOI18N
 
-        DefaultMutableTreeNode treeNode1 = new DefaultMutableTreeNode("root");
-        DefaultMutableTreeNode treeNode2 = new DefaultMutableTreeNode("Random");
+        javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("root");
+        javax.swing.tree.DefaultMutableTreeNode treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("Random");
         treeNode1.add(treeNode2);
-        treeNode2 = new DefaultMutableTreeNode("Female");
-        DefaultMutableTreeNode treeNode3 = new DefaultMutableTreeNode("Panties");
-        DefaultMutableTreeNode treeNode4 = new DefaultMutableTreeNode("Strings");
+        treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("Female");
+        javax.swing.tree.DefaultMutableTreeNode treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("Panties");
+        javax.swing.tree.DefaultMutableTreeNode treeNode4 = new javax.swing.tree.DefaultMutableTreeNode("Strings");
         treeNode3.add(treeNode4);
-        treeNode4 = new DefaultMutableTreeNode("Tanga panties");
+        treeNode4 = new javax.swing.tree.DefaultMutableTreeNode("Tanga panties");
         treeNode3.add(treeNode4);
-        treeNode4 = new DefaultMutableTreeNode("Regular panties");
+        treeNode4 = new javax.swing.tree.DefaultMutableTreeNode("Regular panties");
         treeNode3.add(treeNode4);
-        treeNode4 = new DefaultMutableTreeNode("\"Boy shorts\" panties");
-        treeNode3.add(treeNode4);
-        treeNode2.add(treeNode3);
-        treeNode3 = new DefaultMutableTreeNode("Swimwear");
-        treeNode4 = new DefaultMutableTreeNode("String bikini");
-        treeNode3.add(treeNode4);
-        treeNode4 = new DefaultMutableTreeNode("Regular bikini");
-        treeNode3.add(treeNode4);
-        treeNode4 = new DefaultMutableTreeNode("Swimsuit");
+        treeNode4 = new javax.swing.tree.DefaultMutableTreeNode("\"Boy shorts\" panties");
         treeNode3.add(treeNode4);
         treeNode2.add(treeNode3);
-        treeNode3 = new DefaultMutableTreeNode("Diapers");
-        treeNode4 = new DefaultMutableTreeNode("Light diaper");
+        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("Swimwear");
+        treeNode4 = new javax.swing.tree.DefaultMutableTreeNode("String bikini");
         treeNode3.add(treeNode4);
-        treeNode4 = new DefaultMutableTreeNode("Normal diaper");
+        treeNode4 = new javax.swing.tree.DefaultMutableTreeNode("Regular bikini");
         treeNode3.add(treeNode4);
-        treeNode4 = new DefaultMutableTreeNode("Heavy diaper");
-        treeNode3.add(treeNode4);
-        treeNode2.add(treeNode3);
-        treeNode3 = new DefaultMutableTreeNode("Menstrual pads");
-        treeNode4 = new DefaultMutableTreeNode("Light pad");
-        treeNode3.add(treeNode4);
-        treeNode4 = new DefaultMutableTreeNode("Normal pad");
-        treeNode3.add(treeNode4);
-        treeNode4 = new DefaultMutableTreeNode("Big pad");
+        treeNode4 = new javax.swing.tree.DefaultMutableTreeNode("Swimsuit");
         treeNode3.add(treeNode4);
         treeNode2.add(treeNode3);
-        treeNode1.add(treeNode2);
-        treeNode2 = new DefaultMutableTreeNode("Male");
-        treeNode3 = new DefaultMutableTreeNode("Pants");
+        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("Diapers");
+        treeNode4 = new javax.swing.tree.DefaultMutableTreeNode("Light diaper");
+        treeNode3.add(treeNode4);
+        treeNode4 = new javax.swing.tree.DefaultMutableTreeNode("Normal diaper");
+        treeNode3.add(treeNode4);
+        treeNode4 = new javax.swing.tree.DefaultMutableTreeNode("Heavy diaper");
+        treeNode3.add(treeNode4);
         treeNode2.add(treeNode3);
-        treeNode3 = new DefaultMutableTreeNode("Shorts-alike pants");
+        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("Menstrual pads");
+        treeNode4 = new javax.swing.tree.DefaultMutableTreeNode("Light pad");
+        treeNode3.add(treeNode4);
+        treeNode4 = new javax.swing.tree.DefaultMutableTreeNode("Normal pad");
+        treeNode3.add(treeNode4);
+        treeNode4 = new javax.swing.tree.DefaultMutableTreeNode("Big pad");
+        treeNode3.add(treeNode4);
         treeNode2.add(treeNode3);
         treeNode1.add(treeNode2);
-        treeNode2 = new DefaultMutableTreeNode("Special");
-        treeNode3 = new DefaultMutableTreeNode("Anti-gravity pants");
+        treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("Male");
+        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("Pants");
         treeNode2.add(treeNode3);
-        treeNode3 = new DefaultMutableTreeNode("Super-absorbing diaper");
+        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("Shorts-alike pants");
         treeNode2.add(treeNode3);
         treeNode1.add(treeNode2);
-        treeNode2 = new DefaultMutableTreeNode("No underwear");
+        treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("Special");
+        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("Anti-gravity pants");
+        treeNode2.add(treeNode3);
+        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("Super-absorbing diaper");
+        treeNode2.add(treeNode3);
         treeNode1.add(treeNode2);
-        treeNode2 = new DefaultMutableTreeNode("Custom");
+        treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("No underwear");
         treeNode1.add(treeNode2);
-        underwearTree.setModel(new DefaultTreeModel(treeNode1));
+        treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("Custom");
+        treeNode1.add(treeNode2);
+        underwearTree.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
         underwearTree.setName("underwearTree"); // NOI18N
         underwearTree.setRootVisible(false);
         jScrollPane1.setViewportView(underwearTree);
 
         jScrollPane2.setName("jScrollPane2"); // NOI18N
 
-        treeNode1 = new DefaultMutableTreeNode("root");
-        treeNode2 = new DefaultMutableTreeNode("Random");
+        treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("root");
+        treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("Random");
         treeNode1.add(treeNode2);
-        treeNode2 = new DefaultMutableTreeNode("Female");
-        treeNode3 = new DefaultMutableTreeNode("Jeans");
-        treeNode4 = new DefaultMutableTreeNode("Long jeans");
+        treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("Female");
+        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("Jeans");
+        treeNode4 = new javax.swing.tree.DefaultMutableTreeNode("Long jeans");
         treeNode3.add(treeNode4);
-        treeNode4 = new DefaultMutableTreeNode("Knee-length jeans");
+        treeNode4 = new javax.swing.tree.DefaultMutableTreeNode("Knee-length jeans");
         treeNode3.add(treeNode4);
-        treeNode4 = new DefaultMutableTreeNode("Short jeans");
+        treeNode4 = new javax.swing.tree.DefaultMutableTreeNode("Short jeans");
         treeNode3.add(treeNode4);
-        treeNode4 = new DefaultMutableTreeNode("Very short jeans");
-        treeNode3.add(treeNode4);
-        treeNode2.add(treeNode3);
-        treeNode3 = new DefaultMutableTreeNode("Trousers");
-        treeNode4 = new DefaultMutableTreeNode("Long trousers");
-        treeNode3.add(treeNode4);
-        treeNode4 = new DefaultMutableTreeNode("Knee-length trousers");
-        treeNode3.add(treeNode4);
-        treeNode4 = new DefaultMutableTreeNode("Short trousers");
-        treeNode3.add(treeNode4);
-        treeNode4 = new DefaultMutableTreeNode("Very short trousers");
+        treeNode4 = new javax.swing.tree.DefaultMutableTreeNode("Very short jeans");
         treeNode3.add(treeNode4);
         treeNode2.add(treeNode3);
-        treeNode3 = new DefaultMutableTreeNode("Skirts");
-        treeNode4 = new DefaultMutableTreeNode("Long skirt");
+        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("Trousers");
+        treeNode4 = new javax.swing.tree.DefaultMutableTreeNode("Long trousers");
         treeNode3.add(treeNode4);
-        treeNode4 = new DefaultMutableTreeNode("Knee-length skirt");
+        treeNode4 = new javax.swing.tree.DefaultMutableTreeNode("Knee-length trousers");
         treeNode3.add(treeNode4);
-        treeNode4 = new DefaultMutableTreeNode("Short skirt");
+        treeNode4 = new javax.swing.tree.DefaultMutableTreeNode("Short trousers");
         treeNode3.add(treeNode4);
-        treeNode4 = new DefaultMutableTreeNode("Mini skirt");
-        treeNode3.add(treeNode4);
-        treeNode4 = new DefaultMutableTreeNode("Micro skirt");
-        treeNode3.add(treeNode4);
-        treeNode4 = new DefaultMutableTreeNode("Long skirt and tights");
-        treeNode3.add(treeNode4);
-        treeNode4 = new DefaultMutableTreeNode("Knee-length skirt and tights");
-        treeNode3.add(treeNode4);
-        treeNode4 = new DefaultMutableTreeNode("Short skirt and tights");
-        treeNode3.add(treeNode4);
-        treeNode4 = new DefaultMutableTreeNode("Mini skirt and tights");
-        treeNode3.add(treeNode4);
-        treeNode4 = new DefaultMutableTreeNode("Micro skirt and tights");
+        treeNode4 = new javax.swing.tree.DefaultMutableTreeNode("Very short trousers");
         treeNode3.add(treeNode4);
         treeNode2.add(treeNode3);
-        treeNode3 = new DefaultMutableTreeNode("Leggings");
-        treeNode2.add(treeNode3);
-        treeNode1.add(treeNode2);
-        treeNode2 = new DefaultMutableTreeNode("Male");
-        treeNode3 = new DefaultMutableTreeNode("Jeans");
-        treeNode4 = new DefaultMutableTreeNode("Short male jeans");
+        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("Skirts");
+        treeNode4 = new javax.swing.tree.DefaultMutableTreeNode("Long skirt");
         treeNode3.add(treeNode4);
-        treeNode4 = new DefaultMutableTreeNode("Normal male jeans");
+        treeNode4 = new javax.swing.tree.DefaultMutableTreeNode("Knee-length skirt");
+        treeNode3.add(treeNode4);
+        treeNode4 = new javax.swing.tree.DefaultMutableTreeNode("Short skirt");
+        treeNode3.add(treeNode4);
+        treeNode4 = new javax.swing.tree.DefaultMutableTreeNode("Mini skirt");
+        treeNode3.add(treeNode4);
+        treeNode4 = new javax.swing.tree.DefaultMutableTreeNode("Micro skirt");
+        treeNode3.add(treeNode4);
+        treeNode4 = new javax.swing.tree.DefaultMutableTreeNode("Long skirt and tights");
+        treeNode3.add(treeNode4);
+        treeNode4 = new javax.swing.tree.DefaultMutableTreeNode("Knee-length skirt and tights");
+        treeNode3.add(treeNode4);
+        treeNode4 = new javax.swing.tree.DefaultMutableTreeNode("Short skirt and tights");
+        treeNode3.add(treeNode4);
+        treeNode4 = new javax.swing.tree.DefaultMutableTreeNode("Mini skirt and tights");
+        treeNode3.add(treeNode4);
+        treeNode4 = new javax.swing.tree.DefaultMutableTreeNode("Micro skirt and tights");
         treeNode3.add(treeNode4);
         treeNode2.add(treeNode3);
-        treeNode3 = new DefaultMutableTreeNode("Male trousers");
+        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("Leggings");
         treeNode2.add(treeNode3);
         treeNode1.add(treeNode2);
-        treeNode2 = new DefaultMutableTreeNode("No outerwear");
+        treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("Male");
+        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("Jeans");
+        treeNode4 = new javax.swing.tree.DefaultMutableTreeNode("Short male jeans");
+        treeNode3.add(treeNode4);
+        treeNode4 = new javax.swing.tree.DefaultMutableTreeNode("Normal male jeans");
+        treeNode3.add(treeNode4);
+        treeNode2.add(treeNode3);
+        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("Male trousers");
+        treeNode2.add(treeNode3);
         treeNode1.add(treeNode2);
-        treeNode2 = new DefaultMutableTreeNode("Custom");
+        treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("No outerwear");
         treeNode1.add(treeNode2);
-        outerwearTree.setModel(new DefaultTreeModel(treeNode1));
+        treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("Custom");
+        treeNode1.add(treeNode2);
+        outerwearTree.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
         outerwearTree.setName("outerwearTree"); // NOI18N
         outerwearTree.setRootVisible(false);
         jScrollPane2.setViewportView(outerwearTree);
@@ -413,500 +415,544 @@ public class setupFramePre extends javax.swing.JFrame {
         jScrollPane3.setName("jScrollPane3"); // NOI18N
 
         jTextPane1.setEditable(false);
-        jTextPane1.setFont(new Font("Tahoma", 0, 12)); // NOI18N
+        jTextPane1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jTextPane1.setText("This program is thanks to the wonderful help of the following users:\nAnna May, FromRUSForum, and notwillnotcast of Omo.org, and two others (who choose to not be credited for differing reasons —\n                                            helping a ton, along with a few others helping with my minor mistakes!\n\nIf your (user)name is not here and you want it here, just shoot me a message and I'll add it post-haste!");
         jTextPane1.setName("creditsPane"); // NOI18N
         jScrollPane3.setViewportView(jTextPane1);
 
-        undiesColor_black.setBackground(new Color(0, 0, 0));
-        undiesColor_black.setBorder(BorderFactory.createLineBorder(new Color(255, 255, 255)));
+        undiesColor_black.setBackground(new java.awt.Color(0, 0, 0));
+        undiesColor_black.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
         undiesColor_black.setToolTipText("Black");
         undiesColor_black.setName("undiesColor_black"); // NOI18N
-        undiesColor_black.setPreferredSize(new Dimension(20, 20));
-        undiesColor_black.addMouseListener(new MouseAdapter()
+        undiesColor_black.setPreferredSize(new java.awt.Dimension(20, 20));
+        undiesColor_black.addMouseListener(new java.awt.event.MouseAdapter()
         {
-            public void mouseClicked(MouseEvent evt)
+            public void mouseClicked(java.awt.event.MouseEvent evt)
             {
                 undiesColor_blackMouseClicked(evt);
             }
         });
 
-        GroupLayout undiesColor_blackLayout = new GroupLayout(undiesColor_black);
+        javax.swing.GroupLayout undiesColor_blackLayout = new javax.swing.GroupLayout(undiesColor_black);
         undiesColor_black.setLayout(undiesColor_blackLayout);
-        undiesColor_blackLayout.setHorizontalGroup(undiesColor_blackLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        undiesColor_blackLayout.setHorizontalGroup(
+            undiesColor_blackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 18, Short.MAX_VALUE)
         );
-        undiesColor_blackLayout.setVerticalGroup(undiesColor_blackLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        undiesColor_blackLayout.setVerticalGroup(
+            undiesColor_blackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 18, Short.MAX_VALUE)
         );
 
-        undiesColor_gray.setBackground(new Color(153, 153, 153));
-        undiesColor_gray.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0)));
+        undiesColor_gray.setBackground(new java.awt.Color(153, 153, 153));
+        undiesColor_gray.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         undiesColor_gray.setToolTipText("Gray");
         undiesColor_gray.setName("undiesColor_gray"); // NOI18N
-        undiesColor_gray.setPreferredSize(new Dimension(20, 20));
-        undiesColor_gray.addMouseListener(new MouseAdapter()
+        undiesColor_gray.setPreferredSize(new java.awt.Dimension(20, 20));
+        undiesColor_gray.addMouseListener(new java.awt.event.MouseAdapter()
         {
-            public void mouseClicked(MouseEvent evt)
+            public void mouseClicked(java.awt.event.MouseEvent evt)
             {
                 undiesColor_grayMouseClicked(evt);
             }
         });
 
-        GroupLayout undiesColor_grayLayout = new GroupLayout(undiesColor_gray);
+        javax.swing.GroupLayout undiesColor_grayLayout = new javax.swing.GroupLayout(undiesColor_gray);
         undiesColor_gray.setLayout(undiesColor_grayLayout);
-        undiesColor_grayLayout.setHorizontalGroup(undiesColor_grayLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        undiesColor_grayLayout.setHorizontalGroup(
+            undiesColor_grayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 18, Short.MAX_VALUE)
         );
-        undiesColor_grayLayout.setVerticalGroup(undiesColor_grayLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        undiesColor_grayLayout.setVerticalGroup(
+            undiesColor_grayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 18, Short.MAX_VALUE)
         );
 
-        undiesColor_red.setBackground(new Color(255, 0, 0));
-        undiesColor_red.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0)));
+        undiesColor_red.setBackground(new java.awt.Color(255, 0, 0));
+        undiesColor_red.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         undiesColor_red.setToolTipText("Red");
         undiesColor_red.setName("undiesColor_red"); // NOI18N
-        undiesColor_red.setPreferredSize(new Dimension(20, 20));
-        undiesColor_red.addMouseListener(new MouseAdapter()
+        undiesColor_red.setPreferredSize(new java.awt.Dimension(20, 20));
+        undiesColor_red.addMouseListener(new java.awt.event.MouseAdapter()
         {
-            public void mouseClicked(MouseEvent evt)
+            public void mouseClicked(java.awt.event.MouseEvent evt)
             {
                 undiesColor_redMouseClicked(evt);
             }
         });
 
-        GroupLayout undiesColor_redLayout = new GroupLayout(undiesColor_red);
+        javax.swing.GroupLayout undiesColor_redLayout = new javax.swing.GroupLayout(undiesColor_red);
         undiesColor_red.setLayout(undiesColor_redLayout);
-        undiesColor_redLayout.setHorizontalGroup(undiesColor_redLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        undiesColor_redLayout.setHorizontalGroup(
+            undiesColor_redLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 18, Short.MAX_VALUE)
         );
-        undiesColor_redLayout.setVerticalGroup(undiesColor_redLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        undiesColor_redLayout.setVerticalGroup(
+            undiesColor_redLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 18, Short.MAX_VALUE)
         );
 
-        undiesColor_orange.setBackground(new Color(255, 153, 0));
-        undiesColor_orange.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0)));
+        undiesColor_orange.setBackground(new java.awt.Color(255, 153, 0));
+        undiesColor_orange.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         undiesColor_orange.setToolTipText("Orange");
         undiesColor_orange.setName("undiesColor_orange"); // NOI18N
-        undiesColor_orange.setPreferredSize(new Dimension(20, 20));
-        undiesColor_orange.addMouseListener(new MouseAdapter()
+        undiesColor_orange.setPreferredSize(new java.awt.Dimension(20, 20));
+        undiesColor_orange.addMouseListener(new java.awt.event.MouseAdapter()
         {
-            public void mouseClicked(MouseEvent evt)
+            public void mouseClicked(java.awt.event.MouseEvent evt)
             {
                 undiesColor_orangeMouseClicked(evt);
             }
         });
 
-        GroupLayout undiesColor_orangeLayout = new GroupLayout(undiesColor_orange);
+        javax.swing.GroupLayout undiesColor_orangeLayout = new javax.swing.GroupLayout(undiesColor_orange);
         undiesColor_orange.setLayout(undiesColor_orangeLayout);
-        undiesColor_orangeLayout.setHorizontalGroup(undiesColor_orangeLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        undiesColor_orangeLayout.setHorizontalGroup(
+            undiesColor_orangeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 18, Short.MAX_VALUE)
         );
-        undiesColor_orangeLayout.setVerticalGroup(undiesColor_orangeLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        undiesColor_orangeLayout.setVerticalGroup(
+            undiesColor_orangeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 18, Short.MAX_VALUE)
         );
 
-        undiesColor_yellow.setBackground(new Color(255, 255, 0));
-        undiesColor_yellow.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0)));
+        undiesColor_yellow.setBackground(new java.awt.Color(255, 255, 0));
+        undiesColor_yellow.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         undiesColor_yellow.setToolTipText("Yellow");
         undiesColor_yellow.setName("undiesColor_yellow"); // NOI18N
-        undiesColor_yellow.setPreferredSize(new Dimension(20, 20));
-        undiesColor_yellow.addMouseListener(new MouseAdapter()
+        undiesColor_yellow.setPreferredSize(new java.awt.Dimension(20, 20));
+        undiesColor_yellow.addMouseListener(new java.awt.event.MouseAdapter()
         {
-            public void mouseClicked(MouseEvent evt)
+            public void mouseClicked(java.awt.event.MouseEvent evt)
             {
                 undiesColor_yellowMouseClicked(evt);
             }
         });
 
-        GroupLayout undiesColor_yellowLayout = new GroupLayout(undiesColor_yellow);
+        javax.swing.GroupLayout undiesColor_yellowLayout = new javax.swing.GroupLayout(undiesColor_yellow);
         undiesColor_yellow.setLayout(undiesColor_yellowLayout);
-        undiesColor_yellowLayout.setHorizontalGroup(undiesColor_yellowLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        undiesColor_yellowLayout.setHorizontalGroup(
+            undiesColor_yellowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 18, Short.MAX_VALUE)
         );
-        undiesColor_yellowLayout.setVerticalGroup(undiesColor_yellowLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        undiesColor_yellowLayout.setVerticalGroup(
+            undiesColor_yellowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 18, Short.MAX_VALUE)
         );
 
-        undiesColor_green.setBackground(new Color(0, 255, 0));
-        undiesColor_green.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0)));
+        undiesColor_green.setBackground(new java.awt.Color(0, 255, 0));
+        undiesColor_green.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         undiesColor_green.setToolTipText("Green");
         undiesColor_green.setName("undiesColor_green"); // NOI18N
-        undiesColor_green.setPreferredSize(new Dimension(20, 20));
-        undiesColor_green.addMouseListener(new MouseAdapter()
+        undiesColor_green.setPreferredSize(new java.awt.Dimension(20, 20));
+        undiesColor_green.addMouseListener(new java.awt.event.MouseAdapter()
         {
-            public void mouseClicked(MouseEvent evt)
+            public void mouseClicked(java.awt.event.MouseEvent evt)
             {
                 undiesColor_greenMouseClicked(evt);
             }
         });
 
-        GroupLayout undiesColor_greenLayout = new GroupLayout(undiesColor_green);
+        javax.swing.GroupLayout undiesColor_greenLayout = new javax.swing.GroupLayout(undiesColor_green);
         undiesColor_green.setLayout(undiesColor_greenLayout);
-        undiesColor_greenLayout.setHorizontalGroup(undiesColor_greenLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        undiesColor_greenLayout.setHorizontalGroup(
+            undiesColor_greenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 18, Short.MAX_VALUE)
         );
-        undiesColor_greenLayout.setVerticalGroup(undiesColor_greenLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        undiesColor_greenLayout.setVerticalGroup(
+            undiesColor_greenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 18, Short.MAX_VALUE)
         );
 
-        undiesColor_blue.setBackground(new Color(0, 255, 204));
-        undiesColor_blue.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0)));
+        undiesColor_blue.setBackground(new java.awt.Color(0, 255, 204));
+        undiesColor_blue.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         undiesColor_blue.setToolTipText("Blue");
         undiesColor_blue.setName("undiesColor_blue"); // NOI18N
-        undiesColor_blue.setPreferredSize(new Dimension(20, 20));
-        undiesColor_blue.addMouseListener(new MouseAdapter()
+        undiesColor_blue.setPreferredSize(new java.awt.Dimension(20, 20));
+        undiesColor_blue.addMouseListener(new java.awt.event.MouseAdapter()
         {
-            public void mouseClicked(MouseEvent evt)
+            public void mouseClicked(java.awt.event.MouseEvent evt)
             {
                 undiesColor_blueMouseClicked(evt);
             }
         });
 
-        GroupLayout undiesColor_blueLayout = new GroupLayout(undiesColor_blue);
+        javax.swing.GroupLayout undiesColor_blueLayout = new javax.swing.GroupLayout(undiesColor_blue);
         undiesColor_blue.setLayout(undiesColor_blueLayout);
-        undiesColor_blueLayout.setHorizontalGroup(undiesColor_blueLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        undiesColor_blueLayout.setHorizontalGroup(
+            undiesColor_blueLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 18, Short.MAX_VALUE)
         );
-        undiesColor_blueLayout.setVerticalGroup(undiesColor_blueLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        undiesColor_blueLayout.setVerticalGroup(
+            undiesColor_blueLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 18, Short.MAX_VALUE)
         );
 
-        undiesColor_darkBlue.setBackground(new Color(0, 0, 204));
-        undiesColor_darkBlue.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0)));
+        undiesColor_darkBlue.setBackground(new java.awt.Color(0, 0, 204));
+        undiesColor_darkBlue.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         undiesColor_darkBlue.setToolTipText("Dark blue");
         undiesColor_darkBlue.setName("undiesColor_darkBlue"); // NOI18N
-        undiesColor_darkBlue.setPreferredSize(new Dimension(20, 20));
-        undiesColor_darkBlue.addMouseListener(new MouseAdapter()
+        undiesColor_darkBlue.setPreferredSize(new java.awt.Dimension(20, 20));
+        undiesColor_darkBlue.addMouseListener(new java.awt.event.MouseAdapter()
         {
-            public void mouseClicked(MouseEvent evt)
+            public void mouseClicked(java.awt.event.MouseEvent evt)
             {
                 undiesColor_darkBlueMouseClicked(evt);
             }
         });
 
-        GroupLayout undiesColor_darkBlueLayout = new GroupLayout(undiesColor_darkBlue);
+        javax.swing.GroupLayout undiesColor_darkBlueLayout = new javax.swing.GroupLayout(undiesColor_darkBlue);
         undiesColor_darkBlue.setLayout(undiesColor_darkBlueLayout);
-        undiesColor_darkBlueLayout.setHorizontalGroup(undiesColor_darkBlueLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        undiesColor_darkBlueLayout.setHorizontalGroup(
+            undiesColor_darkBlueLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 18, Short.MAX_VALUE)
         );
-        undiesColor_darkBlueLayout.setVerticalGroup(undiesColor_darkBlueLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        undiesColor_darkBlueLayout.setVerticalGroup(
+            undiesColor_darkBlueLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 18, Short.MAX_VALUE)
         );
 
-        undiesColor_purple.setBackground(new Color(153, 0, 153));
-        undiesColor_purple.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0)));
+        undiesColor_purple.setBackground(new java.awt.Color(153, 0, 153));
+        undiesColor_purple.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         undiesColor_purple.setToolTipText("Purple");
         undiesColor_purple.setName("undiesColor_purple"); // NOI18N
-        undiesColor_purple.setPreferredSize(new Dimension(20, 20));
-        undiesColor_purple.addMouseListener(new MouseAdapter()
+        undiesColor_purple.setPreferredSize(new java.awt.Dimension(20, 20));
+        undiesColor_purple.addMouseListener(new java.awt.event.MouseAdapter()
         {
-            public void mouseClicked(MouseEvent evt)
+            public void mouseClicked(java.awt.event.MouseEvent evt)
             {
                 undiesColor_purpleMouseClicked(evt);
             }
         });
 
-        GroupLayout undiesColor_purpleLayout = new GroupLayout(undiesColor_purple);
+        javax.swing.GroupLayout undiesColor_purpleLayout = new javax.swing.GroupLayout(undiesColor_purple);
         undiesColor_purple.setLayout(undiesColor_purpleLayout);
-        undiesColor_purpleLayout.setHorizontalGroup(undiesColor_purpleLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        undiesColor_purpleLayout.setHorizontalGroup(
+            undiesColor_purpleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 18, Short.MAX_VALUE)
         );
-        undiesColor_purpleLayout.setVerticalGroup(undiesColor_purpleLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        undiesColor_purpleLayout.setVerticalGroup(
+            undiesColor_purpleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 18, Short.MAX_VALUE)
         );
 
-        undiesColor_pink.setBackground(new Color(255, 51, 255));
-        undiesColor_pink.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0)));
+        undiesColor_pink.setBackground(new java.awt.Color(255, 51, 255));
+        undiesColor_pink.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         undiesColor_pink.setToolTipText("Pink");
         undiesColor_pink.setName("undiesColor_pink"); // NOI18N
-        undiesColor_pink.setPreferredSize(new Dimension(20, 20));
-        undiesColor_pink.addMouseListener(new MouseAdapter()
+        undiesColor_pink.setPreferredSize(new java.awt.Dimension(20, 20));
+        undiesColor_pink.addMouseListener(new java.awt.event.MouseAdapter()
         {
-            public void mouseClicked(MouseEvent evt)
+            public void mouseClicked(java.awt.event.MouseEvent evt)
             {
                 undiesColor_pinkMouseClicked(evt);
             }
         });
 
-        GroupLayout undiesColor_pinkLayout = new GroupLayout(undiesColor_pink);
+        javax.swing.GroupLayout undiesColor_pinkLayout = new javax.swing.GroupLayout(undiesColor_pink);
         undiesColor_pink.setLayout(undiesColor_pinkLayout);
-        undiesColor_pinkLayout.setHorizontalGroup(undiesColor_pinkLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        undiesColor_pinkLayout.setHorizontalGroup(
+            undiesColor_pinkLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 18, Short.MAX_VALUE)
         );
-        undiesColor_pinkLayout.setVerticalGroup(undiesColor_pinkLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        undiesColor_pinkLayout.setVerticalGroup(
+            undiesColor_pinkLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 18, Short.MAX_VALUE)
         );
 
-        lowerColor_pink1.setBackground(new Color(255, 51, 255));
-        lowerColor_pink1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0)));
+        lowerColor_pink1.setBackground(new java.awt.Color(255, 51, 255));
+        lowerColor_pink1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         lowerColor_pink1.setToolTipText("Pink");
         lowerColor_pink1.setName("lowerColor_pink1"); // NOI18N
-        lowerColor_pink1.setPreferredSize(new Dimension(20, 20));
-        lowerColor_pink1.addMouseListener(new MouseAdapter()
+        lowerColor_pink1.setPreferredSize(new java.awt.Dimension(20, 20));
+        lowerColor_pink1.addMouseListener(new java.awt.event.MouseAdapter()
         {
-            public void mouseClicked(MouseEvent evt)
+            public void mouseClicked(java.awt.event.MouseEvent evt)
             {
                 lowerColor_pink1MouseClicked(evt);
             }
         });
 
-        GroupLayout lowerColor_pink1Layout = new GroupLayout(lowerColor_pink1);
+        javax.swing.GroupLayout lowerColor_pink1Layout = new javax.swing.GroupLayout(lowerColor_pink1);
         lowerColor_pink1.setLayout(lowerColor_pink1Layout);
-        lowerColor_pink1Layout.setHorizontalGroup(lowerColor_pink1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        lowerColor_pink1Layout.setHorizontalGroup(
+            lowerColor_pink1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 18, Short.MAX_VALUE)
         );
-        lowerColor_pink1Layout.setVerticalGroup(lowerColor_pink1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        lowerColor_pink1Layout.setVerticalGroup(
+            lowerColor_pink1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 18, Short.MAX_VALUE)
         );
 
-        lowerColor_black1.setBackground(new Color(0, 0, 0));
-        lowerColor_black1.setBorder(BorderFactory.createLineBorder(new Color(255, 255, 255)));
+        lowerColor_black1.setBackground(new java.awt.Color(0, 0, 0));
+        lowerColor_black1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
         lowerColor_black1.setToolTipText("Black");
         lowerColor_black1.setName("lowerColor_black1"); // NOI18N
-        lowerColor_black1.setPreferredSize(new Dimension(20, 20));
-        lowerColor_black1.addMouseListener(new MouseAdapter()
+        lowerColor_black1.setPreferredSize(new java.awt.Dimension(20, 20));
+        lowerColor_black1.addMouseListener(new java.awt.event.MouseAdapter()
         {
-            public void mouseClicked(MouseEvent evt)
+            public void mouseClicked(java.awt.event.MouseEvent evt)
             {
                 lowerColor_black1MouseClicked(evt);
             }
         });
 
-        GroupLayout lowerColor_black1Layout = new GroupLayout(lowerColor_black1);
+        javax.swing.GroupLayout lowerColor_black1Layout = new javax.swing.GroupLayout(lowerColor_black1);
         lowerColor_black1.setLayout(lowerColor_black1Layout);
-        lowerColor_black1Layout.setHorizontalGroup(lowerColor_black1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        lowerColor_black1Layout.setHorizontalGroup(
+            lowerColor_black1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 18, Short.MAX_VALUE)
         );
-        lowerColor_black1Layout.setVerticalGroup(lowerColor_black1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        lowerColor_black1Layout.setVerticalGroup(
+            lowerColor_black1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 18, Short.MAX_VALUE)
         );
 
-        lowerColor_gray1.setBackground(new Color(153, 153, 153));
-        lowerColor_gray1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0)));
+        lowerColor_gray1.setBackground(new java.awt.Color(153, 153, 153));
+        lowerColor_gray1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         lowerColor_gray1.setToolTipText("Gray");
         lowerColor_gray1.setName("lowerColor_gray1"); // NOI18N
-        lowerColor_gray1.setPreferredSize(new Dimension(20, 20));
-        lowerColor_gray1.addMouseListener(new MouseAdapter()
+        lowerColor_gray1.setPreferredSize(new java.awt.Dimension(20, 20));
+        lowerColor_gray1.addMouseListener(new java.awt.event.MouseAdapter()
         {
-            public void mouseClicked(MouseEvent evt)
+            public void mouseClicked(java.awt.event.MouseEvent evt)
             {
                 lowerColor_gray1MouseClicked(evt);
             }
         });
 
-        GroupLayout lowerColor_gray1Layout = new GroupLayout(lowerColor_gray1);
+        javax.swing.GroupLayout lowerColor_gray1Layout = new javax.swing.GroupLayout(lowerColor_gray1);
         lowerColor_gray1.setLayout(lowerColor_gray1Layout);
-        lowerColor_gray1Layout.setHorizontalGroup(lowerColor_gray1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        lowerColor_gray1Layout.setHorizontalGroup(
+            lowerColor_gray1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 18, Short.MAX_VALUE)
         );
-        lowerColor_gray1Layout.setVerticalGroup(lowerColor_gray1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        lowerColor_gray1Layout.setVerticalGroup(
+            lowerColor_gray1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 18, Short.MAX_VALUE)
         );
 
-        lowerColor_red1.setBackground(new Color(255, 0, 0));
-        lowerColor_red1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0)));
+        lowerColor_red1.setBackground(new java.awt.Color(255, 0, 0));
+        lowerColor_red1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         lowerColor_red1.setToolTipText("Red");
         lowerColor_red1.setName("lowerColor_red1"); // NOI18N
-        lowerColor_red1.setPreferredSize(new Dimension(20, 20));
-        lowerColor_red1.addMouseListener(new MouseAdapter()
+        lowerColor_red1.setPreferredSize(new java.awt.Dimension(20, 20));
+        lowerColor_red1.addMouseListener(new java.awt.event.MouseAdapter()
         {
-            public void mouseClicked(MouseEvent evt)
+            public void mouseClicked(java.awt.event.MouseEvent evt)
             {
                 lowerColor_red1MouseClicked(evt);
             }
         });
 
-        GroupLayout lowerColor_red1Layout = new GroupLayout(lowerColor_red1);
+        javax.swing.GroupLayout lowerColor_red1Layout = new javax.swing.GroupLayout(lowerColor_red1);
         lowerColor_red1.setLayout(lowerColor_red1Layout);
-        lowerColor_red1Layout.setHorizontalGroup(lowerColor_red1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        lowerColor_red1Layout.setHorizontalGroup(
+            lowerColor_red1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 18, Short.MAX_VALUE)
         );
-        lowerColor_red1Layout.setVerticalGroup(lowerColor_red1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        lowerColor_red1Layout.setVerticalGroup(
+            lowerColor_red1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 18, Short.MAX_VALUE)
         );
 
-        lowerColor_orange1.setBackground(new Color(255, 153, 0));
-        lowerColor_orange1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0)));
+        lowerColor_orange1.setBackground(new java.awt.Color(255, 153, 0));
+        lowerColor_orange1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         lowerColor_orange1.setToolTipText("Orange");
         lowerColor_orange1.setName("lowerColor_orange1"); // NOI18N
-        lowerColor_orange1.setPreferredSize(new Dimension(20, 20));
-        lowerColor_orange1.addMouseListener(new MouseAdapter()
+        lowerColor_orange1.setPreferredSize(new java.awt.Dimension(20, 20));
+        lowerColor_orange1.addMouseListener(new java.awt.event.MouseAdapter()
         {
-            public void mouseClicked(MouseEvent evt)
+            public void mouseClicked(java.awt.event.MouseEvent evt)
             {
                 lowerColor_orange1MouseClicked(evt);
             }
         });
 
-        GroupLayout lowerColor_orange1Layout = new GroupLayout(lowerColor_orange1);
+        javax.swing.GroupLayout lowerColor_orange1Layout = new javax.swing.GroupLayout(lowerColor_orange1);
         lowerColor_orange1.setLayout(lowerColor_orange1Layout);
-        lowerColor_orange1Layout.setHorizontalGroup(lowerColor_orange1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        lowerColor_orange1Layout.setHorizontalGroup(
+            lowerColor_orange1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 18, Short.MAX_VALUE)
         );
-        lowerColor_orange1Layout.setVerticalGroup(lowerColor_orange1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        lowerColor_orange1Layout.setVerticalGroup(
+            lowerColor_orange1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 18, Short.MAX_VALUE)
         );
 
-        lowerColor_yellow1.setBackground(new Color(255, 255, 0));
-        lowerColor_yellow1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0)));
+        lowerColor_yellow1.setBackground(new java.awt.Color(255, 255, 0));
+        lowerColor_yellow1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         lowerColor_yellow1.setToolTipText("Yellow");
         lowerColor_yellow1.setName("lowerColor_yellow1"); // NOI18N
-        lowerColor_yellow1.setPreferredSize(new Dimension(20, 20));
-        lowerColor_yellow1.addMouseListener(new MouseAdapter()
+        lowerColor_yellow1.setPreferredSize(new java.awt.Dimension(20, 20));
+        lowerColor_yellow1.addMouseListener(new java.awt.event.MouseAdapter()
         {
-            public void mouseClicked(MouseEvent evt)
+            public void mouseClicked(java.awt.event.MouseEvent evt)
             {
                 lowerColor_yellow1MouseClicked(evt);
             }
         });
 
-        GroupLayout lowerColor_yellow1Layout = new GroupLayout(lowerColor_yellow1);
+        javax.swing.GroupLayout lowerColor_yellow1Layout = new javax.swing.GroupLayout(lowerColor_yellow1);
         lowerColor_yellow1.setLayout(lowerColor_yellow1Layout);
-        lowerColor_yellow1Layout.setHorizontalGroup(lowerColor_yellow1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        lowerColor_yellow1Layout.setHorizontalGroup(
+            lowerColor_yellow1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 18, Short.MAX_VALUE)
         );
-        lowerColor_yellow1Layout.setVerticalGroup(lowerColor_yellow1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        lowerColor_yellow1Layout.setVerticalGroup(
+            lowerColor_yellow1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 18, Short.MAX_VALUE)
         );
 
-        lowerColor_green1.setBackground(new Color(0, 255, 0));
-        lowerColor_green1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0)));
+        lowerColor_green1.setBackground(new java.awt.Color(0, 255, 0));
+        lowerColor_green1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         lowerColor_green1.setToolTipText("Green");
         lowerColor_green1.setName("lowerColor_green1"); // NOI18N
-        lowerColor_green1.setPreferredSize(new Dimension(20, 20));
-        lowerColor_green1.addMouseListener(new MouseAdapter()
+        lowerColor_green1.setPreferredSize(new java.awt.Dimension(20, 20));
+        lowerColor_green1.addMouseListener(new java.awt.event.MouseAdapter()
         {
-            public void mouseClicked(MouseEvent evt)
+            public void mouseClicked(java.awt.event.MouseEvent evt)
             {
                 lowerColor_green1MouseClicked(evt);
             }
         });
 
-        GroupLayout lowerColor_green1Layout = new GroupLayout(lowerColor_green1);
+        javax.swing.GroupLayout lowerColor_green1Layout = new javax.swing.GroupLayout(lowerColor_green1);
         lowerColor_green1.setLayout(lowerColor_green1Layout);
-        lowerColor_green1Layout.setHorizontalGroup(lowerColor_green1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        lowerColor_green1Layout.setHorizontalGroup(
+            lowerColor_green1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 18, Short.MAX_VALUE)
         );
-        lowerColor_green1Layout.setVerticalGroup(lowerColor_green1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        lowerColor_green1Layout.setVerticalGroup(
+            lowerColor_green1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 18, Short.MAX_VALUE)
         );
 
-        lowerColor_blue1.setBackground(new Color(0, 255, 204));
-        lowerColor_blue1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0)));
+        lowerColor_blue1.setBackground(new java.awt.Color(0, 255, 204));
+        lowerColor_blue1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         lowerColor_blue1.setToolTipText("Blue");
         lowerColor_blue1.setName("lowerColor_blue1"); // NOI18N
-        lowerColor_blue1.setPreferredSize(new Dimension(20, 20));
-        lowerColor_blue1.addMouseListener(new MouseAdapter()
+        lowerColor_blue1.setPreferredSize(new java.awt.Dimension(20, 20));
+        lowerColor_blue1.addMouseListener(new java.awt.event.MouseAdapter()
         {
-            public void mouseClicked(MouseEvent evt)
+            public void mouseClicked(java.awt.event.MouseEvent evt)
             {
                 lowerColor_blue1MouseClicked(evt);
             }
         });
 
-        GroupLayout lowerColor_blue1Layout = new GroupLayout(lowerColor_blue1);
+        javax.swing.GroupLayout lowerColor_blue1Layout = new javax.swing.GroupLayout(lowerColor_blue1);
         lowerColor_blue1.setLayout(lowerColor_blue1Layout);
-        lowerColor_blue1Layout.setHorizontalGroup(lowerColor_blue1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        lowerColor_blue1Layout.setHorizontalGroup(
+            lowerColor_blue1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 18, Short.MAX_VALUE)
         );
-        lowerColor_blue1Layout.setVerticalGroup(lowerColor_blue1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        lowerColor_blue1Layout.setVerticalGroup(
+            lowerColor_blue1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 18, Short.MAX_VALUE)
         );
 
-        lowerColor_darkBlue1.setBackground(new Color(0, 0, 204));
-        lowerColor_darkBlue1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0)));
+        lowerColor_darkBlue1.setBackground(new java.awt.Color(0, 0, 204));
+        lowerColor_darkBlue1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         lowerColor_darkBlue1.setToolTipText("Dark blue");
         lowerColor_darkBlue1.setName("lowerColor_darkBlue1"); // NOI18N
-        lowerColor_darkBlue1.setPreferredSize(new Dimension(20, 20));
-        lowerColor_darkBlue1.addMouseListener(new MouseAdapter()
+        lowerColor_darkBlue1.setPreferredSize(new java.awt.Dimension(20, 20));
+        lowerColor_darkBlue1.addMouseListener(new java.awt.event.MouseAdapter()
         {
-            public void mouseClicked(MouseEvent evt)
+            public void mouseClicked(java.awt.event.MouseEvent evt)
             {
                 lowerColor_darkBlue1MouseClicked(evt);
             }
         });
 
-        GroupLayout lowerColor_darkBlue1Layout = new GroupLayout(lowerColor_darkBlue1);
+        javax.swing.GroupLayout lowerColor_darkBlue1Layout = new javax.swing.GroupLayout(lowerColor_darkBlue1);
         lowerColor_darkBlue1.setLayout(lowerColor_darkBlue1Layout);
-        lowerColor_darkBlue1Layout.setHorizontalGroup(lowerColor_darkBlue1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        lowerColor_darkBlue1Layout.setHorizontalGroup(
+            lowerColor_darkBlue1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 18, Short.MAX_VALUE)
         );
-        lowerColor_darkBlue1Layout.setVerticalGroup(lowerColor_darkBlue1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        lowerColor_darkBlue1Layout.setVerticalGroup(
+            lowerColor_darkBlue1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 18, Short.MAX_VALUE)
         );
 
-        lowerColor_purple1.setBackground(new Color(153, 0, 153));
-        lowerColor_purple1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0)));
+        lowerColor_purple1.setBackground(new java.awt.Color(153, 0, 153));
+        lowerColor_purple1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         lowerColor_purple1.setToolTipText("Purple");
         lowerColor_purple1.setName("lowerColor_purple1"); // NOI18N
-        lowerColor_purple1.setPreferredSize(new Dimension(20, 20));
-        lowerColor_purple1.addMouseListener(new MouseAdapter()
+        lowerColor_purple1.setPreferredSize(new java.awt.Dimension(20, 20));
+        lowerColor_purple1.addMouseListener(new java.awt.event.MouseAdapter()
         {
-            public void mouseClicked(MouseEvent evt)
+            public void mouseClicked(java.awt.event.MouseEvent evt)
             {
                 lowerColor_purple1MouseClicked(evt);
             }
         });
 
-        GroupLayout lowerColor_purple1Layout = new GroupLayout(lowerColor_purple1);
+        javax.swing.GroupLayout lowerColor_purple1Layout = new javax.swing.GroupLayout(lowerColor_purple1);
         lowerColor_purple1.setLayout(lowerColor_purple1Layout);
-        lowerColor_purple1Layout.setHorizontalGroup(lowerColor_purple1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        lowerColor_purple1Layout.setHorizontalGroup(
+            lowerColor_purple1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 18, Short.MAX_VALUE)
         );
-        lowerColor_purple1Layout.setVerticalGroup(lowerColor_purple1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        lowerColor_purple1Layout.setVerticalGroup(
+            lowerColor_purple1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 18, Short.MAX_VALUE)
         );
 
-        undiesColor_random.setBackground(new Color(204, 204, 204));
-        undiesColor_random.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 3));
+        undiesColor_random.setBackground(new java.awt.Color(204, 204, 204));
+        undiesColor_random.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
         undiesColor_random.setToolTipText("Random");
         undiesColor_random.setName("undiesColor_random"); // NOI18N
-        undiesColor_random.setPreferredSize(new Dimension(20, 20));
-        undiesColor_random.addMouseListener(new MouseAdapter()
+        undiesColor_random.setPreferredSize(new java.awt.Dimension(20, 20));
+        undiesColor_random.addMouseListener(new java.awt.event.MouseAdapter()
         {
-            public void mouseClicked(MouseEvent evt)
+            public void mouseClicked(java.awt.event.MouseEvent evt)
             {
                 undiesColor_randomMouseClicked(evt);
             }
         });
 
-        GroupLayout undiesColor_randomLayout = new GroupLayout(undiesColor_random);
+        javax.swing.GroupLayout undiesColor_randomLayout = new javax.swing.GroupLayout(undiesColor_random);
         undiesColor_random.setLayout(undiesColor_randomLayout);
-        undiesColor_randomLayout.setHorizontalGroup(undiesColor_randomLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        undiesColor_randomLayout.setHorizontalGroup(
+            undiesColor_randomLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 14, Short.MAX_VALUE)
         );
-        undiesColor_randomLayout.setVerticalGroup(undiesColor_randomLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        undiesColor_randomLayout.setVerticalGroup(
+            undiesColor_randomLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 14, Short.MAX_VALUE)
         );
 
-        lowerColor_random1.setBackground(new Color(204, 204, 204));
-        lowerColor_random1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 3));
+        lowerColor_random1.setBackground(new java.awt.Color(204, 204, 204));
+        lowerColor_random1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
         lowerColor_random1.setToolTipText("Random");
         lowerColor_random1.setName("lowerColor_random1"); // NOI18N
-        lowerColor_random1.setPreferredSize(new Dimension(20, 20));
-        lowerColor_random1.addMouseListener(new MouseAdapter()
+        lowerColor_random1.setPreferredSize(new java.awt.Dimension(20, 20));
+        lowerColor_random1.addMouseListener(new java.awt.event.MouseAdapter()
         {
-            public void mouseClicked(MouseEvent evt)
+            public void mouseClicked(java.awt.event.MouseEvent evt)
             {
                 lowerColor_random1MouseClicked(evt);
             }
         });
 
-        GroupLayout lowerColor_random1Layout = new GroupLayout(lowerColor_random1);
+        javax.swing.GroupLayout lowerColor_random1Layout = new javax.swing.GroupLayout(lowerColor_random1);
         lowerColor_random1.setLayout(lowerColor_random1Layout);
-        lowerColor_random1Layout.setHorizontalGroup(lowerColor_random1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        lowerColor_random1Layout.setHorizontalGroup(
+            lowerColor_random1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 14, Short.MAX_VALUE)
         );
-        lowerColor_random1Layout.setVerticalGroup(lowerColor_random1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        lowerColor_random1Layout.setVerticalGroup(
+            lowerColor_random1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 14, Short.MAX_VALUE)
         );
 
         wearEditorButton.setText("Wear editor");
         wearEditorButton.setName("wearEditorButton"); // NOI18N
-        wearEditorButton.addActionListener(new ActionListener()
+        wearEditorButton.addActionListener(new java.awt.event.ActionListener()
         {
-            public void actionPerformed(ActionEvent evt)
+            public void actionPerformed(java.awt.event.ActionEvent evt)
             {
                 wearEditorButtonActionPerformed(evt);
             }
@@ -914,172 +960,174 @@ public class setupFramePre extends javax.swing.JFrame {
 
         loadGame.setText("Load game...");
         loadGame.setName("loadGame"); // NOI18N
-        loadGame.addActionListener(new ActionListener()
+        loadGame.addActionListener(new java.awt.event.ActionListener()
         {
-            public void actionPerformed(ActionEvent evt)
+            public void actionPerformed(java.awt.event.ActionEvent evt)
             {
                 loadGameActionPerformed(evt);
             }
         });
 
-        GroupLayout layout = new GroupLayout(getContentPane());
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane3, GroupLayout.DEFAULT_SIZE, 782, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 782, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(nameField)
-                                    .addComponent(difficultyPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jScrollPane1, GroupLayout.Alignment.TRAILING)
+                                    .addComponent(difficultyPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(nameLabel)
                                         .addGap(0, 0, Short.MAX_VALUE)))
                                 .addGap(5, 5, 5))
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(underwearLabel)
                                     .addGroup(layout.createSequentialGroup()
                                         .addGap(6, 6, 6)
-                                        .addComponent(undiesColor_black, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(undiesColor_gray, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(undiesColor_red, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(undiesColor_orange, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(undiesColor_yellow, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(undiesColor_green, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(undiesColor_blue, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(undiesColor_darkBlue, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(undiesColor_purple, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(undiesColor_pink, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(undiesColor_black, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(undiesColor_gray, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(undiesColor_red, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(undiesColor_orange, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(undiesColor_yellow, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(undiesColor_green, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(undiesColor_blue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(undiesColor_darkBlue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(undiesColor_purple, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(undiesColor_pink, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(18, 18, 18)
-                                        .addComponent(undiesColor_random, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                        .addComponent(undiesColor_random, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(basSliderRadio)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(basSlider, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(basSlider, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(randomBasSlider))
                             .addComponent(jScrollPane2)
-                            .addComponent(incontSlider, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(incontSlider, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(femaleRadio)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(maleRadio))
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(outerwearLabel)
                                     .addComponent(incontLabel)
                                     .addComponent(bladAtStartLabel)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(lowerColor_black1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(lowerColor_gray1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(lowerColor_red1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(lowerColor_orange1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(lowerColor_yellow1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(lowerColor_green1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(lowerColor_blue1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(lowerColor_darkBlue1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(lowerColor_purple1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(lowerColor_pink1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(lowerColor_black1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(lowerColor_gray1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(lowerColor_red1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(lowerColor_orange1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(lowerColor_yellow1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(lowerColor_green1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(lowerColor_blue1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(lowerColor_darkBlue1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(lowerColor_purple1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(lowerColor_pink1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(18, 18, 18)
-                                        .addComponent(lowerColor_random1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+                                        .addComponent(lowerColor_random1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addGap(0, 0, Short.MAX_VALUE))))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(loadGame, GroupLayout.PREFERRED_SIZE, 129, GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(start, GroupLayout.PREFERRED_SIZE, 455, GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(wearEditorButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(loadGame, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(start, javax.swing.GroupLayout.PREFERRED_SIZE, 455, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(wearEditorButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
-        layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(nameLabel)
                         .addGap(8, 8, 8)
-                        .addComponent(nameField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(difficultyPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(nameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(difficultyPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(underwearLabel)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, GroupLayout.PREFERRED_SIZE, 155, GroupLayout.PREFERRED_SIZE))
-                    .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(femaleRadio)
                             .addComponent(maleRadio))
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(bladAtStartLabel)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                            .addComponent(basSlider, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(basSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(basSliderRadio)
                             .addComponent(randomBasSlider))
                         .addGap(8, 8, 8)
                         .addComponent(incontLabel)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(incontSlider, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(incontSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(outerwearLabel)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane2, GroupLayout.PREFERRED_SIZE, 155, GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(undiesColor_black, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(undiesColor_gray, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(undiesColor_red, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(undiesColor_orange, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(undiesColor_green, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(undiesColor_blue, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(undiesColor_darkBlue, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(undiesColor_purple, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(undiesColor_pink, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(undiesColor_yellow, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lowerColor_black1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lowerColor_gray1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lowerColor_red1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lowerColor_orange1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lowerColor_green1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lowerColor_blue1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lowerColor_darkBlue1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lowerColor_purple1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lowerColor_pink1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lowerColor_yellow1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(undiesColor_random, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lowerColor_random1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                    .addComponent(start, GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
-                    .addComponent(wearEditorButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(loadGame, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(undiesColor_black, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(undiesColor_gray, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(undiesColor_red, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(undiesColor_orange, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(undiesColor_green, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(undiesColor_blue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(undiesColor_darkBlue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(undiesColor_purple, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(undiesColor_pink, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(undiesColor_yellow, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lowerColor_black1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lowerColor_gray1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lowerColor_red1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lowerColor_orange1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lowerColor_green1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lowerColor_blue1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lowerColor_darkBlue1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lowerColor_purple1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lowerColor_pink1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lowerColor_yellow1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(undiesColor_random, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lowerColor_random1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(start, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
+                    .addComponent(wearEditorButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(loadGame, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -1696,54 +1744,54 @@ public class setupFramePre extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private JSlider basSlider;
-    private JRadioButton basSliderRadio;
-    private JLabel bladAtStartLabel;
-    private ButtonGroup buttonGroup1;
-    private ButtonGroup buttonGroup2;
-    private ButtonGroup buttonGroup3;
-    private JPanel difficultyPanel;
-    private JRadioButton femaleRadio;
-    private JRadioButton hardDiffRadio;
-    private JLabel incontLabel;
-    private JSlider incontSlider;
-    private JScrollPane jScrollPane1;
-    private JScrollPane jScrollPane2;
-    private JScrollPane jScrollPane3;
-    private JTextPane jTextPane1;
-    private JButton loadGame;
-    private JPanel lowerColor_black1;
-    private JPanel lowerColor_blue1;
-    private JPanel lowerColor_darkBlue1;
-    private JPanel lowerColor_gray1;
-    private JPanel lowerColor_green1;
-    private JPanel lowerColor_orange1;
-    private JPanel lowerColor_pink1;
-    private JPanel lowerColor_purple1;
-    private JPanel lowerColor_random1;
-    private JPanel lowerColor_red1;
-    private JPanel lowerColor_yellow1;
-    private JRadioButton maleRadio;
-    private JTextField nameField;
-    private JLabel nameLabel;
-    private JRadioButton normalDiffRadio;
-    private JLabel outerwearLabel;
-    private JTree outerwearTree;
-    private JRadioButton randomBasSlider;
-    private JButton start;
-    private JLabel underwearLabel;
-    private JTree underwearTree;
-    private JPanel undiesColor_black;
-    private JPanel undiesColor_blue;
-    private JPanel undiesColor_darkBlue;
-    private JPanel undiesColor_gray;
-    private JPanel undiesColor_green;
-    private JPanel undiesColor_orange;
-    private JPanel undiesColor_pink;
-    private JPanel undiesColor_purple;
-    private JPanel undiesColor_random;
-    private JPanel undiesColor_red;
-    private JPanel undiesColor_yellow;
-    private JButton wearEditorButton;
+    private javax.swing.JSlider basSlider;
+    private javax.swing.JRadioButton basSliderRadio;
+    private javax.swing.JLabel bladAtStartLabel;
+    private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.ButtonGroup buttonGroup2;
+    private javax.swing.ButtonGroup buttonGroup3;
+    private javax.swing.JPanel difficultyPanel;
+    private javax.swing.JRadioButton femaleRadio;
+    private javax.swing.JRadioButton hardDiffRadio;
+    private javax.swing.JLabel incontLabel;
+    private javax.swing.JSlider incontSlider;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JTextPane jTextPane1;
+    private javax.swing.JButton loadGame;
+    private javax.swing.JPanel lowerColor_black1;
+    private javax.swing.JPanel lowerColor_blue1;
+    private javax.swing.JPanel lowerColor_darkBlue1;
+    private javax.swing.JPanel lowerColor_gray1;
+    private javax.swing.JPanel lowerColor_green1;
+    private javax.swing.JPanel lowerColor_orange1;
+    private javax.swing.JPanel lowerColor_pink1;
+    private javax.swing.JPanel lowerColor_purple1;
+    private javax.swing.JPanel lowerColor_random1;
+    private javax.swing.JPanel lowerColor_red1;
+    private javax.swing.JPanel lowerColor_yellow1;
+    private javax.swing.JRadioButton maleRadio;
+    private javax.swing.JTextField nameField;
+    private javax.swing.JLabel nameLabel;
+    private javax.swing.JRadioButton normalDiffRadio;
+    private javax.swing.JLabel outerwearLabel;
+    private javax.swing.JTree outerwearTree;
+    private javax.swing.JRadioButton randomBasSlider;
+    private javax.swing.JButton start;
+    private javax.swing.JLabel underwearLabel;
+    private javax.swing.JTree underwearTree;
+    private javax.swing.JPanel undiesColor_black;
+    private javax.swing.JPanel undiesColor_blue;
+    private javax.swing.JPanel undiesColor_darkBlue;
+    private javax.swing.JPanel undiesColor_gray;
+    private javax.swing.JPanel undiesColor_green;
+    private javax.swing.JPanel undiesColor_orange;
+    private javax.swing.JPanel undiesColor_pink;
+    private javax.swing.JPanel undiesColor_purple;
+    private javax.swing.JPanel undiesColor_random;
+    private javax.swing.JPanel undiesColor_red;
+    private javax.swing.JPanel undiesColor_yellow;
+    private javax.swing.JButton wearEditorButton;
     // End of variables declaration//GEN-END:variables
 }
