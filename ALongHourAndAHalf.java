@@ -97,6 +97,93 @@ import static omo.NarrativeEngine.GameStage.*;
 import static omo.UI.*;
 import static omo.Wear.WearType.*;
 
+class Action
+{
+    String name;
+    Stage actionStage;
+
+    Action(String name, Stage actionStage)
+    {
+        this.name = name;
+        this.actionStage = actionStage;
+    }
+}
+
+class Stage
+{
+    void operate()
+    {
+        
+    }
+    private String[] text = new String[UI.MAX_LINES];
+    Stage nextStage;
+    
+    Stage(String... text)
+    {
+        this.text = text;
+    }
+    void run()
+    {
+        UI.setText(getText());
+        operate();
+        nextStage.run();
+    }
+
+    /**
+     * @return the stage text
+     */
+    public String[] getText()
+    {
+        return text;
+    }
+
+    /**
+     * @param text the stage text to set
+     */
+    public void setText(String... text)
+    {
+        this.text = text;
+    }
+}
+
+class BladderAffectingStage extends Stage
+{
+    short duration;
+}
+
+class SelectionStage extends BladderAffectingStage
+{
+    private ArrayList<Action> actions;
+    void addAction(Action action)
+    {
+        actions.add(action);
+    }
+}
+
+class HoldCrotchStage extends Stage
+{
+    @Override
+    void operate()
+    {
+        UI.setText("You don't think anyone will see you doing it,", "so you take your hand and hold yourself down there.", "It feels a little better for now.");
+        Bladder.rechargeSphPower(20);
+        Bladder.offsetTime(3);
+        NarrativeEngine.getCaughtByClassmates();
+    }
+    HoldCrotchStage()
+    {
+        
+    }
+}
+
+class HoldingStage extends SelectionStage
+{
+    HoldingStage()
+    {
+        addAction(new Action("Hold crotch", new HoldCrotchStage()));
+    }
+}
+
 /**
  * Describes an underwear of an outerwear of a character.
  *
@@ -400,7 +487,7 @@ class Bladder
      * @param amount the value of amount
      * @param  the value of 
      */
-    public void offsetTime(int amount)
+    static void offsetTime(int amount)
     {
         time += amount;
         if (NarrativeEngine.drain & (time % 15) == 0)
@@ -452,7 +539,7 @@ class Bladder
      *
      * @param amount the sphincter recharge amount
      */
-    public void rechargeSphPower(int amount)
+    static void rechargeSphPower(int amount)
     {
         sphincterPower += amount;
         if (sphincterPower > maxSphincterPower)
@@ -545,7 +632,7 @@ class Bladder
         offsetBelly(-time * 1.5);
         if (Bladder.time >= 88)
         {
-            NarrativeEngine.setText("You hear the bell finally ring.");
+            UI.setText("You hear the bell finally ring.");
             setNextStage(NarrativeEngine.GameStage.CLASS_OVER);
         }
         testWet();
@@ -628,17 +715,17 @@ class Bladder
                 //Naked
                 if (lower.isMissing() && undies.isMissing())
                 {
-                    setText("You feel the leak running down your thighs...", "You're about to pee! You must stop it!");
+                    UI.setText("You feel the leak running down your thighs...", "You're about to pee! You must stop it!");
                 } else //Outerwear
                 {
                     if (!lower.isMissing())
                     {
-                        setText("You see the wet spot expand on your " + lower.insert() + "!", "You're about to pee! You must stop it!");
+                        UI.setText("You see the wet spot expand on your " + lower.insert() + "!", "You're about to pee! You must stop it!");
                     } else //Underwear
                     {
                         if (!undies.isMissing())
                         {
-                            setText("You see the wet spot expand on your " + undies.insert() + "!", "You're about to pee! You must stop it!");
+                            UI.setText("You see the wet spot expand on your " + undies.insert() + "!", "You're about to pee! You must stop it!");
                         }
                     }
                 }
@@ -649,12 +736,12 @@ class Bladder
                 {
                     if (cornered)
                     {
-                        setText("You see a puddle forming on the floor beneath you, you're peeing!", "It's too much...");
+                        UI.setText("You see a puddle forming on the floor beneath you, you're peeing!", "It's too much...");
                         setNextStage(ACCIDENT);
                         handleNextClicked();
                     } else
                     {
-                        setText("Feeling the pee hit the chair and soon fall over the sides,", "you see a puddle forming under your chair, you're peeing!", "It's too much...");
+                        UI.setText("Feeling the pee hit the chair and soon fall over the sides,", "you see a puddle forming under your chair, you're peeing!", "It's too much...");
                         setNextStage(ACCIDENT);
                         handleNextClicked();
                     }
@@ -662,14 +749,14 @@ class Bladder
                 {
                     if (!lower.isMissing())
                     {
-                        setText("You see the wet spot expanding on your " + lower.insert() + "!", "It's too much...");
+                        UI.setText("You see the wet spot expanding on your " + lower.insert() + "!", "It's too much...");
                         setNextStage(ACCIDENT);
                         handleNextClicked();
                     } else
                     {
                         if (!undies.isMissing())
                         {
-                            setText("You see the wet spot expanding on your " + undies.insert() + "!", "It's too much...");
+                            UI.setText("You see the wet spot expanding on your " + undies.insert() + "!", "It's too much...");
                             setNextStage(ACCIDENT);
                             handleNextClicked();
                         }
@@ -695,7 +782,6 @@ class Bladder
 
 class NarrativeEngine
 {
-
     /**
      * @return the nextStage
      */
@@ -703,9 +789,6 @@ class NarrativeEngine
     {
         return nextStage;
     }
-    
-    //Maximal lines of a text
-    private static final int MAX_LINES = 9;
     
     //Random stuff generator
     public static final Random RANDOM = new Random();
@@ -762,7 +845,7 @@ class NarrativeEngine
      * An array that contains boolean values that define <i>dialogue lines</i>.
      * Dialogue lines, unlike normal lines, are <i>italic</i>.
      */
-    private static boolean[] dialogueLines = new boolean[MAX_LINES];
+    private static boolean[] dialogueLines = new boolean[UI.MAX_LINES];
     
     /**
      * Actions list.
@@ -932,7 +1015,7 @@ class NarrativeEngine
     /**
      *
      */
-    private void getCaughtByClassmates()
+    static void getCaughtByClassmates()
     {
         //Chance to be caught by classmates in hardcore mode
         if (RANDOM.nextInt(100) <= 15 + classmatesAwareness & hardcore)
@@ -953,29 +1036,29 @@ class NarrativeEngine
         //Bladder: 0-20
         if (bladder <= 20)
         {
-            setText("Feeling bored about the day, and not really caring about the class too much,", "you look to the clock, watching the minutes tick by.");
+            UI.setText("Feeling bored about the day, and not really caring about the class too much,", "you look to the clock, watching the minutes tick by.");
         }
         //Bladder: 20-40
         if (bladder > 20 && bladder <= 40)
         {
-            setText("Having to pee a little bit,", "you look to the clock, watching the minutes tick by and wishing the lesson to get over faster.");
+            UI.setText("Having to pee a little bit,", "you look to the clock, watching the minutes tick by and wishing the lesson to get over faster.");
         }
         //Bladder: 40-60
         if (bladder > 40 && bladder <= 60)
         {
-            setText("Clearly having to pee,", "you impatiently wait for the lesson end.");
+            UI.setText("Clearly having to pee,", "you impatiently wait for the lesson end.");
         }
         //Bladder: 60-80
         if (bladder > 60 && bladder <= 80)
         {
             setLinesAsDialogue(2);
-            setText("You feel the rather strong pressure in your bladder, and you're starting to get even more desperate.", "Maybe I should ask teacher to go to the restroom? It hurts a bit...");
+            UI.setText("You feel the rather strong pressure in your bladder, and you're starting to get even more desperate.", "Maybe I should ask teacher to go to the restroom? It hurts a bit...");
         }
         //Bladder: 80-100
         if (bladder > 80 && bladder <= 100)
         {
             setLinesAsDialogue(1, 3);
-            setText("Keeping all that urine inside will become impossible very soon.", "You feel the terrible pain and pressure in your bladder, and you can almost definitely say you haven't needed to pee this badly in your life.", "Ouch, it hurts a lot... I must do something about it now, or else...");
+            UI.setText("Keeping all that urine inside will become impossible very soon.", "You feel the terrible pain and pressure in your bladder, and you can almost definitely say you haven't needed to pee this badly in your life.", "Ouch, it hurts a lot... I must do something about it now, or else...");
         }
         //Bladder: 100-130
         if (bladder > 100 && bladder <= 130)
@@ -983,10 +1066,10 @@ class NarrativeEngine
             setLinesAsDialogue(1, 3);
             if (isFemale())
             {
-                setText("This is really bad...", "You know that you can't keep it any longer and you may wet yourself in any moment and oh,", "You can clearly see your bladder as it bulging.", "Ahhh... I cant hold it anymore!!!", "Even holding your crotch doesn't seems to help you to keep it in.");
+                UI.setText("This is really bad...", "You know that you can't keep it any longer and you may wet yourself in any moment and oh,", "You can clearly see your bladder as it bulging.", "Ahhh... I cant hold it anymore!!!", "Even holding your crotch doesn't seems to help you to keep it in.");
             } else
             {
-                setText("This is really bad...", "You know that you can't keep it any longer and you may wet yourself in any moment and oh,", "You can clearly see your bladder as it bulging.", "Ahhh... I cant hold it anymore!!!", "Even squeezing your penis doesn't seems to help you to keep it in.");
+                UI.setText("This is really bad...", "You know that you can't keep it any longer and you may wet yourself in any moment and oh,", "You can clearly see your bladder as it bulging.", "Ahhh... I cant hold it anymore!!!", "Even squeezing your penis doesn't seems to help you to keep it in.");
             }
         }
     }
@@ -1065,47 +1148,13 @@ class NarrativeEngine
         //Called by teacher if unlucky
         if (RANDOM.nextInt(20) == 5)
         {
-            setText("Suddenly, you hear the teacher call your name.");
+            UI.setText("Suddenly, you hear the teacher call your name.");
             setNextStage(CALLED_ON);
             return true;
         }
         return false;
     }
 
-    /**
-     * Sets the in-game text.
-     *
-     * @param lines the in-game text to set
-     */
-    @SuppressWarnings(value = "UseOfSystemOutOrSystemErr")
-    static void setText(String... lines)
-    {
-        if (lines.length > MAX_LINES)
-        {
-            System.err.println("You can't have more than " + MAX_LINES + " lines at a time!");
-            return;
-        }
-        if (lines.length <= 0)
-        {
-            UI.textLabel.setText("");
-            return;
-        }
-        String toSend = "<html><center>";
-        for (int i = 0; i < lines.length; i++)
-        {
-            if (dialogueLines[i])
-            {
-                toSend += "<i>\"" + lines[i] + "\"</i>";
-            } else
-            {
-                toSend += lines[i];
-            }
-            toSend += "<br>";
-        }
-        toSend += "</center></html>";
-        UI.textLabel.setText(toSend);
-        NarrativeEngine.dialogueLines = new boolean[MAX_LINES];
-    }
 
     /**
      *
@@ -1261,6 +1310,43 @@ class UI extends JFrame
     private static JScrollPane listScroller;
     private static JButton btnNewGame;
     static Color lblDefaultColor;
+    //Maximal lines of a text
+    static final int MAX_LINES = 9;
+
+    /**
+     * Sets the in-game text.
+     *
+     * @param lines the in-game text to set
+     */
+    @SuppressWarnings(value = "UseOfSystemOutOrSystemErr")
+    static void setText(String... lines)
+    {
+        if (lines.length > UI.MAX_LINES)
+        {
+            System.err.println("You can't have more than " + UI.MAX_LINES + " lines at a time!");
+            return;
+        }
+        if (lines.length <= 0)
+        {
+            UI.textLabel.setText("");
+            return;
+        }
+        String toSend = "<html><center>";
+        for (int i = 0; i < lines.length; i++)
+        {
+            if (NarrativeEngine.dialogueLines[i])
+            {
+                toSend += "<i>\"" + lines[i] + "\"</i>";
+            } else
+            {
+                toSend += lines[i];
+            }
+            toSend += "<br>";
+        }
+        toSend += "</center></html>";
+        UI.textLabel.setText(toSend);
+        NarrativeEngine.dialogueLines = new boolean[UI.MAX_LINES];
+    }
     private JLabel lblSphPower;
     private JList<Object> listChoice;
     private JButton btnLoad;
@@ -1341,10 +1427,6 @@ class UI extends JFrame
     //TODO: Refactor
     //This method is monstrously huge
     //Introduce Stage class
-    /**
-     *
-     * @param  the value of 
-     */
     static void handleNextClicked()
     {
         update();
@@ -2272,6 +2354,14 @@ class UI extends JFrame
                 setText("Error parsing button. Next text is unavailable, text #" + nextStage);
                 break;
             //case template
+            //      case 4:
+            //   setText("");
+            //   setNextStage(;
+            //   break;                //case template
+            //      case 4:
+            //   setText("");
+            //   setNextStage(;
+            //   break;            //case template
             //      case 4:
             //   setText("");
             //   setNextStage(;
