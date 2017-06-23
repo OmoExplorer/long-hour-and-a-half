@@ -31,7 +31,7 @@ import javax.swing.WindowConstants;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-import omo.ALongHourAndAHalf.Gender;
+import omo.GameCore.Gender;
 
 /**
  *
@@ -1183,7 +1183,7 @@ public class setupFramePre extends javax.swing.JFrame {
 //                        case "Skirts":
 //                            break;
 //                        default:
-                            new ALongHourAndAHalf(nameField.getText(),
+                            new GameCore(nameField.getText(),
                             gnd,
                             diff,
                             incont, (short) bas,
@@ -1664,7 +1664,7 @@ public class setupFramePre extends javax.swing.JFrame {
                 FileInputStream fin = new FileInputStream(file);
                 ObjectInputStream ois = new ObjectInputStream(fin);
                 Save save = (Save) ois.readObject();
-                new ALongHourAndAHalf(save);
+                new GameCore(save);
                 dispose();
             } catch (IOException | ClassNotFoundException e)
             {
