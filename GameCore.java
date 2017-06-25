@@ -134,6 +134,11 @@ class Stage
     {
         this.text = text;
     }
+
+    Stage(Stage nextStage)
+    {
+        this.nextStage = nextStage;
+    }
     
     void run(UI ui)
     {
@@ -178,6 +183,13 @@ class BladderAffectingStage extends Stage
         super(text);
         this.duration = duration;
     }
+
+    BladderAffectingStage(Stage nextStage, short duration)
+    {
+        super(nextStage);
+        this.duration = duration;
+    }
+    
 }
 
 class SelectionStage extends BladderAffectingStage
@@ -564,7 +576,6 @@ class Bladder
      */
     static void offsetTime(int amount)
     {
-        UI ui = UI.getInstance();
         time += amount;
         if (NarrativeEngine.drain & (time % 15) == 0)
         {
@@ -579,7 +590,7 @@ class Bladder
         {
             dryness = lower.getAbsorption() + undies.getAbsorption();
         }
-        ui.update();
+        GameCore.ui.update();
     }
 
     /**
@@ -861,7 +872,7 @@ class Bladder
         ui.update();
     }
 
-    private void calculateCaps()
+    static void calculateCaps()
     {
         UI ui = UI.getInstance();
         //Calculating dryness and maximal bladder capacity values
@@ -878,39 +889,13 @@ class NarrativeEngine
     class StagePool
     {
         Stage leaveHome;
-        Stage leaveBed = new BladderAffectingStage(leaveHome, (short)3, () ->
+        Stage leaveBed = new BladderAffectingStage(leaveHome, (short)3)
         {
-            setLinesAsDialogue(1);
-            return getWearDependentText(new String[]
-                {
-                    "Wh-what? Did I forget to set my alarm?!",
-                    "You cry, tumbling out of bed and feeling an instant jolt from your bladder.",
-                    "You hurriedly slip on some " + undies.insert() + " and " + lower.insert() + ",",
-                    "not even worrying about what covers your chest."
-                }, new String[]
-                {
-                    "Wh-what? Did I forget to set my alarm?!",
-                    "You cry, tumbling out of bed and feeling an instant jolt from your bladder.",
-                    "You hurriedly slip on some " + lower.insert() + ", quick to cover your " + undies.insert() + ",",
-                    "not even worrying about what covers your chest."
-                }, new String[]
-                {
-                    "Wh-what? Did I forget to set my alarm?!",
-                    "You cry, tumbling out of bed and feeling an instant jolt from your bladder.",
-                    "You hurriedly slip on " + undies.insert() + ",",
-                    "not even worrying about what covers your chest and legs."
-                }, new String[]
-                {
-                    "Wh-what? Did I forget to set my alarm?!",
-                    "You cry, tumbling out of bed and feeling an instant jolt from your bladder.",
-                    "You are running downstairs fully naked."
-                });
-        })
-        {
-            void setText()
+            @Override
+            public String[] getText()
             {
                 setLinesAsDialogue(1);
-                getWearDependentText(new String[]
+                return getWearDependentText(new String[]
                 {
                     "Wh-what? Did I forget to set my alarm?!",
                     "You cry, tumbling out of bed and feeling an instant jolt from your bladder.",
@@ -948,7 +933,7 @@ class NarrativeEngine
     /**
      * List of all outerwear types.
      */
-    final Wear[] outerwearList =
+    final static Wear[] outerwearList =
     {
         //        Name      Insert name     Pressure, Absotption, Drying over time
         new Wear("Random", showError((byte) 0), 0, 0, 0),
@@ -1308,7 +1293,6 @@ class NarrativeEngine
         return false;
     }
 
-
     /**
      *
      * @param femaleText the value of femaleText
@@ -1441,19 +1425,6 @@ class NarrativeEngine
         SURPRISE_WET_PRESSURE,
         DRINK
     }
-    
-    class StagePool
-    {
-        Stage leaveBed;
-        
-        void fillPool()
-        {
-            leaveBed = new Stage()
-            {
-                
-            };
-        }
-    }
 }
 
 enum Gender
@@ -1463,18 +1434,6 @@ enum Gender
 
 class UI extends JFrame
 {
-    private static UI instance;
-    
-    private UI() {}
-
-    static UI getInstance() {
-    if (instance == null)
-    {
-        instance = new UI();
-    }
-    return instance;
-  }
-    
     private static final long serialVersionUID = 1L;
     private static final int ACTION_BUTTONS_HEIGHT = 35;
     private static final int ACTION_BUTTONS_WIDTH = 89;
@@ -2864,7 +2823,7 @@ class UI extends JFrame
         }
     }
 
-    private void setupWearLabels()
+    void setupWearLabels()
     {
         //Undies label setup
         lblUndies = new JLabel("Undies: " + undies.getColor() + " " + undies.getName().toLowerCase());
@@ -2877,11 +2836,24 @@ class UI extends JFrame
         lblLower.setBounds(20, 450, 400, 32);
         contentPane.add(lblLower);
     }
+
+    void displayAllValues()
+    {
+        //Displaying all values
+        lblMinutes.setVisible(true);
+        lblSphPower.setVisible(true);
+        lblDryness.setVisible(true);
+        sphincterBar.setVisible(true);
+        drynessBar.setVisible(true);
+        timeBar.setVisible(true);
+        handleNextClicked();
+    }
 }
 
 class ResetParametersStorage
 {
-
+    private static final long serialVersionUID = 1;
+    
     static String underColorParam;
     static String outerColorParam;
     static String outerParam;
@@ -3136,14 +3108,14 @@ public class GameCore
         //Same with the lower clothes
         if (outer.equals("Random"))
         {
-            lower = outerwearList[NarrativeEngine.RANDOM.nextInt(outerwearList.length)];
+            lower = NarrativeEngine.outerwearList[NarrativeEngine.RANDOM.nextInt(outerwearList.length)];
             while (lower.getName().equals("Random"))
             {
-                lower = outerwearList[NarrativeEngine.RANDOM.nextInt(outerwearList.length)];
+                lower = NarrativeEngine.outerwearList[NarrativeEngine.RANDOM.nextInt(outerwearList.length)];
             }
         } else
         {
-            for (Wear iWear : outerwearList)
+            for (Wear iWear : NarrativeEngine.outerwearList)
             {
                 if (iWear.getName().equals(outer))
                 {
@@ -3155,7 +3127,7 @@ public class GameCore
         if (lower == null)
         {
             JOptionPane.showMessageDialog(null, "Incorrect outerwear selected. Setting random instead.", "Incorrect outerwear", JOptionPane.WARNING_MESSAGE);
-            lower = outerwearList[NarrativeEngine.RANDOM.nextInt(outerwearList.length)];
+            lower = NarrativeEngine.outerwearList[NarrativeEngine.RANDOM.nextInt(outerwearList.length)];
         }
 
         //Assigning color
@@ -3215,20 +3187,13 @@ public class GameCore
         cheatsUsed = save.cheatsUsed;
         boyName = save.boyName;
 
-        //Displaying all values
-        lblMinutes.setVisible(true);
-        lblSphPower.setVisible(true);
-        lblDryness.setVisible(true);
-        sphincterBar.setVisible(true);
-        drynessBar.setVisible(true);
-        timeBar.setVisible(true);
-        handleNextClicked();
+        ui.displayAllValues();
         postConstructor();
     }
 
     void postConstructor()
     {
-        calculateCaps();
+        Bladder.calculateCaps();
 
         stashParametersForReset();
 
@@ -3236,10 +3201,10 @@ public class GameCore
 
         initHardcoreMode();
 
-        UI.handleNextClicked();
+        ui.handleNextClicked();
 
         //Displaying the frame
-        setVisible(true);
+        ui.setVisible(true);
     }
 
     private void initHardcoreMode()
