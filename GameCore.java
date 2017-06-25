@@ -121,6 +121,11 @@ class Stage
         
     }
     
+    void operate(UI ui)
+    {
+        
+    }
+    
     protected String[] text = new String[UI.MAX_LINES];
     Stage nextStage;
     
@@ -167,10 +172,10 @@ class BladderAffectingStage extends Stage
 {
     short duration;
     @Override
-    void operate()
+    void operate(UI ui)
     {
         super.operate();
-        Bladder.passTime(duration);
+        Bladder.passTime(ui, duration);
     }
 
     BladderAffectingStage(Stage nextStage, short duration, String[] text)
@@ -574,7 +579,7 @@ class Bladder
      * @param amount the value of amount
      * @param  the value of 
      */
-    static void offsetTime(int amount)
+    static void offsetTime(UI ui, int amount)
     {
         time += amount;
         if (NarrativeEngine.drain & (time % 15) == 0)
@@ -590,7 +595,7 @@ class Bladder
         {
             dryness = lower.getAbsorption() + undies.getAbsorption();
         }
-        GameCore.ui.update();
+        ui.update();
     }
 
     /**
@@ -598,9 +603,8 @@ class Bladder
      *
      * @param amount the amount to offset bladder fulness
      */
-    static void offsetBladder(double amount)
+    static void offsetBladder(UI ui, double amount)
     {
-        UI ui = UI.getInstance();
         fulness += amount; //Incontinence does another job after 1.1
         if ((fulness > 100 && !NarrativeEngine.hardcore) || (fulness > 80 && hardcore))
         {
@@ -627,9 +631,8 @@ class Bladder
      *
      * @param amount the sphincter recharge amount
      */
-    static void rechargeSphPower(int amount)
+    static void rechargeSphPower(UI ui, int amount)
     {
-        UI ui = UI.getInstance();
         sphincterPower += amount;
         if (sphincterPower > maxSphincterPower)
         {
@@ -714,11 +717,10 @@ class Bladder
      *
      * @param time #
      */
-    static void passTime(short time)
+    static void passTime(UI ui, short time)
     {
-        UI ui = UI.getInstance();
-        offsetTime(time);
-        offsetBladder(time * 1.5);
+        offsetTime(ui, time);
+        offsetBladder(ui, time * 1.5);
         offsetBelly(-time * 1.5);
         if (Bladder.time >= 88)
         {
@@ -734,10 +736,10 @@ class Bladder
             {
                 if (belly > 3)
                 {
-                    offsetBladder(2);
+                    offsetBladder(ui, 2);
                 } else
                 {
-                    offsetBladder(belly);
+                    offsetBladder(ui, belly);
                     emptyBelly();
                 }
             }
@@ -759,9 +761,8 @@ class Bladder
      * @param amount the value of amount
      * @param  the value of 
      */
-    static void offsetBelly(double amount)
+    static void offsetBelly(UI ui, double amount)
     {
-        UI ui = UI.getInstance();
         belly += amount;
         if (belly < 0)
         {
@@ -775,9 +776,8 @@ class Bladder
      * @param amount the value of amount
      * @param  the value of 
      */
-    public void offsetEmbarassment(int amount)
+    public void offsetEmbarassment(UI ui, int amount)
     {
-        UI ui = UI.getInstance();
         embarassment += amount;
         if (embarassment < 0)
         {
@@ -794,9 +794,8 @@ class Bladder
      *
      * @param  the value of 
      */
-    static void decaySphPower()
+    static void decaySphPower(UI ui)
     {
-        UI ui = UI.getInstance();
         sphincterPower -= fulness / 30;
         if (sphincterPower < 0)
         {
@@ -872,20 +871,24 @@ class Bladder
         ui.update();
     }
 
-    static void calculateCaps()
+    static void calculateCaps(UI ui)
     {
-        UI ui = UI.getInstance();
         //Calculating dryness and maximal bladder capacity values
         //TODO: Move to Bladder
         dryness = lower.getAbsorption() + undies.getAbsorption();
         maxBladder -= lower.getPressure() + undies.getPressure();
         ui.drynessBar.setMaximum((int) dryness);
     }
-
 }
 
 class NarrativeEngine
 {
+
+    static GameStage getNextStage()
+    {
+        return nextStage;
+    }
+    
     class StagePool
     {
         Stage leaveHome;
@@ -1167,9 +1170,8 @@ class NarrativeEngine
      *
      * @param  the value of 
      */
-    private void displayDesperationStatus()
+    private void displayDesperationStatus(UI ui)
     {
-        UI ui = UI.getInstance();
         //Bladder: 0-20
         if (fulness <= 20)
         {
@@ -1280,9 +1282,8 @@ class NarrativeEngine
      *
      * @return the boolean
      */
-    private boolean gotCalledByTeacher()
+    private boolean gotCalledByTeacher(UI ui)
     {
-        UI ui = UI.getInstance();
         //Called by teacher if unlucky
         if (RANDOM.nextInt(20) == 5)
         {
@@ -2868,8 +2869,7 @@ class ResetParametersStorage
 
 @SuppressWarnings("serial")
 public class GameCore
-{
-    UI ui = UI.getInstance();
+{  
     
     /**
      * Resets the game and values, optionally letting player to select new
@@ -2940,7 +2940,6 @@ public class GameCore
             score("Hardcore", '*', 2F);
         }
     }
-
 
     private void setupFileChoosers()
     {
@@ -3230,9 +3229,8 @@ public class GameCore
         ResetParametersStorage.outerColorParam = lower.getColor();
     }
 
-    static void save()
+    static void save(UI ui)
     {
-        UI ui = UI.getInstance();
         ui.fcGame.setSelectedFile(new File(name));
         if (ui.fcGame.showSaveDialog(ui) == JFileChooser.APPROVE_OPTION)
         {
@@ -3281,9 +3279,8 @@ public class GameCore
     }
 
     @SuppressWarnings("ResultOfObjectAllocationIgnored")
-    static void load()
+    static void load(UI ui)
     {
-        UI ui = UI.getInstance();
         if (ui.fcGame.showOpenDialog(ui) == JFileChooser.APPROVE_OPTION)
         {
             File file = ui.fcGame.getSelectedFile();
