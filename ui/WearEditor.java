@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package omo;
+package omo.ui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -27,6 +27,8 @@ import javax.swing.LayoutStyle;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.WindowConstants;
 import javax.swing.filechooser.FileFilter;
+import omo.Wear;
+import omo.Wear.WearType;
 import static omo.Wear.WearType.*;
 
 /**
@@ -35,7 +37,6 @@ import static omo.Wear.WearType.*;
  */
 public class WearEditor extends javax.swing.JFrame
 {
-
     private static final long serialVersionUID = 1L;
 
     private JFileChooser fc;
@@ -243,9 +244,9 @@ public class WearEditor extends javax.swing.JFrame
             File file = new File(fc.getSelectedFile().getAbsolutePath() + ".lhhwear");
             FileOutputStream fout;
             ObjectOutputStream oos;
+            WearType type = null;
             try
             {
-                wear = new Wear(nameField.getText(), insertNameField.getText(), (float) pressureSpinner.getValue(), (float) absorptionSpinner.getValue(), (float) dotSpinner.getValue());
                 switch (typeComboBox.getSelectedIndex())
                 {
                     case 0:
@@ -258,12 +259,13 @@ public class WearEditor extends javax.swing.JFrame
                         wear.setType(BOTH_SUITABLE);
                         break;
                 }
+                wear = new Wear(nameField.getText(), insertNameField.getText(), (float) pressureSpinner.getValue(), (float) absorptionSpinner.getValue(), (float) dotSpinner.getValue(), type);
 
 //                writer = new PrintStream(file);
                 fout = new FileOutputStream(file);
                 oos = new ObjectOutputStream(fout);
                 oos.writeObject(wear);
-            } catch (IOException ex)
+            } catch (IOException|NullPointerException e)
             {
                 JOptionPane.showMessageDialog(this, "File error.", "Error", JOptionPane.ERROR_MESSAGE);
             }

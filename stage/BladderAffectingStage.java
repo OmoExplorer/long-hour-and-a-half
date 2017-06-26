@@ -1,8 +1,11 @@
-package omo;
+package omo.stage;
 
-class BladderAffectingStage extends Stage
+import omo.Bladder;
+import omo.ui.GameFrame;
+
+public class BladderAffectingStage extends Stage
 {
-    private short duration;
+    private final short duration;
 
     BladderAffectingStage(Stage nextStage, short duration, String[] text)
     {
@@ -23,7 +26,7 @@ class BladderAffectingStage extends Stage
     }
 
     @Override
-    void operate(UI ui)
+    void operate(GameFrame ui)
     {
         super.operate();
         Bladder.passTime(ui, duration);

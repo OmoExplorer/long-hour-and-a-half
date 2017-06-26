@@ -8,7 +8,7 @@ import omo.NarrativeEngine.GameStage;
  * @author JavaBird
  */
 @SuppressWarnings("PackageVisibleField")
-class Save implements Serializable
+public class Save implements Serializable
 {
     private static final long serialVersionUID = 1L;
     

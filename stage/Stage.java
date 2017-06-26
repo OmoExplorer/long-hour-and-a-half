@@ -1,8 +1,11 @@
-package omo;
+package omo.stage;
 
-class Stage
+import omo.ui.GameFrame;
+import static omo.ui.GameFrame.MAX_LINES;
+
+public class Stage
 {
-    private String[] text = new String[UI.MAX_LINES];
+    private String[] text = new String[MAX_LINES];
     private Stage nextStage;
 
     Stage(Stage nextStage, String[] text)
@@ -26,12 +29,12 @@ class Stage
 
     }
 
-    void operate(UI ui)
+    void operate(GameFrame ui)
     {
 
     }
 
-    void run(UI ui)
+    void run(GameFrame ui)
     {
         ui.setText(getText());
         operate();

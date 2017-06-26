@@ -1,4 +1,4 @@
-package omo;
+package omo.stage;
 
 import java.util.ArrayList;
 

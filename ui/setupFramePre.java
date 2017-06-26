@@ -1,4 +1,4 @@
-package omo;
+package omo.ui;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -31,6 +31,9 @@ import javax.swing.WindowConstants;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import omo.GameCore;
+import omo.Gender;
+import omo.Save;
 
 /**
  *
@@ -1206,7 +1209,7 @@ public class setupFramePre extends javax.swing.JFrame
                 outerwearToAssign,
                 undiesColor,
                 lowerColor,
-                new UI());
+                new GameFrame());
         this.dispose();
 //                    }
 //            }
@@ -1674,6 +1677,7 @@ public class setupFramePre extends javax.swing.JFrame
 
     }//GEN-LAST:event_loadGameButtonActionPerformed
 
+    @SuppressWarnings("ResultOfObjectAllocationIgnored")
     private void loadGameActionPerformed(ActionEvent evt)//GEN-FIRST:event_loadGameActionPerformed
     {//GEN-HEADEREND:event_loadGameActionPerformed
         if (fcGame.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
@@ -1684,7 +1688,7 @@ public class setupFramePre extends javax.swing.JFrame
                 FileInputStream fin = new FileInputStream(file);
                 ObjectInputStream ois = new ObjectInputStream(fin);
                 Save save = (Save) ois.readObject();
-                new GameCore(save, new UI());
+                new GameCore(save, new GameFrame());
                 dispose();
             }
             catch (IOException | ClassNotFoundException e)

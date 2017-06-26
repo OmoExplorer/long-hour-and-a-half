@@ -1,8 +1,8 @@
-package omo;
+package omo.stage;
 
 import java.util.ArrayList;
 
-class SelectionStage extends BladderAffectingStage
+public class SelectionStage extends BladderAffectingStage
 {
     private ArrayList<Action> actions;
 
@@ -11,7 +11,7 @@ class SelectionStage extends BladderAffectingStage
         actions.add(action);
     }
 
-    SelectionStage(ArrayList<omo.Action> actions, short duration, String... text)
+    SelectionStage(ArrayList<omo.stage.Action> actions, short duration, String... text)
     {
         super(duration, text);
         this.actions = actions;
