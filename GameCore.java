@@ -99,8 +99,8 @@ import static omo.Wear.WearType.*;
 
 class Action
 {
-    String name;
-    Stage actionStage;
+    private String name;
+    private Stage actionStage;
 
     Action(String name, Stage actionStage)
     {
@@ -108,128 +108,30 @@ class Action
         this.actionStage = actionStage;
     }
 
-    public Action(String name)
+    Action(String name)
     {
         this.name = name;
     }
 }
 
-class Stage
-{
-    void operate()
-    {
-        
-    }
-    
-    void operate(UI ui)
-    {
-        
-    }
-    
-    protected String[] text = new String[UI.MAX_LINES];
-    Stage nextStage;
-    
-    Stage(Stage nextStage, String[] text)
-    {
-        this.nextStage = nextStage;
-        this.text = text;
-    }
-    
-    Stage(String[] text)
-    {
-        this.text = text;
-    }
-
-    Stage(Stage nextStage)
-    {
-        this.nextStage = nextStage;
-    }
-    
-    void run(UI ui)
-    {
-        ui.setText(getText());
-        operate();
-    }
-
-    /**
-     * @return the stage text
-     */
-    public String[] getText()
-    {
-        return text;
-    }
-
-    /**
-     * @param text the stage text to set
-     */
-    public void setText(String... text)
-    {
-        this.text = text;
-    }
-}
-
-class BladderAffectingStage extends Stage
-{
-    short duration;
-    @Override
-    void operate(UI ui)
-    {
-        super.operate();
-        Bladder.passTime(ui, duration);
-    }
-
-    BladderAffectingStage(Stage nextStage, short duration, String[] text)
-    {
-        super(nextStage, text);
-        this.duration = duration;
-    }
-    BladderAffectingStage(short duration, String[] text)
-    {
-        super(text);
-        this.duration = duration;
-    }
-
-    BladderAffectingStage(Stage nextStage, short duration)
-    {
-        super(nextStage);
-        this.duration = duration;
-    }
-    
-}
-
-class SelectionStage extends BladderAffectingStage
-{
-    private ArrayList<Action> actions;
-    void addAction(Action action)
-    {
-        actions.add(action);
-    }
-    
-    SelectionStage(ArrayList<omo.Action> actions, short duration, String... text)
-    {
-        super(duration, text);
-        this.actions = actions;
-        addAction(new Action("Cheat (will reset your score)", new CheatStage(actions, duration, text)));
-    }
-}
-
+//TODO
 class HoldCrotchStage extends Stage
 {
     HoldCrotchStage(Stage nextStage)
     {
         super(nextStage, new String[]
-                {
-                    "You don't think anyone will see you doing it,",
-                    "so you take your hand and hold yourself down there.",
-                    "It feels a little better for now."
-                });
+        {
+            "You don't think anyone will see you doing it,",
+            "so you take your hand and hold yourself down there.",
+            "It feels a little better for now."
+        });
     }
-    
+
     @Override
-    void operate()
+    void operate(UI ui)
     {
-        Bladder.rechargeSphPower(20);
-        Bladder.offsetTime(3);
+        Bladder.rechargeSphPower(ui, 20);
+        Bladder.offsetTime(ui, 3);
         NarrativeEngine.getCaughtByClassmates();
     }
 }
@@ -239,29 +141,19 @@ class RubThigsStage extends Stage
     RubThigsStage(Stage nextStage)
     {
         super(nextStage, new String[]
-                {
-                    "You need to go, and it hurts, but you just",
-                    "can't bring yourself to risk getting caught with your hand between",
-                    "your legs. You rub your thighs hard but it doesn't really help."
-                });
+        {
+            "You need to go, and it hurts, but you just",
+            "can't bring yourself to risk getting caught with your hand between",
+            "your legs. You rub your thighs hard but it doesn't really help."
+        });
     }
 
     @Override
-    void operate()
+    void operate(UI ui)
     {
-        Bladder.rechargeSphPower(2);
-        Bladder.offsetTime(3);
+        Bladder.rechargeSphPower(ui, 2);
+        Bladder.offsetTime(ui, 3);
         NarrativeEngine.getCaughtByClassmates();
-    }
-}
-
-class HoldingStage extends SelectionStage
-{
-    HoldingStage(ArrayList<Action> actions, short duration, String... text)
-    {
-        super(actions, duration, text);
-        addAction(new Action("Hold crotch", new HoldCrotchStage(new HoldingStage(actions, duration, text))));
-        addAction(new Action("Rub thigs", new RubThigsStage(new HoldingStage(actions, duration, text))));
     }
 }
 
@@ -473,17 +365,17 @@ class Wear implements Serializable
 
 class Bladder
 {
-    
+
     /**
      * The dryness game over minimal threshold.
      */
     static final int MINIMAL_DRYNESS = 0;
-    
+
     /**
      * Maximal time without squirming and leaking.
      */
     static short maxSphincterPower;
-    
+
     /**
      * List of all underwear types.
      */
@@ -510,61 +402,61 @@ class Bladder
         new Wear("Anti-gravity pants", "pants", 0, 4, 1),
         new Wear("Super-absorbing diaper", "diaper", 18, 600, 0)
     };
-    
+
     /**
      * Amount of pee that clothes can store.
      */
     static float dryness;
-    
+
     /**
      * Maximal bladder fulness.
      */
     static short maxBladder = 130;
-    
+
     /**
      * Current sphincter power. The higher bladder level, the faster power
      * consumption.
      */
     static short sphincterPower;
-    
+
     /**
      * The class time.
      */
     static byte time = 0;
-    
+
     /**
      * Current bladdder fulness.
      */
     static short fulness;
-    
+
     /**
      * Amount of a water in a belly.
      */
     static double belly;
-    
+
     /**
      * Character's undies.
      */
     static Wear undies;
-    
+
     final static float MAXIMAL_THIRST = 30;
-    
+
     /**
      * Character's lower body clothing.
      */
     static Wear lower;
-    
+
     /**
      * Amount of the character thirstiness. Used only in hardcore mode.
      */
     static float thirst = 0;
-    
+
     /**
      * Makes the wetting chance higher after reaching 100% of the bladder
      * fulness.
      */
     static short embarassment;
-    
+
     /**
      * Before 1.1:<br>
      * simply multiplies a bladder increasement.<br>
@@ -577,14 +469,14 @@ class Bladder
     /**
      *
      * @param amount the value of amount
-     * @param  the value of 
+     * @param the value of
      */
     static void offsetTime(UI ui, int amount)
     {
         time += amount;
         if (NarrativeEngine.drain & (time % 15) == 0)
         {
-            emptyBladder();
+            emptyBladder(ui);
         }
         //Clothes drying over time
         if (dryness < lower.getAbsorption() + undies.getAbsorption())
@@ -609,7 +501,8 @@ class Bladder
         if ((fulness > 100 && !NarrativeEngine.hardcore) || (fulness > 80 && hardcore))
         {
             ui.lblBladder.setForeground(Color.RED);
-        } else
+        }
+        else
         {
             ui.lblBladder.setForeground(UI.lblDefaultColor);
         }
@@ -618,7 +511,7 @@ class Bladder
 
     /**
      *
-     * @param  the value of 
+     * @param the value of
      * @return the boolean
      */
     private static boolean isCriticalBladder()
@@ -642,9 +535,7 @@ class Bladder
     }
 
     /**
-     * Checks the wetting conditions, and if they are met, wetting TODO in v1.4:
-     * add diapers and pads support
-     *
+     * Checks the wetting conditions, and if they are met, wetting
      */
     static void testWet()
     {
@@ -657,12 +548,14 @@ class Bladder
                 if (NarrativeEngine.specialHardcoreStage)
                 {
                     NarrativeEngine.setNextStage(NarrativeEngine.GameStage.SURPRISE_ACCIDENT);
-                } else
+                }
+                else
                 {
                     NarrativeEngine.setNextStage(NarrativeEngine.GameStage.ACCIDENT);
                 }
             }
-        } else //If bladder is filled more than 100 points in the normal mode and 50 points in the hardcore mode, character has a chance to wet
+        }
+        else //If bladder is filled more than 100 points in the normal mode and 50 points in the hardcore mode, character has a chance to wet
         {
             if (isCriticalBladder())
             {
@@ -675,15 +568,15 @@ class Bladder
      * Empties the belly.
      *
      */
-    static void emptyBelly()
+    static void emptyBelly(UI ui)
     {
-        offsetBelly(-belly);
+        offsetBelly(ui, -belly);
     }
 
     /**
      *
      * @param wetChance the value of wetChance
-     * @param  the value of 
+     * @param the value of
      */
     private static void wetIfUnlucky(short wetChance)
     {
@@ -695,7 +588,8 @@ class Bladder
                 if (specialHardcoreStage)
                 {
                     setNextStage(NarrativeEngine.GameStage.SURPRISE_ACCIDENT);
-                } else
+                }
+                else
                 {
                     setNextStage(NarrativeEngine.GameStage.ACCIDENT);
                 }
@@ -707,9 +601,9 @@ class Bladder
      * Increments the time by 3 minutes and all time-related parameters.
      *
      */
-    static void passTime()
+    static void passTime(UI ui)
     {
-        passTime((byte) 3);
+        passTime(ui, (byte) 3);
     }
 
     /**
@@ -721,7 +615,7 @@ class Bladder
     {
         offsetTime(ui, time);
         offsetBladder(ui, time * 1.5);
-        offsetBelly(-time * 1.5);
+        offsetBelly(ui, -time * 1.5);
         if (Bladder.time >= 88)
         {
             ui.setText("You hear the bell finally ring.");
@@ -731,16 +625,17 @@ class Bladder
         //Decrementing sphincter power for every 3 minutes
         for (int i = 0; i < time; i++)
         {
-            decaySphPower();
+            decaySphPower(ui);
             if (belly != 0)
             {
                 if (belly > 3)
                 {
                     offsetBladder(ui, 2);
-                } else
+                }
+                else
                 {
                     offsetBladder(ui, belly);
-                    emptyBelly();
+                    emptyBelly(ui);
                 }
             }
         }
@@ -759,7 +654,7 @@ class Bladder
     /**
      *
      * @param amount the value of amount
-     * @param  the value of 
+     * @param the value of
      */
     static void offsetBelly(UI ui, double amount)
     {
@@ -774,7 +669,7 @@ class Bladder
     /**
      *
      * @param amount the value of amount
-     * @param  the value of 
+     * @param the value of
      */
     public void offsetEmbarassment(UI ui, int amount)
     {
@@ -792,7 +687,7 @@ class Bladder
      */
     /**
      *
-     * @param  the value of 
+     * @param the value of
      */
     static void decaySphPower(UI ui)
     {
@@ -808,12 +703,14 @@ class Bladder
                 if (lower.isMissing() && undies.isMissing())
                 {
                     ui.setText("You feel the leak running down your thighs...", "You're about to pee! You must stop it!");
-                } else //Outerwear
+                }
+                else //Outerwear
                 {
                     if (!lower.isMissing())
                     {
                         ui.setText("You see the wet spot expand on your " + lower.insert() + "!", "You're about to pee! You must stop it!");
-                    } else //Underwear
+                    }
+                    else //Underwear
                     {
                         if (!undies.isMissing())
                         {
@@ -831,20 +728,23 @@ class Bladder
                         ui.setText("You see a puddle forming on the floor beneath you, you're peeing!", "It's too much...");
                         setNextStage(ACCIDENT);
                         ui.handleNextClicked();
-                    } else
+                    }
+                    else
                     {
                         ui.setText("Feeling the pee hit the chair and soon fall over the sides,", "you see a puddle forming under your chair, you're peeing!", "It's too much...");
                         setNextStage(ACCIDENT);
                         ui.handleNextClicked();
                     }
-                } else
+                }
+                else
                 {
                     if (!lower.isMissing())
                     {
                         ui.setText("You see the wet spot expanding on your " + lower.insert() + "!", "It's too much...");
                         setNextStage(ACCIDENT);
                         ui.handleNextClicked();
-                    } else
+                    }
+                    else
                     {
                         if (!undies.isMissing())
                         {
@@ -863,11 +763,9 @@ class Bladder
      * Empties the bladder.
      *
      */
-    static void emptyBladder()
+    static void emptyBladder(UI ui)
     {
-        UI ui = UI.getInstance();
         fulness = 0;
-        ui.lblBladder.setText("Bladder: " + (int) fulness + "%");
         ui.update();
     }
 
@@ -888,11 +786,11 @@ class NarrativeEngine
     {
         return nextStage;
     }
-    
+
     class StagePool
     {
         Stage leaveHome;
-        Stage leaveBed = new BladderAffectingStage(leaveHome, (short)3)
+        Stage leaveBed = new BladderAffectingStage(leaveHome, (short) 3)
         {
             @Override
             public String[] getText()
@@ -932,11 +830,11 @@ class NarrativeEngine
     {
         return RANDOM.nextInt(100) <= chance;
     }
-    
+
     /**
      * List of all outerwear types.
      */
-    final static Wear[] outerwearList =
+    final static Wear[] OUTERWEAR_LIST =
     {
         //        Name      Insert name     Pressure, Absotption, Drying over time
         new Wear("Random", showError((byte) 0), 0, 0, 0),
@@ -964,39 +862,39 @@ class NarrativeEngine
         new Wear("Normal male jeans", "jeans", 7, 12, 1.2F),
         new Wear("Male trousers", "trousers", 9, 15.75F, 1.4F)
     };
-    
+
     /**
      * Times teacher denied character to go out.
      */
     static byte timesPeeDenied = 0;
-    
+
     /**
      * Whether or not hardcore mode enabled: teacher never lets you pee, it's
      * harder to hold pee, you may get caught holding pee
      */
     static boolean hardcore = false;
-    
+
     /**
      * An array that contains boolean values that define <i>dialogue lines</i>.
      * Dialogue lines, unlike normal lines, are <i>italic</i>.
      */
     static boolean[] dialogueLines = new boolean[UI.MAX_LINES];
-    
+
     /**
      * Actions list.
      */
     static ArrayList<String> actionList = new ArrayList<>();
-    
+
     /**
      * Amount of embarassment raising every time character caught holding pee.
      */
     static short classmatesAwareness = 0;
-    
+
     /**
      * Current character gender.
      */
     static Gender gender;
-    
+
     //TODO: Refactor
     /**
      * List of all cheats.
@@ -1007,14 +905,14 @@ class NarrativeEngine
         "Calm the teacher down", "Raise your hand", "Make your pee disappear regularly",
         "Set your incontinence level", "Toggle hardcore mode", "Set bladder fulness"
     };
-    
+
     /**
      * A stage after the current stage.
      */
     private static GameStage nextStage;
-    
+
     static boolean specialHardcoreStage = false;
-    
+
     /**
      * List of all boy names for special hardcore scene.
      */
@@ -1028,50 +926,50 @@ class NarrativeEngine
         "Bill",
         "Dan"
     };
-    
+
     private static final String[] ERRORS =
     {
         "LACK OF WEAR HANDLING",
         "NOT OVERRIDDEN"
     };
-    
+
     /**
      * Whether or not pee drain cheat enabled: pee mysteriously vanishes every
      * 15 minutes.
      */
     public static boolean drain = false;
-    
+
     /**
      * Special hardcore scene boy name.
      */
     static String boyName = BOY_NAMES[RANDOM.nextInt(BOY_NAMES.length)];
-    
+
     /**
      * Character's name.
      */
     static String name;
-    
+
     /**
      * Whether or not charecter has to stay 30 minutes after class.
      */
     static boolean stay = false;
-    
+
     /**
      * Whether or not player has used cheats.
      */
     static boolean cheatsUsed = false;
-    
+
     /**
      * Number of times player got caught holding pee.
      */
     static byte timesCaught = 0;
-    
+
     /**
      * Whether or not character currently stands in the corner and unable to
      * hold crotch.
      */
     static boolean cornered = false;
-    
+
     private final String[] askToPeeSuccessText =
     {
         "You ask the teacher if you can go out to the restroom.",
@@ -1080,13 +978,13 @@ class NarrativeEngine
         showError((byte) 1),
         "wearily flop down on the toilet and start peeing."
     };
-    
+
     /**
      * Text to be displayed after the game which shows how many {@link score}
      * did you get.
      */
     static String scoreText = "";
-    
+
     /**
      * A number that shows a game difficulty - the higher score, the harder was
      * the game. Specific actions (for example, peeing in a restroom during a
@@ -1123,7 +1021,7 @@ class NarrativeEngine
 
     /**
      *
-     * @param  the value of 
+     * @param the value of
      * @return the boolean
      */
     private boolean triggerClsasOverScene()
@@ -1160,7 +1058,8 @@ class NarrativeEngine
         if (RANDOM.nextInt(100) <= 15 + classmatesAwareness & hardcore)
         {
             setNextStage(CAUGHT);
-        } else
+        }
+        else
         {
             setNextStage(ASK_ACTION);
         }
@@ -1168,7 +1067,7 @@ class NarrativeEngine
 
     /**
      *
-     * @param  the value of 
+     * @param the value of
      */
     private void displayDesperationStatus(UI ui)
     {
@@ -1206,7 +1105,8 @@ class NarrativeEngine
             if (isFemale())
             {
                 ui.setText("This is really bad...", "You know that you can't keep it any longer and you may wet yourself in any moment and oh,", "You can clearly see your bladder as it bulging.", "Ahhh... I cant hold it anymore!!!", "Even holding your crotch doesn't seems to help you to keep it in.");
-            } else
+            }
+            else
             {
                 ui.setText("This is really bad...", "You know that you can't keep it any longer and you may wet yourself in any moment and oh,", "You can clearly see your bladder as it bulging.", "Ahhh... I cant hold it anymore!!!", "Even squeezing your penis doesn't seems to help you to keep it in.");
             }
@@ -1215,7 +1115,7 @@ class NarrativeEngine
 
     /**
      *
-     * @param  the value of 
+     * @param the value of
      */
     private void offerHoldingChoices()
     {
@@ -1242,11 +1142,13 @@ class NarrativeEngine
             if (isFemale())
             {
                 actionList.add("Press on your crotch");
-            } else
+            }
+            else
             {
                 actionList.add("Squeeze your penis");
             }
-        } else
+        }
+        else
         {
             actionList.add("[Unavailable]");
         }
@@ -1254,14 +1156,16 @@ class NarrativeEngine
         if (fulness >= 100)
         {
             actionList.add("Give up and pee yourself");
-        } else
+        }
+        else
         {
             actionList.add("[Unavailable]");
         }
         if (hardcore)
         {
             actionList.add("Drink water");
-        } else
+        }
+        else
         {
             actionList.add("[Unavailable]");
         }
@@ -1298,14 +1202,15 @@ class NarrativeEngine
      *
      * @param femaleText the value of femaleText
      * @param maleText the value of maleText
-     * @param  the value of 
+     * @param the value of
      */
-    String[] getGenderDependentText(String[] femaleText, String[] maleText )
+    String[] getGenderDependentText(String[] femaleText, String[] maleText)
     {
         if (isFemale())
         {
             return femaleText;
-        } else
+        }
+        else
         {
             return maleText;
         }
@@ -1325,16 +1230,19 @@ class NarrativeEngine
             if (undies.isMissing())
             {
                 return bothWear;
-            } else
+            }
+            else
             {
                 return lowerOnly;
             }
-        } else
+        }
+        else
         {
             if (undies.isMissing())
             {
                 return undiesOnly;
-            } else
+            }
+            else
             {
                 return noWear;
             }
@@ -1474,7 +1382,8 @@ class UI extends JFrame
             if (NarrativeEngine.dialogueLines[i])
             {
                 toSend += "<i>\"" + lines[i] + "\"</i>";
-            } else
+            }
+            else
             {
                 toSend += lines[i];
             }
@@ -1485,7 +1394,7 @@ class UI extends JFrame
         NarrativeEngine.dialogueLines = new boolean[UI.MAX_LINES];
     }
     JLabel lblSphPower;
-    
+
     void handleNextClicked()
     {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -1516,7 +1425,7 @@ class UI extends JFrame
 
     /**
      *
-     * @param  the value of 
+     * @param the value of
      * @throws HeadlessException
      */
     private void showScore() throws HeadlessException
@@ -1542,9 +1451,9 @@ class UI extends JFrame
     /**
      *
      * @param actionGroupName the value of actionGroupName
-     * @param  the value of 
+     * @param the value of
      */
-    void showActionUI(String actionGroupName )
+    void showActionUI(String actionGroupName)
     {
         listChoice.setListData(NarrativeEngine.actionList.toArray());
         lblChoice.setVisible(true);
@@ -2503,10 +2412,10 @@ class UI extends JFrame
             //   break; 
         }
     }
-*/
+     */
     /**
      *
-     * @param  the value of 
+     * @param the value of
      */
     void update()
     {
@@ -2528,7 +2437,8 @@ class UI extends JFrame
             timeBar.setValue(time);
             lblThirst.setText("Thirst: " + Math.round(thirst) + "%");
             thirstBar.setValue((int) thirst);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             e.printStackTrace();
         }
@@ -2544,7 +2454,7 @@ class UI extends JFrame
 
     /**
      *
-     * @param  the value of 
+     * @param the value of
      * @return the byte
      */
     byte hideActionUI()
@@ -2574,7 +2484,7 @@ class UI extends JFrame
 
     /**
      *
-     * @param  the value of 
+     * @param the value of
      * @throws HeadlessException
      * @throws NumberFormatException
      */
@@ -2643,7 +2553,7 @@ class UI extends JFrame
             @Override
             public void mouseClicked(MouseEvent arg0)
             {
-                GameCore.save();
+                GameCore.save(UI.this);
             }
         });
         btnSave.setBounds(284, UI.ACTION_BUTTONS_TOP_BORDER, UI.ACTION_BUTTONS_WIDTH, UI.ACTION_BUTTONS_HEIGHT);
@@ -2655,7 +2565,7 @@ class UI extends JFrame
             @Override
             public void mouseClicked(MouseEvent arg0)
             {
-                GameCore.load();
+                GameCore.load(UI.this);
             }
         });
         btnLoad.setBounds(376, UI.ACTION_BUTTONS_TOP_BORDER, UI.ACTION_BUTTONS_WIDTH, UI.ACTION_BUTTONS_HEIGHT);
@@ -2854,7 +2764,7 @@ class UI extends JFrame
 class ResetParametersStorage
 {
     private static final long serialVersionUID = 1;
-    
+
     static String underColorParam;
     static String outerColorParam;
     static String outerParam;
@@ -2869,8 +2779,8 @@ class ResetParametersStorage
 
 @SuppressWarnings("serial")
 public class GameCore
-{  
-    
+{
+
     /**
      * Resets the game and values, optionally letting player to select new
      * parameters.
@@ -2883,9 +2793,10 @@ public class GameCore
         if (newValues)
         {
             new setupFramePre().setVisible(true);
-        } else
+        }
+        else
         {
-            new GameCore(ResetParametersStorage.nameParam, ResetParametersStorage.gndrParam, ResetParametersStorage.diffParam, ResetParametersStorage.incParam, ResetParametersStorage.bladderParam, ResetParametersStorage.underParam, ResetParametersStorage.outerParam, ResetParametersStorage.underColorParam, ResetParametersStorage.outerColorParam);
+            new GameCore(ResetParametersStorage.nameParam, ResetParametersStorage.gndrParam, ResetParametersStorage.diffParam, ResetParametersStorage.incParam, ResetParametersStorage.bladderParam, ResetParametersStorage.underParam, ResetParametersStorage.outerParam, ResetParametersStorage.underColorParam, ResetParametersStorage.outerColorParam, new UI());
         }
     }
 
@@ -2903,20 +2814,21 @@ public class GameCore
      * @param undiesColor the underwear color
      * @param lowerColor the outerwear color
      */
-    void preConstructor(String name, Gender gndr, boolean diff, float inc, short bladder)
+    void preConstructor(String name, Gender gndr, boolean diff, float inc, short bladder, UI ui)
     {
         stashParametersForReset();
-        
+
         assignFieldValuesFromParameters(name, gndr, diff, inc, bladder);
 
-        setupFileChoosers();
+        setupFileChoosers(ui);
 
         //Setting "No underwear" insert name depending on character's gender
         //May be gone soon
         if (isMale())
         {
             underwearList[1].setInsertName("penis");
-        } else
+        }
+        else
         {
             underwearList[1].setInsertName("crotch");
         }
@@ -2941,7 +2853,7 @@ public class GameCore
         }
     }
 
-    private void setupFileChoosers()
+    private void setupFileChoosers(UI ui)
     {
         //Setting up custom wear file chooser
         ui.fcWear = new JFileChooser();
@@ -2958,14 +2870,14 @@ public class GameCore
                 }
                 return extension.equals("lhhwear");
             }
-            
+
             @Override
             public String getDescription()
             {
                 return "A Long Hour and a Half Custom wear";
             }
         });
-        
+
         ui.fcGame = new JFileChooser();
         ui.fcGame.setFileFilter(new FileFilter()
         {
@@ -2980,7 +2892,7 @@ public class GameCore
                 }
                 return extension.equals("lhhsav");
             }
-            
+
             @Override
             public String getDescription()
             {
@@ -3003,9 +2915,9 @@ public class GameCore
         boyName = BOY_NAMES[NarrativeEngine.RANDOM.nextInt(BOY_NAMES.length)];
     }
 
-    GameCore(String name, Gender gndr, boolean diff, float inc, short bladder, String under, String outer, String undiesColor, String lowerColor)
+    GameCore(String name, Gender gndr, boolean diff, float inc, short bladder, String under, String outer, String undiesColor, String lowerColor, UI ui)
     {
-        preConstructor(name, gndr, diff, inc, bladder);
+        preConstructor(name, gndr, diff, inc, bladder, ui);
 
         if (under.equals("Custom"))
         {
@@ -3024,7 +2936,8 @@ public class GameCore
                         ui.dispose();
                         setupFramePre.main(new String[0]);
                     }
-                } catch (IOException | ClassNotFoundException e)
+                }
+                catch (IOException | ClassNotFoundException e)
                 {
                     JOptionPane.showMessageDialog(null, "File error.", "Error", JOptionPane.ERROR_MESSAGE);
                     ui.dispose();
@@ -3042,7 +2955,8 @@ public class GameCore
                 undies = underwearList[NarrativeEngine.RANDOM.nextInt(underwearList.length)];
             }
             //If random undies weren't chosen...
-        } else
+        }
+        else
         {
             //We look for the selected undies in the array
             for (Wear iWear : underwearList)
@@ -3069,11 +2983,13 @@ public class GameCore
             if (!undiesColor.equals("Random"))
             {
                 undies.setColor(undiesColor);
-            } else
+            }
+            else
             {
                 undies.setColor(Wear.COLOR_LIST[NarrativeEngine.RANDOM.nextInt(Wear.COLOR_LIST.length)]);
             }
-        } else
+        }
+        else
         {
             undies.setColor("");
         }
@@ -3095,7 +3011,8 @@ public class GameCore
                         ui.dispose();
                         setupFramePre.main(new String[0]);
                     }
-                } catch (IOException | ClassNotFoundException e)
+                }
+                catch (IOException | ClassNotFoundException e)
                 {
                     JOptionPane.showMessageDialog(null, "File error.", "Error", JOptionPane.ERROR_MESSAGE);
                     ui.dispose();
@@ -3107,14 +3024,15 @@ public class GameCore
         //Same with the lower clothes
         if (outer.equals("Random"))
         {
-            lower = NarrativeEngine.outerwearList[NarrativeEngine.RANDOM.nextInt(outerwearList.length)];
+            lower = NarrativeEngine.OUTERWEAR_LIST[NarrativeEngine.RANDOM.nextInt(OUTERWEAR_LIST.length)];
             while (lower.getName().equals("Random"))
             {
-                lower = NarrativeEngine.outerwearList[NarrativeEngine.RANDOM.nextInt(outerwearList.length)];
+                lower = NarrativeEngine.OUTERWEAR_LIST[NarrativeEngine.RANDOM.nextInt(OUTERWEAR_LIST.length)];
             }
-        } else
+        }
+        else
         {
-            for (Wear iWear : NarrativeEngine.outerwearList)
+            for (Wear iWear : NarrativeEngine.OUTERWEAR_LIST)
             {
                 if (iWear.getName().equals(outer))
                 {
@@ -3126,7 +3044,7 @@ public class GameCore
         if (lower == null)
         {
             JOptionPane.showMessageDialog(null, "Incorrect outerwear selected. Setting random instead.", "Incorrect outerwear", JOptionPane.WARNING_MESSAGE);
-            lower = NarrativeEngine.outerwearList[NarrativeEngine.RANDOM.nextInt(outerwearList.length)];
+            lower = NarrativeEngine.OUTERWEAR_LIST[NarrativeEngine.RANDOM.nextInt(OUTERWEAR_LIST.length)];
         }
 
         //Assigning color
@@ -3135,11 +3053,13 @@ public class GameCore
             if (!lowerColor.equals("Random"))
             {
                 lower.setColor(lowerColor);
-            } else
+            }
+            else
             {
                 lower.setColor(Wear.COLOR_LIST[NarrativeEngine.RANDOM.nextInt(Wear.COLOR_LIST.length)]);
             }
-        } else
+        }
+        else
         {
             lower.setColor("");
         }
@@ -3161,12 +3081,12 @@ public class GameCore
         //Starting the game
         setNextStage(LEAVE_BED);
 
-        postConstructor();
+        postConstructor(ui);
     }
 
-    GameCore(Save save)
+    GameCore(Save save, UI ui)
     {
-        preConstructor(save.name, save.gender, save.hardcore, save.incontinence, save.bladder);
+        preConstructor(save.name, save.gender, save.hardcore, save.incontinence, save.bladder, ui);
         undies = save.underwear;
         lower = save.outerwear;
         embarassment = save.embarassment;
@@ -3187,18 +3107,18 @@ public class GameCore
         boyName = save.boyName;
 
         ui.displayAllValues();
-        postConstructor();
+        postConstructor(ui);
     }
 
-    void postConstructor()
+    void postConstructor(UI ui)
     {
-        Bladder.calculateCaps();
+        Bladder.calculateCaps(ui);
 
         stashParametersForReset();
 
         ui.setupWearLabels();
 
-        initHardcoreMode();
+        initHardcoreMode(ui);
 
         ui.handleNextClicked();
 
@@ -3206,7 +3126,7 @@ public class GameCore
         ui.setVisible(true);
     }
 
-    private void initHardcoreMode()
+    private void initHardcoreMode(UI ui)
     {
         //Making bladder smaller in the hardcore mode, adding hardcore label
         if (hardcore)
@@ -3269,7 +3189,8 @@ public class GameCore
                 fout = new FileOutputStream(file);
                 oos = new ObjectOutputStream(fout);
                 oos.writeObject(save);
-            } catch (IOException e)
+            }
+            catch (IOException e)
             {
                 e.printStackTrace();
                 JOptionPane.showMessageDialog(ui, "File error.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -3289,9 +3210,10 @@ public class GameCore
                 FileInputStream fin = new FileInputStream(file);
                 ObjectInputStream ois = new ObjectInputStream(fin);
                 Save save = (Save) ois.readObject();
-                new GameCore(save);
+                new GameCore(save, ui);
                 ui.dispose();
-            } catch (IOException | ClassNotFoundException e)
+            }
+            catch (IOException | ClassNotFoundException e)
             {
                 e.printStackTrace();
                 JOptionPane.showMessageDialog(ui, "File error.", "Error", JOptionPane.ERROR_MESSAGE);

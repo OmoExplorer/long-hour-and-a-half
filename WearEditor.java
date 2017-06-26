@@ -38,10 +38,10 @@ public class WearEditor extends javax.swing.JFrame
 
     private static final long serialVersionUID = 1L;
 
-    JFileChooser fc;
-    Scanner fs;
+    private JFileChooser fc;
+    private Scanner fs;
 //    PrintStream writer;
-    Wear wear;
+    private Wear wear;
 
     /**
      * Creates new form WearEditor

@@ -31,27 +31,29 @@ import javax.swing.WindowConstants;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-import omo.GameCore.Gender;
 
 /**
  *
  * @author JavaBird
  */
-public class setupFramePre extends javax.swing.JFrame {
+public class setupFramePre extends javax.swing.JFrame
+{
 
     private static final long serialVersionUID = 1L;
     private String undiesColor = "Random";
     private String lowerColor = "Random";
-    JFileChooser fcWear;
-    JFileChooser fcGame;
-    Save game;
+    private JFileChooser fcWear;
+    private JFileChooser fcGame;
+    private Save game;
 
     /**
      * Creates new form setupFrame
      */
-    public setupFramePre() {
-		fcWear = new JFileChooser();
-        fcWear.setFileFilter(new FileFilter() {
+    public setupFramePre()
+    {
+        fcWear = new JFileChooser();
+        fcWear.setFileFilter(new FileFilter()
+        {
             @Override
             public boolean accept(File f)
             {
@@ -70,9 +72,10 @@ public class setupFramePre extends javax.swing.JFrame {
                 return "A Long Hour and a Half Saved game";
             }
         });
-        
+
         fcGame = new JFileChooser();
-        fcGame.setFileFilter(new FileFilter() {
+        fcGame.setFileFilter(new FileFilter()
+        {
             @Override
             public boolean accept(File f)
             {
@@ -1104,65 +1107,77 @@ public class setupFramePre extends javax.swing.JFrame {
         boolean diff = false;
         String underwearToAssign = "Random";
         String outerwearToAssign = "Random";
-        
-        if(femaleRadio.isSelected())
-            gnd = Gender.FEMALE;
-        
-        if(basSliderRadio.isSelected())
-            bas = basSlider.getValue();
-        else
-            bas = rnd.nextInt(51);
 
-        if (hardDiffRadio.isSelected()) {
+        if (femaleRadio.isSelected())
+        {
+            gnd = Gender.FEMALE;
+        }
+
+        if (basSliderRadio.isSelected())
+        {
+            bas = basSlider.getValue();
+        }
+        else
+        {
+            bas = rnd.nextInt(51);
+        }
+
+        if (hardDiffRadio.isSelected())
+        {
             diff = true;
         }
 
-        float incont = incontSlider.getValue()/10;
-        if(incont<1)
+        float incont = incontSlider.getValue() / 10;
+        if (incont < 1)
+        {
             incont += 0.5;
-        
+        }
+
         try
         {
             System.out.println(underwearTree.getLastSelectedPathComponent().toString());
         }
-        catch(NullPointerException e)
-        {
-            System.out.println("null");
-        }
-        
-        try
-        {
-            System.out.println(outerwearTree.getLastSelectedPathComponent().toString());
-        }
-        catch(NullPointerException e)
-        {
-            System.out.println("null");
-        }
-        
-        try
-        {
-            System.out.println(lowerColor);
-        }
-        catch(NullPointerException e)
-        {
-            System.out.println("null");
-        }
-        
-        try
-        {
-            System.out.println(undiesColor);
-        }
-        catch(NullPointerException e)
+        catch (NullPointerException e)
         {
             System.out.println("null");
         }
 
-        if(underwearTree.getLastSelectedPathComponent()!=null)
+        try
+        {
+            System.out.println(outerwearTree.getLastSelectedPathComponent().toString());
+        }
+        catch (NullPointerException e)
+        {
+            System.out.println("null");
+        }
+
+        try
+        {
+            System.out.println(lowerColor);
+        }
+        catch (NullPointerException e)
+        {
+            System.out.println("null");
+        }
+
+        try
+        {
+            System.out.println(undiesColor);
+        }
+        catch (NullPointerException e)
+        {
+            System.out.println("null");
+        }
+
+        if (underwearTree.getLastSelectedPathComponent() != null)
+        {
             underwearToAssign = underwearTree.getLastSelectedPathComponent().toString();
-        if(outerwearTree.getLastSelectedPathComponent()!=null)
+        }
+        if (outerwearTree.getLastSelectedPathComponent() != null)
+        {
             outerwearToAssign = outerwearTree.getLastSelectedPathComponent().toString();
-            
-                
+        }
+
 //        try {
 //            switch (underwearTree.getLastSelectedPathComponent().toString()) {
 //                case "Female":
@@ -1183,15 +1198,16 @@ public class setupFramePre extends javax.swing.JFrame {
 //                        case "Skirts":
 //                            break;
 //                        default:
-                            new GameCore(nameField.getText(),
-                            gnd,
-                            diff,
-                            incont, (short) bas,
-                            underwearToAssign,
-                            outerwearToAssign,
-                            undiesColor,
-                            lowerColor);
-                            this.dispose();
+        new GameCore(nameField.getText(),
+                gnd,
+                diff,
+                incont, (short) bas,
+                underwearToAssign,
+                outerwearToAssign,
+                undiesColor,
+                lowerColor,
+                new UI());
+        this.dispose();
 //                    }
 //            }
 //        } catch (NullPointerException e) {
@@ -1212,19 +1228,23 @@ public class setupFramePre extends javax.swing.JFrame {
     }//GEN-LAST:event_randomBasSliderActionPerformed
 
     private void maleRadioActionPerformed(ActionEvent evt) {//GEN-FIRST:event_maleRadioActionPerformed
-        if(nameField.getText().equals("Mrs. Nobody"))
+        if (nameField.getText().equals("Mrs. Nobody"))
+        {
             nameField.setText("Mr. Nobody");
+        }
     }//GEN-LAST:event_maleRadioActionPerformed
 
     private void femaleRadioActionPerformed(ActionEvent evt) {//GEN-FIRST:event_femaleRadioActionPerformed
-        if(nameField.getText().equals("Mr. Nobody"))
+        if (nameField.getText().equals("Mr. Nobody"))
+        {
             nameField.setText("Mrs. Nobody");
+        }
     }//GEN-LAST:event_femaleRadioActionPerformed
 
     private void undiesColor_blackMouseClicked(MouseEvent evt)//GEN-FIRST:event_undiesColor_blackMouseClicked
     {//GEN-HEADEREND:event_undiesColor_blackMouseClicked
         undiesColor_black.setBorder(BorderFactory.createLineBorder(new Color(255, 255, 255), 3));
-        
+
         //Unchecking other colors
         undiesColor_gray.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
         undiesColor_red.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
@@ -1236,14 +1256,14 @@ public class setupFramePre extends javax.swing.JFrame {
         undiesColor_purple.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
         undiesColor_pink.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
         undiesColor_random.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
-        
+
         undiesColor = "Black";
     }//GEN-LAST:event_undiesColor_blackMouseClicked
 
     private void undiesColor_grayMouseClicked(MouseEvent evt)//GEN-FIRST:event_undiesColor_grayMouseClicked
     {//GEN-HEADEREND:event_undiesColor_grayMouseClicked
         undiesColor_gray.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 3));
-        
+
         //Unchecking other colors
         undiesColor_black.setBorder(BorderFactory.createLineBorder(new Color(255, 255, 255), 1));
         undiesColor_red.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
@@ -1255,14 +1275,14 @@ public class setupFramePre extends javax.swing.JFrame {
         undiesColor_purple.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
         undiesColor_pink.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
         undiesColor_random.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
-        
+
         undiesColor = "Gray";
     }//GEN-LAST:event_undiesColor_grayMouseClicked
 
     private void undiesColor_redMouseClicked(MouseEvent evt)//GEN-FIRST:event_undiesColor_redMouseClicked
     {//GEN-HEADEREND:event_undiesColor_redMouseClicked
         undiesColor_red.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 3));
-        
+
         //Unchecking other colors
         undiesColor_black.setBorder(BorderFactory.createLineBorder(new Color(255, 255, 255), 1));
         undiesColor_gray.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
@@ -1274,14 +1294,14 @@ public class setupFramePre extends javax.swing.JFrame {
         undiesColor_purple.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
         undiesColor_pink.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
         undiesColor_random.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
-        
+
         undiesColor = "Red";
     }//GEN-LAST:event_undiesColor_redMouseClicked
 
     private void undiesColor_orangeMouseClicked(MouseEvent evt)//GEN-FIRST:event_undiesColor_orangeMouseClicked
     {//GEN-HEADEREND:event_undiesColor_orangeMouseClicked
         undiesColor_orange.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 3));
-        
+
         //Unchecking other colors
         undiesColor_black.setBorder(BorderFactory.createLineBorder(new Color(255, 255, 255), 1));
         undiesColor_red.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
@@ -1293,14 +1313,14 @@ public class setupFramePre extends javax.swing.JFrame {
         undiesColor_purple.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
         undiesColor_pink.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
         undiesColor_random.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
-        
+
         undiesColor = "Orange";
     }//GEN-LAST:event_undiesColor_orangeMouseClicked
 
     private void undiesColor_yellowMouseClicked(MouseEvent evt)//GEN-FIRST:event_undiesColor_yellowMouseClicked
     {//GEN-HEADEREND:event_undiesColor_yellowMouseClicked
         undiesColor_yellow.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 3));
-        
+
         //Unchecking other colors
         undiesColor_black.setBorder(BorderFactory.createLineBorder(new Color(255, 255, 255), 1));
         undiesColor_red.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
@@ -1312,14 +1332,14 @@ public class setupFramePre extends javax.swing.JFrame {
         undiesColor_purple.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
         undiesColor_pink.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
         undiesColor_random.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
-        
-         undiesColor = "Yellow";
+
+        undiesColor = "Yellow";
     }//GEN-LAST:event_undiesColor_yellowMouseClicked
 
     private void undiesColor_greenMouseClicked(MouseEvent evt)//GEN-FIRST:event_undiesColor_greenMouseClicked
     {//GEN-HEADEREND:event_undiesColor_greenMouseClicked
         undiesColor_green.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 3));
-        
+
         //Unchecking other colors
         undiesColor_black.setBorder(BorderFactory.createLineBorder(new Color(255, 255, 255), 1));
         undiesColor_red.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
@@ -1331,14 +1351,14 @@ public class setupFramePre extends javax.swing.JFrame {
         undiesColor_purple.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
         undiesColor_pink.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
         undiesColor_random.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
-        
+
         undiesColor = "Green";
     }//GEN-LAST:event_undiesColor_greenMouseClicked
 
     private void undiesColor_blueMouseClicked(MouseEvent evt)//GEN-FIRST:event_undiesColor_blueMouseClicked
     {//GEN-HEADEREND:event_undiesColor_blueMouseClicked
         undiesColor_blue.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 3));
-        
+
         //Unchecking other colors
         undiesColor_black.setBorder(BorderFactory.createLineBorder(new Color(255, 255, 255), 1));
         undiesColor_red.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
@@ -1350,14 +1370,14 @@ public class setupFramePre extends javax.swing.JFrame {
         undiesColor_purple.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
         undiesColor_pink.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
         undiesColor_random.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
-        
+
         undiesColor = "Blue";
     }//GEN-LAST:event_undiesColor_blueMouseClicked
 
     private void undiesColor_darkBlueMouseClicked(MouseEvent evt)//GEN-FIRST:event_undiesColor_darkBlueMouseClicked
     {//GEN-HEADEREND:event_undiesColor_darkBlueMouseClicked
         undiesColor_darkBlue.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 3));
-        
+
         //Unchecking other colors
         undiesColor_black.setBorder(BorderFactory.createLineBorder(new Color(255, 255, 255), 1));
         undiesColor_red.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
@@ -1369,14 +1389,14 @@ public class setupFramePre extends javax.swing.JFrame {
         undiesColor_purple.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
         undiesColor_pink.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
         undiesColor_random.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
-        
+
         undiesColor = "Dark blue";
     }//GEN-LAST:event_undiesColor_darkBlueMouseClicked
 
     private void undiesColor_purpleMouseClicked(MouseEvent evt)//GEN-FIRST:event_undiesColor_purpleMouseClicked
     {//GEN-HEADEREND:event_undiesColor_purpleMouseClicked
         undiesColor_purple.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 3));
-        
+
         //Unchecking other colors
         undiesColor_black.setBorder(BorderFactory.createLineBorder(new Color(255, 255, 255), 1));
         undiesColor_red.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
@@ -1388,14 +1408,14 @@ public class setupFramePre extends javax.swing.JFrame {
         undiesColor_gray.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
         undiesColor_pink.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
         undiesColor_random.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
-        
+
         undiesColor = "Purple";
     }//GEN-LAST:event_undiesColor_purpleMouseClicked
 
     private void undiesColor_pinkMouseClicked(MouseEvent evt)//GEN-FIRST:event_undiesColor_pinkMouseClicked
     {//GEN-HEADEREND:event_undiesColor_pinkMouseClicked
         undiesColor_pink.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 3));
-        
+
         //Unchecking other colors
         undiesColor_black.setBorder(BorderFactory.createLineBorder(new Color(255, 255, 255), 1));
         undiesColor_red.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
@@ -1407,14 +1427,14 @@ public class setupFramePre extends javax.swing.JFrame {
         undiesColor_purple.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
         undiesColor_gray.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
         undiesColor_random.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
-        
+
         undiesColor = "Pink";
     }//GEN-LAST:event_undiesColor_pinkMouseClicked
 
     private void lowerColor_pink1MouseClicked(MouseEvent evt)//GEN-FIRST:event_lowerColor_pink1MouseClicked
     {//GEN-HEADEREND:event_lowerColor_pink1MouseClicked
         lowerColor_pink1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 3));
-        
+
         //Unchecking other colors
         lowerColor_black1.setBorder(BorderFactory.createLineBorder(new Color(255, 255, 255), 1));
         lowerColor_red1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
@@ -1426,14 +1446,14 @@ public class setupFramePre extends javax.swing.JFrame {
         lowerColor_purple1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
         lowerColor_gray1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
         lowerColor_random1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
-        
+
         lowerColor = "Pink";
     }//GEN-LAST:event_lowerColor_pink1MouseClicked
 
     private void lowerColor_black1MouseClicked(MouseEvent evt)//GEN-FIRST:event_lowerColor_black1MouseClicked
     {//GEN-HEADEREND:event_lowerColor_black1MouseClicked
         lowerColor_black1.setBorder(BorderFactory.createLineBorder(new Color(255, 255, 255), 3));
-        
+
         //Unchecking other colors
         lowerColor_gray1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
         lowerColor_red1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
@@ -1445,14 +1465,14 @@ public class setupFramePre extends javax.swing.JFrame {
         lowerColor_purple1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
         lowerColor_pink1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
         lowerColor_random1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
-        
+
         lowerColor = "Black";
     }//GEN-LAST:event_lowerColor_black1MouseClicked
 
     private void lowerColor_gray1MouseClicked(MouseEvent evt)//GEN-FIRST:event_lowerColor_gray1MouseClicked
     {//GEN-HEADEREND:event_lowerColor_gray1MouseClicked
         lowerColor_gray1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 3));
-        
+
         //Unchecking other colors
         lowerColor_black1.setBorder(BorderFactory.createLineBorder(new Color(255, 255, 255), 1));
         lowerColor_red1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
@@ -1464,14 +1484,14 @@ public class setupFramePre extends javax.swing.JFrame {
         lowerColor_purple1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
         lowerColor_pink1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
         lowerColor_random1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
-        
+
         lowerColor = "Gray";
     }//GEN-LAST:event_lowerColor_gray1MouseClicked
 
     private void lowerColor_red1MouseClicked(MouseEvent evt)//GEN-FIRST:event_lowerColor_red1MouseClicked
     {//GEN-HEADEREND:event_lowerColor_red1MouseClicked
         lowerColor_red1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 3));
-        
+
         //Unchecking other colors
         lowerColor_black1.setBorder(BorderFactory.createLineBorder(new Color(255, 255, 255), 1));
         lowerColor_gray1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
@@ -1483,14 +1503,14 @@ public class setupFramePre extends javax.swing.JFrame {
         lowerColor_purple1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
         lowerColor_pink1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
         lowerColor_random1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
-        
+
         lowerColor = "Red";
     }//GEN-LAST:event_lowerColor_red1MouseClicked
 
     private void lowerColor_orange1MouseClicked(MouseEvent evt)//GEN-FIRST:event_lowerColor_orange1MouseClicked
     {//GEN-HEADEREND:event_lowerColor_orange1MouseClicked
         lowerColor_orange1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 3));
-        
+
         //Unchecking other colors
         lowerColor_black1.setBorder(BorderFactory.createLineBorder(new Color(255, 255, 255), 1));
         lowerColor_red1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
@@ -1502,14 +1522,14 @@ public class setupFramePre extends javax.swing.JFrame {
         lowerColor_purple1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
         lowerColor_pink1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
         lowerColor_random1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
-        
+
         lowerColor = "Orange";
     }//GEN-LAST:event_lowerColor_orange1MouseClicked
 
     private void lowerColor_yellow1MouseClicked(MouseEvent evt)//GEN-FIRST:event_lowerColor_yellow1MouseClicked
     {//GEN-HEADEREND:event_lowerColor_yellow1MouseClicked
         lowerColor_yellow1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 3));
-        
+
         //Unchecking other colors
         lowerColor_black1.setBorder(BorderFactory.createLineBorder(new Color(255, 255, 255), 1));
         lowerColor_red1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
@@ -1521,14 +1541,14 @@ public class setupFramePre extends javax.swing.JFrame {
         lowerColor_purple1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
         lowerColor_pink1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
         lowerColor_random1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
-        
+
         lowerColor = "Yellow";
     }//GEN-LAST:event_lowerColor_yellow1MouseClicked
 
     private void lowerColor_green1MouseClicked(MouseEvent evt)//GEN-FIRST:event_lowerColor_green1MouseClicked
     {//GEN-HEADEREND:event_lowerColor_green1MouseClicked
         lowerColor_green1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 3));
-        
+
         //Unchecking other colors
         lowerColor_black1.setBorder(BorderFactory.createLineBorder(new Color(255, 255, 255), 1));
         lowerColor_red1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
@@ -1540,14 +1560,14 @@ public class setupFramePre extends javax.swing.JFrame {
         lowerColor_purple1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
         lowerColor_pink1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
         lowerColor_random1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
-        
+
         lowerColor = "Green";
     }//GEN-LAST:event_lowerColor_green1MouseClicked
 
     private void lowerColor_blue1MouseClicked(MouseEvent evt)//GEN-FIRST:event_lowerColor_blue1MouseClicked
     {//GEN-HEADEREND:event_lowerColor_blue1MouseClicked
         lowerColor_blue1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 3));
-        
+
         //Unchecking other colors
         lowerColor_black1.setBorder(BorderFactory.createLineBorder(new Color(255, 255, 255), 1));
         lowerColor_red1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
@@ -1559,14 +1579,14 @@ public class setupFramePre extends javax.swing.JFrame {
         lowerColor_purple1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
         lowerColor_pink1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
         lowerColor_random1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
-        
+
         lowerColor = "Blue";
     }//GEN-LAST:event_lowerColor_blue1MouseClicked
 
     private void lowerColor_darkBlue1MouseClicked(MouseEvent evt)//GEN-FIRST:event_lowerColor_darkBlue1MouseClicked
     {//GEN-HEADEREND:event_lowerColor_darkBlue1MouseClicked
         lowerColor_darkBlue1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 3));
-        
+
         //Unchecking other colors
         lowerColor_black1.setBorder(BorderFactory.createLineBorder(new Color(255, 255, 255), 1));
         lowerColor_red1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
@@ -1578,14 +1598,14 @@ public class setupFramePre extends javax.swing.JFrame {
         lowerColor_purple1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
         lowerColor_pink1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
         lowerColor_random1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
-        
+
         lowerColor = "Dark blue";
     }//GEN-LAST:event_lowerColor_darkBlue1MouseClicked
 
     private void lowerColor_purple1MouseClicked(MouseEvent evt)//GEN-FIRST:event_lowerColor_purple1MouseClicked
     {//GEN-HEADEREND:event_lowerColor_purple1MouseClicked
         lowerColor_purple1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 3));
-        
+
         //Unchecking other colors
         lowerColor_black1.setBorder(BorderFactory.createLineBorder(new Color(255, 255, 255), 1));
         lowerColor_red1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
@@ -1597,14 +1617,14 @@ public class setupFramePre extends javax.swing.JFrame {
         lowerColor_gray1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
         lowerColor_pink1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
         lowerColor_random1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
-        
+
         lowerColor = "Purple";
     }//GEN-LAST:event_lowerColor_purple1MouseClicked
 
     private void undiesColor_randomMouseClicked(MouseEvent evt)//GEN-FIRST:event_undiesColor_randomMouseClicked
     {//GEN-HEADEREND:event_undiesColor_randomMouseClicked
         undiesColor_random.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 3));
-        
+
         //Unchecking other colors
         undiesColor_black.setBorder(BorderFactory.createLineBorder(new Color(255, 255, 255), 1));
         undiesColor_red.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
@@ -1616,14 +1636,14 @@ public class setupFramePre extends javax.swing.JFrame {
         undiesColor_gray.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
         undiesColor_pink.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
         undiesColor_purple.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
-        
+
         undiesColor = "Random";
     }//GEN-LAST:event_undiesColor_randomMouseClicked
 
     private void lowerColor_random1MouseClicked(MouseEvent evt)//GEN-FIRST:event_lowerColor_random1MouseClicked
     {//GEN-HEADEREND:event_lowerColor_random1MouseClicked
         lowerColor_random1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 3));
-        
+
         //Unchecking other colors
         lowerColor_black1.setBorder(BorderFactory.createLineBorder(new Color(255, 255, 255), 1));
         lowerColor_red1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
@@ -1635,7 +1655,7 @@ public class setupFramePre extends javax.swing.JFrame {
         lowerColor_gray1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
         lowerColor_pink1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
         lowerColor_purple1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
-        
+
         lowerColor = "Random";
     }//GEN-LAST:event_lowerColor_random1MouseClicked
 
@@ -1651,7 +1671,7 @@ public class setupFramePre extends javax.swing.JFrame {
 
     private void loadGameButtonActionPerformed(ActionEvent evt)//GEN-FIRST:event_loadGameButtonActionPerformed
     {//GEN-HEADEREND:event_loadGameButtonActionPerformed
-        
+
     }//GEN-LAST:event_loadGameButtonActionPerformed
 
     private void loadGameActionPerformed(ActionEvent evt)//GEN-FIRST:event_loadGameActionPerformed
@@ -1664,43 +1684,50 @@ public class setupFramePre extends javax.swing.JFrame {
                 FileInputStream fin = new FileInputStream(file);
                 ObjectInputStream ois = new ObjectInputStream(fin);
                 Save save = (Save) ois.readObject();
-                new GameCore(save);
+                new GameCore(save, new UI());
                 dispose();
-            } catch (IOException | ClassNotFoundException e)
+            }
+            catch (IOException | ClassNotFoundException e)
             {
                 JOptionPane.showMessageDialog(this, "File error.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_loadGameActionPerformed
 
-
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args)
+    {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+        try
+        {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels())
+            {
+                if ("Nimbus".equals(info.getName()))
+                {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
             }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+        }
+        catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex)
+        {
             java.util.logging.Logger.getLogger(setupFramePre.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
         //</editor-fold>
-        
+
         //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> {
+        java.awt.EventQueue.invokeLater(() ->
+        {
             new setupFramePre().setVisible(true);
         });
     }
