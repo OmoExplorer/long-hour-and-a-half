@@ -4,11 +4,12 @@ import java.io.Serializable;
 import omo.NarrativeEngine.GameStage;
 
 /**
+ * All game values storage for saving into a file.
  *
  * @author JavaBird
  */
 @SuppressWarnings("PackageVisibleField")
-public class Save implements Serializable
+public class Save implements Serializable //"implements Serializable" is required for saving into a file
 {
     private static final long serialVersionUID = 1L;
     

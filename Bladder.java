@@ -5,6 +5,11 @@ import static omo.NarrativeEngine.*;
 import static omo.NarrativeEngine.GameStage.ACCIDENT;
 import omo.ui.GameFrame;
 
+/**
+ * Static class which provides bladder simulation functionality and stores the bladder data.
+ *
+ * @author JavaBird
+ */
 public class Bladder
 {
     /**
@@ -45,7 +50,7 @@ public class Bladder
     };
 
     /**
-     * Amount of pee that clothes can store.
+     * Maximal amount of pee that clothes can store.
      */
     private static float dryness;
 
@@ -55,13 +60,12 @@ public class Bladder
     static short maxBladder = 130;
 
     /**
-     * Current sphincter power. The higher bladder level, the faster power
-     * consumption.
+     * Current sphincter power.
      */
     private static short sphincterPower;
 
     /**
-     * The class time.
+     * The class time in minutes.
      */
     private static byte time = 0;
 
@@ -100,7 +104,7 @@ public class Bladder
 
     /**
      * Before 1.1:<br>
-     * simply multiplies a bladder increasement.<br>
+     * simply multiplies a bladder increasement speed.<br>
      * <br>
      * 1.1 and after:<br>
      * defines the sphincter weakening speed.
@@ -108,9 +112,10 @@ public class Bladder
     private static float incontinence;
 
     /**
+     * Offsets the time by a specified amount.
      *
-     * @param amount the value of amount
-     * @param the value of
+     * @param ui @code{GameFrame} object to update values
+     * @param amount the offset value. May be negative to decrease time
      */
     public static void offsetTime(GameFrame ui, int amount)
     {
@@ -134,7 +139,8 @@ public class Bladder
     /**
      * Offsets bladder fulness by a specified amount.
      *
-     * @param amount the amount to offset bladder fulness
+     * @param ui @code{GameFrame} object to update values
+     * @param amount the bladder fulness offset amount
      */
     static void offsetBladder(GameFrame ui, double amount)
     {
@@ -151,9 +157,9 @@ public class Bladder
     }
 
     /**
+     * Checks if bladder fulness is higher than critical value (when leaks are beginning).
      *
-     * @param the value of
-     * @return the boolean
+     * @return @code{true} if bladder fulness is past the critical value, @code{false} otherwise
      */
     private static boolean isCriticalBladder()
     {
@@ -180,7 +186,7 @@ public class Bladder
      */
     static void testWet()
     {
-        //If bladder is filled more than 130 points in the normal mode and 100 points in the hardcore mode, forcing wetting
+        //If bladder is filled more than 130 points in the normal mode and 100 points in the hardcore mode, setting sphincter power to 0
         if (getFulness() >= maxBladder & !hardcore)
         {
             setSphincterPower((short) 0);
@@ -208,16 +214,16 @@ public class Bladder
     /**
      * Empties the belly.
      *
+     * @param ui @code{GameFrame} object to update values
      */
     static void emptyBelly(GameFrame ui)
     {
         offsetBelly(ui, -getBelly());
     }
 
+    //TODO: Refactor
     /**
-     *
-     * @param wetChance the value of wetChance
-     * @param the value of
+     * Sets sphicter power to 0 with a specific chance if bladder is filled more than critical value.
      */
     private static void wetIfUnlucky(short wetChance)
     {
@@ -239,8 +245,9 @@ public class Bladder
     }
 
     /**
-     * Increments the time by 3 minutes and all time-related parameters.
+     * Increments the time by 3 minutes and increments all time-related parameters.
      *
+     * @param ui @code{GameFrame} object to update values
      */
     static void passTime(GameFrame ui)
     {
@@ -248,9 +255,10 @@ public class Bladder
     }
 
     /**
-     * Increments the time by # minutes and all time-related parameters.
+     * Increments the time by specified amount and increments all time-related parameters.
      *
-     * @param time #
+     * @param time increasement amount
+     * @param ui @code{GameFrame} object to update values
      */
     static void passTime(GameFrame ui, short time)
     {
@@ -293,9 +301,10 @@ public class Bladder
     }
 
     /**
+     * Offsets a belly water amount by specified value.
      *
-     * @param amount the value of amount
-     * @param the value of
+     * @param amount increasement amount
+     * @param ui @code{GameFrame} object to update values
      */
     static void offsetBelly(GameFrame ui, double amount)
     {

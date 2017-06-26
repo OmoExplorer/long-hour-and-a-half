@@ -1,17 +1,21 @@
 package omo;
 
+/**
+ * Class for storing game user parameters for reset.
+ *
+ * @author JavaBird
+ */
 class ResetParametersStorage
 {
     private static final long serialVersionUID = 1;
-
-    static String underColorParam;
-    static String outerColorParam;
-    static String outerParam;
-    //Parameters used for a game reset
+    
     static String nameParam;
     static short bladderParam;
     static Gender gndrParam;
-    static String underParam;
     static boolean diffParam;
     static float incParam;
+    static String underParam;
+    static String outerParam;
+    static String underColorParam;
+    static String outerColorParam;
 }

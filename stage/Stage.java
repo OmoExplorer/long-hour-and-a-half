@@ -3,6 +3,9 @@ package omo.stage;
 import omo.ui.GameFrame;
 import static omo.ui.GameFrame.MAX_LINES;
 
+/**
+ * The basic game slide.
+ */
 public class Stage
 {
     private String[] text = new String[MAX_LINES];

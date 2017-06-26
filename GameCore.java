@@ -91,10 +91,20 @@ import omo.ui.GameSaveFileChooser;
 import omo.ui.WearFileChooser;
 import omo.ui.setupFramePre;
 
+/**
+ * Provides the basic game functions.
+ * @author JavaBird
+ */
 @SuppressWarnings("serial")
 public class GameCore
 {
+	/**
+	 * JFileChooser object for picking wear files.
+	 */
     private static WearFileChooser fcWear;
+    /**
+	 * JFileChooser object for picking save files.
+	 */
     private static GameSaveFileChooser fcGame;
     
     /**
@@ -115,6 +125,10 @@ public class GameCore
         }
     }
 
+    /**
+     * Creates new @code{Save} object, writes current game values into it and saves an object into a file.
+     * @param ui @code{GameFrame} object to show the file selector dialog relative to.
+     */
     public static void save(GameFrame ui)
     {
         fcGame.setSelectedFile(new File(name));
@@ -164,6 +178,11 @@ public class GameCore
         }
     }
 
+    /**
+     * Opens a @code{Save} object, reads game values and applies them.
+     *
+     * @param ui @code{GameFrame} object to show the file selector dialog relative to.
+     */
     @SuppressWarnings("ResultOfObjectAllocationIgnored")
     public static void load(GameFrame ui)
     {
@@ -185,6 +204,11 @@ public class GameCore
         }
     }
     
+    /**
+     * Compares given file's extension with a given one.
+     *
+     * @return @code{true} if extensions are equal, @code{false} otherwise
+     */
     public static boolean isExtensionEquals(File pathname, String compareExtension)
     {
         String fileExtension = "";
@@ -196,6 +220,20 @@ public class GameCore
         return fileExtension.equals(compareExtension);
     }
 
+    /**
+     * New game constructor.
+     *
+     * @param name character's name
+     * @param gndr character's gender
+     * @param diff hardcore mode
+     * @param inc character's incontinence
+     * @param bladder character's start bladder fulness
+     * @param under character's undies
+     * @param outer character's lower wear
+     * @param undiesColor character undies' color
+     * @param lowerColor character lower wear's color
+     * @param ui @code{GameFrame} object to assign values to.
+     */
     public GameCore(String name, Gender gndr, boolean diff, float inc, short bladder, String under, String outer, String undiesColor, String lowerColor, GameFrame ui)
     {
         preConstructor(name, gndr, diff, inc, bladder, ui);
@@ -311,6 +349,12 @@ public class GameCore
         postConstructor(ui);
     }
     
+    /**
+     * Saved game restore constructor.
+     *
+     * @param save @code{Save} object to retrieve values from
+     * @param ui @code{GameFrame} object to assign values to
+     */
     public GameCore(Save save, GameFrame ui)
     {
         preConstructor(save.name, save.gender, save.hardcore, save.incontinence, save.bladder, ui);
@@ -337,7 +381,12 @@ public class GameCore
         postConstructor(ui);
     }
 
-    private void openOuterwearFile(GameFrame ui) throws HeadlessException
+    /**
+     * Shows file chooser dialog, reads an @code{Wear} object from a selected file, checks if its type is outerwear and assigns it to @code{lower}.
+     *
+     * @param ui @code{GameFrame} object
+     */
+    private void openOuterwearFile(GameFrame ui)
     {
         fcWear.setDialogTitle("Open an outerwear file");
         if (fcWear.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)

@@ -7,7 +7,7 @@ import java.io.Serializable;
  *
  * @author JavaBird
  */
-public class Wear implements Serializable
+public class Wear implements Serializable //"implements Serializable" is required for saving into a file
 {
     /**
      * List of all colors that clothes may have.
@@ -16,6 +16,7 @@ public class Wear implements Serializable
     {
         "Black", "Gray", "Red", "Orange", "Yellow", "Green", "Blue", "Dark blue", "Purple", "Pink"
     };
+    
     private static final long serialVersionUID = 1L;
 
     /**
@@ -60,6 +61,18 @@ public class Wear implements Serializable
      */
     private WearType type;
 
+    /**
+     * Assign wear parameters.
+     *
+     * @param name the wear name (e. g. "Regular panties")
+     * @param insertName the insert name used in the game text (e. g. "panties")
+     * @param pressure the pressure of an wear.<br>1 point of a pressure takes 1
+     * point from the maximal bladder capacity.
+     * @param absorption the absorption of an wear.<br>1 point of an absorption
+     * can store 1 point of a leaked pee.
+     * @param dryingOverTime the drying over time.<br>1 point = -1 pee unit per
+     * 3 minutes
+     */
     private void setFieldValuesInConstructor(String name, String insertName, float pressure, float absorption, float dryingOverTime)
     {
         this.name = name;
@@ -87,10 +100,10 @@ public class Wear implements Serializable
 
     /**
      * @param name the wear name (e. g. "Regular panties")
-     * @param insertName	the insert name used in the game text (e. g. "panties")
-     * @param pressure	the pressure of an wear.<br>1 point of a pressure takes 1
+     * @param insertName the insert name used in the game text (e. g. "panties")
+     * @param pressure the pressure of an wear.<br>1 point of a pressure takes 1
      * point from the maximal bladder capacity.
-     * @param absorption	the absorption of an wear.<br>1 point of an absorption
+     * @param absorption the absorption of an wear.<br>1 point of an absorption
      * can store 1 point of a leaked pee.
      * @param dryingOverTime the drying over time.<br>1 point = -1 pee unit per
      * 3 minutes
@@ -190,8 +203,22 @@ public class Wear implements Serializable
         this.type = type;
     }
 
+    /**
+     * The wear types list.
+     */
     public enum WearType
     {
-        UNDERWEAR, OUTERWEAR, BOTH_SUITABLE
+    	/**
+         * Wear can be considered only as underwear.
+         */
+        UNDERWEAR,
+        /**
+         * Wear can be considered only as outerwear.
+         */
+        OUTERWEAR,
+        /**
+         * Wear can be considered as either underwear or outerwear.
+         */
+        BOTH_SUITABLE
     }
 }

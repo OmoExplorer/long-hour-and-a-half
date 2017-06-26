@@ -4,6 +4,9 @@ import static omo.Bladder.*;
 import static omo.NarrativeEngine.getCaughtByClassmates;
 import omo.ui.GameFrame;
 
+/**
+ * Stage which is used by the holding stage.
+ */
 class HoldCrotchStage extends Stage
 {
     HoldCrotchStage(Stage nextStage)
