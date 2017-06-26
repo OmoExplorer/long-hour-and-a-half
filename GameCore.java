@@ -98,7 +98,7 @@ import omo.ui.setupFramePre;
 @SuppressWarnings("serial")
 public class GameCore
 {
-	/**
+    /**
 	 * JFileChooser object for picking wear files.
 	 */
     private static WearFileChooser fcWear;
@@ -126,8 +126,9 @@ public class GameCore
     }
 
     /**
-     * Creates new @code{Save} object, writes current game values into it and saves an object into a file.
-     * @param ui @code{GameFrame} object to show the file selector dialog relative to.
+     * Creates new {@link Save} object, writes current game values into it and saves an object into a file.
+     * @param ui {@link GameFrame} object to show the file selector dialog relative to.
+     * @see Save
      */
     public static void save(GameFrame ui)
     {
@@ -179,9 +180,9 @@ public class GameCore
     }
 
     /**
-     * Opens a @code{Save} object, reads game values and applies them.
+     * Opens a Save} object, reads game values and applies them.
      *
-     * @param ui @code{GameFrame} object to show the file selector dialog relative to.
+     * @param ui GameFrame} object to show the file selector dialog relative to.
      */
     @SuppressWarnings("ResultOfObjectAllocationIgnored")
     public static void load(GameFrame ui)
@@ -207,7 +208,9 @@ public class GameCore
     /**
      * Compares given file's extension with a given one.
      *
-     * @return @code{true} if extensions are equal, @code{false} otherwise
+     * @param pathname File name which extension to compare
+     * @param compareExtension extension to compare
+     * @return <code>true</code> if extensions are equal, <code>false</code> otherwise
      */
     public static boolean isExtensionEquals(File pathname, String compareExtension)
     {
@@ -232,7 +235,7 @@ public class GameCore
      * @param outer character's lower wear
      * @param undiesColor character undies' color
      * @param lowerColor character lower wear's color
-     * @param ui @code{GameFrame} object to assign values to.
+     * @param ui GameFrame} object to assign values to.
      */
     public GameCore(String name, Gender gndr, boolean diff, float inc, short bladder, String under, String outer, String undiesColor, String lowerColor, GameFrame ui)
     {
@@ -339,7 +342,7 @@ public class GameCore
         //Making bladder smaller in the hardcore mode, adding hardcore label
         if (hardcore)
         {
-            maxBladder = 100;
+            setMaxBladder((short) 100);
             ui.lblName.setText(ui.lblName.getText() + " [Hardcore]");
         }
 
@@ -352,8 +355,8 @@ public class GameCore
     /**
      * Saved game restore constructor.
      *
-     * @param save @code{Save} object to retrieve values from
-     * @param ui @code{GameFrame} object to assign values to
+     * @param save Save} object to retrieve values from
+     * @param ui GameFrame} object to assign values to
      */
     public GameCore(Save save, GameFrame ui)
     {
@@ -382,9 +385,9 @@ public class GameCore
     }
 
     /**
-     * Shows file chooser dialog, reads an @code{Wear} object from a selected file, checks if its type is outerwear and assigns it to @code{lower}.
+     * Shows file chooser dialog, reads an Wear} object from a selected file, checks if its type is outerwear and assigns it to lower}.
      *
-     * @param ui @code{GameFrame} object
+     * @param ui GameFrame} object
      */
     private void openOuterwearFile(GameFrame ui)
     {
@@ -531,7 +534,7 @@ public class GameCore
         //Making bladder smaller in the hardcore mode, adding hardcore label
         if (hardcore)
         {
-            Bladder.maxBladder = 100;
+            Bladder.setMaxBladder((short) 100);
             ui.lblName.setName(ui.lblName.getName() + " [Hardcore]");
         }
     }

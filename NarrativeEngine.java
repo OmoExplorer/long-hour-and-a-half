@@ -1,7 +1,5 @@
 package omo;
 
-import omo.stage.BladderAffectingStage;
-import omo.stage.Stage;
 import java.util.ArrayList;
 import java.util.Random;
 import static omo.Bladder.*;
@@ -281,7 +279,7 @@ public class NarrativeEngine
      *
      * @param lines the value of lines
      */
-    private void setLinesAsDialogue(int... lines)
+    public static void setLinesAsDialogue(int... lines)
     {
         for (int i : lines)
         {
@@ -309,7 +307,6 @@ public class NarrativeEngine
         }
         return false;
     }
-
 
     /**
      *
@@ -419,7 +416,6 @@ public class NarrativeEngine
         actionList.add("Cheat (will reset your score)");
     }
 
-
     /**
      *
      * @return the boolean
@@ -455,13 +451,15 @@ public class NarrativeEngine
     }
 
     /**
-     *
+     * Returns in-game text depending on wear.
+     * 
      * @param bothWear the value of bothWear
      * @param lowerOnly the value of lowerOnly
      * @param undiesOnly the value of undiesOnly
      * @param noWear the value of noWear
+     * @return in-game text depending on wear
      */
-    String[] getWearDependentText(String[] bothWear, String[] lowerOnly, String[] undiesOnly, String[] noWear)
+    public static String[] getWearDependentText(String[] bothWear, String[] lowerOnly, String[] undiesOnly, String[] noWear)
     {
         if (getLower().isMissing())
         {

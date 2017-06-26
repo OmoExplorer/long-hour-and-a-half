@@ -6,7 +6,8 @@ import static omo.NarrativeEngine.GameStage.ACCIDENT;
 import omo.ui.GameFrame;
 
 /**
- * Static class which provides bladder simulation functionality and stores the bladder data.
+ * Static class which provides bladder simulation functionality and stores the
+ * bladder data.
  *
  * @author JavaBird
  */
@@ -28,7 +29,7 @@ public class Bladder
     static Wear[] underwearList =
     {
         //        Name      Insert name     Pressure, Absotption, Drying over time
-        new Wear("Random", NarrativeEngine.showError((byte) 0) + "</i></b>", 0, 0, 0),
+        new Wear("Random", NarrativeEngine.showError((byte) 0), 0, 0, 0),
         new Wear("No underwear", NarrativeEngine.showError((byte) 0), 0, 0, 1),
         new Wear("Strings", "panties", 1, 2, 1),
         new Wear("Tanga panties", "panties", 1.5F, 3, 1),
@@ -57,7 +58,7 @@ public class Bladder
     /**
      * Maximal bladder fulness.
      */
-    static short maxBladder = 130;
+    private static short maxBladder = 130;
 
     /**
      * Current sphincter power.
@@ -114,18 +115,26 @@ public class Bladder
     /**
      * Offsets the time by a specified amount.
      *
-     * @param ui @code{GameFrame} object to update values
+     * @param ui {@link GameFrame} object to update values
      * @param amount the offset value. May be negative to decrease time
      */
     public static void offsetTime(GameFrame ui, int amount)
     {
         setTime((byte) (getTime() + amount));
-        if (NarrativeEngine.drain & (getTime() % 15) == 0)
-        {
-            emptyBladder(ui);
-        }
+        drain(ui);
+        dryClothesOverTime(amount);
+        ui.update();
+    }
+
+    /**
+     * Restores clothes' dryness over time.
+     *
+     * @param amount time amount
+     */
+    private static void dryClothesOverTime(int amount)
+    {
         //Clothes drying over time
-        if (getDryness() < getLower().getAbsorption() + getUndies().getAbsorption())
+        if (getDryness() < getLower().getAbsorption() + getUndies().getAbsorption()) //TODO: replace with a variable
         {
             setDryness(getDryness() + getLower().getDryingOverTime() + getUndies().getDryingOverTime() * (amount / 3));
         }
@@ -133,18 +142,42 @@ public class Bladder
         {
             setDryness(getLower().getAbsorption() + getUndies().getAbsorption());
         }
-        ui.update();
+    }
+
+    /**
+     * Empties a bladder every 15 in-game minutes if corresponding cheat is
+     * enabled.
+     *
+     * @param ui {@code GameFrame} object to update values
+     */
+    private static void drain(GameFrame ui)
+    {
+        if (NarrativeEngine.drain & (getTime() % 15) == 0)
+        {
+            emptyBladder(ui);
+        }
     }
 
     /**
      * Offsets bladder fulness by a specified amount.
      *
-     * @param ui @code{GameFrame} object to update values
+     * @param ui {@link GameFrame} object to update values
      * @param amount the bladder fulness offset amount
      */
     static void offsetBladder(GameFrame ui, double amount)
     {
         setFulness((short) (getFulness() + amount)); //Incontinence does another job after 1.1
+        changeLabelColor(ui);
+        ui.update();
+    }
+
+    /**
+     * Colors bladder label in red if fulness is past the critical value.
+     *
+     * @param ui {@code GameFrame} object to update values
+     */
+    private static void changeLabelColor(GameFrame ui)
+    {
         if ((getFulness() > 100 && !NarrativeEngine.hardcore) || (getFulness() > 80 && hardcore))
         {
             ui.lblBladder.setForeground(Color.RED);
@@ -153,17 +186,18 @@ public class Bladder
         {
             ui.lblBladder.setForeground(GameFrame.lblDefaultColor);
         }
-        ui.update();
     }
 
     /**
-     * Checks if bladder fulness is higher than critical value (when leaks are beginning).
+     * Checks if bladder fulness is higher than critical value (when leaks are
+     * beginning).
      *
-     * @return @code{true} if bladder fulness is past the critical value, @code{false} otherwise
+     * @return {@link true} if bladder fulness is past the critical value,
+     * {@link false} otherwise
      */
     private static boolean isCriticalBladder()
     {
-        return (getFulness() > maxBladder - 30 & !hardcore) | (getFulness() > maxBladder - 20 & hardcore);
+        return (getFulness() > getMaxBladder() - 30 & !hardcore) | (getFulness() > getMaxBladder() - 20 & hardcore);
     }
 
     /**
@@ -187,7 +221,7 @@ public class Bladder
     static void testWet()
     {
         //If bladder is filled more than 130 points in the normal mode and 100 points in the hardcore mode, setting sphincter power to 0
-        if (getFulness() >= maxBladder & !hardcore)
+        if (getFulness() >= getMaxBladder() & !hardcore)
         {
             setSphincterPower((short) 0);
             if (getDryness() < MINIMAL_DRYNESS)
@@ -214,7 +248,7 @@ public class Bladder
     /**
      * Empties the belly.
      *
-     * @param ui @code{GameFrame} object to update values
+     * @param ui {@link GameFrame} object to update values
      */
     static void emptyBelly(GameFrame ui)
     {
@@ -223,7 +257,8 @@ public class Bladder
 
     //TODO: Refactor
     /**
-     * Sets sphicter power to 0 with a specific chance if bladder is filled more than critical value.
+     * Sets sphicter power to 0 with a specific chance if bladder is filled more
+     * than critical value.
      */
     private static void wetIfUnlucky(short wetChance)
     {
@@ -245,9 +280,10 @@ public class Bladder
     }
 
     /**
-     * Increments the time by 3 minutes and increments all time-related parameters.
+     * Increments the time by 3 minutes and increments all time-related
+     * parameters.
      *
-     * @param ui @code{GameFrame} object to update values
+     * @param ui {@link GameFrame} object to update values
      */
     static void passTime(GameFrame ui)
     {
@@ -255,12 +291,13 @@ public class Bladder
     }
 
     /**
-     * Increments the time by specified amount and increments all time-related parameters.
+     * Increments the time by specified amount and increments all time-related
+     * parameters.
      *
      * @param time increasement amount
-     * @param ui @code{GameFrame} object to update values
+     * @param ui {@link GameFrame} object to update values
      */
-    static void passTime(GameFrame ui, short time)
+    public static void passTime(GameFrame ui, short time)
     {
         offsetTime(ui, time);
         offsetBladder(ui, time * 1.5);
@@ -304,7 +341,7 @@ public class Bladder
      * Offsets a belly water amount by specified value.
      *
      * @param amount increasement amount
-     * @param ui @code{GameFrame} object to update values
+     * @param ui {@link GameFrame} object to update values
      */
     static void offsetBelly(GameFrame ui, double amount)
     {
@@ -319,6 +356,8 @@ public class Bladder
     //TODO: Refactor
     /**
      * Decreases the sphincter power.
+     * 
+     * @param ui {@code GameFrame} object to update values
      */
     static void decaySphPower(GameFrame ui)
     {
@@ -328,66 +367,71 @@ public class Bladder
             setDryness(getDryness() - 5); //Decreasing dryness
             setFulness((short) (getFulness() - 2.5)); //Decreasing bladder level
             setSphincterPower((short) 0);
-            if (getDryness() > MINIMAL_DRYNESS)
+            peeingAlert(ui);
+        }
+        ui.update();
+    }
+
+    private static void peeingAlert(GameFrame ui)
+    {
+        if (getDryness() > MINIMAL_DRYNESS)
+        {
+            //Naked
+            if (getLower().isMissing() && getUndies().isMissing())
             {
-                //Naked
-                if (getLower().isMissing() && getUndies().isMissing())
-                {
-                    ui.setText("You feel the leak running down your thighs...", "You're about to pee! You must stop it!");
-                }
-                else //Outerwear
-                {
-                    if (!lower.isMissing())
-                    {
-                        ui.setText("You see the wet spot expand on your " + getLower().insert() + "!", "You're about to pee! You must stop it!");
-                    }
-                    else //Underwear
-                    {
-                        if (!undies.isMissing())
-                        {
-                            ui.setText("You see the wet spot expand on your " + getUndies().insert() + "!", "You're about to pee! You must stop it!");
-                        }
-                    }
-                }
+                ui.setText("You feel the leak running down your thighs...", "You're about to pee! You must stop it!");
             }
-            if (getDryness() < MINIMAL_DRYNESS)
+            else //Outerwear
             {
-                if (getLower().isMissing() && getUndies().isMissing())
+                if (!lower.isMissing())
                 {
-                    if (cornered)
-                    {
-                        ui.setText("You see a puddle forming on the floor beneath you, you're peeing!", "It's too much...");
-                        setNextStage(ACCIDENT);
-                        ui.handleNextClicked();
-                    }
-                    else
-                    {
-                        ui.setText("Feeling the pee hit the chair and soon fall over the sides,", "you see a puddle forming under your chair, you're peeing!", "It's too much...");
-                        setNextStage(ACCIDENT);
-                        ui.handleNextClicked();
-                    }
+                    ui.setText("You see the wet spot expand on your " + getLower().insert() + "!", "You're about to pee! You must stop it!");
                 }
-                else
+                else //Underwear
                 {
-                    if (!lower.isMissing())
+                    if (!undies.isMissing())
                     {
-                        ui.setText("You see the wet spot expanding on your " + getLower().insert() + "!", "It's too much...");
-                        setNextStage(ACCIDENT);
-                        ui.handleNextClicked();
-                    }
-                    else
-                    {
-                        if (!undies.isMissing())
-                        {
-                            ui.setText("You see the wet spot expanding on your " + getUndies().insert() + "!", "It's too much...");
-                            setNextStage(ACCIDENT);
-                            ui.handleNextClicked();
-                        }
+                        ui.setText("You see the wet spot expand on your " + getUndies().insert() + "!", "You're about to pee! You must stop it!");
                     }
                 }
             }
         }
-        ui.update();
+        if (getDryness() < MINIMAL_DRYNESS)
+        {
+            if (getLower().isMissing() && getUndies().isMissing())
+            {
+                if (cornered)
+                {
+                    ui.setText("You see a puddle forming on the floor beneath you, you're peeing!", "It's too much...");
+                    setNextStage(ACCIDENT);
+                    ui.handleNextClicked();
+                }
+                else
+                {
+                    ui.setText("Feeling the pee hit the chair and soon fall over the sides,", "you see a puddle forming under your chair, you're peeing!", "It's too much...");
+                    setNextStage(ACCIDENT);
+                    ui.handleNextClicked();
+                }
+            }
+            else
+            {
+                if (!lower.isMissing())
+                {
+                    ui.setText("You see the wet spot expanding on your " + getLower().insert() + "!", "It's too much...");
+                    setNextStage(ACCIDENT);
+                    ui.handleNextClicked();
+                }
+                else
+                {
+                    if (!undies.isMissing())
+                    {
+                        ui.setText("You see the wet spot expanding on your " + getUndies().insert() + "!", "It's too much...");
+                        setNextStage(ACCIDENT);
+                        ui.handleNextClicked();
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -405,23 +449,8 @@ public class Bladder
         //Calculating dryness and maximal bladder capacity values
         //TODO: Move to Bladder
         setDryness(getLower().getAbsorption() + getUndies().getAbsorption());
-        maxBladder -= getLower().getPressure() + getUndies().getPressure();
+        setMaxBladder((short) (getMaxBladder() - getLower().getPressure() + getUndies().getPressure()));
         ui.drynessBar.setMaximum((int) getDryness());
-    }
-    
-    /**
-     *
-     * @param ui the GameFrame object to update the interface
-     * @param amount the value of amount
-     */
-    public void offsetEmbarassment(GameFrame ui, int amount)
-    {
-        setEmbarassment((short) (getEmbarassment() + amount));
-        if (getEmbarassment() < 0)
-        {
-            setEmbarassment((short) 0);
-        }
-        ui.update();
     }
 
     /**
@@ -598,5 +627,35 @@ public class Bladder
     public static void setIncontinence(float aIncontinence)
     {
         incontinence = aIncontinence;
+    }
+
+    /**
+     * @return the maxBladder
+     */
+    public static short getMaxBladder()
+    {
+        return maxBladder;
+    }
+
+    /**
+     * @param aMaxBladder the maxBladder to set
+     */
+    public static void setMaxBladder(short aMaxBladder)
+    {
+        maxBladder = aMaxBladder;
+    }
+    /**
+     *
+     * @param ui the GameFrame object to update the interface
+     * @param amount the value of amount
+     */
+    public void offsetEmbarassment(GameFrame ui, int amount)
+    {
+        setEmbarassment((short) (getEmbarassment() + amount));
+        if (getEmbarassment() < 0)
+        {
+            setEmbarassment((short) 0);
+        }
+        ui.update();
     }
 }

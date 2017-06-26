@@ -1,6 +1,6 @@
 package omo.stage;
 
-import omo.Bladder;
+import static omo.Bladder.*;
 import omo.ui.GameFrame;
 
 /**
@@ -10,7 +10,7 @@ import omo.ui.GameFrame;
  */
 public class BladderAffectingStage extends Stage
 {
-	/**
+    /**
 	 * Scene duration in in-game minutes.
 	 */
     private final short duration;
@@ -37,6 +37,6 @@ public class BladderAffectingStage extends Stage
     void operate(GameFrame ui)
     {
         super.operate();
-        Bladder.passTime(ui, duration);
+        passTime(ui, duration);
     }
 }
