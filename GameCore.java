@@ -73,7 +73,6 @@
  */
 package omo;
 
-import java.awt.HeadlessException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -85,6 +84,7 @@ import static javax.swing.JOptionPane.showMessageDialog;
 import static omo.Bladder.*;
 import static omo.NarrativeEngine.*;
 import static omo.NarrativeEngine.GameStage.*;
+import omo.Wear.WearType;
 import static omo.Wear.WearType.*;
 import omo.ui.GameFrame;
 import omo.ui.GameSaveFileChooser;
@@ -102,6 +102,7 @@ public class GameCore
 	 * JFileChooser object for picking wear files.
 	 */
     private static WearFileChooser fcWear;
+    
     /**
 	 * JFileChooser object for picking save files.
 	 */
@@ -243,7 +244,7 @@ public class GameCore
 
         if (under.equals("Custom"))
         {
-            openUnderwearFile(ui);
+            openWearFile(ui, UNDERWEAR);
         }
 
         if (under.equals("Random"))
@@ -293,20 +294,20 @@ public class GameCore
 
         if (outer.equals("Custom"))
         {
-            openOuterwearFile(ui);
+            openWearFile(ui, OUTERWEAR);
         }
 
         //Same with the lower clothes
         if (outer.equals("Random"))
         {
-            setLower(NarrativeEngine.OUTERWEAR_LIST[NarrativeEngine.RANDOM.nextInt(OUTERWEAR_LIST.length)]);
+            setLower(Bladder.OUTERWEAR_LIST[NarrativeEngine.RANDOM.nextInt(Bladder.OUTERWEAR_LIST.length)]);
             while (getLower().getName().equals("Random"))
             {
-                setLower(NarrativeEngine.OUTERWEAR_LIST[NarrativeEngine.RANDOM.nextInt(OUTERWEAR_LIST.length)]);
+                setLower(Bladder.OUTERWEAR_LIST[NarrativeEngine.RANDOM.nextInt(Bladder.OUTERWEAR_LIST.length)]);
             }
         } else
         {
-            for (Wear iWear : NarrativeEngine.OUTERWEAR_LIST)
+            for (Wear iWear : Bladder.OUTERWEAR_LIST)
             {
                 if (iWear.getName().equals(outer))
                 {
@@ -318,7 +319,7 @@ public class GameCore
         if (getLower() == null)
         {
             JOptionPane.showMessageDialog(null, "Incorrect outerwear selected. Setting random instead.", "Incorrect outerwear", JOptionPane.WARNING_MESSAGE);
-            setLower(NarrativeEngine.OUTERWEAR_LIST[NarrativeEngine.RANDOM.nextInt(OUTERWEAR_LIST.length)]);
+            setLower(Bladder.OUTERWEAR_LIST[NarrativeEngine.RANDOM.nextInt(Bladder.OUTERWEAR_LIST.length)]);
         }
 
         //Assigning color
@@ -342,7 +343,7 @@ public class GameCore
         //Making bladder smaller in the hardcore mode, adding hardcore label
         if (hardcore)
         {
-            setMaxBladder((short) 100);
+            setMaxFulness((short) 100);
             ui.lblName.setText(ui.lblName.getText() + " [Hardcore]");
         }
 
@@ -385,39 +386,19 @@ public class GameCore
     }
 
     /**
-     * Shows file chooser dialog, reads an Wear} object from a selected file, checks if its type is outerwear and assigns it to lower}.
+     * Shows file chooser dialog, reads an {@link Wear} object from a selected file, checks if its type is matching the given one and assigns it to {@link lower}.
      *
-     * @param ui GameFrame} object
+     * @param ui {@code GameFrame} object
      */
-    private void openOuterwearFile(GameFrame ui)
+    private void openWearFile(GameFrame ui, WearType type)
     {
-        fcWear.setDialogTitle("Open an outerwear file");
-        if (fcWear.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
+        if(type == UNDERWEAR)
         {
-            File file = fcWear.getSelectedFile();
-            try
-            {
-                FileInputStream fin = new FileInputStream(file);
-                ObjectInputStream ois = new ObjectInputStream(fin);
-                setLower((Wear) ois.readObject());
-                if (getLower().getType() == UNDERWEAR)
-                {
-                    JOptionPane.showMessageDialog(null, "This isn't an outerwear.", "Wrong wear type", JOptionPane.ERROR_MESSAGE);
-                    ui.dispose();
-                    setupFramePre.main(new String[0]);
-                }
-            } catch (IOException | ClassNotFoundException e)
-            {
-                JOptionPane.showMessageDialog(null, "File error.", "Error", JOptionPane.ERROR_MESSAGE);
-                ui.dispose();
-                setupFramePre.main(new String[0]);
-            }
+            fcWear.setDialogTitle("Open an underwear file");
+        } else
+        {
+            fcWear.setDialogTitle("Open an outerwear file");
         }
-    }
-
-    private void openUnderwearFile(GameFrame ui) throws HeadlessException
-    {
-        fcWear.setDialogTitle("Open an underwear file");
         if (fcWear.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
         {
             File file = fcWear.getSelectedFile();
@@ -425,12 +406,25 @@ public class GameCore
             {
                 FileInputStream fin = new FileInputStream(file);
                 ObjectInputStream ois = new ObjectInputStream(fin);
-                setUndies((Wear) ois.readObject());
-                if (getUndies().getType() == OUTERWEAR)
+                if(type == UNDERWEAR)
                 {
-                    JOptionPane.showMessageDialog(null, "This isn't an underwear.", "Wrong wear type", JOptionPane.ERROR_MESSAGE);
-                    ui.dispose();
-                    setupFramePre.main(new String[0]);
+                    setUndies((Wear) ois.readObject());
+                    if (getLower().getType() == OUTERWEAR)
+                    {
+                        JOptionPane.showMessageDialog(null, "This isn't an underwear.", "Wrong wear type", JOptionPane.ERROR_MESSAGE);
+                        ui.dispose();
+                        setupFramePre.main(new String[0]);
+                    }
+                }
+                else
+                {
+                    setLower((Wear) ois.readObject());
+                    if (getLower().getType() == UNDERWEAR)
+                    {
+                        JOptionPane.showMessageDialog(null, "This isn't an outerwear.", "Wrong wear type", JOptionPane.ERROR_MESSAGE);
+                        ui.dispose();
+                        setupFramePre.main(new String[0]);
+                    }
                 }
             } catch (IOException | ClassNotFoundException e)
             {
@@ -463,34 +457,11 @@ public class GameCore
 
         setupFileChoosers(ui);
 
-        //Setting "No underwear" insert name depending on character's gender
-        //May be gone soon
-        if (NarrativeEngine.isMale())
-        {
-            underwearList[1].setInsertName("penis");
-        } else
-        {
-            underwearList[1].setInsertName("crotch");
-        }
+        initCrotchName();
 
         ui.setup();
 
-        //Scoring bladder at start
-        NarrativeEngine.score("Bladder at start - " + bladder + "%", '+', Math.round(bladder));
-
-        //Scoring incontinence
-        score("Incontinence - " + Math.round(getIncontinence()) + "x", '*', Math.round(getIncontinence()));
-
-        /*
-                    Hardcore, it will be harder to hold pee:
-                    Teacher will never let character to go pee
-                    Character's bladder will have less capacity
-                    Character may get caught holding pee
-         */
-        if (hardcore)
-        {
-            score("Hardcore", '*', 2F);
-        }
+        scoreBeginning(bladder);
     }
 
     private void setupFileChoosers(GameFrame ui)
@@ -515,7 +486,7 @@ public class GameCore
 
     void postConstructor(GameFrame ui)
     {
-        Bladder.calculateCaps(ui);
+        calculateCaps(ui);
 
         stashParametersForReset();
 
@@ -534,8 +505,12 @@ public class GameCore
         //Making bladder smaller in the hardcore mode, adding hardcore label
         if (hardcore)
         {
-            Bladder.setMaxBladder((short) 100);
+            Bladder.setMaxFulness((short) 100);
             ui.lblName.setName(ui.lblName.getName() + " [Hardcore]");
+        }
+        if (hardcore)
+        {
+            score("Hardcore", '*', 2F);
         }
     }
 

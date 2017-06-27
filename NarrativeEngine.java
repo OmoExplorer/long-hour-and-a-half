@@ -15,38 +15,6 @@ public class NarrativeEngine
     public static final Random RANDOM = new Random();
 
     /**
-     * List of all outerwear types.
-     */
-    final static Wear[] OUTERWEAR_LIST =
-    {
-        //        Name      Insert name     Pressure, Absotption, Drying over time
-        new Wear("Random", showError((byte) 0), 0, 0, 0),
-        new Wear("No outerwear", showError((byte) 0), 0, 0, 1),
-        new Wear("Long jeans", "jeans", 7, 12, 1.2F),
-        new Wear("Knee-length jeans", "jeans", 6, 10, 1.2F),
-        new Wear("Short jeans", "shorts", 5, 8.5F, 1.2F),
-        new Wear("Very short jeans", "shorts", 4, 7, 1.2F),
-        new Wear("Long trousers", "trousers", 9, 15.75F, 1.4F),
-        new Wear("Knee-length trousers", "trousers", 8, 14, 1.4F),
-        new Wear("Short trousers", "shorts", 7, 12.25F, 1.4F),
-        new Wear("Very short trousers", "shorts", 6, 10.5F, 1.4F),
-        new Wear("Long skirt", "skirt", 5, 6, 1.7F),
-        new Wear("Knee-length skirt", "skirt", 4, 4.8F, 1.7F),
-        new Wear("Short skirt", "skirt", 3, 3.6F, 1.7F),
-        new Wear("Mini skirt", "skirt", 2, 2.4F, 1.7F),
-        new Wear("Micro skirt", "skirt", 1, 1.2F, 1.7F),
-        new Wear("Long skirt and tights", "skirt and tights", 6, 7.5F, 1.6F),
-        new Wear("Knee-length skirt and tights", "skirt and tights", 5, 8.75F, 1.6F),
-        new Wear("Short skirt and tights", "skirt and tights", 4, 7, 1.6F),
-        new Wear("Mini skirt and tights", "skirt and tights", 3, 5.25F, 1.6F),
-        new Wear("Micro skirt and tights", "skirt and tights", 2, 3.5F, 1.6F),
-        new Wear("Leggings", "leggings", 10, 11, 1.8F),
-        new Wear("Short male jeans", "jeans", 5, 8.5F, 1.2F),
-        new Wear("Normal male jeans", "jeans", 7, 12, 1.2F),
-        new Wear("Male trousers", "trousers", 9, 15.75F, 1.4F)
-    };
-
-    /**
      * Times teacher denied character to go out.
      */
     static byte timesPeeDenied = 0;
@@ -318,6 +286,14 @@ public class NarrativeEngine
                 return noWear;
             }
         }
+    }
+
+    public static void scoreBeginning(short bladder)
+    {
+        //Scoring bladder at start
+        score("Bladder at start - " + bladder + "%", '+', Math.round(bladder));
+        //Scoring incontinence
+        score("Incontinence - " + Math.round(getIncontinence()) + "x", '*', Math.round(getIncontinence()));
     }
     //TODO: Refactor
     /**

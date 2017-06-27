@@ -14,23 +14,86 @@ import omo.ui.GameFrame;
 public class Bladder
 {
     /**
-     * The dryness game over minimal threshold.
+     * Current bladdder fulness.
      */
-    public static final int MINIMAL_DRYNESS = 0;
-
+    private static short fulness;
+    
+    /**
+     * Maximal bladder fulness.
+     */
+    private static short maxFulness = 130;
+    
+    /**
+     * Current sphincter power.
+     */
+    private static short sphincterPower;
+    
     /**
      * Maximal time without squirming and leaking.
      */
     private static short maxSphincterPower;
+    
+    /**
+     * Amount of a water in a belly.
+     */
+    private static double belly;
+    
+    /**
+     * Maximal amount of pee that clothes can store.
+     */
+    private static float dryness;
+    
+    /**
+     * The dryness game over minimal threshold.
+     */
+    public static final int MINIMAL_DRYNESS = 0;
 
+    private static float maxDryness = getLower().getAbsorption() + getUndies().getAbsorption();
+    
+    /**
+     * The class time in minutes.
+     */
+    private static byte time = 0;
+    
+    /**
+     * Amount of the character thirstiness. Used only in hardcore mode.
+     */
+    private static float thirst = 0;
+
+    /**
+     * Maximal allowed thirst level.
+     * Character will drink water if thirst is past this value.
+     */
+    public final static float MAXIMAL_THIRST = 30;
+    
+    /**
+     * Makes the wetting chance higher after reaching 100% of the bladder
+     * fulness.
+     */
+    private static short embarassment;
+
+    /**
+     * Before 1.1:<br>
+     * simply multiplies a bladder increasement speed.<br>
+     * <br>
+     * 1.1 and after:<br>
+     * defines the sphincter weakening speed.
+     */
+    private static float incontinence;
+    
+    /**
+     * Character's undies.
+     */
+    private static Wear undies;
+    
     /**
      * List of all underwear types.
      */
     static Wear[] underwearList =
     {
         //        Name      Insert name     Pressure, Absotption, Drying over time
-        new Wear("Random", NarrativeEngine.showError((byte) 0), 0, 0, 0),
-        new Wear("No underwear", NarrativeEngine.showError((byte) 0), 0, 0, 1),
+        new Wear("Random", showError((byte) 0), 0, 0, 0),
+        new Wear("No underwear", showError((byte) 0), 0, 0, 1),
         new Wear("Strings", "panties", 1, 2, 1),
         new Wear("Tanga panties", "panties", 1.5F, 3, 1),
         new Wear("Regular panties", "panties", 2, 4, 1),
@@ -51,66 +114,40 @@ public class Bladder
     };
 
     /**
-     * Maximal amount of pee that clothes can store.
-     */
-    private static float dryness;
-
-    /**
-     * Maximal bladder fulness.
-     */
-    private static short maxBladder = 130;
-
-    /**
-     * Current sphincter power.
-     */
-    private static short sphincterPower;
-
-    /**
-     * The class time in minutes.
-     */
-    private static byte time = 0;
-
-    /**
-     * Current bladdder fulness.
-     */
-    private static short fulness;
-
-    /**
-     * Amount of a water in a belly.
-     */
-    private static double belly;
-
-    /**
-     * Character's undies.
-     */
-    private static Wear undies;
-
-    public final static float MAXIMAL_THIRST = 30;
-
-    /**
      * Character's lower body clothing.
      */
     private static Wear lower;
-
+    
     /**
-     * Amount of the character thirstiness. Used only in hardcore mode.
+     * List of all outerwear types.
      */
-    private static float thirst = 0;
-
-    /**
-     * Makes the wetting chance higher after reaching 100% of the bladder
-     * fulness.
-     */
-    private static short embarassment;
-
-    /**
-     * Before 1.1:<br>
-     * simply multiplies a bladder increasement speed.<br>
-     * <br>
-     * 1.1 and after:<br>
-     * defines the sphincter weakening speed.
-     */
-    private static float incontinence;
+    static final Wear[] OUTERWEAR_LIST =
+    { //        Name      Insert name     Pressure, Absotption, Drying over time
+        new Wear("Random", NarrativeEngine.showError((byte) 0), 0, 0, 0),
+        new Wear("No outerwear", NarrativeEngine.showError((byte) 0), 0, 0, 1),
+        new Wear("Long jeans", "jeans", 7, 12, 1.2F),
+        new Wear("Knee-length jeans", "jeans", 6, 10, 1.2F),
+        new Wear("Short jeans", "shorts", 5, 8.5F, 1.2F),
+        new Wear("Very short jeans", "shorts", 4, 7, 1.2F),
+        new Wear("Long trousers", "trousers", 9, 15.75F, 1.4F),
+        new Wear("Knee-length trousers", "trousers", 8, 14, 1.4F),
+        new Wear("Short trousers", "shorts", 7, 12.25F, 1.4F),
+        new Wear("Very short trousers", "shorts", 6, 10.5F, 1.4F),
+        new Wear("Long skirt", "skirt", 5, 6, 1.7F),
+        new Wear("Knee-length skirt", "skirt", 4, 4.8F, 1.7F),
+        new Wear("Short skirt", "skirt", 3, 3.6F, 1.7F),
+        new Wear("Mini skirt", "skirt", 2, 2.4F, 1.7F),
+        new Wear("Micro skirt", "skirt", 1, 1.2F, 1.7F),
+        new Wear("Long skirt and tights", "skirt and tights", 6, 7.5F, 1.6F),
+        new Wear("Knee-length skirt and tights", "skirt and tights", 5, 8.75F, 1.6F),
+        new Wear("Short skirt and tights", "skirt and tights", 4, 7, 1.6F),
+        new Wear("Mini skirt and tights", "skirt and tights", 3, 5.25F, 1.6F),
+        new Wear("Micro skirt and tights", "skirt and tights", 2, 3.5F, 1.6F),
+        new Wear("Leggings", "leggings", 10, 11, 1.8F),
+        new Wear("Short male jeans", "jeans", 5, 8.5F, 1.2F),
+        new Wear("Normal male jeans", "jeans", 7, 12, 1.2F),
+        new Wear("Male trousers", "trousers", 9, 15.75F, 1.4F)
+    };
 
     /**
      * Offsets the time by a specified amount.
@@ -134,13 +171,13 @@ public class Bladder
     private static void dryClothesOverTime(int amount)
     {
         //Clothes drying over time
-        if (getDryness() < getLower().getAbsorption() + getUndies().getAbsorption()) //TODO: replace with a variable
+        if (getDryness() < maxDryness) //TODO: replace with a variable
         {
             setDryness(getDryness() + getLower().getDryingOverTime() + getUndies().getDryingOverTime() * (amount / 3));
         }
-        if (getDryness() > getLower().getAbsorption() + getUndies().getAbsorption())
+        if (getDryness() > maxDryness)
         {
-            setDryness(getLower().getAbsorption() + getUndies().getAbsorption());
+            setDryness(maxDryness);
         }
     }
 
@@ -197,7 +234,7 @@ public class Bladder
      */
     private static boolean isCriticalBladder()
     {
-        return (getFulness() > getMaxBladder() - 30 & !hardcore) | (getFulness() > getMaxBladder() - 20 & hardcore);
+        return (getFulness() > getMaxFulness() - 30 & !hardcore) | (getFulness() > getMaxFulness() - 20 & hardcore);
     }
 
     /**
@@ -221,7 +258,7 @@ public class Bladder
     static void testWet()
     {
         //If bladder is filled more than 130 points in the normal mode and 100 points in the hardcore mode, setting sphincter power to 0
-        if (getFulness() >= getMaxBladder() & !hardcore)
+        if (getFulness() >= getMaxFulness() & !hardcore)
         {
             setSphincterPower((short) 0);
             if (getDryness() < MINIMAL_DRYNESS)
@@ -448,8 +485,8 @@ public class Bladder
     {
         //Calculating dryness and maximal bladder capacity values
         //TODO: Move to Bladder
-        setDryness(getLower().getAbsorption() + getUndies().getAbsorption());
-        setMaxBladder((short) (getMaxBladder() - getLower().getPressure() + getUndies().getPressure()));
+        setDryness(maxDryness);
+        setMaxFulness((short) (getMaxFulness() - getLower().getPressure() + getUndies().getPressure()));
         ui.drynessBar.setMaximum((int) getDryness());
     }
 
@@ -632,18 +669,19 @@ public class Bladder
     /**
      * @return the maxBladder
      */
-    public static short getMaxBladder()
+    public static short getMaxFulness()
     {
-        return maxBladder;
+        return maxFulness;
     }
 
     /**
      * @param aMaxBladder the maxBladder to set
      */
-    public static void setMaxBladder(short aMaxBladder)
+    public static void setMaxFulness(short aMaxBladder)
     {
-        maxBladder = aMaxBladder;
+        maxFulness = aMaxBladder;
     }
+    
     /**
      *
      * @param ui the GameFrame object to update the interface
@@ -662,5 +700,18 @@ public class Bladder
     public static boolean fulnessBetween(short min, short max)
     {
         return Bladder.getFulness() > min && Bladder.getFulness() < max;
+    }
+
+    public static void initCrotchName()
+    {
+        //Setting "No underwear" insert name depending on character's gender
+        //May be gone soon
+        if (NarrativeEngine.isMale())
+        {
+            underwearList[1].setInsertName("penis");
+        } else
+        {
+            underwearList[1].setInsertName("crotch");
+        }
     }
 }
