@@ -343,7 +343,7 @@ public class Bladder
      * @param amount increasement amount
      * @param ui {@link GameFrame} object to update values
      */
-    static void offsetBelly(GameFrame ui, double amount)
+    public static void offsetBelly(GameFrame ui, double amount)
     {
         setBelly(getBelly() + amount);
         if (getBelly() < 0)
@@ -649,7 +649,7 @@ public class Bladder
      * @param ui the GameFrame object to update the interface
      * @param amount the value of amount
      */
-    public void offsetEmbarassment(GameFrame ui, int amount)
+    public static void offsetEmbarassment(GameFrame ui, int amount)
     {
         setEmbarassment((short) (getEmbarassment() + amount));
         if (getEmbarassment() < 0)
@@ -657,5 +657,10 @@ public class Bladder
             setEmbarassment((short) 0);
         }
         ui.update();
+    }
+
+    public static boolean fulnessBetween(short min, short max)
+    {
+        return Bladder.getFulness() > min && Bladder.getFulness() < max;
     }
 }

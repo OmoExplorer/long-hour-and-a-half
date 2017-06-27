@@ -27,7 +27,7 @@ public class Stage
         this.nextStage = nextStage;
     }
 
-    void operate()
+    public void operate()
     {
 
     }

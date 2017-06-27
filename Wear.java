@@ -182,7 +182,7 @@ public class Wear implements Serializable //"implements Serializable" is require
     /**
      * @return whether or not certain wear equals "No under/outerwear".
      */
-    boolean isMissing()
+    public boolean isMissing()
     {
         return missing;
     }

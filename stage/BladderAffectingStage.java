@@ -34,7 +34,7 @@ public class BladderAffectingStage extends Stage
     }
 
     @Override
-    void operate(GameFrame ui)
+    public void operate(GameFrame ui)
     {
         super.operate();
         passTime(ui, duration);

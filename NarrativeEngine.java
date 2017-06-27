@@ -10,7 +10,7 @@ import static omo.ui.GameFrame.MAX_LINES;
 
 @SuppressWarnings("PackageVisibleField")
 public class NarrativeEngine
-{
+{    
     //Random stuff generator
     public static final Random RANDOM = new Random();
 
@@ -154,6 +154,34 @@ public class NarrativeEngine
      * lesson) reduce score points. Using the cheats will zero the score points.
      */
     public static int score = 0;
+    public static String[] getBladderDependingText(String[] empty, String[] firstUrge, String[] continuousUrges, String[] full, String[] bursting, String[] critical)
+    {
+        if(fulnessBetween((short)0, (short)20))
+        {
+            return empty;
+        }
+        if(fulnessBetween((short)20, (short)40))
+        {
+            return firstUrge;
+        }
+        if(fulnessBetween((short)40, (short)60))
+        {
+            return continuousUrges;
+        }
+        if(fulnessBetween((short)60, (short)80))
+        {
+            return full;
+        }
+        if(fulnessBetween((short)80, (short)100))
+        {
+            return bursting;
+        }
+        if(fulnessBetween((short)100, (short)130))
+        {
+            return critical;
+        }
+        return new String[0];
+    }
     static GameStage getNextStage()
     {
         return nextStage;
@@ -241,6 +269,56 @@ public class NarrativeEngine
     {
         return gender == MALE;
     }
+
+    public static boolean revealingLower()
+    {
+        return getLower().insert().equals("skirt") || getLower().insert().equals("skirt and tights") || getLower().insert().equals("skirt and tights");
+    }
+    /**
+     *
+     * @param lines the value of lines
+     */
+    public static void setLinesAsDialogue(int... lines)
+    {
+        for (int i : lines)
+        {
+            dialogueLines[i - 1] = true;
+        }
+    }
+    /**
+     * Returns in-game text depending on wear.
+     *
+     * @param bothWear the value of bothWear
+     * @param lowerOnly the value of lowerOnly
+     * @param undiesOnly the value of undiesOnly
+     * @param noWear the value of noWear
+     * @return in-game text depending on wear
+     */
+    public static String[] getWearDependentText(String[] bothWear, String[] lowerOnly, String[] undiesOnly, String[] noWear)
+    {
+        if (getLower().isMissing())
+        {
+            if (getUndies().isMissing())
+            {
+                return bothWear;
+            }
+            else
+            {
+                return lowerOnly;
+            }
+        }
+        else
+        {
+            if (getUndies().isMissing())
+            {
+                return undiesOnly;
+            }
+            else
+            {
+                return noWear;
+            }
+        }
+    }
     //TODO: Refactor
     /**
      * List of all cheats.
@@ -275,17 +353,6 @@ public class NarrativeEngine
         return false;
     }
 
-    /**
-     *
-     * @param lines the value of lines
-     */
-    public static void setLinesAsDialogue(int... lines)
-    {
-        for (int i : lines)
-        {
-            dialogueLines[i - 1] = true;
-        }
-    }
 
     /**
      *
@@ -450,40 +517,6 @@ public class NarrativeEngine
         }
     }
 
-    /**
-     * Returns in-game text depending on wear.
-     * 
-     * @param bothWear the value of bothWear
-     * @param lowerOnly the value of lowerOnly
-     * @param undiesOnly the value of undiesOnly
-     * @param noWear the value of noWear
-     * @return in-game text depending on wear
-     */
-    public static String[] getWearDependentText(String[] bothWear, String[] lowerOnly, String[] undiesOnly, String[] noWear)
-    {
-        if (getLower().isMissing())
-        {
-            if (getUndies().isMissing())
-            {
-                return bothWear;
-            }
-            else
-            {
-                return lowerOnly;
-            }
-        }
-        else
-        {
-            if (getUndies().isMissing())
-            {
-                return undiesOnly;
-            }
-            else
-            {
-                return noWear;
-            }
-        }
-    }
 
     @Deprecated
     public enum GameStage
