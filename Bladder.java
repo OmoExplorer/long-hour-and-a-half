@@ -2,8 +2,8 @@ package omo;
 
 import java.awt.Color;
 import static omo.NarrativeEngine.*;
-import static omo.NarrativeEngine.GameStage.ACCIDENT;
 import omo.ui.GameFrame;
+import static omo.ui.GameFrame.*;
 
 /**
  * Static class which provides bladder simulation functionality and stores the
@@ -15,14 +15,24 @@ public class Bladder
 {
 
     /**
-     * Current bladdder fulness.
+     * Current bladder fulness.
      */
     private static short fulness;
 
     /**
-     * Maximal bladder fulness.
+     * Dynamic maximal bladder fulness. Being decreased by a wear pressure.
      */
     private static short maxFulness = 130;
+
+    /**
+     * Maximal bladder fulness in normal mode.
+     */
+    public static final int MAX_FULNESS_NORMAL_MODE = 130;
+
+    /**
+     * Maximal bladder fulness in hardcore mode.
+     */
+    public static final int MAX_FULNESS_HARDCORE = 100;
 
     /**
      * Current sphincter power.
@@ -35,21 +45,25 @@ public class Bladder
     private static short maxSphincterPower;
 
     /**
-     * Amount of a water in a belly.
+     * Current amount of a water in a belly.
      */
     private static double belly;
 
     /**
-     * Maximal amount of pee that clothes can store.
+     * Current amount of pee that clothes can store.
      */
     private static float dryness;
 
     /**
-     * The dryness game over minimal threshold.
+     * The dryness minimal threshold. If dryness reaches this value, game is
+     * over.
      */
     public static final int MINIMAL_DRYNESS = 0;
 
-    private static float maxDryness = getLower().getAbsorption() + getUndies().getAbsorption();
+    /**
+     * Maximal dryness limit.
+     */
+    private static float maxDryness;
 
     /**
      * The class time in minutes.
@@ -90,7 +104,7 @@ public class Bladder
     /**
      * List of all underwear types.
      */
-    static Wear[] underwearList =
+    static final Wear[] UNDERWEAR_LIST =
     {
         //        Name      Insert name     Pressure, Absotption, Drying over time
         new Wear("Random", showError((byte) 0), 0, 0, 0),
@@ -153,7 +167,7 @@ public class Bladder
     /**
      * Offsets the time by a specified amount.
      *
-     * @param ui     {@link GameFrame} object to update values
+     * @param ui {@link GameFrame} object to update values
      * @param amount the offset value. May be negative to decrease time
      */
     public static void offsetTime(GameFrame ui, int amount)
@@ -165,14 +179,14 @@ public class Bladder
     }
 
     /**
-     * Restores clothes' dryness over time.
+     * Restores clothes' dryness over the time.
      *
      * @param amount time amount
      */
     private static void dryClothesOverTime(int amount)
     {
         //Clothes drying over time
-        if (getDryness() < maxDryness) //TODO: replace with a variable
+        if (getDryness() < maxDryness)
         {
             setDryness(getDryness() + getLower().getDryingOverTime() + getUndies().getDryingOverTime() * (amount / 3));
         }
@@ -182,6 +196,7 @@ public class Bladder
         }
     }
 
+    //This may be problematic
     /**
      * Empties a bladder every 15 in-game minutes if corresponding cheat is
      * enabled.
@@ -199,7 +214,7 @@ public class Bladder
     /**
      * Offsets bladder fulness by a specified amount.
      *
-     * @param ui     {@link GameFrame} object to update values
+     * @param ui {@link GameFrame} object to update values
      * @param amount the bladder fulness offset amount
      */
     static void offsetBladder(GameFrame ui, double amount)
@@ -216,13 +231,13 @@ public class Bladder
      */
     private static void changeLabelColor(GameFrame ui)
     {
-        if ((getFulness() > 100 && !NarrativeEngine.hardcore) || (getFulness() > 80 && hardcore))
+        if ((getFulness() > 100 && !hardcore) || (getFulness() > 80 && hardcore))
         {
             ui.lblBladder.setForeground(Color.RED);
         }
         else
         {
-            ui.lblBladder.setForeground(GameFrame.lblDefaultColor);
+            ui.lblBladder.setForeground(lblDefaultColor);
         }
     }
 
@@ -230,8 +245,8 @@ public class Bladder
      * Checks if bladder fulness is higher than critical value (when leaks are
      * beginning).
      *
-     * @return {@link true} if bladder fulness is past the critical value,
-     *         {@link false} otherwise
+     * @return {@code true} if bladder fulness is past the critical value,
+     * {@code false} otherwise
      */
     private static boolean isCriticalBladder()
     {
@@ -241,7 +256,7 @@ public class Bladder
     /**
      * Replenishes the sphincter power.
      *
-     * @param ui {@link GameFrame} object to update values
+     * @param ui {@code GameFrame} object to update values
      * @param amount the sphincter recharge amount
      */
     public static void rechargeSphPower(GameFrame ui, int amount)
@@ -265,7 +280,7 @@ public class Bladder
             setSphincterPower((short) 0);
             if (getDryness() < MINIMAL_DRYNESS)
             {
-                if (NarrativeEngine.specialHardcoreStage)
+                if (specialHardcoreStage)
                 {
                     NarrativeEngine.setNextStage(NarrativeEngine.GameStage.SURPRISE_ACCIDENT);
                 }
@@ -277,10 +292,7 @@ public class Bladder
         }
         else //If bladder is filled more than 100 points in the normal mode and 50 points in the hardcore mode, character has a chance to wet
         {
-            if (isCriticalBladder())
-            {
-                wetIfUnlucky(!hardcore ? ((short) (5 * (getFulness() - 80))) : ((short) (3 * (getFulness() - 100) + getEmbarassment())));
-            }
+            randomlyLeakOnFullBladder();
         }
     }
 
@@ -294,28 +306,35 @@ public class Bladder
         offsetBelly(ui, -getBelly());
     }
 
-    //TODO: Refactor
     /**
      * Sets sphicter power to 0 with a specific chance if bladder is filled more
      * than critical value.
      */
-    private static void wetIfUnlucky(short wetChance)
+    private static void randomlyLeakOnFullBladder()
     {
-        if (NarrativeEngine.chance((byte) wetChance))
+        if (isCriticalBladder())
         {
-            setSphincterPower((short) 0);
-            if (getDryness() < MINIMAL_DRYNESS)
+            if (chance(calculateLeakingChance()))
             {
-                if (specialHardcoreStage)
+                setSphincterPower((short) 0);
+                if (getDryness() < MINIMAL_DRYNESS)
                 {
-                    setNextStage(NarrativeEngine.GameStage.SURPRISE_ACCIDENT);
-                }
-                else
-                {
-                    setNextStage(NarrativeEngine.GameStage.ACCIDENT);
+                    if (specialHardcoreStage)
+                    {
+                        setNextStage(NarrativeEngine.GameStage.SURPRISE_ACCIDENT);
+                    }
+                    else
+                    {
+                        setNextStage(NarrativeEngine.GameStage.ACCIDENT);
+                    }
                 }
             }
         }
+    }
+
+    private static byte calculateLeakingChance()
+    {
+        return !hardcore ? ((byte) (5 * (getFulness() - 80))) : ((byte) (3 * (getFulness() - 100) + getEmbarassment()));
     }
 
     /**
@@ -334,53 +353,68 @@ public class Bladder
      * parameters.
      *
      * @param time increasement amount
-     * @param ui   {@link GameFrame} object to update values
+     * @param ui {@link GameFrame} object to update values
      */
     public static void passTime(GameFrame ui, short time)
     {
         offsetTime(ui, time);
         offsetBladder(ui, time * 1.5);
         offsetBelly(ui, -time * 1.5);
-        if (Bladder.getTime() >= 88)
-        {
-            ui.setText("You hear the bell finally ring.");
-            setNextStage(NarrativeEngine.GameStage.CLASS_OVER);
-        }
+        checkClassOver(ui);
         testWet();
-        //Decrementing sphincter power for every 3 minutes
+        //Processing bladder cycle for every 3 minutes
         for (int i = 0; i < time; i++)
         {
-            decaySphPower(ui);
-            if (getBelly() != 0)
+            bladderCycle(ui);
+        }
+        //Updating labels
+        ui.update();
+    }
+
+    private static void bladderCycle(GameFrame ui)
+    {
+        decaySphPower(ui);
+        if (getBelly() != 0)
+        {
+            if (getBelly() > 3)
             {
-                if (getBelly() > 3)
-                {
-                    offsetBladder(ui, 2);
-                }
-                else
-                {
-                    offsetBladder(ui, getBelly());
-                    emptyBelly(ui);
-                }
+                offsetBladder(ui, 2);
+            }
+            else
+            {
+                offsetBladder(ui, getBelly());
+                emptyBelly(ui);
             }
         }
+        offsetThirst((byte)2);
+    }
+
+    private static void offsetThirst(byte amount)
+    {
         if (hardcore)
         {
-            setThirst(getThirst() + 2);
+            setThirst(getThirst() + amount);
             if (Bladder.getThirst() > Bladder.MAXIMAL_THIRST)
             {
                 setNextStage(NarrativeEngine.GameStage.DRINK);
             }
         }
-        //Updating labels
-        ui.update();
+    }
+
+    private static void checkClassOver(GameFrame ui)
+    {
+        if (Bladder.getTime() >= 88)
+        {
+            ui.setText("You hear the bell finally ring.");
+            setNextStage(NarrativeEngine.GameStage.CLASS_OVER);
+        }
     }
 
     /**
      * Offsets a belly water amount by specified value.
      *
      * @param amount increasement amount
-     * @param ui     {@link GameFrame} object to update values
+     * @param ui {@link GameFrame} object to update values
      */
     public static void offsetBelly(GameFrame ui, double amount)
     {
@@ -486,9 +520,8 @@ public class Bladder
     static void calculateCaps(GameFrame ui)
     {
         //Calculating dryness and maximal bladder capacity values
-        //TODO: Move to Bladder
-        setDryness(maxDryness);
-        setMaxFulness((short) (getMaxFulness() - getLower().getPressure() + getUndies().getPressure()));
+        maxDryness = getLower().getAbsorption() + getUndies().getAbsorption();
+        maxFulness = (short) (getMaxFulness() - getLower().getPressure() + getUndies().getPressure());
         ui.drynessBar.setMaximum((int) getDryness());
     }
 
@@ -677,16 +710,16 @@ public class Bladder
     }
 
     /**
-     * @param aMaxBladder the maxBladder to set
+     * @param maxFulness the maxBladder to set
      */
-    public static void setMaxFulness(short aMaxBladder)
+    public static void setMaxFulness(short maxFulness)
     {
-        maxFulness = aMaxBladder;
+        Bladder.maxFulness = maxFulness;
     }
 
     /**
      *
-     * @param ui     the GameFrame object to update the interface
+     * @param ui the GameFrame object to update the interface
      * @param amount the value of amount
      */
     public static void offsetEmbarassment(GameFrame ui, int amount)
@@ -710,11 +743,11 @@ public class Bladder
         //May be gone soon
         if (NarrativeEngine.isMale())
         {
-            underwearList[1].setInsertName("penis");
+            UNDERWEAR_LIST[1].setInsertName("penis");
         }
         else
         {
-            underwearList[1].setInsertName("crotch");
+            UNDERWEAR_LIST[1].setInsertName("crotch");
         }
     }
 }

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Random;
 import static omo.Bladder.*;
 import static omo.Gender.*;
-import static omo.NarrativeEngine.GameStage.*;
 import omo.ui.GameFrame;
 import static omo.ui.GameFrame.MAX_LINES;
 
@@ -513,42 +512,41 @@ public class NarrativeEngine
         }
     }
 
-    @Deprecated
-    public enum GameStage
-    {
-        LEAVE_BED,
-        LEAVE_HOME,
-        GO_TO_CLASS,
-        WALK_IN,
-        SIT_DOWN,
-        ASK_ACTION,
-        CHOSE_ACTION,
-        ASK_TO_PEE,
-        CALLED_ON,
-        CAUGHT,
-        USE_BOTTLE,
-        ASK_CHEAT,
-        CHOSE_CHEAT,
-        CLASS_OVER,
-        AFTER_CLASS,
-        ACCIDENT,
-        GIVE_UP,
-        WET,
-        POST_WET,
-        GAME_OVER,
-        END_GAME,
-        SURPRISE,
-        SURPRISE_2,
-        SURPRISE_ACCIDENT,
-        SURPRISE_DIALOGUE,
-        SURPRISE_CHOSE,
-        HIT,
-        PERSUADE,
-        SURPRISE_WET_VOLUNTARY,
-        SURPRISE_WET_VOLUNTARY2,
-        SURPRISE_WET_PRESSURE,
-        DRINK
-    }
+//    public enum GameStage
+//    {
+//        LEAVE_BED,
+//        LEAVE_HOME,
+//        GO_TO_CLASS,
+//        WALK_IN,
+//        SIT_DOWN,
+//        ASK_ACTION,
+//        CHOSE_ACTION,
+//        ASK_TO_PEE,
+//        CALLED_ON,
+//        CAUGHT,
+//        USE_BOTTLE,
+//        ASK_CHEAT,
+//        CHOSE_CHEAT,
+//        CLASS_OVER,
+//        AFTER_CLASS,
+//        ACCIDENT,
+//        GIVE_UP,
+//        WET,
+//        POST_WET,
+//        GAME_OVER,
+//        END_GAME,
+//        SURPRISE,
+//        SURPRISE_2,
+//        SURPRISE_ACCIDENT,
+//        SURPRISE_DIALOGUE,
+//        SURPRISE_CHOSE,
+//        HIT,
+//        PERSUADE,
+//        SURPRISE_WET_VOLUNTARY,
+//        SURPRISE_WET_VOLUNTARY2,
+//        SURPRISE_WET_PRESSURE,
+//        DRINK
+//    }
 
     /**
      * @return the cornered

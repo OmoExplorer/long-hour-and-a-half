@@ -249,17 +249,17 @@ public class GameCore
 
         if (under.equals("Random"))
         {
-            setUndies(underwearList[NarrativeEngine.RANDOM.nextInt(underwearList.length)]);
+            setUndies(UNDERWEAR_LIST[NarrativeEngine.RANDOM.nextInt(UNDERWEAR_LIST.length)]);
             while (getUndies().getName().equals("Random"))
             //...selecting random undies from the undies array.
             {
-                setUndies(underwearList[NarrativeEngine.RANDOM.nextInt(underwearList.length)]);
+                setUndies(UNDERWEAR_LIST[NarrativeEngine.RANDOM.nextInt(UNDERWEAR_LIST.length)]);
             }
             //If random undies weren't chosen...
         } else
         {
             //We look for the selected undies in the array
-            for (Wear iWear : underwearList)
+            for (Wear iWear : UNDERWEAR_LIST)
             {
                 //By comparing all possible undies' names with the selected undies string
                 if (iWear.getName().equals(under))
@@ -274,7 +274,7 @@ public class GameCore
         if (getUndies() == null)
         {
             JOptionPane.showMessageDialog(null, "Incorrect underwear selected. Setting random instead.", "Incorrect underwear", JOptionPane.WARNING_MESSAGE);
-            setUndies(underwearList[NarrativeEngine.RANDOM.nextInt(underwearList.length)]);
+            setUndies(UNDERWEAR_LIST[NarrativeEngine.RANDOM.nextInt(UNDERWEAR_LIST.length)]);
         }
 
         //Assigning color
