@@ -4,28 +4,15 @@ import java.util.ArrayList;
 import java.util.Random;
 import static omo.Bladder.*;
 import static omo.Gender.*;
+import omo.stage.StageEngine;
+import omo.stage.StagePool;
+import static omo.stage.StagePool.caughtHoldingPee;
 import omo.ui.GameFrame;
 import static omo.ui.GameFrame.MAX_LINES;
 
 @SuppressWarnings("PackageVisibleField")
 public class NarrativeEngine
 {
-
-    /**
-     * @return the timesPeeDenied
-     */
-    public static byte getTimesPeeDenied()
-    {
-        return timesPeeDenied;
-    }
-
-    /**
-     * @param aTimesPeeDenied the timesPeeDenied to set
-     */
-    public static void setTimesPeeDenied(byte aTimesPeeDenied)
-    {
-        timesPeeDenied = aTimesPeeDenied;
-    }
     //Random stuff generator
     public static final Random RANDOM = new Random();
 
@@ -38,18 +25,18 @@ public class NarrativeEngine
      * Whether or not hardcore mode enabled: teacher never lets you pee, it's
      * harder to hold pee, you may get caught holding pee
      */
-    public static boolean hardcore = false;
+    private static boolean hardcore = false;
 
     /**
      * An array that contains boolean values that define <i>dialogue lines</i>.
      * Dialogue lines, unlike normal lines, are <i>italic</i>.
      */
-    public static boolean[] dialogueLines = new boolean[MAX_LINES];
+    private static boolean[] dialogueLines = new boolean[MAX_LINES];
 
     /**
      * Actions list.
      */
-    public static ArrayList<String> actionList = new ArrayList<>();
+    private static ArrayList<String> actionList = new ArrayList<>();
 
     /**
      * Amount of embarassment raising every time character caught holding pee.
@@ -60,11 +47,6 @@ public class NarrativeEngine
      * Current character gender.
      */
     static Gender gender;
-
-    /**
-     * A stage after the current stage.
-     */
-    private static GameStage nextStage;
 
     static boolean specialHardcoreStage = false;
 
@@ -92,7 +74,7 @@ public class NarrativeEngine
      * Whether or not pee drain cheat enabled: pee mysteriously vanishes every
      * 15 minutes.
      */
-    public static boolean drain = false;
+    private static boolean drain = false;
 
     /**
      * Special hardcore scene boy name.
@@ -102,7 +84,7 @@ public class NarrativeEngine
     /**
      * Character's name.
      */
-    public static String name;
+    private static String name;
 
     /**
      * Whether or not charecter has to stay 30 minutes after class.
@@ -112,7 +94,7 @@ public class NarrativeEngine
     /**
      * Whether or not player has used cheats.
      */
-    public static boolean cheatsUsed = false;
+    private static boolean cheatsUsed = false;
 
     /**
      * Number of times player got caught holding pee.
@@ -129,14 +111,32 @@ public class NarrativeEngine
      * Text to be displayed after the game which shows how many {@link score}
      * did you get.
      */
-    public static String scoreText = "";
+    private static String scoreText = "";
 
     /**
      * A number that shows a game difficulty - the higher score, the harder was
      * the game. Specific actions (for example, peeing in a restroom during a
      * lesson) reduce score points. Using the cheats will zero the score points.
      */
-    public static int score = 0;
+    private static int score = 0;
+    
+    public static final String ACTION_UNAVAILABLE = "[Unavailable]";
+
+    /**
+     * @return the timesPeeDenied
+     */
+    public static byte getTimesPeeDenied()
+    {
+        return timesPeeDenied;
+    }
+
+    /**
+     * @param aTimesPeeDenied the timesPeeDenied to set
+     */
+    public static void setTimesPeeDenied(byte aTimesPeeDenied)
+    {
+        timesPeeDenied = aTimesPeeDenied;
+    }
 
     public static String[] getBladderDependingText(String[] empty, String[] firstUrge, String[] continuousUrges, String[] full, String[] bursting, String[] critical)
     {
@@ -167,11 +167,6 @@ public class NarrativeEngine
         return new String[0];
     }
 
-    static GameStage getNextStage()
-    {
-        return nextStage;
-    }
-
     static boolean chance(byte chance)
     {
         return RANDOM.nextInt(100) <= chance;
@@ -183,13 +178,9 @@ public class NarrativeEngine
     public static void getCaughtByClassmates()
     {
         //Chance to be caught by classmates in hardcore mode
-        if (RANDOM.nextInt(100) <= 15 + classmatesAwareness & hardcore)
+        if (RANDOM.nextInt(100) <= 15 + classmatesAwareness & isHardcore())
         {
-            setNextStage(CAUGHT);
-        }
-        else
-        {
-            setNextStage(ASK_ACTION);
+            StageEngine.rotatePlot(caughtHoldingPee);
         }
     }
 
@@ -206,28 +197,28 @@ public class NarrativeEngine
      * Operates the player score.
      *
      * @param message the reason to manipulate score
-     * @param mode    add, substract, divide or multiply
-     * @param points  amount of points to operate
+     * @param mode add, substract, divide or multiply
+     * @param points amount of points to operate
      */
     public static void score(String message, char mode, float points)
     {
         switch (mode)
         {
             case '+':
-                score += points;
-                scoreText += "\n" + message + ": +" + points + " points";
+                setScore((int) (getScore() + points));
+                setScoreText(getScoreText() + "\n" + message + ": +" + points + " points");
                 break;
             case '-':
-                score -= points;
-                scoreText += "\n" + message + ": -" + points + " points";
+                setScore((int) (getScore() - points));
+                setScoreText(getScoreText() + "\n" + message + ": -" + points + " points");
                 break;
             case '*':
-                score *= points;
-                scoreText += "\n" + message + ": +" + points * 100 + "% of points";
+                setScore((int) (getScore() * points));
+                setScoreText(getScoreText() + "\n" + message + ": +" + points * 100 + "% of points");
                 break;
             case '/':
-                score /= points;
-                scoreText += "\n" + message + ": -" + 100 / points + "% of points";
+                setScore((int) (getScore() / points));
+                setScoreText(getScoreText() + "\n" + message + ": -" + 100 / points + "% of points");
                 break;
             default:
                 System.err.println("score() method used incorrectly, message: \"" + message + "\"");
@@ -236,7 +227,7 @@ public class NarrativeEngine
 
     /**
      * @return TRUE - if character's gender is female<br>FALSE - if character's
-     *         gender is male
+     * gender is male
      */
     public static boolean isFemale()
     {
@@ -245,7 +236,7 @@ public class NarrativeEngine
 
     /**
      * @return TRUE - if character's gender is male<br>FALSE - if character's
-     *         gender is female
+     * gender is female
      */
     static boolean isMale()
     {
@@ -265,17 +256,17 @@ public class NarrativeEngine
     {
         for (int i : lines)
         {
-            dialogueLines[i - 1] = true;
+            getDialogueLines()[i - 1] = true;
         }
     }
 
     /**
      * Returns in-game text depending on wear.
      *
-     * @param bothWear   the value of bothWear
-     * @param lowerOnly  the value of lowerOnly
+     * @param bothWear the value of bothWear
+     * @param lowerOnly the value of lowerOnly
      * @param undiesOnly the value of undiesOnly
-     * @param noWear     the value of noWear
+     * @param noWear the value of noWear
      *
      * @return in-game text depending on wear
      */
@@ -312,6 +303,57 @@ public class NarrativeEngine
         //Scoring incontinence
         score("Incontinence - " + Math.round(getIncontinence()) + "x", '*', Math.round(getIncontinence()));
     }
+    //    public enum GameStage
+//    {
+//        LEAVE_BED,
+//        LEAVE_HOME,
+//        GO_TO_CLASS,
+//        WALK_IN,
+//        SIT_DOWN,
+//        ASK_ACTION,
+//        CHOSE_ACTION,
+//        ASK_TO_PEE,
+//        CALLED_ON,
+//        CAUGHT,
+//        USE_BOTTLE,
+//        ASK_CHEAT,
+//        CHOSE_CHEAT,
+//        CLASS_OVER,
+//        AFTER_CLASS,
+//        ACCIDENT,
+//        GIVE_UP,
+//        WET,
+//        POST_WET,
+//        GAME_OVER,
+//        END_GAME,
+//        SURPRISE,
+//        SURPRISE_2,
+//        SURPRISE_ACCIDENT,
+//        SURPRISE_DIALOGUE,
+//        SURPRISE_CHOSE,
+//        HIT,
+//        PERSUADE,
+//        SURPRISE_WET_VOLUNTARY,
+//        SURPRISE_WET_VOLUNTARY2,
+//        SURPRISE_WET_PRESSURE,
+//        DRINK
+//    }
+
+    /**
+     * @return the cornered
+     */
+    public static boolean isCornered()
+    {
+        return cornered;
+    }
+
+    /**
+     * @param aCornered the cornered to set
+     */
+    public static void setCornered(boolean aCornered)
+    {
+        cornered = aCornered;
+    }
     //TODO: Refactor
     /**
      * List of all cheats.
@@ -322,14 +364,15 @@ public class NarrativeEngine
         "Calm the teacher down", "Raise your hand", "Make your pee disappear regularly",
         "Set your incontinence level", "Toggle hardcore mode", "Set bladder fulness"
     };
-    private final String[] askToPeeSuccessText =
-    {
-        "You ask the teacher if you can go out to the restroom.",
-        "Yes, you may.",
-        "says the teacher. You run to the restroom,",
-        showError((byte) 1),
-        "wearily flop down on the toilet and start peeing."
-    };
+    
+//    private final String[] askToPeeSuccessText =
+//    {
+//        "You ask the teacher if you can go out to the restroom.",
+//        "Yes, you may.",
+//        "says the teacher. You run to the restroom,",
+//        showError((byte) 1),
+//        "wearily flop down on the toilet and start peeing."
+//    };
 
     /**
      *
@@ -340,7 +383,7 @@ public class NarrativeEngine
         if (getTime() >= 120)
         {
             stay = false;
-            setNextStage(CLASS_OVER);
+            StageEngine.rotatePlot(StagePool.classOver);
             return true;
         }
         return false;
@@ -352,20 +395,17 @@ public class NarrativeEngine
      *
      * @return the boolean
      */
-    private boolean triggerClsasOverScene()
+    private void triggerClassOverScene()
     {
         //Special hardcore scene trigger
-        if (RANDOM.nextInt(100) <= 10 && hardcore & isFemale())
+        if (RANDOM.nextInt(100) <= 10 && isHardcore() & isFemale())
         {
-            setNextStage(SURPRISE);
-            return true;
+            StageEngine.rotatePlot(StagePool.surprise);
         }
         if (stay)
         {
-            setNextStage(AFTER_CLASS);
-            return true;
+            StageEngine.rotatePlot(StagePool.writeLines);
         }
-        return false;
     }
 
     /**
@@ -426,79 +466,75 @@ public class NarrativeEngine
         switch (getTimesPeeDenied())
         {
             case 0:
-                actionList.add("Ask the teacher to go pee");
+                getActionList().add("Ask the teacher to go pee");
                 break;
             case 1:
-                actionList.add("Ask the teacher to go pee again");
+                getActionList().add("Ask the teacher to go pee again");
                 break;
             case 2:
-                actionList.add("Try to ask the teacher again");
+                getActionList().add("Try to ask the teacher again");
                 break;
             case 3:
-                actionList.add("Take a chance and ask the teacher (RISKY)");
+                getActionList().add("Take a chance and ask the teacher (RISKY)");
                 break;
             default:
-                actionList.add(ACTION_UNAVAILABLE);
+                getActionList().add(ACTION_UNAVAILABLE);
         }
         if (!isCornered())
         {
             if (isFemale())
             {
-                actionList.add("Press on your crotch");
+                getActionList().add("Press on your crotch");
             }
             else
             {
-                actionList.add("Squeeze your penis");
+                getActionList().add("Squeeze your penis");
             }
         }
         else
         {
-            actionList.add(ACTION_UNAVAILABLE);
+            getActionList().add(ACTION_UNAVAILABLE);
         }
-        actionList.add("Rub thighs");
+        getActionList().add("Rub thighs");
         if (getFulness() >= 100)
         {
-            actionList.add("Give up and pee yourself");
+            getActionList().add("Give up and pee yourself");
         }
         else
         {
-            actionList.add(ACTION_UNAVAILABLE);
+            getActionList().add(ACTION_UNAVAILABLE);
         }
-        if (hardcore)
+        if (isHardcore())
         {
-            actionList.add("Drink water");
+            getActionList().add("Drink water");
         }
         else
         {
-            actionList.add(ACTION_UNAVAILABLE);
+            getActionList().add(ACTION_UNAVAILABLE);
         }
-        actionList.add("Just wait");
-        actionList.add("Cheat (will reset your score)");
+        getActionList().add("Just wait");
+        getActionList().add("Cheat (will reset your score)");
     }
-    
-    public static final String ACTION_UNAVAILABLE = "[Unavailable]";
 
     /**
      *
      * @return the boolean
      */
-    private boolean gotCalledByTeacher(GameFrame ui)
+    private void getCalledByTeacher(GameFrame ui)
     {
         //Called by teacher if unlucky
         if (RANDOM.nextInt(20) == 5)
         {
             ui.setText("Suddenly, you hear the teacher call your name.");
-            setNextStage(CALLED_ON);
-            return true;
+            StageEngine.rotatePlot(StagePool.calledOn);
         }
-        return false;
     }
 
     /**
      *
      * @param femaleText the value of femaleText
-     * @param maleText   the value of maleText
-     * @param the        value of
+     * @param maleText the value of maleText
+     * @param the value of
      */
     String[] getGenderDependentText(String[] femaleText, String[] maleText)
     {
@@ -512,55 +548,132 @@ public class NarrativeEngine
         }
     }
 
-//    public enum GameStage
-//    {
-//        LEAVE_BED,
-//        LEAVE_HOME,
-//        GO_TO_CLASS,
-//        WALK_IN,
-//        SIT_DOWN,
-//        ASK_ACTION,
-//        CHOSE_ACTION,
-//        ASK_TO_PEE,
-//        CALLED_ON,
-//        CAUGHT,
-//        USE_BOTTLE,
-//        ASK_CHEAT,
-//        CHOSE_CHEAT,
-//        CLASS_OVER,
-//        AFTER_CLASS,
-//        ACCIDENT,
-//        GIVE_UP,
-//        WET,
-//        POST_WET,
-//        GAME_OVER,
-//        END_GAME,
-//        SURPRISE,
-//        SURPRISE_2,
-//        SURPRISE_ACCIDENT,
-//        SURPRISE_DIALOGUE,
-//        SURPRISE_CHOSE,
-//        HIT,
-//        PERSUADE,
-//        SURPRISE_WET_VOLUNTARY,
-//        SURPRISE_WET_VOLUNTARY2,
-//        SURPRISE_WET_PRESSURE,
-//        DRINK
-//    }
-
     /**
-     * @return the cornered
+     * @return the hardcore
      */
-    public static boolean isCornered()
+    public static boolean isHardcore()
     {
-        return cornered;
+        return hardcore;
     }
 
     /**
-     * @param aCornered the cornered to set
+     * @param aHardcore the hardcore to set
      */
-    public static void setCornered(boolean aCornered)
+    public static void setHardcore(boolean aHardcore)
     {
-        cornered = aCornered;
+        hardcore = aHardcore;
     }
+
+    /**
+     * @return the dialogueLines
+     */
+    public static boolean[] getDialogueLines()
+    {
+        return dialogueLines;
+    }
+
+    /**
+     * @param aDialogueLines the dialogueLines to set
+     */
+    public static void setDialogueLines(boolean[] aDialogueLines)
+    {
+        dialogueLines = aDialogueLines;
+    }
+
+    /**
+     * @return the actionList
+     */
+    public static ArrayList<String> getActionList()
+    {
+        return actionList;
+    }
+
+    /**
+     * @param aActionList the actionList to set
+     */
+    public static void setActionList(ArrayList<String> aActionList)
+    {
+        actionList = aActionList;
+    }
+
+    /**
+     * @return the drain
+     */
+    public static boolean isDrain()
+    {
+        return drain;
+    }
+
+    /**
+     * @param aDrain the drain to set
+     */
+    public static void setDrain(boolean aDrain)
+    {
+        drain = aDrain;
+    }
+
+    /**
+     * @return the name
+     */
+    public static String getName()
+    {
+        return name;
+    }
+
+    /**
+     * @param aName the name to set
+     */
+    public static void setName(String aName)
+    {
+        name = aName;
+    }
+
+    /**
+     * @return the cheatsUsed
+     */
+    public static boolean isCheatsUsed()
+    {
+        return cheatsUsed;
+    }
+
+    /**
+     * @param aCheatsUsed the cheatsUsed to set
+     */
+    public static void setCheatsUsed(boolean aCheatsUsed)
+    {
+        cheatsUsed = aCheatsUsed;
+    }
+
+    /**
+     * @return the scoreText
+     */
+    public static String getScoreText()
+    {
+        return scoreText;
+    }
+
+    /**
+     * @param aScoreText the scoreText to set
+     */
+    public static void setScoreText(String aScoreText)
+    {
+        scoreText = aScoreText;
+    }
+
+    /**
+     * @return the score
+     */
+    public static int getScore()
+    {
+        return score;
+    }
+
+    /**
+     * @param aScore the score to set
+     */
+    public static void setScore(int aScore)
+    {
+        score = aScore;
+    }
+
 }

@@ -1,7 +1,7 @@
 package omo;
 
 import java.io.Serializable;
-import omo.NarrativeEngine.GameStage;
+import omo.stage.Stage;
 
 /**
  * All game values storage for saving into a file.
@@ -26,7 +26,7 @@ public class Save implements Serializable //"implements Serializable" is require
     Wear underwear;
     Wear outerwear;
     byte time;
-    GameStage stage;
+    Stage stage;
     int score;
     String scoreText;
     byte timesPeeDenied;

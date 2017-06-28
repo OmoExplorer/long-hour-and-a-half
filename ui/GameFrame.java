@@ -84,7 +84,7 @@ public class GameFrame extends JFrame
         String toSend = "<html><center>";
         for (int i = 0; i < lines.length; i++)
         {
-            if (NarrativeEngine.dialogueLines[i])
+            if (NarrativeEngine.getDialogueLines()[i])
             {
                 toSend += "<i>\"" + lines[i] + "\"</i>";
             }
@@ -96,7 +96,7 @@ public class GameFrame extends JFrame
         }
         toSend += "</center></html>";
         textLabel.setText(toSend);
-        NarrativeEngine.dialogueLines = new boolean[GameFrame.MAX_LINES];
+        NarrativeEngine.setDialogueLines(new boolean[GameFrame.MAX_LINES]);
     }
     
     public void handleNextClicked()
@@ -111,12 +111,12 @@ public class GameFrame extends JFrame
      */
     private void showScore()
     {
-        if (cheatsUsed)
+        if (isCheatsUsed())
         {
-            score = 0;
-            scoreText = "\nYou've used the cheats, so you've got no score.";
+            setScore(0);
+            setScoreText("\nYou've used the cheats, so you've got no score.");
         }
-        String scoreText2 = "Your score: " + score + "\n" + scoreText;
+        String scoreText2 = "Your score: " + getScore() + "\n" + getScoreText();
         JOptionPane.showMessageDialog(null, scoreText2);
     }
 
@@ -136,7 +136,7 @@ public class GameFrame extends JFrame
      */
     void showActionUI(String actionGroupName)
     {
-        listChoice.setListData(actionList.toArray());
+        listChoice.setListData(getActionList().toArray());
         lblChoice.setVisible(true);
         lblChoice.setText(actionGroupName);
         listScroller.setVisible(true);
@@ -1101,7 +1101,7 @@ public class GameFrame extends JFrame
     {
         try
         {
-            lblName.setText(name);
+            lblName.setText(getName());
             lblBladder.setText("Bladder: " + Math.round(getFulness()) + "%");
             lblEmbarassment.setText("Embarassment: " + getEmbarassment());
             lblBelly.setText("Belly: " + Math.round(getBelly()) + "%");
@@ -1132,7 +1132,7 @@ public class GameFrame extends JFrame
     byte hideActionUI()
     {
         byte choice = (byte) listChoice.getSelectedIndex();
-        actionList.clear();
+        getActionList().clear();
         lblChoice.setVisible(false);
         listScroller.setVisible(false);
         return choice;
@@ -1260,7 +1260,7 @@ public class GameFrame extends JFrame
         btnNewGame.setToolTipText("Start the game over with the another parameters.");
         contentPane.add(btnNewGame);
         //Name label setup
-        lblName = new JLabel(NarrativeEngine.name);
+        lblName = new JLabel(NarrativeEngine.getName());
         lblName.setFont(new Font("Tahoma", Font.PLAIN, 18));
         lblName.setBounds(20, 170, 200, 32);
         contentPane.add(lblName);
@@ -1288,7 +1288,7 @@ public class GameFrame extends JFrame
         lblThirst.setFont(new Font("Tahoma", Font.PLAIN, 15));
         lblThirst.setBounds(20, 480, 200, 32);
         lblThirst.setToolTipText("Character will automatically drink water at 30% of thirst.");
-        if (hardcore)
+        if (isHardcore())
         {
             contentPane.add(lblThirst);
         }
@@ -1298,7 +1298,7 @@ public class GameFrame extends JFrame
         thirstBar.setMaximum((int) MAXIMAL_THIRST);
         thirstBar.setValue((int) getThirst());
         thirstBar.setToolTipText("Character will automatically drink water at 30% of thirst.");
-        if (hardcore)
+        if (isHardcore())
         {
             contentPane.add(thirstBar);
         }
@@ -1382,15 +1382,15 @@ public class GameFrame extends JFrame
             lblName.setForeground(Color.CYAN);
         }
         //Assigning the blank name if player didn't selected the name
-        if (name.isEmpty())
+        if (getName().isEmpty())
         {
             if (isFemale())
             {
-                name = "Mrs. Nobody";
+                setName("Mrs. Nobody");
             }
             else
             {
-                name = "Mr. Nobody";
+                setName("Mr. Nobody");
             }
         }
     }

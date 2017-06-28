@@ -83,9 +83,10 @@ import javax.swing.*;
 import static javax.swing.JOptionPane.showMessageDialog;
 import static omo.Bladder.*;
 import static omo.NarrativeEngine.*;
-import static omo.NarrativeEngine.GameStage.*;
 import omo.Wear.WearType;
 import static omo.Wear.WearType.*;
+import static omo.stage.StageEngine.*;
+import static omo.stage.StagePool.leaveBed;
 import omo.ui.GameFrame;
 import omo.ui.GameSaveFileChooser;
 import omo.ui.WearFileChooser;
@@ -93,21 +94,22 @@ import omo.ui.setupFramePre;
 
 /**
  * Provides the basic game functions.
+ *
  * @author JavaBird
  */
 @SuppressWarnings("serial")
 public class GameCore
 {
     /**
-	 * JFileChooser object for picking wear files.
-	 */
+     * JFileChooser object for picking wear files.
+     */
     private static WearFileChooser fcWear;
-    
+
     /**
-	 * JFileChooser object for picking save files.
-	 */
+     * JFileChooser object for picking save files.
+     */
     private static GameSaveFileChooser fcGame;
-    
+
     /**
      * Resets the game and values, optionally letting player to select new
      * parameters.
@@ -120,20 +122,24 @@ public class GameCore
         if (newValues)
         {
             new setupFramePre().setVisible(true);
-        } else
+        }
+        else
         {
             new GameCore(ResetParametersStorage.nameParam, ResetParametersStorage.gndrParam, ResetParametersStorage.diffParam, ResetParametersStorage.incParam, ResetParametersStorage.bladderParam, ResetParametersStorage.underParam, ResetParametersStorage.outerParam, ResetParametersStorage.underColorParam, ResetParametersStorage.outerColorParam, new GameFrame());
         }
     }
 
     /**
-     * Creates new {@link Save} object, writes current game values into it and saves an object into a file.
-     * @param ui {@link GameFrame} object to show the file selector dialog relative to.
+     * Creates new {@link Save} object, writes current game values into it and
+     * saves an object into a file.
+     *
+     * @param ui {@link GameFrame} object to show the file selector dialog
+     * relative to.
      * @see Save
      */
     public static void save(GameFrame ui)
     {
-        fcGame.setSelectedFile(new File(name));
+        fcGame.setSelectedFile(new File(getName()));
         if (fcGame.showSaveDialog(ui) == JFileChooser.APPROVE_OPTION)
         {
             File file = new File(fcGame.getSelectedFile().getAbsolutePath() + ".lhhsav");
@@ -143,35 +149,36 @@ public class GameCore
             try
             {
                 Save save = new Save();
-                save.name = NarrativeEngine.name;
-                save.gender = NarrativeEngine.gender;
-                save.hardcore = NarrativeEngine.hardcore; //TODO
-                save.incontinence = Bladder.getIncontinence();
-                save.bladder = Bladder.getFulness();
-                save.underwear = Bladder.getUndies();
-                save.outerwear = Bladder.getLower();
-                save.embarassment = Bladder.getEmbarassment();
-                save.dryness = Bladder.getDryness();
-                save.maxSphincterPower = Bladder.getMaxSphincterPower();
-                save.sphincterPower = Bladder.getSphincterPower();
-                save.time = Bladder.getTime();
-                save.stage = NarrativeEngine.getNextStage();
-                save.score = NarrativeEngine.score;
-                save.scoreText = NarrativeEngine.scoreText;
+                save.name = getName();
+                save.gender = gender;
+                save.hardcore = isHardcore(); //TODO
+                save.incontinence = getIncontinence();
+                save.bladder = getFulness();
+                save.underwear = getUndies();
+                save.outerwear = getLower();
+                save.embarassment = getEmbarassment();
+                save.dryness = getDryness();
+                save.maxSphincterPower = getMaxSphincterPower();
+                save.sphincterPower = getSphincterPower();
+                save.time = getTime();
+                save.stage = getCurrentStage();
+                save.score = NarrativeEngine.getScore();
+                save.scoreText = NarrativeEngine.getScoreText();
                 save.timesPeeDenied = NarrativeEngine.getTimesPeeDenied();
                 save.timesCaught = NarrativeEngine.timesCaught;
                 save.classmatesAwareness = NarrativeEngine.classmatesAwareness;
                 save.stay = NarrativeEngine.stay;
                 save.cornered = NarrativeEngine.isCornered();
-                save.drain = NarrativeEngine.drain;
-                save.cheatsUsed = NarrativeEngine.cheatsUsed;
+                save.drain = NarrativeEngine.isDrain();
+                save.cheatsUsed = NarrativeEngine.isCheatsUsed();
                 save.boyName = NarrativeEngine.boyName;
 
 //                writer = new PrintStream(file);
                 fout = new FileOutputStream(file);
                 oos = new ObjectOutputStream(fout);
                 oos.writeObject(save);
-            } catch (IOException e)
+            }
+            catch (IOException e)
             {
                 e.printStackTrace();
                 JOptionPane.showMessageDialog(ui, "File error.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -198,20 +205,22 @@ public class GameCore
                 Save save = (Save) ois.readObject();
                 new GameCore(save, ui);
                 ui.dispose();
-            } catch (IOException | ClassNotFoundException e)
+            }
+            catch (IOException | ClassNotFoundException e)
             {
                 e.printStackTrace();
                 showMessageDialog(ui, "File error.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
-    
+
     /**
      * Compares given file's extension with a given one.
      *
      * @param pathname File name which extension to compare
      * @param compareExtension extension to compare
-     * @return <code>true</code> if extensions are equal, <code>false</code> otherwise
+     * @return <code>true</code> if extensions are equal, <code>false</code>
+     * otherwise
      */
     public static boolean isExtensionEquals(File pathname, String compareExtension)
     {
@@ -256,7 +265,8 @@ public class GameCore
                 setUndies(UNDERWEAR_LIST[NarrativeEngine.RANDOM.nextInt(UNDERWEAR_LIST.length)]);
             }
             //If random undies weren't chosen...
-        } else
+        }
+        else
         {
             //We look for the selected undies in the array
             for (Wear iWear : UNDERWEAR_LIST)
@@ -283,11 +293,13 @@ public class GameCore
             if (!undiesColor.equals("Random"))
             {
                 getUndies().setColor(undiesColor);
-            } else
+            }
+            else
             {
                 getUndies().setColor(Wear.COLOR_LIST[NarrativeEngine.RANDOM.nextInt(Wear.COLOR_LIST.length)]);
             }
-        } else
+        }
+        else
         {
             getUndies().setColor("");
         }
@@ -305,7 +317,8 @@ public class GameCore
             {
                 setLower(Bladder.OUTERWEAR_LIST[NarrativeEngine.RANDOM.nextInt(Bladder.OUTERWEAR_LIST.length)]);
             }
-        } else
+        }
+        else
         {
             for (Wear iWear : Bladder.OUTERWEAR_LIST)
             {
@@ -328,11 +341,13 @@ public class GameCore
             if (!lowerColor.equals("Random"))
             {
                 getLower().setColor(lowerColor);
-            } else
+            }
+            else
             {
                 getLower().setColor(Wear.COLOR_LIST[NarrativeEngine.RANDOM.nextInt(Wear.COLOR_LIST.length)]);
             }
-        } else
+        }
+        else
         {
             getLower().setColor("");
         }
@@ -341,18 +356,18 @@ public class GameCore
         ui.displayAllValues();
 
         //Making bladder smaller in the hardcore mode, adding hardcore label
-        if (hardcore)
+        if (isHardcore())
         {
             setMaxFulness((short) 100);
             ui.lblName.setText(ui.lblName.getText() + " [Hardcore]");
         }
 
         //Starting the game
-        setNextStage(LEAVE_BED);
+        setFirstStage(leaveBed);
 
         postConstructor(ui);
     }
-    
+
     /**
      * Saved game restore constructor.
      *
@@ -362,6 +377,13 @@ public class GameCore
     public GameCore(Save save, GameFrame ui)
     {
         preConstructor(save.name, save.gender, save.hardcore, save.incontinence, save.bladder, ui);
+        restoreValues(save);
+        ui.displayAllValues();
+        postConstructor(ui);
+    }
+
+    private void restoreValues(Save save)
+    {
         setUndies(save.underwear);
         setLower(save.outerwear);
         setEmbarassment(save.embarassment);
@@ -369,33 +391,33 @@ public class GameCore
         setMaxSphincterPower(save.maxSphincterPower);
         setSphincterPower(save.sphincterPower);
         setTime(save.time);
-        setNextStage(save.stage);
-        score = save.score;
-        scoreText = save.scoreText;
+        rotatePlot(save.stage);
+        setScore(save.score);
+        setScoreText(save.scoreText);
         setTimesPeeDenied(save.timesPeeDenied);
         timesCaught = save.timesCaught;
         classmatesAwareness = save.classmatesAwareness;
         stay = save.stay;
         setCornered(save.cornered);
-        drain = save.drain;
-        cheatsUsed = save.cheatsUsed;
+        setDrain(save.drain);
+        setCheatsUsed(save.cheatsUsed);
         boyName = save.boyName;
-        
-        ui.displayAllValues();
-        postConstructor(ui);
     }
 
     /**
-     * Shows file chooser dialog, reads an {@link Wear} object from a selected file, checks if its type is matching the given one and assigns it to {@link lower}.
+     * Shows file chooser dialog, reads an {@link Wear} object from a selected
+     * file, checks if its type is matching the given one and assigns it to
+     * {@link lower}.
      *
      * @param ui {@code GameFrame} object
      */
     private void openWearFile(GameFrame ui, WearType type)
     {
-        if(type == UNDERWEAR)
+        if (type == UNDERWEAR)
         {
             fcWear.setDialogTitle("Open an underwear file");
-        } else
+        }
+        else
         {
             fcWear.setDialogTitle("Open an outerwear file");
         }
@@ -406,7 +428,7 @@ public class GameCore
             {
                 FileInputStream fin = new FileInputStream(file);
                 ObjectInputStream ois = new ObjectInputStream(fin);
-                if(type == UNDERWEAR)
+                if (type == UNDERWEAR)
                 {
                     setUndies((Wear) ois.readObject());
                     if (getLower().getType() == OUTERWEAR)
@@ -426,7 +448,8 @@ public class GameCore
                         setupFramePre.main(new String[0]);
                     }
                 }
-            } catch (IOException | ClassNotFoundException e)
+            }
+            catch (IOException | ClassNotFoundException e)
             {
                 JOptionPane.showMessageDialog(null, "File error.", "Error", JOptionPane.ERROR_MESSAGE);
                 ui.dispose();
@@ -473,9 +496,9 @@ public class GameCore
     private void assignFieldValuesFromParameters(String name1, Gender gndr, boolean diff, float inc, short bladder)
     {
         //Assigning constructor parameters to values
-        NarrativeEngine.name = name1;
+        NarrativeEngine.setName(name1);
         gender = gndr;
-        hardcore = diff;
+        setHardcore(diff);
         setIncontinence(inc);
         setFulness(bladder);
         setMaxSphincterPower((short) Math.round(100 / getIncontinence()));
@@ -503,12 +526,12 @@ public class GameCore
     private void initHardcoreMode(GameFrame ui)
     {
         //Making bladder smaller in the hardcore mode, adding hardcore label
-        if (hardcore)
+        if (isHardcore())
         {
             Bladder.setMaxFulness((short) 100);
             ui.lblName.setName(ui.lblName.getName() + " [Hardcore]");
         }
-        if (hardcore)
+        if (isHardcore())
         {
             score("Hardcore", '*', 2F);
         }
@@ -517,7 +540,7 @@ public class GameCore
     private void stashParametersForReset()
     {
         //TODO
-        ResetParametersStorage.nameParam = NarrativeEngine.name;
+        ResetParametersStorage.nameParam = NarrativeEngine.getName();
         ResetParametersStorage.gndrParam = NarrativeEngine.gender;
         ResetParametersStorage.incParam = Bladder.getIncontinence();
         ResetParametersStorage.bladderParam = Bladder.getFulness();
@@ -526,5 +549,4 @@ public class GameCore
         ResetParametersStorage.underColorParam = getUndies().getColor();
         ResetParametersStorage.outerColorParam = getLower().getColor();
     }
-
 }

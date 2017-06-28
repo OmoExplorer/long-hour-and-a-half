@@ -2,6 +2,11 @@ package omo;
 
 import java.awt.Color;
 import static omo.NarrativeEngine.*;
+import static omo.stage.StageEngine.*;
+import omo.stage.StagePool;
+import static omo.stage.StagePool.accident;
+import static omo.stage.StagePool.classOver;
+import static omo.stage.StagePool.drink;
 import omo.ui.GameFrame;
 import static omo.ui.GameFrame.*;
 
@@ -205,7 +210,7 @@ public class Bladder
      */
     private static void drain(GameFrame ui)
     {
-        if (NarrativeEngine.drain & (getTime() % 15) == 0)
+        if (NarrativeEngine.isDrain() & (getTime() % 15) == 0)
         {
             emptyBladder(ui);
         }
@@ -231,7 +236,7 @@ public class Bladder
      */
     private static void changeLabelColor(GameFrame ui)
     {
-        if ((getFulness() > 100 && !hardcore) || (getFulness() > 80 && hardcore))
+        if ((getFulness() > 100 && !isHardcore()) || (getFulness() > 80 && isHardcore()))
         {
             ui.lblBladder.setForeground(Color.RED);
         }
@@ -250,7 +255,7 @@ public class Bladder
      */
     private static boolean isCriticalBladder()
     {
-        return (getFulness() > getMaxFulness() - 30 & !hardcore) | (getFulness() > getMaxFulness() - 20 & hardcore);
+        return (getFulness() > getMaxFulness() - 30 & !isHardcore()) | (getFulness() > getMaxFulness() - 20 & isHardcore());
     }
 
     /**
@@ -269,32 +274,6 @@ public class Bladder
         ui.update();
     }
 
-    /**
-     * Checks the wetting conditions, and if they are met, wetting
-     */
-    static void testWet()
-    {
-        //If bladder is filled more than 130 points in the normal mode and 100 points in the hardcore mode, setting sphincter power to 0
-        if (getFulness() >= getMaxFulness() & !hardcore)
-        {
-            setSphincterPower((short) 0);
-            if (getDryness() < MINIMAL_DRYNESS)
-            {
-                if (specialHardcoreStage)
-                {
-                    NarrativeEngine.setNextStage(NarrativeEngine.GameStage.SURPRISE_ACCIDENT);
-                }
-                else
-                {
-                    NarrativeEngine.setNextStage(NarrativeEngine.GameStage.ACCIDENT);
-                }
-            }
-        }
-        else //If bladder is filled more than 100 points in the normal mode and 50 points in the hardcore mode, character has a chance to wet
-        {
-            randomlyLeakOnFullBladder();
-        }
-    }
 
     /**
      * Empties the belly.
@@ -321,11 +300,11 @@ public class Bladder
                 {
                     if (specialHardcoreStage)
                     {
-                        setNextStage(NarrativeEngine.GameStage.SURPRISE_ACCIDENT);
+                        rotatePlot(StagePool.surpriseAccident);
                     }
                     else
                     {
-                        setNextStage(NarrativeEngine.GameStage.ACCIDENT);
+                        rotatePlot(StagePool.accident);
                     }
                 }
             }
@@ -334,7 +313,7 @@ public class Bladder
 
     private static byte calculateLeakingChance()
     {
-        return !hardcore ? ((byte) (5 * (getFulness() - 80))) : ((byte) (3 * (getFulness() - 100) + getEmbarassment()));
+        return !isHardcore() ? ((byte) (5 * (getFulness() - 80))) : ((byte) (3 * (getFulness() - 100) + getEmbarassment()));
     }
 
     /**
@@ -361,7 +340,7 @@ public class Bladder
         offsetBladder(ui, time * 1.5);
         offsetBelly(ui, -time * 1.5);
         checkClassOver(ui);
-        testWet();
+        randomlyLeakOnFullBladder();
         //Processing bladder cycle for every 3 minutes
         for (int i = 0; i < time; i++)
         {
@@ -391,12 +370,12 @@ public class Bladder
 
     private static void offsetThirst(byte amount)
     {
-        if (hardcore)
+        if (isHardcore())
         {
             setThirst(getThirst() + amount);
             if (Bladder.getThirst() > Bladder.MAXIMAL_THIRST)
             {
-                setNextStage(NarrativeEngine.GameStage.DRINK);
+                rotatePlot(drink);
             }
         }
     }
@@ -406,7 +385,7 @@ public class Bladder
         if (Bladder.getTime() >= 88)
         {
             ui.setText("You hear the bell finally ring.");
-            setNextStage(NarrativeEngine.GameStage.CLASS_OVER);
+            rotatePlot(classOver);
         }
     }
 
@@ -476,14 +455,10 @@ public class Bladder
                 if (isCornered())
                 {
                     ui.setText("You see a puddle forming on the floor beneath you, you're peeing!", "It's too much...");
-                    setNextStage(ACCIDENT);
-                    ui.handleNextClicked();
                 }
                 else
                 {
                     ui.setText("Feeling the pee hit the chair and soon fall over the sides,", "you see a puddle forming under your chair, you're peeing!", "It's too much...");
-                    setNextStage(ACCIDENT);
-                    ui.handleNextClicked();
                 }
             }
             else
@@ -491,19 +466,17 @@ public class Bladder
                 if (!lower.isMissing())
                 {
                     ui.setText("You see the wet spot expanding on your " + getLower().insert() + "!", "It's too much...");
-                    setNextStage(ACCIDENT);
-                    ui.handleNextClicked();
                 }
                 else
                 {
                     if (!undies.isMissing())
                     {
                         ui.setText("You see the wet spot expanding on your " + getUndies().insert() + "!", "It's too much...");
-                        setNextStage(ACCIDENT);
-                        ui.handleNextClicked();
                     }
                 }
             }
+            rotatePlot(accident);
+            ui.handleNextClicked();
         }
     }
 

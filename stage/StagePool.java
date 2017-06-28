@@ -1,14 +1,21 @@
 package omo.stage;
 
+import java.util.ArrayList;
 import static omo.Bladder.*;
-import omo.NarrativeEngine;
 import static omo.NarrativeEngine.*;
 import omo.ui.GameFrame;
 
 public class StagePool
 {
 
-    BladderAffectingStage leaveBed;
+    public static BladderAffectingStage leaveBed;
+    public static Stage surpriseAccident;
+    public static Stage accident;
+    public static Stage drink;
+    public static Stage classOver;
+    public static Stage caughtHoldingPee;
+    public static Stage calledOn;
+    
     BladderAffectingStage leaveHome;
     BladderAffectingStage arrivedToClass;
     BladderAffectingStage walkIn;
@@ -16,6 +23,9 @@ public class StagePool
     HoldingStage schoolHolding;
     Stage askTeacherToPee;
 
+    public static BladderAffectingStage surprise;
+    public static BladderAffectingStage writeLines;
+    
     public StagePool()
     {
         leaveBed = new BladderAffectingStage(leaveHome, (short) 3)
@@ -151,7 +161,7 @@ public class StagePool
                     setLinesAsDialogue(1, 3);
                     return new String[]
                     {
-                        "Next time you run into class, " + name + ",", "your teacher says,",
+                        "Next time you run into class, " + getName() + ",", "your teacher says,",
                         "make sure you're wearing something less... revealing!",
                         "A chuckle passes over the classroom, and you can't help but feel a",
                         "tad bit embarrassed about your rush into class."
@@ -176,7 +186,7 @@ public class StagePool
                         setLinesAsDialogue(1, 3);
                         return new String[]
                         {
-                            "Sit down, " + name + ". You're running late.",
+                            "Sit down, " + getName() + ". You're running late.",
                             "your teacher says,",
                             "And next time, don't make so much noise entering the classroom!",
                             "A chuckle passes over the classroom, and you can't help but feel a tad bit embarrassed",
@@ -217,8 +227,9 @@ public class StagePool
             }
         };
 
-        schoolHolding = new HoldingStage(new Action[]
-        {
+        ArrayList<Action> customSchoolHoldingActions = new ArrayList<>();
+        customSchoolHoldingActions.add
+        (
             new Action(askTeacherToPee)
             {
                 @Override
@@ -239,7 +250,9 @@ public class StagePool
                     }
                 }
             }
-        }, (short) 2)
+        );
+        
+        schoolHolding = new HoldingStage(customSchoolHoldingActions, (short) 2)
         {
             @Override
             public String[] getText()
@@ -282,5 +295,4 @@ public class StagePool
             }
         };
     }
-;
 }
