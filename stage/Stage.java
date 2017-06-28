@@ -27,6 +27,10 @@ public class Stage
         this.nextStage = nextStage;
     }
 
+    public Stage()
+    {
+    }
+    
     public void operate()
     {
 
@@ -57,5 +61,21 @@ public class Stage
     public void setText(String... text)
     {
         this.text = text;
+    }
+
+    /**
+     * @return the nextStage
+     */
+    public Stage getNextStage()
+    {
+        return nextStage;
+    }
+
+    /**
+     * @param nextStage the nextStage to set
+     */
+    public void setNextStage(Stage nextStage)
+    {
+        this.nextStage = nextStage;
     }
 }

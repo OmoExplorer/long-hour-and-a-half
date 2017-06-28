@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 class HoldingStage extends SelectionStage
 {
-    HoldingStage(ArrayList<Action> actions, short duration, String... text)
+    HoldingStage(Action[] actions, short duration, String... text)
     {
         super(actions, duration, text);
         addAction(new Action("Hold crotch", new HoldCrotchStage(new HoldingStage(actions, duration, text))));

@@ -33,6 +33,12 @@ public class BladderAffectingStage extends Stage
         this.duration = duration;
     }
 
+    public BladderAffectingStage(short duration)
+    {
+        super();
+        this.duration = duration;
+    }
+
     @Override
     public void operate(GameFrame ui)
     {

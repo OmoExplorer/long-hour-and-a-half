@@ -13,59 +13,60 @@ import omo.ui.GameFrame;
  */
 public class Bladder
 {
+
     /**
      * Current bladdder fulness.
      */
     private static short fulness;
-    
+
     /**
      * Maximal bladder fulness.
      */
     private static short maxFulness = 130;
-    
+
     /**
      * Current sphincter power.
      */
     private static short sphincterPower;
-    
+
     /**
      * Maximal time without squirming and leaking.
      */
     private static short maxSphincterPower;
-    
+
     /**
      * Amount of a water in a belly.
      */
     private static double belly;
-    
+
     /**
      * Maximal amount of pee that clothes can store.
      */
     private static float dryness;
-    
+
     /**
      * The dryness game over minimal threshold.
      */
     public static final int MINIMAL_DRYNESS = 0;
 
     private static float maxDryness = getLower().getAbsorption() + getUndies().getAbsorption();
-    
+
     /**
      * The class time in minutes.
      */
     private static byte time = 0;
-    
+
     /**
      * Amount of the character thirstiness. Used only in hardcore mode.
      */
     private static float thirst = 0;
 
     /**
-     * Maximal allowed thirst level.
-     * Character will drink water if thirst is past this value.
+     * Maximal allowed thirst level. Character will drink water if thirst is
+     * past this value.
      */
     public final static float MAXIMAL_THIRST = 30;
-    
+
     /**
      * Makes the wetting chance higher after reaching 100% of the bladder
      * fulness.
@@ -80,12 +81,12 @@ public class Bladder
      * defines the sphincter weakening speed.
      */
     private static float incontinence;
-    
+
     /**
      * Character's undies.
      */
     private static Wear undies;
-    
+
     /**
      * List of all underwear types.
      */
@@ -117,7 +118,7 @@ public class Bladder
      * Character's lower body clothing.
      */
     private static Wear lower;
-    
+
     /**
      * List of all outerwear types.
      */
@@ -152,7 +153,7 @@ public class Bladder
     /**
      * Offsets the time by a specified amount.
      *
-     * @param ui {@link GameFrame} object to update values
+     * @param ui     {@link GameFrame} object to update values
      * @param amount the offset value. May be negative to decrease time
      */
     public static void offsetTime(GameFrame ui, int amount)
@@ -198,7 +199,7 @@ public class Bladder
     /**
      * Offsets bladder fulness by a specified amount.
      *
-     * @param ui {@link GameFrame} object to update values
+     * @param ui     {@link GameFrame} object to update values
      * @param amount the bladder fulness offset amount
      */
     static void offsetBladder(GameFrame ui, double amount)
@@ -230,7 +231,7 @@ public class Bladder
      * beginning).
      *
      * @return {@link true} if bladder fulness is past the critical value,
-     * {@link false} otherwise
+     *         {@link false} otherwise
      */
     private static boolean isCriticalBladder()
     {
@@ -240,6 +241,7 @@ public class Bladder
     /**
      * Replenishes the sphincter power.
      *
+     * @param ui {@link GameFrame} object to update values
      * @param amount the sphincter recharge amount
      */
     public static void rechargeSphPower(GameFrame ui, int amount)
@@ -332,7 +334,7 @@ public class Bladder
      * parameters.
      *
      * @param time increasement amount
-     * @param ui {@link GameFrame} object to update values
+     * @param ui   {@link GameFrame} object to update values
      */
     public static void passTime(GameFrame ui, short time)
     {
@@ -378,7 +380,7 @@ public class Bladder
      * Offsets a belly water amount by specified value.
      *
      * @param amount increasement amount
-     * @param ui {@link GameFrame} object to update values
+     * @param ui     {@link GameFrame} object to update values
      */
     public static void offsetBelly(GameFrame ui, double amount)
     {
@@ -393,7 +395,7 @@ public class Bladder
     //TODO: Refactor
     /**
      * Decreases the sphincter power.
-     * 
+     *
      * @param ui {@code GameFrame} object to update values
      */
     static void decaySphPower(GameFrame ui)
@@ -437,7 +439,7 @@ public class Bladder
         {
             if (getLower().isMissing() && getUndies().isMissing())
             {
-                if (cornered)
+                if (isCornered())
                 {
                     ui.setText("You see a puddle forming on the floor beneath you, you're peeing!", "It's too much...");
                     setNextStage(ACCIDENT);
@@ -681,10 +683,10 @@ public class Bladder
     {
         maxFulness = aMaxBladder;
     }
-    
+
     /**
      *
-     * @param ui the GameFrame object to update the interface
+     * @param ui     the GameFrame object to update the interface
      * @param amount the value of amount
      */
     public static void offsetEmbarassment(GameFrame ui, int amount)
@@ -709,7 +711,8 @@ public class Bladder
         if (NarrativeEngine.isMale())
         {
             underwearList[1].setInsertName("penis");
-        } else
+        }
+        else
         {
             underwearList[1].setInsertName("crotch");
         }

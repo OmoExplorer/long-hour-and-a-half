@@ -14,6 +14,7 @@ public class StagePool
     BladderAffectingStage walkIn;
     BladderAffectingStage sitDown;
     HoldingStage schoolHolding;
+    Stage askTeacherToPee;
 
     public StagePool()
     {
@@ -84,7 +85,8 @@ public class StagePool
                             "Normally, you'd be worried your " + getUndies().insert() + " would be seen, but you can't worry about it right now.",
                             "You make it to your seat without a minute to spare."
                         };
-                    } else
+                    }
+                    else
                     {
                         //Nothing is blowing in wind
                         return new String[]
@@ -92,7 +94,8 @@ public class StagePool
                             "Trying your best to make up lost time, you rush into class and sit down to your seat without a minute to spare."
                         };
                     }
-                } else
+                }
+                else
                 {
                     if (!getUndies().isMissing())
                     {
@@ -103,7 +106,8 @@ public class StagePool
                             "and you know that your " + getUndies().insert() + " have definitely been seen.",
                             "You make it to your seat without a minute to spare."
                         };
-                    } else
+                    }
+                    else
                     {
                         if (isFemale())
                         {
@@ -114,7 +118,8 @@ public class StagePool
                                 "You can't understand how you dared to come to school naked.",
                                 "You make it to your seat without a minute to spare."
                             };
-                        } else
+                        }
+                        else
                         {
                             return new String[]
                             {
@@ -135,8 +140,9 @@ public class StagePool
             }
         };
 
-        walkIn = new BladderAffectingStage(sitDown,(short) 1)
+        walkIn = new BladderAffectingStage((short) 1)
         {
+            @Override
             public String[] getText()
             {
                 //If lower clothes is a skirt
@@ -150,7 +156,8 @@ public class StagePool
                         "A chuckle passes over the classroom, and you can't help but feel a",
                         "tad bit embarrassed about your rush into class."
                     };
-                } else //No outerwear
+                }
+                else //No outerwear
                 {
                     if (getLower().isMissing())
                     {
@@ -163,8 +170,8 @@ public class StagePool
                             "A chuckle passes over the classroom, and you can't help but feel extremely embarrassed",
                             "about your rush into class, let alone your nudity."
                         };
-                        offsetEmbarassment(ui, 25);
-                    } else
+                    }
+                    else
                     {
                         setLinesAsDialogue(1, 3);
                         return new String[]
@@ -177,12 +184,12 @@ public class StagePool
                         };
                     }
                 }
-                return new String[0];
             }
-            
+
+            @Override
             public void operate(GameFrame ui)
             {
-                if(revealingLower())
+                if (revealingLower())
                 {
                     offsetEmbarassment(ui, 5);
                 }
@@ -193,15 +200,87 @@ public class StagePool
                         offsetEmbarassment(ui, 25);
                     }
                 }
+                setNextStage(fulnessBetween((short) 0, (short) 60) ? sitDown : schoolHolding);
             }
         };
-        
-        sitDown = new BladderAffectingStage(schoolHolding, 1)
+
+        sitDown = new BladderAffectingStage(schoolHolding, (short) 1, new String[]
         {
+            "Subconsciously rubbing your thighs together, you feel the uncomfortable feeling of",
+            "your bladder filling as the liquids you drank earlier start to make their way down."
+        })
+        {
+            @Override
+            public void operate()
+            {
+                score("Embarassment at start - " + getIncontinence() + " pts", '+', getEmbarassment());
+            }
+        };
+
+        schoolHolding = new HoldingStage(new Action[]
+        {
+            new Action(askTeacherToPee)
+            {
+                @Override
+                public String getName()
+                {
+                    switch (getTimesPeeDenied())
+                    {
+                        case 0:
+                            return "Ask teacher to go pee";
+                        case 1:
+                            return "Ask the teacher to go pee again";
+                        case 2:
+                            return "Try to ask the teacher again";
+                        case 3:
+                            return "Take a chance and ask the teacher (RISKY)";
+                        default:
+                            return ACTION_UNAVAILABLE;
+                    }
+                }
+            }
+        }, (short) 2)
+        {
+            @Override
             public String[] getText()
             {
                 return getBladderDependingText(
+                        new String[]
+                        {
+                            "Feeling bored about the day, and not really caring about the class too much,",
+                            "you look to the clock, watching the minutes tick by."
+                        },
+                        new String[]
+                        {
+                            "Having to pee a little bit,",
+                            "you look to the clock, watching the minutes tick by and wishing the lesson to get over faster."
+                        },
+                        new String[]
+                        {
+                            "Clearly having to pee,",
+                            "you impatiently wait for the lesson end."
+                        },
+                        new String[]
+                        {
+                            "You feel the rather strong pressure in your bladder, and you're starting to get even more desperate.",
+                            "Maybe I should ask teacher to go to the restroom? It hurts a bit..."
+                        },
+                        new String[]
+                        {
+                            "Keeping all that urine inside will become impossible very soon.",
+                            "You feel the terrible pain and pressure in your bladder, and you can almost definitely say you haven't needed to pee this badly in your life.",
+                            "Ouch, it hurts a lot... I must do something about it now, or else..."
+                        },
+                        new String[]
+                        {
+                            "This is really bad...",
+                            "You know that you can't keep it any longer and you may wet yourself in any moment and oh,",
+                            "You can clearly see your bladder as it bulging.",
+                            "Ahhh... I cant hold it anymore!!!",
+                            "Even holding your crotch doesn't seems to help you to keep it in."
+                        });
             }
         };
     }
+;
 }

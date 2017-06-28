@@ -158,11 +158,11 @@ public class GameCore
                 save.stage = NarrativeEngine.getNextStage();
                 save.score = NarrativeEngine.score;
                 save.scoreText = NarrativeEngine.scoreText;
-                save.timesPeeDenied = NarrativeEngine.timesPeeDenied;
+                save.timesPeeDenied = NarrativeEngine.getTimesPeeDenied();
                 save.timesCaught = NarrativeEngine.timesCaught;
                 save.classmatesAwareness = NarrativeEngine.classmatesAwareness;
                 save.stay = NarrativeEngine.stay;
-                save.cornered = NarrativeEngine.cornered;
+                save.cornered = NarrativeEngine.isCornered();
                 save.drain = NarrativeEngine.drain;
                 save.cheatsUsed = NarrativeEngine.cheatsUsed;
                 save.boyName = NarrativeEngine.boyName;
@@ -372,11 +372,11 @@ public class GameCore
         setNextStage(save.stage);
         score = save.score;
         scoreText = save.scoreText;
-        timesPeeDenied = save.timesPeeDenied;
+        setTimesPeeDenied(save.timesPeeDenied);
         timesCaught = save.timesCaught;
         classmatesAwareness = save.classmatesAwareness;
         stay = save.stay;
-        cornered = save.cornered;
+        setCornered(save.cornered);
         drain = save.drain;
         cheatsUsed = save.cheatsUsed;
         boyName = save.boyName;

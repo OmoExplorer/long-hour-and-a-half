@@ -10,14 +10,30 @@ import static omo.ui.GameFrame.MAX_LINES;
 
 @SuppressWarnings("PackageVisibleField")
 public class NarrativeEngine
-{    
+{
+
+    /**
+     * @return the timesPeeDenied
+     */
+    public static byte getTimesPeeDenied()
+    {
+        return timesPeeDenied;
+    }
+
+    /**
+     * @param aTimesPeeDenied the timesPeeDenied to set
+     */
+    public static void setTimesPeeDenied(byte aTimesPeeDenied)
+    {
+        timesPeeDenied = aTimesPeeDenied;
+    }
     //Random stuff generator
     public static final Random RANDOM = new Random();
 
     /**
      * Times teacher denied character to go out.
      */
-    static byte timesPeeDenied = 0;
+    private static byte timesPeeDenied = 0;
 
     /**
      * Whether or not hardcore mode enabled: teacher never lets you pee, it's
@@ -108,7 +124,7 @@ public class NarrativeEngine
      * Whether or not character currently stands in the corner and unable to
      * hold crotch.
      */
-    static boolean cornered = false;
+    private static boolean cornered = false;
 
     /**
      * Text to be displayed after the game which shows how many {@link score}
@@ -122,51 +138,46 @@ public class NarrativeEngine
      * lesson) reduce score points. Using the cheats will zero the score points.
      */
     public static int score = 0;
+
     public static String[] getBladderDependingText(String[] empty, String[] firstUrge, String[] continuousUrges, String[] full, String[] bursting, String[] critical)
     {
-        if(fulnessBetween((short)0, (short)20))
+        if (fulnessBetween((short) 0, (short) 20))
         {
             return empty;
         }
-        if(fulnessBetween((short)20, (short)40))
+        if (fulnessBetween((short) 20, (short) 40))
         {
             return firstUrge;
         }
-        if(fulnessBetween((short)40, (short)60))
+        if (fulnessBetween((short) 40, (short) 60))
         {
             return continuousUrges;
         }
-        if(fulnessBetween((short)60, (short)80))
+        if (fulnessBetween((short) 60, (short) 80))
         {
             return full;
         }
-        if(fulnessBetween((short)80, (short)100))
+        if (fulnessBetween((short) 80, (short) 100))
         {
             return bursting;
         }
-        if(fulnessBetween((short)100, (short)130))
+        if (fulnessBetween((short) 100, (short) 130))
         {
             return critical;
         }
         return new String[0];
     }
+
     static GameStage getNextStage()
     {
         return nextStage;
     }
+
     static boolean chance(byte chance)
     {
         return RANDOM.nextInt(100) <= chance;
     }
-    
-    /**
-     *
-     * @param nextStage the value of nextStage
-     */
-    public static void setNextStage(GameStage nextStage)
-    {
-        NarrativeEngine.nextStage = nextStage;
-    }
+
     /**
      *
      */
@@ -182,6 +193,7 @@ public class NarrativeEngine
             setNextStage(ASK_ACTION);
         }
     }
+
     /**
      *
      * @param errorIndex the value of errorIndex
@@ -190,12 +202,13 @@ public class NarrativeEngine
     {
         return "<b><i>" + ERRORS[errorIndex] + "@" + Thread.currentThread().getStackTrace()[1].getLineNumber() + "</i></b>";
     }
+
     /**
      * Operates the player score.
      *
      * @param message the reason to manipulate score
-     * @param mode add, substract, divide or multiply
-     * @param points amount of points to operate
+     * @param mode    add, substract, divide or multiply
+     * @param points  amount of points to operate
      */
     public static void score(String message, char mode, float points)
     {
@@ -221,17 +234,19 @@ public class NarrativeEngine
                 System.err.println("score() method used incorrectly, message: \"" + message + "\"");
         }
     }
+
     /**
      * @return TRUE - if character's gender is female<br>FALSE - if character's
-     * gender is male
+     *         gender is male
      */
     public static boolean isFemale()
     {
         return gender == FEMALE;
     }
+
     /**
      * @return TRUE - if character's gender is male<br>FALSE - if character's
-     * gender is female
+     *         gender is female
      */
     static boolean isMale()
     {
@@ -242,6 +257,7 @@ public class NarrativeEngine
     {
         return getLower().insert().equals("skirt") || getLower().insert().equals("skirt and tights") || getLower().insert().equals("skirt and tights");
     }
+
     /**
      *
      * @param lines the value of lines
@@ -253,13 +269,15 @@ public class NarrativeEngine
             dialogueLines[i - 1] = true;
         }
     }
+
     /**
      * Returns in-game text depending on wear.
      *
-     * @param bothWear the value of bothWear
-     * @param lowerOnly the value of lowerOnly
+     * @param bothWear   the value of bothWear
+     * @param lowerOnly  the value of lowerOnly
      * @param undiesOnly the value of undiesOnly
-     * @param noWear the value of noWear
+     * @param noWear     the value of noWear
+     *
      * @return in-game text depending on wear
      */
     public static String[] getWearDependentText(String[] bothWear, String[] lowerOnly, String[] undiesOnly, String[] noWear)
@@ -329,10 +347,10 @@ public class NarrativeEngine
         return false;
     }
 
-
     /**
      *
      * @param the value of
+     *
      * @return the boolean
      */
     private boolean triggerClsasOverScene()
@@ -406,7 +424,7 @@ public class NarrativeEngine
     private void offerHoldingChoices()
     {
         //Adding action choices
-        switch (timesPeeDenied)
+        switch (getTimesPeeDenied())
         {
             case 0:
                 actionList.add("Ask the teacher to go pee");
@@ -421,9 +439,9 @@ public class NarrativeEngine
                 actionList.add("Take a chance and ask the teacher (RISKY)");
                 break;
             default:
-                actionList.add("[Unavailable]");
+                actionList.add(ACTION_UNAVAILABLE);
         }
-        if (!cornered)
+        if (!isCornered())
         {
             if (isFemale())
             {
@@ -436,7 +454,7 @@ public class NarrativeEngine
         }
         else
         {
-            actionList.add("[Unavailable]");
+            actionList.add(ACTION_UNAVAILABLE);
         }
         actionList.add("Rub thighs");
         if (getFulness() >= 100)
@@ -445,7 +463,7 @@ public class NarrativeEngine
         }
         else
         {
-            actionList.add("[Unavailable]");
+            actionList.add(ACTION_UNAVAILABLE);
         }
         if (hardcore)
         {
@@ -453,11 +471,13 @@ public class NarrativeEngine
         }
         else
         {
-            actionList.add("[Unavailable]");
+            actionList.add(ACTION_UNAVAILABLE);
         }
         actionList.add("Just wait");
         actionList.add("Cheat (will reset your score)");
     }
+    
+    public static final String ACTION_UNAVAILABLE = "[Unavailable]";
 
     /**
      *
@@ -478,8 +498,8 @@ public class NarrativeEngine
     /**
      *
      * @param femaleText the value of femaleText
-     * @param maleText the value of maleText
-     * @param the value of
+     * @param maleText   the value of maleText
+     * @param the        value of
      */
     String[] getGenderDependentText(String[] femaleText, String[] maleText)
     {
@@ -492,7 +512,6 @@ public class NarrativeEngine
             return maleText;
         }
     }
-
 
     @Deprecated
     public enum GameStage
@@ -529,5 +548,21 @@ public class NarrativeEngine
         SURPRISE_WET_VOLUNTARY2,
         SURPRISE_WET_PRESSURE,
         DRINK
+    }
+
+    /**
+     * @return the cornered
+     */
+    public static boolean isCornered()
+    {
+        return cornered;
+    }
+
+    /**
+     * @param aCornered the cornered to set
+     */
+    public static void setCornered(boolean aCornered)
+    {
+        cornered = aCornered;
     }
 }

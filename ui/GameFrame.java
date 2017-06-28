@@ -98,6 +98,7 @@ public class GameFrame extends JFrame
         textLabel.setText(toSend);
         NarrativeEngine.dialogueLines = new boolean[GameFrame.MAX_LINES];
     }
+    
     public void handleNextClicked()
     {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -125,7 +126,7 @@ public class GameFrame extends JFrame
      */
     private boolean inappropriateSelection()
     {
-        return listChoice.isSelectionEmpty() || listChoice.getSelectedValue().equals("[Unavailable]");
+        return listChoice.isSelectionEmpty() || listChoice.getSelectedValue().equals(ACTION_UNAVAILABLE);
     }
 
     /**
