@@ -45,4 +45,11 @@ public class BladderAffectingStage extends Stage
         super.operate();
         passTime(ui, duration);
     }
+    
+    @Override
+    public void run(GameFrame ui)
+    {
+        super.run(ui);
+        //TODO
+    }
 }

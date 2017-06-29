@@ -1,5 +1,7 @@
 package omo;
 
+import static omo.Bladder.*;
+
 /**
  * Class for storing game user parameters for reset.
  *
@@ -18,4 +20,17 @@ class ResetParametersStorage
     static String outerParam;
     static String underColorParam;
     static String outerColorParam;
+
+    static void stashParametersForReset()
+    {
+        //TODO
+        ResetParametersStorage.nameParam = NarrativeEngine.getName();
+        ResetParametersStorage.gndrParam = NarrativeEngine.gender;
+        ResetParametersStorage.incParam = Bladder.getIncontinence();
+        ResetParametersStorage.bladderParam = Bladder.getFulness();
+        ResetParametersStorage.outerParam = getLower().getName();
+        ResetParametersStorage.underParam = getUndies().getName();
+        ResetParametersStorage.underColorParam = getUndies().getColor();
+        ResetParametersStorage.outerColorParam = getLower().getColor();
+    }
 }

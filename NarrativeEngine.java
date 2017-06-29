@@ -13,6 +13,7 @@ import static omo.ui.GameFrame.MAX_LINES;
 @SuppressWarnings("PackageVisibleField")
 public class NarrativeEngine
 {
+
     //Random stuff generator
     public static final Random RANDOM = new Random();
 
@@ -119,7 +120,7 @@ public class NarrativeEngine
      * lesson) reduce score points. Using the cheats will zero the score points.
      */
     private static int score = 0;
-    
+
     public static final String ACTION_UNAVAILABLE = "[Unavailable]";
 
     /**
@@ -243,7 +244,7 @@ public class NarrativeEngine
         return gender == MALE;
     }
 
-    public static boolean revealingLower()
+    public static boolean isLowerRevealing()
     {
         return getLower().insert().equals("skirt") || getLower().insert().equals("skirt and tights") || getLower().insert().equals("skirt and tights");
     }
@@ -277,19 +278,16 @@ public class NarrativeEngine
             if (getUndies().isMissing())
             {
                 return bothWear;
-            }
-            else
+            } else
             {
                 return lowerOnly;
             }
-        }
-        else
+        } else
         {
             if (getUndies().isMissing())
             {
                 return undiesOnly;
-            }
-            else
+            } else
             {
                 return noWear;
             }
@@ -350,10 +348,139 @@ public class NarrativeEngine
     /**
      * @param aCornered the cornered to set
      */
-    public static void setCornered(boolean aCornered)
+    public static void setCornered(boolean cornered)
     {
-        cornered = aCornered;
+        NarrativeEngine.cornered = cornered;
     }
+
+    /**
+     * @return the hardcore
+     */
+    public static boolean isHardcore()
+    {
+        return hardcore;
+    }
+
+    /**
+     * @param aHardcore the hardcore to set
+     */
+    public static void setHardcore(boolean hardcore)
+    {
+        NarrativeEngine.hardcore = hardcore;
+    }
+
+    /**
+     * @return the dialogueLines
+     */
+    public static boolean[] getDialogueLines()
+    {
+        return dialogueLines;
+    }
+
+    /**
+     * @param aDialogueLines the dialogueLines to set
+     */
+    public static void setDialogueLines(boolean[] dialogueLines)
+    {
+        NarrativeEngine.dialogueLines = dialogueLines;
+    }
+
+    /**
+     * @return the actionList
+     */
+    public static ArrayList<String> getActionList()
+    {
+        return actionList;
+    }
+
+    /**
+     * @param actionList the action list to set
+     */
+    public static void setActionList(ArrayList<String> actionList)
+    {
+        NarrativeEngine.actionList = actionList;
+    }
+
+    /**
+     * @return the drain
+     */
+    public static boolean isDrain()
+    {
+        return drain;
+    }
+
+    /**
+     * @param aDrain the drain to set
+     */
+    public static void setDrain(boolean drain)
+    {
+        NarrativeEngine.drain = drain;
+    }
+
+    /**
+     * @return the name
+     */
+    public static String getName()
+    {
+        return name;
+    }
+
+    /**
+     * @param aName the name to set
+     */
+    public static void setName(String name)
+    {
+        NarrativeEngine.name = name;
+    }
+
+    /**
+     * @return the cheatsUsed
+     */
+    public static boolean isCheatsUsed()
+    {
+        return cheatsUsed;
+    }
+
+    /**
+     * @param aCheatsUsed the cheatsUsed to set
+     */
+    public static void setCheatsUsed(boolean chheatsUsed)
+    {
+        NarrativeEngine.cheatsUsed = cheatsUsed;
+    }
+
+    /**
+     * @return the scoreText
+     */
+    public static String getScoreText()
+    {
+        return scoreText;
+    }
+
+    /**
+     * @param aScoreText the scoreText to set
+     */
+    public static void setScoreText(String scoreText)
+    {
+        NarrativeEngine.scoreText = scoreText;
+    }
+
+    /**
+     * @return the score
+     */
+    public static int getScore()
+    {
+        return score;
+    }
+
+    /**
+     * @param aScore the score to set
+     */
+    public static void setScore(int score)
+    {
+        NarrativeEngine.score = score;
+    }
+
     //TODO: Refactor
     /**
      * List of all cheats.
@@ -364,8 +491,7 @@ public class NarrativeEngine
         "Calm the teacher down", "Raise your hand", "Make your pee disappear regularly",
         "Set your incontinence level", "Toggle hardcore mode", "Set bladder fulness"
     };
-    
-//    private final String[] askToPeeSuccessText =
+    //    private final String[] askToPeeSuccessText =
 //    {
 //        "You ask the teacher if you can go out to the restroom.",
 //        "Yes, you may.",
@@ -448,8 +574,7 @@ public class NarrativeEngine
             if (isFemale())
             {
                 ui.setText("This is really bad...", "You know that you can't keep it any longer and you may wet yourself in any moment and oh,", "You can clearly see your bladder as it bulging.", "Ahhh... I cant hold it anymore!!!", "Even holding your crotch doesn't seems to help you to keep it in.");
-            }
-            else
+            } else
             {
                 ui.setText("This is really bad...", "You know that you can't keep it any longer and you may wet yourself in any moment and oh,", "You can clearly see your bladder as it bulging.", "Ahhh... I cant hold it anymore!!!", "Even squeezing your penis doesn't seems to help you to keep it in.");
             }
@@ -485,13 +610,11 @@ public class NarrativeEngine
             if (isFemale())
             {
                 getActionList().add("Press on your crotch");
-            }
-            else
+            } else
             {
                 getActionList().add("Squeeze your penis");
             }
-        }
-        else
+        } else
         {
             getActionList().add(ACTION_UNAVAILABLE);
         }
@@ -499,16 +622,14 @@ public class NarrativeEngine
         if (getFulness() >= 100)
         {
             getActionList().add("Give up and pee yourself");
-        }
-        else
+        } else
         {
             getActionList().add(ACTION_UNAVAILABLE);
         }
         if (isHardcore())
         {
             getActionList().add("Drink water");
-        }
-        else
+        } else
         {
             getActionList().add(ACTION_UNAVAILABLE);
         }
@@ -541,139 +662,10 @@ public class NarrativeEngine
         if (isFemale())
         {
             return femaleText;
-        }
-        else
+        } else
         {
             return maleText;
         }
-    }
-
-    /**
-     * @return the hardcore
-     */
-    public static boolean isHardcore()
-    {
-        return hardcore;
-    }
-
-    /**
-     * @param aHardcore the hardcore to set
-     */
-    public static void setHardcore(boolean aHardcore)
-    {
-        hardcore = aHardcore;
-    }
-
-    /**
-     * @return the dialogueLines
-     */
-    public static boolean[] getDialogueLines()
-    {
-        return dialogueLines;
-    }
-
-    /**
-     * @param aDialogueLines the dialogueLines to set
-     */
-    public static void setDialogueLines(boolean[] aDialogueLines)
-    {
-        dialogueLines = aDialogueLines;
-    }
-
-    /**
-     * @return the actionList
-     */
-    public static ArrayList<String> getActionList()
-    {
-        return actionList;
-    }
-
-    /**
-     * @param aActionList the actionList to set
-     */
-    public static void setActionList(ArrayList<String> aActionList)
-    {
-        actionList = aActionList;
-    }
-
-    /**
-     * @return the drain
-     */
-    public static boolean isDrain()
-    {
-        return drain;
-    }
-
-    /**
-     * @param aDrain the drain to set
-     */
-    public static void setDrain(boolean aDrain)
-    {
-        drain = aDrain;
-    }
-
-    /**
-     * @return the name
-     */
-    public static String getName()
-    {
-        return name;
-    }
-
-    /**
-     * @param aName the name to set
-     */
-    public static void setName(String aName)
-    {
-        name = aName;
-    }
-
-    /**
-     * @return the cheatsUsed
-     */
-    public static boolean isCheatsUsed()
-    {
-        return cheatsUsed;
-    }
-
-    /**
-     * @param aCheatsUsed the cheatsUsed to set
-     */
-    public static void setCheatsUsed(boolean aCheatsUsed)
-    {
-        cheatsUsed = aCheatsUsed;
-    }
-
-    /**
-     * @return the scoreText
-     */
-    public static String getScoreText()
-    {
-        return scoreText;
-    }
-
-    /**
-     * @param aScoreText the scoreText to set
-     */
-    public static void setScoreText(String aScoreText)
-    {
-        scoreText = aScoreText;
-    }
-
-    /**
-     * @return the score
-     */
-    public static int getScore()
-    {
-        return score;
-    }
-
-    /**
-     * @param aScore the score to set
-     */
-    public static void setScore(int aScore)
-    {
-        score = aScore;
     }
 
 }

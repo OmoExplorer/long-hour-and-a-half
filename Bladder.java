@@ -341,17 +341,16 @@ public class Bladder
         offsetBelly(ui, -time * 1.5);
         checkClassOver(ui);
         randomlyLeakOnFullBladder();
-        //Processing bladder cycle for every 3 minutes
-        for (int i = 0; i < time; i++)
-        {
-            bladderCycle(ui);
-        }
+        cycleBladder(ui, time);
         //Updating labels
         ui.update();
     }
 
-    private static void bladderCycle(GameFrame ui)
+    private static void cycleBladder(GameFrame ui, short time)
     {
+                                  //TODO: Possible mistake
+        for (int i = 0; i < time; i++)
+        {
         decaySphPower(ui);
         if (getBelly() != 0)
         {
@@ -366,6 +365,7 @@ public class Bladder
             }
         }
         offsetThirst((byte)2);
+        }
     }
 
     private static void offsetThirst(byte amount)
@@ -405,7 +405,6 @@ public class Bladder
         ui.update();
     }
 
-    //TODO: Refactor
     /**
      * Decreases the sphincter power.
      *
@@ -710,6 +709,7 @@ public class Bladder
         return Bladder.getFulness() > min && Bladder.getFulness() < max;
     }
 
+    //TODO
     public static void initCrotchName()
     {
         //Setting "No underwear" insert name depending on character's gender

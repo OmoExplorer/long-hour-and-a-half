@@ -156,7 +156,7 @@ public class StagePool
             public String[] getText()
             {
                 //If lower clothes is a skirt
-                if (revealingLower())
+                if (isLowerRevealing())
                 {
                     setLinesAsDialogue(1, 3);
                     return new String[]
@@ -199,7 +199,7 @@ public class StagePool
             @Override
             public void operate(GameFrame ui)
             {
-                if (revealingLower())
+                if (isLowerRevealing())
                 {
                     offsetEmbarassment(ui, 5);
                 }

@@ -91,6 +91,7 @@ import omo.ui.GameFrame;
 import omo.ui.GameSaveFileChooser;
 import omo.ui.WearFileChooser;
 import omo.ui.setupFramePre;
+import static omo.ResetParametersStorage.*;
 
 /**
  * Provides the basic game functions.
@@ -100,6 +101,7 @@ import omo.ui.setupFramePre;
 @SuppressWarnings("serial")
 public class GameCore
 {
+
     /**
      * JFileChooser object for picking wear files.
      */
@@ -109,6 +111,8 @@ public class GameCore
      * JFileChooser object for picking save files.
      */
     private static GameSaveFileChooser fcGame;
+    private static final String RANDOM_WEAR = "Random";
+    private static final String CUSTOM_WEAR = "Custom";
 
     /**
      * Resets the game and values, optionally letting player to select new
@@ -122,8 +126,7 @@ public class GameCore
         if (newValues)
         {
             new setupFramePre().setVisible(true);
-        }
-        else
+        } else
         {
             new GameCore(ResetParametersStorage.nameParam, ResetParametersStorage.gndrParam, ResetParametersStorage.diffParam, ResetParametersStorage.incParam, ResetParametersStorage.bladderParam, ResetParametersStorage.underParam, ResetParametersStorage.outerParam, ResetParametersStorage.underColorParam, ResetParametersStorage.outerColorParam, new GameFrame());
         }
@@ -177,8 +180,7 @@ public class GameCore
                 fout = new FileOutputStream(file);
                 oos = new ObjectOutputStream(fout);
                 oos.writeObject(save);
-            }
-            catch (IOException e)
+            } catch (IOException e)
             {
                 e.printStackTrace();
                 JOptionPane.showMessageDialog(ui, "File error.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -205,8 +207,7 @@ public class GameCore
                 Save save = (Save) ois.readObject();
                 new GameCore(save, ui);
                 ui.dispose();
-            }
-            catch (IOException | ClassNotFoundException e)
+            } catch (IOException | ClassNotFoundException e)
             {
                 e.printStackTrace();
                 showMessageDialog(ui, "File error.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -251,116 +252,52 @@ public class GameCore
     {
         preConstructor(name, gndr, diff, inc, bladder, ui);
 
-        if (under.equals("Custom"))
+        if (under.equals(CUSTOM_WEAR))
         {
             openWearFile(ui, UNDERWEAR);
         }
 
-        if (under.equals("Random"))
+        if (under.equals(RANDOM_WEAR))
         {
-            setUndies(UNDERWEAR_LIST[NarrativeEngine.RANDOM.nextInt(UNDERWEAR_LIST.length)]);
-            while (getUndies().getName().equals("Random"))
-            //...selecting random undies from the undies array.
-            {
-                setUndies(UNDERWEAR_LIST[NarrativeEngine.RANDOM.nextInt(UNDERWEAR_LIST.length)]);
-            }
-            //If random undies weren't chosen...
-        }
-        else
+            setRandomWear(UNDERWEAR);
+        } else
         {
-            //We look for the selected undies in the array
-            for (Wear iWear : UNDERWEAR_LIST)
-            {
-                //By comparing all possible undies' names with the selected undies string
-                if (iWear.getName().equals(under))
-                {
-                    //If the selected undies were found, assigning current compared undies to the character's undies
-                    setUndies(iWear);
-                    break;
-                }
-            }
+            assignSelectedWear(under, UNDERWEAR);
         }
         //If the selected undies weren't found
         if (getUndies() == null)
         {
             JOptionPane.showMessageDialog(null, "Incorrect underwear selected. Setting random instead.", "Incorrect underwear", JOptionPane.WARNING_MESSAGE);
-            setUndies(UNDERWEAR_LIST[NarrativeEngine.RANDOM.nextInt(UNDERWEAR_LIST.length)]);
+            setRandomWear(UNDERWEAR);
         }
 
-        //Assigning color
-        if (!getUndies().isMissing())
-        {
-            if (!undiesColor.equals("Random"))
-            {
-                getUndies().setColor(undiesColor);
-            }
-            else
-            {
-                getUndies().setColor(Wear.COLOR_LIST[NarrativeEngine.RANDOM.nextInt(Wear.COLOR_LIST.length)]);
-            }
-        }
-        else
-        {
-            getUndies().setColor("");
-        }
+        assignWearColor(undiesColor, UNDERWEAR);
 
-        if (outer.equals("Custom"))
+        if (outer.equals(CUSTOM_WEAR))
         {
             openWearFile(ui, OUTERWEAR);
         }
 
         //Same with the lower clothes
-        if (outer.equals("Random"))
+        if (outer.equals(RANDOM_WEAR))
         {
-            setLower(Bladder.OUTERWEAR_LIST[NarrativeEngine.RANDOM.nextInt(Bladder.OUTERWEAR_LIST.length)]);
-            while (getLower().getName().equals("Random"))
-            {
-                setLower(Bladder.OUTERWEAR_LIST[NarrativeEngine.RANDOM.nextInt(Bladder.OUTERWEAR_LIST.length)]);
-            }
-        }
-        else
+            setRandomWear(OUTERWEAR);
+        } else
         {
-            for (Wear iWear : Bladder.OUTERWEAR_LIST)
-            {
-                if (iWear.getName().equals(outer))
-                {
-                    setLower(iWear);
-                    break;
-                }
-            }
+            assignSelectedWear(outer, OUTERWEAR);
         }
         if (getLower() == null)
         {
             JOptionPane.showMessageDialog(null, "Incorrect outerwear selected. Setting random instead.", "Incorrect outerwear", JOptionPane.WARNING_MESSAGE);
-            setLower(Bladder.OUTERWEAR_LIST[NarrativeEngine.RANDOM.nextInt(Bladder.OUTERWEAR_LIST.length)]);
+            setRandomWear(OUTERWEAR);
         }
 
-        //Assigning color
-        if (!getLower().isMissing())
-        {
-            if (!lowerColor.equals("Random"))
-            {
-                getLower().setColor(lowerColor);
-            }
-            else
-            {
-                getLower().setColor(Wear.COLOR_LIST[NarrativeEngine.RANDOM.nextInt(Wear.COLOR_LIST.length)]);
-            }
-        }
-        else
-        {
-            getLower().setColor("");
-        }
+        assignWearColor(lowerColor, OUTERWEAR);
 
         //Displaying all values
         ui.displayAllValues();
 
-        //Making bladder smaller in the hardcore mode, adding hardcore label
-        if (isHardcore())
-        {
-            setMaxFulness((short) 100);
-            ui.lblName.setText(ui.lblName.getText() + " [Hardcore]");
-        }
+        initHardcoreMode(ui);
 
         //Starting the game
         setFirstStage(leaveBed);
@@ -380,6 +317,97 @@ public class GameCore
         restoreValues(save);
         ui.displayAllValues();
         postConstructor(ui);
+    }
+    
+    private void assignWearColor(String wearColor, WearType type)
+    {
+        if (type == UNDERWEAR)
+        {
+            //Assigning color
+            if (!getUndies().isMissing())
+            {
+                if (!wearColor.equals(RANDOM_WEAR))
+                {
+                    getUndies().setColor(wearColor);
+                } else
+                {
+                    getUndies().setColor(Wear.COLOR_LIST[NarrativeEngine.RANDOM.nextInt(Wear.COLOR_LIST.length)]);
+                }
+            } else
+            {
+                getUndies().setColor("");
+            }
+        }
+        if (type == OUTERWEAR)
+        {
+            //Assigning color
+            if (!getLower().isMissing())
+            {
+                if (!wearColor.equals(RANDOM_WEAR))
+                {
+                    getLower().setColor(wearColor);
+                } else
+                {
+                    getLower().setColor(Wear.COLOR_LIST[NarrativeEngine.RANDOM.nextInt(Wear.COLOR_LIST.length)]);
+                }
+            } else
+            {
+                getLower().setColor("");
+            }
+        }
+    }
+
+    private void assignSelectedWear(String wear, WearType type)
+    {
+        if (type == UNDERWEAR)
+        {
+            //We look for the selected undies in the array
+            for (Wear iWear : UNDERWEAR_LIST)
+            {
+                //By comparing all possible undies' names with the selected undies string
+                if (iWear.getName().equals(wear))
+                {
+                    //If the selected undies were found, assigning current compared undies to the character's undies
+                    setUndies(iWear);
+                    break;
+                }
+            }
+        }
+        if (type == OUTERWEAR)
+        {
+            //We look for the selected undies in the array
+            for (Wear iWear : OUTERWEAR_LIST)
+            {
+                //By comparing all possible undies' names with the selected undies string
+                if (iWear.getName().equals(wear))
+                {
+                    //If the selected undies were found, assigning current compared undies to the character's undies
+                    setLower(iWear);
+                    break;
+                }
+            }
+        }
+    }
+
+    //TODO: Remove duplicate code
+    private void setRandomWear(WearType type)
+    {
+        if (type == UNDERWEAR)
+        {
+            setUndies(UNDERWEAR_LIST[NarrativeEngine.RANDOM.nextInt(UNDERWEAR_LIST.length)]);
+            while (getUndies().getName().equals(RANDOM_WEAR))
+            {
+                setUndies(UNDERWEAR_LIST[NarrativeEngine.RANDOM.nextInt(UNDERWEAR_LIST.length)]);
+            }
+        }
+        if (type == OUTERWEAR)
+        {
+            setLower(OUTERWEAR_LIST[NarrativeEngine.RANDOM.nextInt(OUTERWEAR_LIST.length)]);
+            while (getLower().getName().equals(RANDOM_WEAR))
+            {
+                setUndies(OUTERWEAR_LIST[NarrativeEngine.RANDOM.nextInt(OUTERWEAR_LIST.length)]);
+            }
+        }
     }
 
     private void restoreValues(Save save)
@@ -416,8 +444,7 @@ public class GameCore
         if (type == UNDERWEAR)
         {
             fcWear.setDialogTitle("Open an underwear file");
-        }
-        else
+        } else
         {
             fcWear.setDialogTitle("Open an outerwear file");
         }
@@ -437,8 +464,7 @@ public class GameCore
                         ui.dispose();
                         setupFramePre.main(new String[0]);
                     }
-                }
-                else
+                } else
                 {
                     setLower((Wear) ois.readObject());
                     if (getLower().getType() == UNDERWEAR)
@@ -448,8 +474,7 @@ public class GameCore
                         setupFramePre.main(new String[0]);
                     }
                 }
-            }
-            catch (IOException | ClassNotFoundException e)
+            } catch (IOException | ClassNotFoundException e)
             {
                 JOptionPane.showMessageDialog(null, "File error.", "Error", JOptionPane.ERROR_MESSAGE);
                 ui.dispose();
@@ -474,9 +499,9 @@ public class GameCore
      */
     void preConstructor(String name, Gender gndr, boolean diff, float inc, short bladder, GameFrame ui)
     {
-        stashParametersForReset();
-
         assignFieldValuesFromParameters(name, gndr, diff, inc, bladder);
+
+        stashParametersForReset();
 
         setupFileChoosers(ui);
 
@@ -519,7 +544,6 @@ public class GameCore
 
         ui.handleNextClicked();
 
-        //Displaying the frame
         ui.setVisible(true);
     }
 
@@ -535,18 +559,5 @@ public class GameCore
         {
             score("Hardcore", '*', 2F);
         }
-    }
-
-    private void stashParametersForReset()
-    {
-        //TODO
-        ResetParametersStorage.nameParam = NarrativeEngine.getName();
-        ResetParametersStorage.gndrParam = NarrativeEngine.gender;
-        ResetParametersStorage.incParam = Bladder.getIncontinence();
-        ResetParametersStorage.bladderParam = Bladder.getFulness();
-        ResetParametersStorage.outerParam = getLower().getName();
-        ResetParametersStorage.underParam = getUndies().getName();
-        ResetParametersStorage.underColorParam = getUndies().getColor();
-        ResetParametersStorage.outerColorParam = getLower().getColor();
     }
 }
