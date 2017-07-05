@@ -7,7 +7,6 @@ import omo.ui.GameFrame;
 
 public class StagePool
 {
-
     public static BladderAffectingStage leaveBed;
     public static Stage surpriseAccident;
     public static Stage accident;

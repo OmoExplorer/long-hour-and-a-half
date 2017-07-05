@@ -104,18 +104,8 @@ public class GameFrame extends JFrame
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    /**
-     *
-     * @param the value of
-     * @throws HeadlessException
-     */
     private void showScore()
     {
-        if (isCheatsUsed())
-        {
-            setScore(0);
-            setScoreText("\nYou've used the cheats, so you've got no score.");
-        }
         String scoreText2 = "Your score: " + getScore() + "\n" + getScoreText();
         JOptionPane.showMessageDialog(null, scoreText2);
     }
@@ -1238,7 +1228,7 @@ public class GameFrame extends JFrame
             @Override
             public void mouseClicked(MouseEvent arg0)
             {
-                GameCore.reset(false);
+                GameCore.reset(false, GameFrame.this);
                 dispose();
             }
         });
@@ -1252,7 +1242,7 @@ public class GameFrame extends JFrame
             @Override
             public void mouseClicked(MouseEvent arg0)
             {
-                GameCore.reset(true);
+                GameCore.reset(true, GameFrame.this);
                 dispose();
             }
         });

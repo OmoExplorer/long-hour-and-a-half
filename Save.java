@@ -1,7 +1,10 @@
 package omo;
 
 import java.io.Serializable;
+import static omo.Bladder.*;
+import static omo.NarrativeEngine.*;
 import omo.stage.Stage;
+import static omo.stage.StageEngine.*;
 
 /**
  * All game values storage for saving into a file.
@@ -35,6 +38,26 @@ public class Save implements Serializable //"implements Serializable" is require
     boolean stay;
     boolean cornered;
     boolean drain;
-    boolean cheatsUsed;
     String boyName;
+
+    void restoreValues()
+    {
+        setUndies(this.underwear);
+        setLower(this.outerwear);
+        setEmbarassment(this.embarassment);
+        setDryness(this.dryness);
+        setMaxSphincterPower(this.maxSphincterPower);
+        setSphincterPower(this.sphincterPower);
+        setTime(this.time);
+        rotatePlot(this.stage);
+        setScore(this.score);
+        setScoreText(this.scoreText);
+        setTimesPeeDenied(this.timesPeeDenied);
+        NarrativeEngine.timesCaught = this.timesCaught;
+        NarrativeEngine.classmatesAwareness = this.classmatesAwareness;
+        NarrativeEngine.stay = this.stay;
+        setCornered(this.cornered);
+        setDrain(this.drain);
+        NarrativeEngine.boyName = this.boyName;
+    }
 }

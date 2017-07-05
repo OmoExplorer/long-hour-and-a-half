@@ -1,7 +1,5 @@
 package omo.stage;
 
-import omo.stage.Stage;
-
 /**
  * Action variant used in selection stages.
  *
@@ -9,9 +7,9 @@ import omo.stage.Stage;
  */
 public class Action
 {
-	/**
-	 * Action name, for example "Hold crotch".
-	 */
+    /**
+     * Action name, for example "Hold crotch".
+     */
     private String name;
     
     /**

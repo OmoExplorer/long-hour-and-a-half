@@ -83,6 +83,7 @@ import javax.swing.*;
 import static javax.swing.JOptionPane.showMessageDialog;
 import static omo.Bladder.*;
 import static omo.NarrativeEngine.*;
+import static omo.ResetParametersStorage.*;
 import omo.Wear.WearType;
 import static omo.Wear.WearType.*;
 import static omo.stage.StageEngine.*;
@@ -91,7 +92,6 @@ import omo.ui.GameFrame;
 import omo.ui.GameSaveFileChooser;
 import omo.ui.WearFileChooser;
 import omo.ui.setupFramePre;
-import static omo.ResetParametersStorage.*;
 
 /**
  * Provides the basic game functions.
@@ -111,22 +111,23 @@ public class GameCore
      * JFileChooser object for picking save files.
      */
     private static GameSaveFileChooser fcGame;
-    private static final String RANDOM_WEAR = "Random";
-    private static final String CUSTOM_WEAR = "Custom";
-
+    
     /**
      * Resets the game and values, optionally letting player to select new
      * parameters.
      *
      * @param newValues
+     * @param ui
      */
     @SuppressWarnings("ResultOfObjectAllocationIgnored")
-    public static void reset(boolean newValues)
+    public static void reset(boolean newValues, GameFrame ui)
     {
         if (newValues)
         {
             new setupFramePre().setVisible(true);
-        } else
+            ui.dispose();
+        }
+        else
         {
             new GameCore(ResetParametersStorage.nameParam, ResetParametersStorage.gndrParam, ResetParametersStorage.diffParam, ResetParametersStorage.incParam, ResetParametersStorage.bladderParam, ResetParametersStorage.underParam, ResetParametersStorage.outerParam, ResetParametersStorage.underColorParam, ResetParametersStorage.outerColorParam, new GameFrame());
         }
@@ -173,14 +174,14 @@ public class GameCore
                 save.stay = NarrativeEngine.stay;
                 save.cornered = NarrativeEngine.isCornered();
                 save.drain = NarrativeEngine.isDrain();
-                save.cheatsUsed = NarrativeEngine.isCheatsUsed();
                 save.boyName = NarrativeEngine.boyName;
 
 //                writer = new PrintStream(file);
                 fout = new FileOutputStream(file);
                 oos = new ObjectOutputStream(fout);
                 oos.writeObject(save);
-            } catch (IOException e)
+            }
+            catch (IOException e)
             {
                 e.printStackTrace();
                 JOptionPane.showMessageDialog(ui, "File error.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -207,7 +208,8 @@ public class GameCore
                 Save save = (Save) ois.readObject();
                 new GameCore(save, ui);
                 ui.dispose();
-            } catch (IOException | ClassNotFoundException e)
+            }
+            catch (IOException | ClassNotFoundException e)
             {
                 e.printStackTrace();
                 showMessageDialog(ui, "File error.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -252,15 +254,16 @@ public class GameCore
     {
         preConstructor(name, gndr, diff, inc, bladder, ui);
 
-        if (under.equals(CUSTOM_WEAR))
+        if (under.equals(Wear.CUSTOM_WEAR))
         {
             openWearFile(ui, UNDERWEAR);
         }
 
-        if (under.equals(RANDOM_WEAR))
+        if (under.equals(Wear.RANDOM_WEAR))
         {
             setRandomWear(UNDERWEAR);
-        } else
+        }
+        else
         {
             assignSelectedWear(under, UNDERWEAR);
         }
@@ -273,16 +276,17 @@ public class GameCore
 
         assignWearColor(undiesColor, UNDERWEAR);
 
-        if (outer.equals(CUSTOM_WEAR))
+        if (outer.equals(Wear.CUSTOM_WEAR))
         {
             openWearFile(ui, OUTERWEAR);
         }
 
         //Same with the lower clothes
-        if (outer.equals(RANDOM_WEAR))
+        if (outer.equals(Wear.RANDOM_WEAR))
         {
             setRandomWear(OUTERWEAR);
-        } else
+        }
+        else
         {
             assignSelectedWear(outer, OUTERWEAR);
         }
@@ -314,11 +318,11 @@ public class GameCore
     public GameCore(Save save, GameFrame ui)
     {
         preConstructor(save.name, save.gender, save.hardcore, save.incontinence, save.bladder, ui);
-        restoreValues(save);
+        save.restoreValues();
         ui.displayAllValues();
         postConstructor(ui);
     }
-    
+
     private void assignWearColor(String wearColor, WearType type)
     {
         if (type == UNDERWEAR)
@@ -326,14 +330,16 @@ public class GameCore
             //Assigning color
             if (!getUndies().isMissing())
             {
-                if (!wearColor.equals(RANDOM_WEAR))
+                if (!wearColor.equals(Wear.RANDOM_WEAR))
                 {
                     getUndies().setColor(wearColor);
-                } else
+                }
+                else
                 {
                     getUndies().setColor(Wear.COLOR_LIST[NarrativeEngine.RANDOM.nextInt(Wear.COLOR_LIST.length)]);
                 }
-            } else
+            }
+            else
             {
                 getUndies().setColor("");
             }
@@ -343,14 +349,16 @@ public class GameCore
             //Assigning color
             if (!getLower().isMissing())
             {
-                if (!wearColor.equals(RANDOM_WEAR))
+                if (!wearColor.equals(Wear.RANDOM_WEAR))
                 {
                     getLower().setColor(wearColor);
-                } else
+                }
+                else
                 {
                     getLower().setColor(Wear.COLOR_LIST[NarrativeEngine.RANDOM.nextInt(Wear.COLOR_LIST.length)]);
                 }
-            } else
+            }
+            else
             {
                 getLower().setColor("");
             }
@@ -389,47 +397,24 @@ public class GameCore
         }
     }
 
-    //TODO: Remove duplicate code
     private void setRandomWear(WearType type)
     {
         if (type == UNDERWEAR)
         {
-            setUndies(UNDERWEAR_LIST[NarrativeEngine.RANDOM.nextInt(UNDERWEAR_LIST.length)]);
-            while (getUndies().getName().equals(RANDOM_WEAR))
+            do
             {
                 setUndies(UNDERWEAR_LIST[NarrativeEngine.RANDOM.nextInt(UNDERWEAR_LIST.length)]);
             }
+            while (getUndies().getName().equals(Wear.RANDOM_WEAR));
         }
         if (type == OUTERWEAR)
         {
-            setLower(OUTERWEAR_LIST[NarrativeEngine.RANDOM.nextInt(OUTERWEAR_LIST.length)]);
-            while (getLower().getName().equals(RANDOM_WEAR))
+            do
             {
-                setUndies(OUTERWEAR_LIST[NarrativeEngine.RANDOM.nextInt(OUTERWEAR_LIST.length)]);
+                setLower(OUTERWEAR_LIST[NarrativeEngine.RANDOM.nextInt(OUTERWEAR_LIST.length)]);
             }
+            while (getLower().getName().equals(Wear.RANDOM_WEAR));
         }
-    }
-
-    private void restoreValues(Save save)
-    {
-        setUndies(save.underwear);
-        setLower(save.outerwear);
-        setEmbarassment(save.embarassment);
-        setDryness(save.dryness);
-        setMaxSphincterPower(save.maxSphincterPower);
-        setSphincterPower(save.sphincterPower);
-        setTime(save.time);
-        rotatePlot(save.stage);
-        setScore(save.score);
-        setScoreText(save.scoreText);
-        setTimesPeeDenied(save.timesPeeDenied);
-        timesCaught = save.timesCaught;
-        classmatesAwareness = save.classmatesAwareness;
-        stay = save.stay;
-        setCornered(save.cornered);
-        setDrain(save.drain);
-        setCheatsUsed(save.cheatsUsed);
-        boyName = save.boyName;
     }
 
     /**
@@ -444,7 +429,8 @@ public class GameCore
         if (type == UNDERWEAR)
         {
             fcWear.setDialogTitle("Open an underwear file");
-        } else
+        }
+        else
         {
             fcWear.setDialogTitle("Open an outerwear file");
         }
@@ -464,7 +450,8 @@ public class GameCore
                         ui.dispose();
                         setupFramePre.main(new String[0]);
                     }
-                } else
+                }
+                else
                 {
                     setLower((Wear) ois.readObject());
                     if (getLower().getType() == UNDERWEAR)
@@ -474,7 +461,8 @@ public class GameCore
                         setupFramePre.main(new String[0]);
                     }
                 }
-            } catch (IOException | ClassNotFoundException e)
+            }
+            catch (IOException | ClassNotFoundException e)
             {
                 JOptionPane.showMessageDialog(null, "File error.", "Error", JOptionPane.ERROR_MESSAGE);
                 ui.dispose();

@@ -72,12 +72,6 @@ public class NarrativeEngine
     };
 
     /**
-     * Whether or not pee drain cheat enabled: pee mysteriously vanishes every
-     * 15 minutes.
-     */
-    private static boolean drain = false;
-
-    /**
      * Special hardcore scene boy name.
      */
     static String boyName = BOY_NAMES[RANDOM.nextInt(BOY_NAMES.length)];
@@ -91,11 +85,6 @@ public class NarrativeEngine
      * Whether or not charecter has to stay 30 minutes after class.
      */
     static boolean stay = false;
-
-    /**
-     * Whether or not player has used cheats.
-     */
-    private static boolean cheatsUsed = false;
 
     /**
      * Number of times player got caught holding pee.
@@ -117,7 +106,7 @@ public class NarrativeEngine
     /**
      * A number that shows a game difficulty - the higher score, the harder was
      * the game. Specific actions (for example, peeing in a restroom during a
-     * lesson) reduce score points. Using the cheats will zero the score points.
+     * lesson) reduce score points.
      */
     private static int score = 0;
 
@@ -434,22 +423,6 @@ public class NarrativeEngine
     }
 
     /**
-     * @return the cheatsUsed
-     */
-    public static boolean isCheatsUsed()
-    {
-        return cheatsUsed;
-    }
-
-    /**
-     * @param aCheatsUsed the cheatsUsed to set
-     */
-    public static void setCheatsUsed(boolean chheatsUsed)
-    {
-        NarrativeEngine.cheatsUsed = cheatsUsed;
-    }
-
-    /**
      * @return the scoreText
      */
     public static String getScoreText()
@@ -481,16 +454,6 @@ public class NarrativeEngine
         NarrativeEngine.score = score;
     }
 
-    //TODO: Refactor
-    /**
-     * List of all cheats.
-     */
-    final String[] CHEAT_LIST =
-    {
-        "Go to the corner", "Stay after class", "Pee in a bottle", "End class right now",
-        "Calm the teacher down", "Raise your hand", "Make your pee disappear regularly",
-        "Set your incontinence level", "Toggle hardcore mode", "Set bladder fulness"
-    };
     //    private final String[] askToPeeSuccessText =
 //    {
 //        "You ask the teacher if you can go out to the restroom.",
@@ -634,7 +597,6 @@ public class NarrativeEngine
             getActionList().add(ACTION_UNAVAILABLE);
         }
         getActionList().add("Just wait");
-        getActionList().add("Cheat (will reset your score)");
     }
 
     /**

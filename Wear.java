@@ -18,6 +18,8 @@ public class Wear implements Serializable //"implements Serializable" is require
     };
     
     private static final long serialVersionUID = 1L;
+    static final String CUSTOM_WEAR = "Custom";
+    static final String RANDOM_WEAR = "Random";
 
     /**
      * The wear name (e. g. "Regular panties")

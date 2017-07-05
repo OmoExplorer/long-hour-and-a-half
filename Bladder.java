@@ -201,21 +201,6 @@ public class Bladder
         }
     }
 
-    //This may be problematic
-    /**
-     * Empties a bladder every 15 in-game minutes if corresponding cheat is
-     * enabled.
-     *
-     * @param ui {@code GameFrame} object to update values
-     */
-    private static void drain(GameFrame ui)
-    {
-        if (NarrativeEngine.isDrain() & (getTime() % 15) == 0)
-        {
-            emptyBladder(ui);
-        }
-    }
-
     /**
      * Offsets bladder fulness by a specified amount.
      *
