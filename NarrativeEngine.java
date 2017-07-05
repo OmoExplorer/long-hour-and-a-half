@@ -10,6 +10,8 @@ import static omo.stage.StagePool.caughtHoldingPee;
 import omo.ui.GameFrame;
 import static omo.ui.GameFrame.MAX_LINES;
 
+//TODO: Break down
+//TODO: Remove old stage engine functinality
 @SuppressWarnings("PackageVisibleField")
 public class NarrativeEngine
 {
@@ -157,7 +159,7 @@ public class NarrativeEngine
         return new String[0];
     }
 
-    static boolean chance(byte chance)
+    public static boolean chance(byte chance)
     {
         return RANDOM.nextInt(100) <= chance;
     }
@@ -388,22 +390,6 @@ public class NarrativeEngine
     public static void setActionList(ArrayList<String> actionList)
     {
         NarrativeEngine.actionList = actionList;
-    }
-
-    /**
-     * @return the drain
-     */
-    public static boolean isDrain()
-    {
-        return drain;
-    }
-
-    /**
-     * @param aDrain the drain to set
-     */
-    public static void setDrain(boolean drain)
-    {
-        NarrativeEngine.drain = drain;
     }
 
     /**

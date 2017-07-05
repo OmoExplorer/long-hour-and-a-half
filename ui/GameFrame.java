@@ -68,7 +68,7 @@ public class GameFrame extends JFrame
      *
      * @param lines the in-game text to set
      */
-    @SuppressWarnings(value = "UseOfSystemOutOrSystemErr")
+    @SuppressWarnings("UseOfSystemOutOrSystemErr")
     public void setText(String... lines)
     {
         if (lines.length > GameFrame.MAX_LINES)

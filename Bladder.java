@@ -178,7 +178,6 @@ public class Bladder
     public static void offsetTime(GameFrame ui, int amount)
     {
         setTime((byte) (getTime() + amount));
-        drain(ui);
         dryClothesOverTime(amount);
         ui.update();
     }
@@ -259,7 +258,6 @@ public class Bladder
         ui.update();
     }
 
-
     /**
      * Empties the belly.
      *
@@ -324,8 +322,6 @@ public class Bladder
         offsetTime(ui, time);
         offsetBladder(ui, time * 1.5);
         offsetBelly(ui, -time * 1.5);
-        checkClassOver(ui);
-        randomlyLeakOnFullBladder();
         cycleBladder(ui, time);
         //Updating labels
         ui.update();
@@ -333,23 +329,24 @@ public class Bladder
 
     private static void cycleBladder(GameFrame ui, short time)
     {
-                                  //TODO: Possible mistake
-        for (int i = 0; i < time; i++)
+        for (int i = 0; i < time; i+=3)
         {
-        decaySphPower(ui);
-        if (getBelly() != 0)
-        {
-            if (getBelly() > 3)
+            decaySphPower(ui);
+            if (getBelly() != 0)
             {
-                offsetBladder(ui, 2);
+                if (getBelly() > 3)
+                {
+                    offsetBladder(ui, 2);
+                }
+                else
+                {
+                    offsetBladder(ui, getBelly());
+                    emptyBelly(ui);
+                }
             }
-            else
-            {
-                offsetBladder(ui, getBelly());
-                emptyBelly(ui);
-            }
-        }
-        offsetThirst((byte)2);
+            offsetThirst((byte) 2);
+            randomlyLeakOnFullBladder();
+            checkClassOver(ui);
         }
     }
 
@@ -367,7 +364,7 @@ public class Bladder
 
     private static void checkClassOver(GameFrame ui)
     {
-        if (Bladder.getTime() >= 88)
+        if (Bladder.getTime() >= 90)
         {
             ui.setText("You hear the bell finally ring.");
             rotatePlot(classOver);
@@ -403,12 +400,12 @@ public class Bladder
             setDryness(getDryness() - 5); //Decreasing dryness
             setFulness((short) (getFulness() - 2.5)); //Decreasing bladder level
             setSphincterPower((short) 0);
-            peeingAlert(ui);
+            leakingAlert(ui);
         }
         ui.update();
     }
 
-    private static void peeingAlert(GameFrame ui)
+    private static void leakingAlert(GameFrame ui)
     {
         if (getDryness() > MINIMAL_DRYNESS)
         {
@@ -466,7 +463,6 @@ public class Bladder
 
     /**
      * Empties the bladder.
-     *
      */
     static void emptyBladder(GameFrame ui)
     {

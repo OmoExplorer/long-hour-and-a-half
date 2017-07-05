@@ -2,6 +2,7 @@ package omo.stage;
 
 import java.util.ArrayList;
 import static omo.Bladder.*;
+import omo.NarrativeEngine;
 import static omo.NarrativeEngine.*;
 import omo.ui.GameFrame;
 
@@ -14,7 +15,7 @@ public class StagePool
     public static Stage classOver;
     public static Stage caughtHoldingPee;
     public static Stage calledOn;
-    
+
     BladderAffectingStage leaveHome;
     BladderAffectingStage arrivedToClass;
     BladderAffectingStage walkIn;
@@ -24,7 +25,7 @@ public class StagePool
 
     public static BladderAffectingStage surprise;
     public static BladderAffectingStage writeLines;
-    
+
     public StagePool()
     {
         leaveBed = new BladderAffectingStage(leaveHome, (short) 3)
@@ -227,30 +228,29 @@ public class StagePool
         };
 
         ArrayList<Action> customSchoolHoldingActions = new ArrayList<>();
-        customSchoolHoldingActions.add
-        (
-            new Action(askTeacherToPee)
+        customSchoolHoldingActions.add(
+                new Action(askTeacherToPee)
+        {
+            @Override
+            public String getName()
             {
-                @Override
-                public String getName()
+                switch (getTimesPeeDenied())
                 {
-                    switch (getTimesPeeDenied())
-                    {
-                        case 0:
-                            return "Ask teacher to go pee";
-                        case 1:
-                            return "Ask the teacher to go pee again";
-                        case 2:
-                            return "Try to ask the teacher again";
-                        case 3:
-                            return "Take a chance and ask the teacher (RISKY)";
-                        default:
-                            return ACTION_UNAVAILABLE;
-                    }
+                    case 0:
+                        return "Ask teacher to go pee";
+                    case 1:
+                        return "Ask the teacher to go pee again";
+                    case 2:
+                        return "Try to ask the teacher again";
+                    case 3:
+                        return "Take a chance and ask the teacher (RISKY)";
+                    default:
+                        return ACTION_UNAVAILABLE;
                 }
             }
+        }
         );
-        
+
         schoolHolding = new HoldingStage(customSchoolHoldingActions, (short) 2)
         {
             @Override
@@ -292,6 +292,108 @@ public class StagePool
                             "Even holding your crotch doesn't seems to help you to keep it in."
                         });
             }
+        };
+
+        askTeacherToPee = new Stage()
+        {
+            boolean success = NarrativeEngine.chance((byte) (40 / getTimesPeeDenied()));
+            boolean punishmentType = RANDOM.nextBoolean();
+
+            public String[] getText()
+            {
+                if (success)
+                {
+                    return getWearDependentText(
+                            new String[]
+                            {
+                                "You ask the teacher if you can go out to the restroom.",
+                                "Yes, you may.",
+                                "says the teacher.",
+                                "You run to the restroom.",
+                                "You enter it, pulled down your " + getLower().insert() + " and " + getUndies().insert() + ",",
+                                "wearily flop down on the toilet and start peeing."
+                            },
+                            new String[]
+                            {
+                                "You ask the teacher if you can go out to the restroom.",
+                                "Yes, you may.",
+                                "says the teacher.",
+                                "You run to the restroom.",
+                                "You enter it, pulled down your " + getLower().insert() + ",",
+                                "wearily flop down on the toilet and start peeing."
+                            },
+                            new String[]
+                            {
+                                "You ask the teacher if you can go out to the restroom.",
+                                "Yes, you may.",
+                                "says the teacher.",
+                                "You run to the restroom.",
+                                "You enter it, pulled down your " + getUndies().insert() + ",",
+                                "wearily flop down on the toilet and start peeing."
+                            },
+                            new String[]
+                            {
+                                "You ask the teacher if you can go out to the restroom.",
+                                "Yes, you may.",
+                                "says the teacher.",
+                                "You run to the restroom.",
+                                "You enter it,",
+                                "wearily flop down on the toilet and start peeing."
+                            });
+                }
+                else
+                {
+                    switch (getTimesPeeDenied())
+                    {
+                        case 0:
+                            return new String[]
+                            {
+                                "You ask the teacher if you can go out to the restroom.",
+                                "No, you can't go out, the director prohibited it.",
+                                "says the teacher."
+                            };
+                        case 1:
+                            return new String[]
+                            {
+                                "You ask the teacher again if you can go out to the restroom.",
+                                "No, you can't! I already told you that the director prohibited it!",
+                                "says the teacher."
+                            };
+                        case 2:
+                            return new String[]
+                            {
+                                "You ask the teacher once more if you can go out to the restroom.",
+                                "No, you can't! Stop asking me or there will be consequences!",
+                                "says the teacher."
+                            };
+                        case 3:
+                            if (punishmentType)
+                            {
+                                return new String[]
+                                {
+                                    "Desperately, you ask the teacher if you can go out to the restroom.",
+                                    "NO!! NO!! NO!!! YOU CAN'T GO OUT!!! STAY IN THAT CORNER!!!,",
+                                    "yells the teacher."
+                                };
+                            }
+                            else
+                            {
+                                return new String[]
+                                {
+                                    "Desperately, you ask the teacher if you can go out to the restroom.",
+                                    "NO!! NO!! NO!!! YOU CAN'T GO OUT!!! YOU WILL WRITE LINES AFTER THE LESSON!!!,",
+                                    "yells the teacher."
+                                };
+                            }
+                    }
+                    return null;
+                }
+            }
+        };
+        
+        classOver = new BladderAffectingStage((short)2)
+        {
+            
         };
     }
 }
