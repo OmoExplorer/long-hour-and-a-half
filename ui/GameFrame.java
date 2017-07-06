@@ -21,6 +21,7 @@ import static omo.Bladder.*;
 import omo.GameCore;
 import omo.NarrativeEngine;
 import static omo.NarrativeEngine.*;
+import omo.Save;
 
 public class GameFrame extends JFrame
 {
@@ -41,7 +42,7 @@ public class GameFrame extends JFrame
     private JButton btnNewGame;
     JLabel lblSphPower;
 
-    private JList<Object> listChoice;
+    public JList<Object> listChoice;
     private JButton btnLoad;
     private JLabel lblIncon;
     private JLabel lblUndies;
@@ -1117,6 +1118,7 @@ public class GameFrame extends JFrame
     public void gameOver()
     {
         btnNext.setVisible(false);
+        showScore();
     }
 
     byte hideActionUI()
@@ -1204,7 +1206,7 @@ public class GameFrame extends JFrame
             @Override
             public void mouseClicked(MouseEvent arg0)
             {
-                GameCore.save(GameFrame.this);
+                Save.save(GameFrame.this);
             }
         });
         btnSave.setBounds(284, GameFrame.ACTION_BUTTONS_TOP_BORDER, GameFrame.ACTION_BUTTONS_WIDTH, GameFrame.ACTION_BUTTONS_HEIGHT);
@@ -1216,7 +1218,7 @@ public class GameFrame extends JFrame
             @Override
             public void mouseClicked(MouseEvent arg0)
             {
-                GameCore.load(GameFrame.this);
+                Save.load(GameFrame.this);
             }
         });
         btnLoad.setBounds(376, GameFrame.ACTION_BUTTONS_TOP_BORDER, GameFrame.ACTION_BUTTONS_WIDTH, GameFrame.ACTION_BUTTONS_HEIGHT);

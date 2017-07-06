@@ -39,7 +39,7 @@ import omo.Save;
  *
  * @author JavaBird
  */
-public class setupFramePre extends javax.swing.JFrame
+public class SetupFrame extends javax.swing.JFrame
 {
 
     private static final long serialVersionUID = 1L;
@@ -52,7 +52,7 @@ public class setupFramePre extends javax.swing.JFrame
     /**
      * Creates new form setupFrame
      */
-    public setupFramePre()
+    public SetupFrame()
     {
         fcWear = new JFileChooser();
         fcWear.setFileFilter(new FileFilter()
@@ -1721,8 +1721,10 @@ public class setupFramePre extends javax.swing.JFrame
         }
         catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex)
         {
-            java.util.logging.Logger.getLogger(setupFramePre.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SetupFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 
@@ -1732,7 +1734,7 @@ public class setupFramePre extends javax.swing.JFrame
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() ->
         {
-            new setupFramePre().setVisible(true);
+            new SetupFrame().setVisible(true);
         });
     }
 

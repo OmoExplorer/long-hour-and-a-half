@@ -1,7 +1,6 @@
 package omo.stage;
 
 import static omo.Bladder.*;
-import static omo.NarrativeEngine.*;
 import omo.ui.GameFrame;
 
 class RubThigsStage extends Stage
@@ -21,6 +20,5 @@ class RubThigsStage extends Stage
     {
         rechargeSphPower(ui, 2);
         offsetTime(ui, 3);
-        getCaughtByClassmates();
     }
 }

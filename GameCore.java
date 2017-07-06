@@ -75,12 +75,9 @@ package omo;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import javax.swing.*;
-import static javax.swing.JOptionPane.showMessageDialog;
 import static omo.Bladder.*;
 import static omo.NarrativeEngine.*;
 import static omo.ResetParametersStorage.*;
@@ -91,7 +88,7 @@ import static omo.stage.StagePool.leaveBed;
 import omo.ui.GameFrame;
 import omo.ui.GameSaveFileChooser;
 import omo.ui.WearFileChooser;
-import omo.ui.setupFramePre;
+import omo.ui.SetupFrame;
 
 /**
  * Provides the basic game functions.
@@ -117,103 +114,19 @@ public class GameCore
      * parameters.
      *
      * @param newValues
-     * @param ui
+     * @param ui {@link GameFrame} object to update the interface
      */
     @SuppressWarnings("ResultOfObjectAllocationIgnored")
     public static void reset(boolean newValues, GameFrame ui)
     {
         if (newValues)
         {
-            new setupFramePre().setVisible(true);
+            new SetupFrame().setVisible(true);
             ui.dispose();
         }
         else
         {
             new GameCore(ResetParametersStorage.nameParam, ResetParametersStorage.gndrParam, ResetParametersStorage.diffParam, ResetParametersStorage.incParam, ResetParametersStorage.bladderParam, ResetParametersStorage.underParam, ResetParametersStorage.outerParam, ResetParametersStorage.underColorParam, ResetParametersStorage.outerColorParam, new GameFrame());
-        }
-    }
-
-    /**
-     * Creates new {@link Save} object, writes current game values into it and
-     * saves an object into a file.
-     *
-     * @param ui {@link GameFrame} object to show the file selector dialog
-     * relative to.
-     * @see Save
-     */
-    public static void save(GameFrame ui)
-    {
-        fcGame.setSelectedFile(new File(getName()));
-        if (fcGame.showSaveDialog(ui) == JFileChooser.APPROVE_OPTION)
-        {
-            File file = new File(fcGame.getSelectedFile().getAbsolutePath() + ".lhhsav");
-//            PrintStream writer;
-            FileOutputStream fout;
-            ObjectOutputStream oos;
-            try
-            {
-                Save save = new Save();
-                save.name = getName();
-                save.gender = gender;
-                save.hardcore = isHardcore(); //TODO
-                save.incontinence = getIncontinence();
-                save.bladder = getFulness();
-                save.underwear = getUndies();
-                save.outerwear = getLower();
-                save.embarassment = getEmbarassment();
-                save.dryness = getDryness();
-                save.maxSphincterPower = getMaxSphincterPower();
-                save.sphincterPower = getSphincterPower();
-                save.time = getTime();
-                save.stage = getCurrentStage();
-                save.score = NarrativeEngine.getScore();
-                save.scoreText = NarrativeEngine.getScoreText();
-                save.timesPeeDenied = NarrativeEngine.getTimesPeeDenied();
-                save.timesCaught = NarrativeEngine.timesCaught;
-                save.classmatesAwareness = NarrativeEngine.classmatesAwareness;
-                save.stay = NarrativeEngine.stay;
-                save.cornered = NarrativeEngine.isCornered();
-                save.drain = NarrativeEngine.isDrain();
-                save.boyName = NarrativeEngine.boyName;
-
-//                writer = new PrintStream(file);
-                fout = new FileOutputStream(file);
-                oos = new ObjectOutputStream(fout);
-                oos.writeObject(save);
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(ui, "File error.", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-
-        }
-    }
-
-    /**
-     * Opens a Save} object, reads game values and applies them.
-     *
-     * @param ui GameFrame} object to show the file selector dialog relative to.
-     */
-    @SuppressWarnings("ResultOfObjectAllocationIgnored")
-    public static void load(GameFrame ui)
-    {
-        if (fcGame.showOpenDialog(ui) == JFileChooser.APPROVE_OPTION)
-        {
-            File file = fcGame.getSelectedFile();
-            try
-            {
-                FileInputStream fin = new FileInputStream(file);
-                ObjectInputStream ois = new ObjectInputStream(fin);
-                Save save = (Save) ois.readObject();
-                new GameCore(save, ui);
-                ui.dispose();
-            }
-            catch (IOException | ClassNotFoundException e)
-            {
-                e.printStackTrace();
-                showMessageDialog(ui, "File error.", "Error", JOptionPane.ERROR_MESSAGE);
-            }
         }
     }
 
@@ -448,7 +361,7 @@ public class GameCore
                     {
                         JOptionPane.showMessageDialog(null, "This isn't an underwear.", "Wrong wear type", JOptionPane.ERROR_MESSAGE);
                         ui.dispose();
-                        setupFramePre.main(new String[0]);
+                        SetupFrame.main(new String[0]);
                     }
                 }
                 else
@@ -458,7 +371,7 @@ public class GameCore
                     {
                         JOptionPane.showMessageDialog(null, "This isn't an outerwear.", "Wrong wear type", JOptionPane.ERROR_MESSAGE);
                         ui.dispose();
-                        setupFramePre.main(new String[0]);
+                        SetupFrame.main(new String[0]);
                     }
                 }
             }
@@ -466,7 +379,7 @@ public class GameCore
             {
                 JOptionPane.showMessageDialog(null, "File error.", "Error", JOptionPane.ERROR_MESSAGE);
                 ui.dispose();
-                setupFramePre.main(new String[0]);
+                SetupFrame.main(new String[0]);
             }
         }
     }

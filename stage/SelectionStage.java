@@ -1,6 +1,7 @@
 package omo.stage;
 
 import java.util.ArrayList;
+import omo.ui.GameFrame;
 
 public class SelectionStage extends Stage
 {
@@ -47,5 +48,11 @@ public class SelectionStage extends Stage
     void addAction(Action action)
     {
         actions.add(action);
+    }
+    
+    void runAction(GameFrame ui)
+    {
+        Action selection = (Action)ui.listChoice.getSelectedValue();
+        StageEngine.rotatePlot(selection.getActionStage());
     }
 }

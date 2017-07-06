@@ -6,7 +6,7 @@ package omo.stage;
  * @author JavaBird
  */
 public class Action
-{
+{    
     /**
      * Action name, for example "Hold crotch".
      */
@@ -49,6 +49,12 @@ public class Action
         this.actionStage = actionStage;
     }
     
+    @Override
+    public String toString()
+    {
+        return name;
+    }
+    
     /**
      * @return the name
      */
@@ -63,5 +69,13 @@ public class Action
     public void setName(String name)
     {
         this.name = name;
+    }
+
+    /**
+     * @return the actionStage
+     */
+    public Stage getActionStage()
+    {
+        return actionStage;
     }
 }

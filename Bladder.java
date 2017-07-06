@@ -463,8 +463,9 @@ public class Bladder
 
     /**
      * Empties the bladder.
+     * @param ui
      */
-    static void empty(GameFrame ui)
+    public static void empty(GameFrame ui)
     {
         setFulness((short) 0);
         ui.update();

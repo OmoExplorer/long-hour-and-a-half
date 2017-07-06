@@ -6,7 +6,6 @@ import static omo.Bladder.*;
 import static omo.Gender.*;
 import omo.stage.StageEngine;
 import omo.stage.StagePool;
-import static omo.stage.StagePool.caughtHoldingPee;
 import omo.ui.GameFrame;
 import static omo.ui.GameFrame.MAX_LINES;
 
@@ -44,7 +43,7 @@ public class NarrativeEngine
     /**
      * Amount of embarassment raising every time character caught holding pee.
      */
-    static short classmatesAwareness = 0;
+    public static short classmatesAwareness = 0;
 
     /**
      * Current character gender.
@@ -76,7 +75,7 @@ public class NarrativeEngine
     /**
      * Special hardcore scene boy name.
      */
-    static String boyName = BOY_NAMES[RANDOM.nextInt(BOY_NAMES.length)];
+    public static String boyName = BOY_NAMES[RANDOM.nextInt(BOY_NAMES.length)];
 
     /**
      * Character's name.
@@ -91,7 +90,7 @@ public class NarrativeEngine
     /**
      * Number of times player got caught holding pee.
      */
-    static byte timesCaught = 0;
+    public static byte timesCaught = 0;
 
     /**
      * Whether or not character currently stands in the corner and unable to
@@ -162,18 +161,6 @@ public class NarrativeEngine
     public static boolean chance(byte chance)
     {
         return RANDOM.nextInt(100) <= chance;
-    }
-
-    /**
-     *
-     */
-    public static void getCaughtByClassmates()
-    {
-        //Chance to be caught by classmates in hardcore mode
-        if (RANDOM.nextInt(100) <= 15 + classmatesAwareness & isHardcore())
-        {
-            StageEngine.rotatePlot(caughtHoldingPee);
-        }
     }
 
     /**
@@ -583,20 +570,6 @@ public class NarrativeEngine
             getActionList().add(ACTION_UNAVAILABLE);
         }
         getActionList().add("Just wait");
-    }
-
-    /**
-     *
-     * @return the boolean
-     */
-    private void getCalledByTeacher(GameFrame ui)
-    {
-        //Called by teacher if unlucky
-        if (RANDOM.nextInt(20) == 5)
-        {
-            ui.setText("Suddenly, you hear the teacher call your name.");
-            StageEngine.rotatePlot(StagePool.calledOn);
-        }
     }
 
     /**

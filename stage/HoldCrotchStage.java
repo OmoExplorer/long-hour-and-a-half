@@ -1,7 +1,6 @@
 package omo.stage;
 
 import static omo.Bladder.*;
-import static omo.NarrativeEngine.getCaughtByClassmates;
 import omo.ui.GameFrame;
 
 /**
@@ -24,6 +23,5 @@ class HoldCrotchStage extends Stage
     {
         rechargeSphPower(ui, 20);
         offsetTime(ui, 3);
-        getCaughtByClassmates();
     }
 }

@@ -33,14 +33,22 @@ public class StageEngine
         return currentStage;
     }
     
+    /**
+     * Immediately runs a next stage.
+     * @param ui 
+     */
     public static void runNextStage(GameFrame ui)
     {
         nextStage.run(ui);
     }
     
+    /**
+     * Changes the next stage.
+     * Doesn't advances to a next stage.
+     * @param nextStage next stage to set
+     */
     public static void rotatePlot(Stage nextStage)
     {
         StageEngine.nextStage = nextStage;
     }
-
 }

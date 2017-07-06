@@ -15,7 +15,6 @@ public class StagePool
     public static Stage drink;
     public static Stage classOver;
     public static Stage caughtHoldingPee;
-    public static Stage calledOn;
 
     Stage leaveHome;
     Stage arrivedToClass;
@@ -29,6 +28,7 @@ public class StagePool
     private Stage peeingAfterClass;
     private Stage schoolRestroomLine;
     private Stage win;
+    private Stage askedByTeacher;
 
     public StagePool()
     {
@@ -295,6 +295,13 @@ public class StagePool
                             "Even holding your crotch doesn't seems to help you to keep it in."
                         });
             }
+
+            @Override
+            void operate(GameFrame ui)
+            {
+                caughtByClassmates(ui);
+                askedByTeacher(ui);
+            }
         };
 
         askTeacherToPee = new Stage()
@@ -402,6 +409,99 @@ public class StagePool
             }
         };
 
+        askedByTeacher = new Stage(schoolHolding, new String[]
+        {
+            NarrativeEngine.getName() + ", why don't you come up to the board and solve this problem?,",
+            "suddenly asks you the teacher. Of course, you don't have a clue how to solve it.",
+            "You make your way to the front of the room and act lost, knowing you'll be stuck",
+            "up there for a while as the teacher explains it.",
+            "Well, you can't dare to hold yourself now..."
+        }, (short) 3)
+        {
+            @Override
+            void operate()
+            {
+                score("Called on the lesson", '+', 5);
+            }
+        };
+
+        caughtHoldingPee = new Stage(schoolHolding, (short) 1)
+        {
+            @Override
+            public String[] getText()
+            {
+                switch (NarrativeEngine.timesCaught)
+                {
+                    case 0:
+                        return new String[]
+                        {
+                            "It looks like a classmate has spotted that you've got to go badly.",
+                            "Damn, he may spread that fact..."
+                        };
+                    case 1:
+                        return new String[]
+                        {
+                            "You'he heard a suspicious whisper behind you.",
+                            "Listening to the whisper, you've found out that they're saying that you need to go.",
+                            "If I hold it until the lesson ends, I will beat them."
+                        };
+                    case 2:
+                        if (isFemale())
+                        {
+                            setLinesAsDialogue(2);
+                            return new String[]
+                            {
+                                "The most handsome boy in your class, " + NarrativeEngine.boyName + ", is whispering to you:",
+                                "Hey there, don't wet yourself!",
+                                "Oh no, he knows it..."
+                            };
+                        }
+                        else
+                        {
+                            return new String[]
+                            {
+                                "The most nasty boy in your class, " + boyName + ", is calling you:",
+                                "Hey there, don't wet yourself! Ahahahaa!",
+                                "Shut up...",
+                                "you think to yourself."
+                            };
+                        }
+                    default:
+                        return new String[]
+                        {
+                            "The chuckles are continiously passing over the classroom.",
+                            "Everyone is watching you.",
+                            "Oh god... this is so embarassing..."
+                        };
+                }
+            }
+
+            @Override
+            void operate(GameFrame ui)
+            {
+                switch (timesCaught)
+                {
+                    case 0:
+                        offsetEmbarassment(ui, 3);
+                        score("Caught holding pee", '+', 3);
+                        break;
+                    case 1:
+                        offsetEmbarassment(ui, 8);
+                        score("Caught holding pee", '+', 8);
+                        break;
+                    case 2:
+                        offsetEmbarassment(ui, 12);
+                        score("Caught holding pee", '+', 12);
+                        break;
+                    default:
+                        offsetEmbarassment(ui, 20);
+                        score("Caught holding pee", '+', 20);
+                }
+                classmatesAwareness+=5;
+                timesCaught++;
+            }
+        };
+
         classOver = new Stage(new String[]
         {
             "Lesson is finally over, and you're running to the restroom as fast as you can."
@@ -448,18 +548,25 @@ public class StagePool
                     "wearily flop down on the toilet and start peeing."
                 });
             }
-            
+
             @Override
-            void operate()
+            void operate(GameFrame ui)
             {
-                Bladder.empty();
+                Bladder.empty(ui);
             }
         };
 
         schoolRestroomLine = new Stage(new String[]
         {
             "No, please... All cabins are occupied, and there's a line. You have to wait!"
-        }, (short) 3);
+        }, (short) 3)
+        {
+            @Override
+            void operate()
+            {
+                setNextStage(RANDOM.nextBoolean() ? schoolRestroomLine : peeingAfterClass);
+            }
+        };
 
         win = new Stage(new String[]
         {
@@ -472,5 +579,23 @@ public class StagePool
                 ui.gameOver();
             }
         };
+    }
+
+    private void askedByTeacher(GameFrame ui)
+    {
+        if (chance((byte) 5))
+        {
+            StageEngine.rotatePlot(askedByTeacher);
+            StageEngine.runNextStage(ui);
+        }
+    }
+    
+    public static void caughtByClassmates(GameFrame ui)
+    {
+        if (chance((byte)(15 + classmatesAwareness)) & isHardcore())
+        {
+            StageEngine.rotatePlot(caughtHoldingPee);
+            StageEngine.runNextStage(ui);
+        }
     }
 }
