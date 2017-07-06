@@ -5,6 +5,7 @@ import omo.Bladder;
 import static omo.Bladder.*;
 import omo.NarrativeEngine;
 import static omo.NarrativeEngine.*;
+import static omo.stage.StageEngine.*;
 import omo.ui.GameFrame;
 
 public class StagePool
@@ -30,8 +31,12 @@ public class StagePool
     private Stage win;
     private Stage askedByTeacher;
 
+    private Stage surpriseBeginning;
+    private Stage surpriseBroughtToRestroom;
+    
     public StagePool()
     {
+        //Leaving bed
         leaveBed = new Stage(leaveHome, (short) 3)
         {
             @Override
@@ -65,6 +70,7 @@ public class StagePool
             }
         };
 
+        //Leaving home
         leaveHome = new Stage(arrivedToClass, new String[]
         {
             "Just looking at the clock again in disbelief adds a redder tint to your cheeks.",
@@ -82,6 +88,7 @@ public class StagePool
             }
         };
 
+        //Arrived to class
         arrivedToClass = new Stage(walkIn, (short) 1)
         {
             @Override
@@ -154,6 +161,7 @@ public class StagePool
             }
         };
 
+        //Walking in the class
         walkIn = new Stage((short) 1)
         {
             @Override
@@ -214,10 +222,11 @@ public class StagePool
                         offsetEmbarassment(ui, 25);
                     }
                 }
-                setNextStage(fulnessBetween((short) 0, (short) 60) ? sitDown : schoolHolding);
+                StageEngine.rotatePlot(fulnessBetween((short) 0, (short) 60) ? sitDown : schoolHolding);
             }
         };
 
+        //Sitting down
         sitDown = new Stage(schoolHolding, new String[]
         {
             "Subconsciously rubbing your thighs together, you feel the uncomfortable feeling of",
@@ -254,6 +263,7 @@ public class StagePool
             }
         });
 
+        //Holding in class
         schoolHolding = new HoldingStage(customSchoolHoldingActions, (short) 3)
         {
             @Override
@@ -304,6 +314,7 @@ public class StagePool
             }
         };
 
+        //Asked the teacher to pee
         askTeacherToPee = new Stage()
         {
             private boolean success = NarrativeEngine.chance((byte) (40 / getTimesPeeDenied()));
@@ -409,6 +420,7 @@ public class StagePool
             }
         };
 
+        //Asked by the teacher
         askedByTeacher = new Stage(schoolHolding, new String[]
         {
             NarrativeEngine.getName() + ", why don't you come up to the board and solve this problem?,",
@@ -425,6 +437,7 @@ public class StagePool
             }
         };
 
+        //Caught by classmates
         caughtHoldingPee = new Stage(schoolHolding, (short) 1)
         {
             @Override
@@ -502,6 +515,7 @@ public class StagePool
             }
         };
 
+        //Class is over
         classOver = new Stage(new String[]
         {
             "Lesson is finally over, and you're running to the restroom as fast as you can."
@@ -512,15 +526,18 @@ public class StagePool
             {
                 if (RANDOM.nextBoolean())
                 {
-                    setNextStage(peeingAfterClass);
+                    rotatePlot(peeingAfterClass);
                 }
                 else
                 {
-                    setNextStage(schoolRestroomLine);
+                    rotatePlot(schoolRestroomLine);
                 }
+                if(isHardcore()&chance(10))
+                    rotatePlot(leaveHome)
             }
         };
 
+        //Peeing after the class
         peeingAfterClass = new Stage(win)
         {
             @Override
@@ -556,6 +573,7 @@ public class StagePool
             }
         };
 
+        //Waiting for a free restroom cabin after the class
         schoolRestroomLine = new Stage(new String[]
         {
             "No, please... All cabins are occupied, and there's a line. You have to wait!"
@@ -564,10 +582,11 @@ public class StagePool
             @Override
             void operate()
             {
-                setNextStage(RANDOM.nextBoolean() ? schoolRestroomLine : peeingAfterClass);
+                rotatePlot(RANDOM.nextBoolean() ? schoolRestroomLine : peeingAfterClass);
             }
         };
 
+        //Win
         win = new Stage(new String[]
         {
             "Congratulations! You won!"
@@ -578,6 +597,21 @@ public class StagePool
             {
                 ui.gameOver();
             }
+        };
+        
+        //***********SPECIAL HARDCORE EXTENSION***********
+        surpriseBeginning = new Stage(surpriseBroughtToRestroom, new String[]
+        {
+            "The lesson is finally over, and you're running to the restroom as fast as you can.",
+            "But... You see " + boyName + " staying in front of the restroom.",
+            "Suddenly, he takes you, not letting you to escape."
+        }, (short) 1)
+        {
+//            timesPeeDenied = 0;
+//    specialHardcoreStage = true;
+//    score("Got the \"surprise\" by " + boyName, '+', 70);
+//    setText("The lesson is finally over, and you're running to the restroom as fast as you can.", "But... You see " + boyName + " staying in front of the restroom.", "Suddenly, he takes you, not letting you to escape.");
+//    offsetEmbarassment(10, );
         };
     }
 

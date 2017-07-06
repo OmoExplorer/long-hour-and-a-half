@@ -9,6 +9,7 @@ class HoldingStage extends SelectionStage
         super(actions, duration, text);
         addAction(new Action("Hold crotch", new HoldCrotchStage(new HoldingStage(actions, duration, text))));
         addAction(new Action("Rub thigs", new RubThigsStage(new HoldingStage(actions, duration, text))));
+        addAction(new Action("Give up", new GiveUpStage()));
         //TODO: More holding actions
     }
 }
