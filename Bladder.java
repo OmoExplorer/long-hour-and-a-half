@@ -206,7 +206,7 @@ public class Bladder
      * @param ui {@link GameFrame} object to update values
      * @param amount the bladder fulness offset amount
      */
-    static void offsetBladder(GameFrame ui, double amount)
+    static void offsetFulness(GameFrame ui, double amount)
     {
         setFulness((short) (getFulness() + amount)); //Incontinence does another job after 1.1
         changeLabelColor(ui);
@@ -237,7 +237,7 @@ public class Bladder
      * @return {@code true} if bladder fulness is past the critical value,
      * {@code false} otherwise
      */
-    private static boolean isCriticalBladder()
+    private static boolean isCriticalFulness()
     {
         return (getFulness() > getMaxFulness() - 30 & !isHardcore()) | (getFulness() > getMaxFulness() - 20 & isHardcore());
     }
@@ -274,7 +274,7 @@ public class Bladder
      */
     private static void randomlyLeakOnFullBladder()
     {
-        if (isCriticalBladder())
+        if (isCriticalFulness())
         {
             if (chance(calculateLeakingChance()))
             {
@@ -320,7 +320,7 @@ public class Bladder
     public static void passTime(GameFrame ui, short time)
     {
         offsetTime(ui, time);
-        offsetBladder(ui, time * 1.5);
+        offsetFulness(ui, time * 1.5);
         offsetBelly(ui, -time * 1.5);
         cycleBladder(ui, time);
         //Updating labels
@@ -336,11 +336,11 @@ public class Bladder
             {
                 if (getBelly() > 3)
                 {
-                    offsetBladder(ui, 2);
+                    offsetFulness(ui, 2);
                 }
                 else
                 {
-                    offsetBladder(ui, getBelly());
+                    offsetFulness(ui, getBelly());
                     emptyBelly(ui);
                 }
             }
@@ -464,7 +464,7 @@ public class Bladder
     /**
      * Empties the bladder.
      */
-    static void emptyBladder(GameFrame ui)
+    static void empty(GameFrame ui)
     {
         setFulness((short) 0);
         ui.update();

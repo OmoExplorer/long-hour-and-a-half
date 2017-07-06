@@ -1,5 +1,6 @@
 package omo.stage;
 
+import static omo.Bladder.passTime;
 import omo.ui.GameFrame;
 import static omo.ui.GameFrame.MAX_LINES;
 
@@ -9,42 +10,75 @@ import static omo.ui.GameFrame.MAX_LINES;
 public class Stage
 {
     private String[] text = new String[MAX_LINES];
+    private final short duration;
     private Stage nextStage;
 
+    Stage(Stage nextStage, String[] text, short duration)
+    {
+        this.nextStage = nextStage;
+        this.text = text;
+        this.duration = duration;
+    }
+
+    Stage(String[] text, short duration)
+    {
+        this.text = text;
+        this.duration = duration;
+    }
+
+    Stage(Stage nextStage, short duration)
+    {
+        this.nextStage = nextStage;
+        this.duration = duration;
+    }
+
+    public Stage()
+    {
+        this.duration = 0;
+    }
+    
+    public Stage(short duration)
+    {
+        this.duration = duration;
+    }
+    
     Stage(Stage nextStage, String[] text)
     {
         this.nextStage = nextStage;
         this.text = text;
+        this.duration = 0;
     }
 
     Stage(String[] text)
     {
         this.text = text;
+        this.duration = 0;
     }
 
     Stage(Stage nextStage)
     {
         this.nextStage = nextStage;
+        this.duration = 0;
     }
 
-    public Stage()
+    void operate()
     {
+        
     }
     
-    public void operate()
-    {
-
-    }
-
     void operate(GameFrame ui)
     {
-
+        
     }
-
+    
     void run(GameFrame ui)
     {
+        if(duration != 0)
+        {
+            passTime(ui, duration);
+        }
         ui.setText(getText());
-        operate();
+        operate(ui);
     }
 
     /**

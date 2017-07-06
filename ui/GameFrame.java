@@ -1114,7 +1114,7 @@ public class GameFrame extends JFrame
         }
     }
 
-    private void gameOver()
+    public void gameOver()
     {
         btnNext.setVisible(false);
     }

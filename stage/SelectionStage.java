@@ -2,7 +2,7 @@ package omo.stage;
 
 import java.util.ArrayList;
 
-public class SelectionStage extends BladderAffectingStage
+public class SelectionStage extends Stage
 {
     private ArrayList<Action> actions;
 
@@ -15,7 +15,7 @@ public class SelectionStage extends BladderAffectingStage
      */
     SelectionStage(ArrayList<Action> actions, short duration, String... text)
     {
-        super(duration, text);
+        super(text, duration);
         this.actions = actions;
     }
     

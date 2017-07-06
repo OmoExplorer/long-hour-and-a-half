@@ -1,6 +1,7 @@
 package omo.stage;
 
 import java.util.ArrayList;
+import omo.Bladder;
 import static omo.Bladder.*;
 import omo.NarrativeEngine;
 import static omo.NarrativeEngine.*;
@@ -8,7 +9,7 @@ import omo.ui.GameFrame;
 
 public class StagePool
 {
-    public static BladderAffectingStage leaveBed;
+    public static Stage leaveBed;
     public static Stage surpriseAccident;
     public static Stage accident;
     public static Stage drink;
@@ -16,19 +17,22 @@ public class StagePool
     public static Stage caughtHoldingPee;
     public static Stage calledOn;
 
-    BladderAffectingStage leaveHome;
-    BladderAffectingStage arrivedToClass;
-    BladderAffectingStage walkIn;
-    BladderAffectingStage sitDown;
+    Stage leaveHome;
+    Stage arrivedToClass;
+    Stage walkIn;
+    Stage sitDown;
     HoldingStage schoolHolding;
     Stage askTeacherToPee;
 
-    public static BladderAffectingStage surprise;
-    public static BladderAffectingStage writeLines;
+    public static Stage surprise;
+    public static Stage writeLines;
+    private Stage peeingAfterClass;
+    private Stage schoolRestroomLine;
+    private Stage win;
 
     public StagePool()
     {
-        leaveBed = new BladderAffectingStage(leaveHome, (short) 3)
+        leaveBed = new Stage(leaveHome, (short) 3)
         {
             @Override
             public String[] getText()
@@ -61,14 +65,14 @@ public class StagePool
             }
         };
 
-        leaveHome = new BladderAffectingStage(arrivedToClass, (short) 10, new String[]
+        leaveHome = new Stage(arrivedToClass, new String[]
         {
             "Just looking at the clock again in disbelief adds a redder tint to your cheeks.",
             "",
             "Paying much less attention to your daily routine, you quickly run down the stairs, get a small glass of orange juice and chug it.",
             "",
             "The cold drink brings a chill down your spine as you collect your things and rush out the door to school."
-        })
+        }, (short) 10)
         {
             @Override
             public void operate(GameFrame ui)
@@ -78,7 +82,7 @@ public class StagePool
             }
         };
 
-        arrivedToClass = new BladderAffectingStage(walkIn, (short) 1)
+        arrivedToClass = new Stage(walkIn, (short) 1)
         {
             @Override
             public String[] getText()
@@ -150,7 +154,7 @@ public class StagePool
             }
         };
 
-        walkIn = new BladderAffectingStage((short) 1)
+        walkIn = new Stage((short) 1)
         {
             @Override
             public String[] getText()
@@ -214,11 +218,11 @@ public class StagePool
             }
         };
 
-        sitDown = new BladderAffectingStage(schoolHolding, (short) 1, new String[]
+        sitDown = new Stage(schoolHolding, new String[]
         {
             "Subconsciously rubbing your thighs together, you feel the uncomfortable feeling of",
             "your bladder filling as the liquids you drank earlier start to make their way down."
-        })
+        }, (short) 1)
         {
             @Override
             public void operate()
@@ -248,10 +252,9 @@ public class StagePool
                         return ACTION_UNAVAILABLE;
                 }
             }
-        }
-        );
+        });
 
-        schoolHolding = new HoldingStage(customSchoolHoldingActions, (short) 2)
+        schoolHolding = new HoldingStage(customSchoolHoldingActions, (short) 3)
         {
             @Override
             public String[] getText()
@@ -296,9 +299,10 @@ public class StagePool
 
         askTeacherToPee = new Stage()
         {
-            boolean success = NarrativeEngine.chance((byte) (40 / getTimesPeeDenied()));
-            boolean punishmentType = RANDOM.nextBoolean();
+            private boolean success = NarrativeEngine.chance((byte) (40 / getTimesPeeDenied()));
+            private boolean punishmentType = RANDOM.nextBoolean();
 
+            @Override
             public String[] getText()
             {
                 if (success)
@@ -389,11 +393,84 @@ public class StagePool
                     return null;
                 }
             }
+
+            @Override
+            void operate()
+            {
+                success = NarrativeEngine.chance((byte) (40 / getTimesPeeDenied()));
+                punishmentType = RANDOM.nextBoolean();
+            }
         };
-        
-        classOver = new BladderAffectingStage((short)2)
+
+        classOver = new Stage(new String[]
         {
+            "Lesson is finally over, and you're running to the restroom as fast as you can."
+        }, (short) 2)
+        {
+            @Override
+            void operate()
+            {
+                if (RANDOM.nextBoolean())
+                {
+                    setNextStage(peeingAfterClass);
+                }
+                else
+                {
+                    setNextStage(schoolRestroomLine);
+                }
+            }
+        };
+
+        peeingAfterClass = new Stage(win)
+        {
+            @Override
+            public String[] getText()
+            {
+                return getWearDependentText(new String[]
+                {
+                    "Thank god, one cabin is free!",
+                    "You enter it, pulled down your " + getLower().insert() + " and " + getUndies().insert() + ",",
+                    "wearily flop down on the toilet and start peeing."
+                }, new String[]
+                {
+                    "Thank god, one cabin is free!",
+                    "You enter it, pulled down your " + getLower().insert() + ",",
+                    "wearily flop down on the toilet and start peeing."
+                }, new String[]
+                {
+                    "Thank god, one cabin is free!",
+                    "You enter it, pulled down your " + getUndies().insert() + ",",
+                    "wearily flop down on the toilet and start peeing."
+                }, new String[]
+                {
+                    "Thank god, one cabin is free!",
+                    "You enter it,",
+                    "wearily flop down on the toilet and start peeing."
+                });
+            }
             
+            @Override
+            void operate()
+            {
+                Bladder.empty();
+            }
+        };
+
+        schoolRestroomLine = new Stage(new String[]
+        {
+            "No, please... All cabins are occupied, and there's a line. You have to wait!"
+        }, (short) 3);
+
+        win = new Stage(new String[]
+        {
+            "Congratulations! You won!"
+        })
+        {
+            @Override
+            void operate(GameFrame ui)
+            {
+                ui.gameOver();
+            }
         };
     }
 }
