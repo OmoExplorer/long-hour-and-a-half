@@ -85,7 +85,7 @@ public class NarrativeEngine
     /**
      * Whether or not charecter has to stay 30 minutes after class.
      */
-    static boolean stay = false;
+    public static boolean stay = false;
 
     /**
      * Number of times player got caught holding pee.
