@@ -33,6 +33,8 @@ public class StagePool
 
     private Stage surpriseBeginning;
     private Stage surpriseBroughtToRestroom;
+    private Stage surpriseOnWindowsill;
+    private SelectionStage surpriseAction;
     
     public StagePool()
     {
@@ -532,8 +534,10 @@ public class StagePool
                 {
                     rotatePlot(schoolRestroomLine);
                 }
-                if(isHardcore()&chance(10))
-                    rotatePlot(leaveHome)
+                if(isHardcore()&chance((byte)10))
+                {
+                    rotatePlot(surpriseBeginning);
+                }
             }
         };
 
@@ -613,6 +617,26 @@ public class StagePool
 //    setText("The lesson is finally over, and you're running to the restroom as fast as you can.", "But... You see " + boyName + " staying in front of the restroom.", "Suddenly, he takes you, not letting you to escape.");
 //    offsetEmbarassment(10, );
         };
+        
+        surpriseBroughtToRestroom = new Stage(surpriseOnWindowsill, new String[]
+        {
+            "What do you want from me?!",
+            "He has brought you in the restroom and quickly put you on the windowsill.",
+            boyName + " has locked the restroom door (seems he has stolen the key), then he puts his palm on your belly and says:",
+            "I want you to wet yourself."
+        }, (short)1);
+        
+        surpriseOnWindowsill = new Stage(surpriseAction, new String[]
+        {
+            "No, please, don't do it, no...",
+            "I want to see you wet...",
+            "He slightly presses your belly again, you shook from the terrible pain",
+            "in your bladder and subconsciously rubbed your crotch. You have to do something!"
+        }, (short)1);
+        
+        ArrayList<Action> surpriseActions = new ArrayList<>();
+        surpriseActions.add(new Action())
+        surpriseAction = new SelectionStage();
     }
 
     private void askedByTeacher(GameFrame ui)
