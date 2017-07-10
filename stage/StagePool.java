@@ -10,12 +10,19 @@ import omo.ui.GameFrame;
 
 public class StagePool
 {
-    public static Stage leaveBed;
-    public static Stage surpriseAccident;
-    public static Stage accident;
-    public static Stage drink;
-    public static Stage classOver;
-    public static Stage caughtHoldingPee;
+    private static final StagePool INSTANCE = new StagePool();
+
+    public static StagePool getInstance()
+    {
+        return INSTANCE;
+    }
+
+    public Stage leaveBed;
+    public Stage surpriseAccident;
+    public Stage accident;
+    public Stage drink;
+    public Stage classOver;
+    public Stage caughtHoldingPee;
 
     Stage leaveHome;
     Stage arrivedToClass;
@@ -24,8 +31,8 @@ public class StagePool
     HoldingStage schoolHolding;
     Stage askTeacherToPee;
 
-    public static Stage surprise;
-    public static Stage writeLines;
+    public Stage surprise;
+    public Stage writeLines;
     private Stage peeingAfterClass;
     private Stage schoolRestroomLine;
     private Stage win;
@@ -37,11 +44,441 @@ public class StagePool
     private SelectionStage surpriseAction;
     private Stage surprisePersuade;
     private Stage surpriseHit;
-    private final Stage surpriseWetPressure;
-    private Stage wetting;
+    private Stage surpriseWetPressure;
+    Stage wetting;
     private Stage humiliation;
+    private Stage fail;
+    Stage holdCrotch;
+    Stage rubThigs;
+    Stage giveUp;
 
-    public StagePool()
+    private StagePool()
+    {
+        //Initializing all stages
+        initStages_basicPlot();
+        initStages_gameOvers();
+        initStages_holding();
+        initStages_surprise();
+        initStages_extended();
+    }
+
+    private void initStages_surprise()
+    {
+        surpriseBeginning = new Stage(surpriseBroughtToRestroom, new String[]
+        {
+            "The lesson is finally over, and you're running to the restroom as fast as you can.",
+            "But... You see " + boyName + " staying in front of the restroom.",
+            "Suddenly, he takes you, not letting you to escape."
+        }, (short) 1)
+        {
+//            timesPeeDenied = 0;
+//    specialHardcoreStage = true;
+//    score("Got the \"surprise\" by " + boyName, '+', 70);
+//    return new String[]{"The lesson is finally over, and you're running to the restroom as fast as you can.", "But... You see " + boyName + " staying in front of the restroom.", "Suddenly, he takes you, not letting you to escape.");
+//    offsetEmbarassment(10, );
+        };
+
+        surpriseBroughtToRestroom = new Stage(surpriseOnWindowsill, new String[]
+        {
+            "What do you want from me?!",
+            "He has brought you in the restroom and quickly put you on the windowsill.",
+            boyName + " has locked the restroom door (seems he has stolen the key), then he puts his palm on your belly and says:",
+            "I want you to wet yourself."
+        }, (short) 1);
+
+        surpriseOnWindowsill = new Stage(surpriseAction, new String[]
+        {
+            "No, please, don't do it, no...",
+            "I want to see you wet...",
+            "He slightly presses your belly again, you shook from the terrible pain",
+            "in your bladder and subconsciously rubbed your crotch. You have to do something!"
+        }, (short) 1);
+
+        ArrayList<Action> surpriseActions = new ArrayList<>();
+        surpriseActions.add(new Action("Persuade " + boyName + " to pee", surprisePersuade));
+        surpriseActions.add(new Action("Hit him", surpriseHit));
+        surpriseAction = new SelectionStage(surpriseActions, (short) 1,
+                "No, please, don't do it, no...",
+                "I want to see you wet...",
+                "He slightly presses your belly again, you shook from the terrible pain",
+                "in your bladder and subconsciously rubbed your crotch. You have to do something!"
+        );
+
+        surpriseHit = new Stage((short) 1)
+        {
+            private final boolean success = chance((byte) 20);
+
+            @Override
+            public String[] getText()
+            {
+                if (success)
+                {
+                    return getWearDependentText(new String[]
+                    {
+                        "You hit " + boyName + "'s groin.",
+                        "Ouch!.. You, little bitch...",
+                        "Then he left the restroom quickly.",
+                        "You got off from the windowsill while holding your crotch,",
+                        "opened the cabin door, entered it, pulled down your " + getLower().insert() + " and " + getUndies().insert() + ",",
+                        "wearily flop down on the toilet and start peeing."
+                    }, new String[]
+                    {
+                        "You hit " + boyName + "'s groin.",
+                        "Ouch!.. You, little bitch...",
+                        "Then he left the restroom quickly.",
+                        "You got off from the windowsill while holding your crotch,",
+                        "opened the cabin door, entered it, pulled down your " + getLower().insert() + ",",
+                        "wearily flop down on the toilet and start peeing."
+                    }, new String[]
+                    {
+                        "You hit " + boyName + "'s groin.",
+                        "Ouch!.. You, little bitch...",
+                        "Then he left the restroom quickly.",
+                        "You got off from the windowsill while holding your crotch,",
+                        "opened the cabin door, entered it, pulled down your " + getUndies().insert() + ",",
+                        "wearily flop down on the toilet and start peeing."
+                    }, new String[]
+                    {
+                        "You hit " + boyName + "'s groin.",
+                        "Ouch!.. You, little bitch...",
+                        "Then he left the restroom quickly.",
+                        "You get off from the windowsill while holding your crotch,",
+                        "open the cabin, enter it,",
+                        "wearily flop down on the toilet and start peeing."
+                    });
+                }
+                else
+                {
+                    return new String[]
+                    {
+                        "You hit " + boyName + "'s hand. Damn, you'd meant to hit his groin...",
+                        "You're braver than I expected;",
+                        "now let's check the strength of your bladder!",
+                        boyName + " presses your bladder violently..."
+                    };
+                }
+            }
+
+            @Override
+            void operate()
+            {
+                if (success)
+                {
+                    rotatePlot(win);
+                }
+                else
+                {
+                    rotatePlot(surpriseWetPressure);
+                }
+            }
+        };
+
+        surprisePersuade = new Stage((short) 1)
+        {
+            private boolean success = chance((byte) (15 + getTimesPeeDenied() + 1));
+
+            @Override
+            public String[] getText()
+            {
+                if (success)
+                {
+                    return getWearDependentText(new String[]
+                    {
+                        "Ok, you may, but you'll let me watch you pee.",
+                        "states " + boyName + ". You enter the cabin,",
+                        "pull down your " + getLower().insert() + " and " + getUndies().insert() + ",",
+                        "stand over the toilet and start peeing under " + boyName + "'s spectation."
+                    }, new String[]
+                    {
+                        "Ok, you may, but you'll let me watch you pee.",
+                        "states " + boyName + ". You enter the cabin,",
+                        "pull down your " + getLower().insert() + ",",
+                        "stand over the toilet and start peeing under " + boyName + "'s spectation."
+                    }, new String[]
+                    {
+                        "Ok, you may, but you'll let me watch you pee.",
+                        "states " + boyName + ". You enter the cabin,",
+                        "pull down your " + getUndies().insert() + ",",
+                        "stand over the toilet and start peeing under " + boyName + "'s spectation."
+                    }, new String[]
+                    {
+                        "Ok, you may, but you'll let me watch you pee.",
+                        "states " + boyName + ". You enter the cabin,",
+                        "stand over the toilet and start peeing under " + boyName + "'s spectation."
+                    });
+                }
+                else
+                {
+                    switch (getTimesPeeDenied())
+                    {
+                        case 0:
+                            return new String[]
+                            {
+                                "You ask " + boyName + " if you can pee.",
+                                "No, you can't pee in a cabin. I want you to wet yourself.,",
+                                boyName + " says."
+                            };
+                        case 1:
+                            return new String[]
+                            {
+                                "You ask " + boyName + " if you can pee again.",
+                                "No, you can't pee in a cabin. I want you to wet yourself. You're doing it now.",
+                                boyName + " demands."
+                            };
+                        case 2:
+                            return new String[]
+                            {
+                                "You ask " + boyName + " if you can pee again desperately.",
+                                "No, you can't pee in a cabin. You will wet yourself right now,",
+                                boyName + " demands.",
+                                "Then " + boyName + " pressed your bladder..."
+                            };
+                        default:
+                            return null;
+                    }
+                }
+            }
+
+            @Override
+            void operate()
+            {
+                if (success)
+                {
+                    rotatePlot(win);
+                }
+                else
+                {
+                    rotatePlot(surpriseWetPressure);
+                }
+            }
+        };
+
+        surpriseWetPressure = new Stage(fail)
+        {
+            @Override
+            public String[] getText()
+            {
+                return getWearDependentText(new String[]
+                {
+                    "Ouch... The sudden pain flash passes through your bladder...",
+                    "You try to hold the pee back, but you just can't.",
+                    "You feel the warm pee stream",
+                    "filling your " + getUndies().insert() + " and darkening your " + getLower().insert() + ".",
+                    "You close your eyes and ease your sphincter off.",
+                    "You feel the pee stream become much stronger."
+                },
+                        new String[]
+                        {
+                            "Ouch... The sudden pain flash passes through your bladder...",
+                            "You try to hold the pee back, but you just can't.",
+                            "You feel the warm pee stream",
+                            "filling your " + getUndies().insert() + ".",
+                            "You close your eyes and ease your sphincter off.",
+                            "You feel the pee stream become much stronger."
+                        },
+                        new String[]
+                        {
+                            "Ouch... The sudden pain flash passes through your bladder...",
+                            "You try to hold the pee back, but you just can't.",
+                            "You feel the warm pee stream",
+                            "filling your " + getLower().insert() + ".",
+                            "You close your eyes and ease your sphincter off.",
+                            "You feel the pee stream become much stronger."
+                        }, new String[]
+                        {
+                            "Ouch... The sudden pain flash passes through your bladder...",
+                            "You try to hold the pee back, but you just can't.",
+                            "You feel the warm pee stream",
+                            "running down your legs.",
+                            "You close your eyes and ease your sphincter off.",
+                            "You feel the pee stream become much stronger."
+                        });
+            }
+        };
+    }
+
+    private void initStages_gameOvers()
+    {
+        //Win
+        win = new Stage(new String[]
+        {
+            "Congratulations! You won!"
+        })
+        {
+            @Override
+            void operate(GameFrame ui)
+            {
+                ui.gameOver();
+            }
+        };
+
+        accident = new Stage(wetting, new String[]
+        {
+            "You can't help it.. No matter how much pressure you use, the leaks won't stop.",
+            "Despite all this, you try your best, but suddenly you're forced to stop.",
+            "You can't move, or you risk peeing yourself. Heck, the moment you stood up you thought you could barely move for risk of peeing everywhere.",
+            "But now... a few seconds tick by as you try to will yourself to move, but soon, the inevitable happens anyways."
+        });
+
+        wetting = new Stage(humiliation)
+        {
+            @Override
+            public String[] getText()
+            {
+                if (!getLower().isMissing())
+                {
+                    if (!getUndies().isMissing())
+                    {
+                        return new String[]
+                        {
+                            "Before you can move an inch, pee quickly soaks through your " + getUndies().insert() + ",",
+                            "floods your " + getUndies().insert() + ", and streaks down your legs.",
+                            "A large puddle quickly forms, and you can't stop tears from falling down your cheeks."
+                        };
+                    }
+                    else
+                    {
+                        return new String[]
+                        {
+                            "Before you can move an inch, pee quickly darkens your " + getLower().insert() + " and streaks down your legs.",
+                            "A large puddle quickly forms, and you can't stop tears from falling down your cheeks."
+                        };
+                    }
+                }
+                else
+                {
+                    if (!getUndies().isMissing())
+                    {
+                        return new String[]
+                        {
+                            "Before you can move an inch, pee quickly soaks through your " + getUndies().insert() + ", and streaks down your legs.",
+                            "A large puddle quickly forms, and you can't stop tears from falling down your cheeks."
+                        };
+                    }
+                    else
+                    {
+                        if (!isCornered())
+                        {
+                            return new String[]
+                            {
+                                "The heavy pee jets are hitting the seat and loudly leaking out from your " + getUndies().insert() + ".",
+                                "A large puddle quickly forms, and you can't stop tears from falling down your cheeks."
+                            };
+                        }
+                        else
+                        {
+                            return new String[]
+                            {
+                                "The heavy pee jets are hitting the floor and loudly leaking out from your " + getUndies().insert() + ".",
+                                "A large puddle quickly forms, and you can't stop tears from falling down your cheeks."
+                            };
+                        }
+                    }
+                }
+            }
+        };
+
+        humiliation = new Stage(fail)
+        {
+            @Override
+            public String[] getText()
+            {
+                if (!stay)
+                {
+                    if (getLower().isMissing())
+                    {
+                        if (isFemale() && getUndies().isMissing())
+                        {
+                            return new String[]
+                            {
+                                "People around you are laughing loudly.", getName() + " peed herself! Ahaha!!!"
+                            };
+                        }
+                        else
+                        {
+                            if (isMale() && getUndies().isMissing())
+                            {
+                                return new String[]
+                                {
+                                    "People around you are laughing loudly.", getName() + " peed himself! Ahaha!!!"
+                                };
+                            }
+                            else
+                            {
+                                return new String[]
+                                {
+                                    "People around you are laughing loudly.", getName() + " wet h" + (isFemale() ? "er " : "is ") + getUndies().insert() + "! Ahaha!!"
+                                };
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (isFemale())
+                        {
+                            return new String[]
+                            {
+                                "People around you are laughing loudly.", getName() + " peed her " + getLower().insert() + "! Ahaha!!"
+                            };
+                        }
+                        else
+                        {
+                            return new String[]
+                            {
+                                "People around you are laughing loudly.", " peed his " + getLower().insert() + "! Ahaha!!"
+                            };
+                        }
+                    }
+                }
+                else
+                {
+                    return new String[]
+                    {
+                        "Teacher is laughing loudly.", "Oh, you peed yourself? This is a great punishment.", "I hope you will no longer get in the way of the lesson."
+                    };
+                }
+            }
+        };
+
+        fail = new Stage()
+        {
+            @Override
+            public String[] getText()
+            {
+                return getWearDependentText(new String[]
+                {
+                    "No matter how hard you tried... It doesn't seem to matter, even to think about it...",
+                    "No, nobody would be as sadistic as that, especially to themselves...",
+                    "Game over!"
+                }, new String[]
+                {
+                    "No matter how hard you tried... It doesn't seem to matter, even to think about it...",
+                    "Your " + getUndies().insert() + " are clinging to your skin, a sign of your failure...",
+                    "...unless, of course, you meant for this to happen?", "No, nobody would be as sadistic as that, especially to themselves...",
+                    "Game over!"
+                }, new String[]
+                {
+                    "No matter how hard you tried... It doesn't seem to matter, even to think about it...",
+                    "Your " + getLower().insert() + " is clinging to your skin, a sign of your failure...", //TODO: Add "is/are" depending on getLower() clothes type
+                    "...unless, of course, you meant for this to happen?",
+                    "No, nobody would be as sadistic as that, especially to themselves...",
+                    "Game over!"
+                }, new String[]
+                {
+                    "No matter how hard you tried... It doesn't seem to matter, even to think about it...",
+                    "Your " + getLower().insert() + " and " + getUndies().insert() + " are both clinging to your skin, a sign of your failure...",
+                    "...unless, of course, you meant for this to happen?",
+                    "No, nobody would be as sadistic as that, especially to themselves...",
+                    "Game over!"
+                });
+            }
+        ;
+    }
+
+    ;
+    }
+
+    private void initStages_basicPlot()
     {
         //Leaving bed
         leaveBed = new Stage(leaveHome, (short) 3)
@@ -130,7 +567,7 @@ public class StagePool
                         return new String[]
                         {
                             "You rush into class; your classmates are looking at your " + getUndies().insert() + ".",
-                            "You can't understand how you forgot to even put on any lower clothing,",
+                            "You can't understand how you forgot to even put on any getLower() clothing,",
                             "and you know that your " + getUndies().insert() + " have definitely been seen.",
                             "You make it to your seat without a minute to spare."
                         };
@@ -174,7 +611,7 @@ public class StagePool
             @Override
             public String[] getText()
             {
-                //If lower clothes is a skirt
+                //If getLower() clothes is a skirt
                 if (isLowerRevealing())
                 {
                     setLinesAsDialogue(1, 3);
@@ -325,7 +762,7 @@ public class StagePool
         //Asked the teacher to pee
         askTeacherToPee = new Stage()
         {
-            private boolean success = NarrativeEngine.chance((byte) (40 / getTimesPeeDenied() + 1));
+            private boolean success = NarrativeEngine.chance((byte) (40 / (getTimesPeeDenied() + 1)));
             private boolean punishmentType = RANDOM.nextBoolean();
 
             @Override
@@ -595,358 +1032,6 @@ public class StagePool
                 rotatePlot(RANDOM.nextBoolean() ? schoolRestroomLine : peeingAfterClass);
             }
         };
-
-        //Win
-        win = new Stage(new String[]
-        {
-            "Congratulations! You won!"
-        })
-        {
-            @Override
-            void operate(GameFrame ui)
-            {
-                ui.gameOver();
-            }
-        };
-
-        accident = new Stage(wetting, new String[]
-        {
-            "You can't help it.. No matter how much pressure you use, the leaks won't stop.",
-            "Despite all this, you try your best, but suddenly you're forced to stop.",
-            "You can't move, or you risk peeing yourself. Heck, the moment you stood up you thought you could barely move for risk of peeing everywhere.",
-            "But now... a few seconds tick by as you try to will yourself to move, but soon, the inevitable happens anyways."
-        });
-
-        wetting = new Stage(humiliation)
-        {
-            @Override
-            public String[] getText()
-            {
-                if (!getLower().isMissing())
-                {
-                    if (!getUndies().isMissing())
-                    {
-                        return new String[]
-                        {
-                            "Before you can move an inch, pee quickly soaks through your " + getUndies().insert() + ",",
-                            "floods your " + getUndies().insert() + ", and streaks down your legs.",
-                            "A large puddle quickly forms, and you can't stop tears from falling down your cheeks."
-                        };
-                    }
-                    else
-                    {
-                        return new String[]
-                        {
-                            "Before you can move an inch, pee quickly darkens your " + getLower().insert() + " and streaks down your legs.",
-                            "A large puddle quickly forms, and you can't stop tears from falling down your cheeks."
-                        };
-                    }
-                }
-                else
-                {
-                    if (!getUndies().isMissing())
-                    {
-                        return new String[]
-                        {
-                            "Before you can move an inch, pee quickly soaks through your " + getUndies().insert() + ", and streaks down your legs.",
-                            "A large puddle quickly forms, and you can't stop tears from falling down your cheeks."
-                        };
-                    }
-                    else
-                    {
-                        if (!isCornered())
-                        {
-                            return new String[]
-                            {
-                                "The heavy pee jets are hitting the seat and loudly leaking out from your " + getUndies().insert() + ".",
-                                "A large puddle quickly forms, and you can't stop tears from falling down your cheeks."
-                            };
-                        }
-                        else
-                        {
-                            return new String[]
-                            {
-                                "The heavy pee jets are hitting the floor and loudly leaking out from your " + getUndies().insert() + ".",
-                                "A large puddle quickly forms, and you can't stop tears from falling down your cheeks."
-                            };
-                        }
-                    }
-                }
-            }
-        };
-
-        humiliation = new Stage(fail)
-        {
-            public String[] getText()
-            {
-                if (!stay)
-                {
-                    if (getLower().isMissing())
-                    {
-                        if (isFemale() && getUndies().isMissing())
-                        {
-                            setText("People around you are laughing loudly.", name + " peed herself! Ahaha!!!");
-                        }
-                        else
-                        {
-                            if (isMale() && undies.isMissing())
-                            {
-                                setText("People around you are laughing loudly.", name + " peed himself! Ahaha!!!");
-                            }
-                            else
-                            {
-                                setText("People around you are laughing loudly.", name + " wet h" + (isFemale() ? "er " : "is ") + undies.insert() + "! Ahaha!!");
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (isFemale())
-                        {
-                            setText("People around you are laughing loudly.", name + " peed her " + lower.insert() + "! Ahaha!!");
-                        }
-                        else
-                        {
-                            setText("People around you are laughing loudly.", " peed his " + lower.insert() + "! Ahaha!!");
-                        }
-                    }
-                }
-                else
-                {
-                    setText("Teacher is laughing loudly.", "Oh, you peed yourself? This is a great punishment.", "I hope you will no longer get in the way of the lesson.");
-                }
-            }
-        } //***********SPECIAL HARDCORE EXTENSION***********
-        surpriseBeginning = new Stage(surpriseBroughtToRestroom, new String[]
-        {
-            "The lesson is finally over, and you're running to the restroom as fast as you can.",
-            "But... You see " + boyName + " staying in front of the restroom.",
-            "Suddenly, he takes you, not letting you to escape."
-        }, (short) 1)
-        {
-//            timesPeeDenied = 0;
-//    specialHardcoreStage = true;
-//    score("Got the \"surprise\" by " + boyName, '+', 70);
-//    setText("The lesson is finally over, and you're running to the restroom as fast as you can.", "But... You see " + boyName + " staying in front of the restroom.", "Suddenly, he takes you, not letting you to escape.");
-//    offsetEmbarassment(10, );
-        };
-
-        surpriseBroughtToRestroom = new Stage(surpriseOnWindowsill, new String[]
-        {
-            "What do you want from me?!",
-            "He has brought you in the restroom and quickly put you on the windowsill.",
-            boyName + " has locked the restroom door (seems he has stolen the key), then he puts his palm on your belly and says:",
-            "I want you to wet yourself."
-        }, (short) 1);
-
-        surpriseOnWindowsill = new Stage(surpriseAction, new String[]
-        {
-            "No, please, don't do it, no...",
-            "I want to see you wet...",
-            "He slightly presses your belly again, you shook from the terrible pain",
-            "in your bladder and subconsciously rubbed your crotch. You have to do something!"
-        }, (short) 1);
-
-        ArrayList<Action> surpriseActions = new ArrayList<>();
-        surpriseActions.add(new Action("Persuade " + boyName + " to pee", surprisePersuade));
-        surpriseActions.add(new Action("Hit him", surpriseHit));
-        surpriseAction = new SelectionStage(surpriseActions, (short) 1,
-                "No, please, don't do it, no...",
-                "I want to see you wet...",
-                "He slightly presses your belly again, you shook from the terrible pain",
-                "in your bladder and subconsciously rubbed your crotch. You have to do something!"
-        );
-
-        surpriseHit = new Stage((short) 1)
-        {
-            private final boolean success = chance((byte) 20);
-
-            @Override
-            public String[] getText()
-            {
-                if (success)
-                {
-                    return getWearDependentText(new String[]
-                    {
-                        "You hit " + boyName + "'s groin.",
-                        "Ouch!.. You, little bitch...",
-                        "Then he left the restroom quickly.",
-                        "You got off from the windowsill while holding your crotch,",
-                        "opened the cabin door, entered it, pulled down your " + getLower().insert() + " and " + getUndies().insert() + ",",
-                        "wearily flop down on the toilet and start peeing."
-                    }, new String[]
-                    {
-                        "You hit " + boyName + "'s groin.",
-                        "Ouch!.. You, little bitch...",
-                        "Then he left the restroom quickly.",
-                        "You got off from the windowsill while holding your crotch,",
-                        "opened the cabin door, entered it, pulled down your " + getLower().insert() + ",",
-                        "wearily flop down on the toilet and start peeing."
-                    }, new String[]
-                    {
-                        "You hit " + boyName + "'s groin.",
-                        "Ouch!.. You, little bitch...",
-                        "Then he left the restroom quickly.",
-                        "You got off from the windowsill while holding your crotch,",
-                        "opened the cabin door, entered it, pulled down your " + getUndies().insert() + ",",
-                        "wearily flop down on the toilet and start peeing."
-                    }, new String[]
-                    {
-                        "You hit " + boyName + "'s groin.",
-                        "Ouch!.. You, little bitch...",
-                        "Then he left the restroom quickly.",
-                        "You get off from the windowsill while holding your crotch,",
-                        "open the cabin, enter it,",
-                        "wearily flop down on the toilet and start peeing."
-                    });
-                }
-                else
-                {
-                    return new String[]
-                    {
-                        "You hit " + boyName + "'s hand. Damn, you'd meant to hit his groin...",
-                        "You're braver than I expected;",
-                        "now let's check the strength of your bladder!",
-                        boyName + " presses your bladder violently..."
-                    };
-                }
-            }
-
-            @Override
-            void operate()
-            {
-                if (success)
-                {
-                    rotatePlot(win);
-                }
-                else
-                {
-                    rotatePlot(surpriseWetPressure);
-                }
-            }
-        };
-
-        surprisePersuade = new Stage((short) 1)
-        {
-            private boolean success = chance((byte) (15 + getTimesPeeDenied() + 1));
-
-            public String[] getText()
-            {
-                if (success)
-                {
-                    return getWearDependentText(new String[]
-                    {
-                        "Ok, you may, but you'll let me watch you pee.",
-                        "states " + boyName + ". You enter the cabin,",
-                        "pull down your " + getLower().insert() + " and " + getUndies().insert() + ",",
-                        "stand over the toilet and start peeing under " + boyName + "'s spectation."
-                    }, new String[]
-                    {
-                        "Ok, you may, but you'll let me watch you pee.",
-                        "states " + boyName + ". You enter the cabin,",
-                        "pull down your " + getLower().insert() + ",",
-                        "stand over the toilet and start peeing under " + boyName + "'s spectation."
-                    }, new String[]
-                    {
-                        "Ok, you may, but you'll let me watch you pee.",
-                        "states " + boyName + ". You enter the cabin,",
-                        "pull down your " + getUndies().insert() + ",",
-                        "stand over the toilet and start peeing under " + boyName + "'s spectation."
-                    }, new String[]
-                    {
-                        "Ok, you may, but you'll let me watch you pee.",
-                        "states " + boyName + ". You enter the cabin,",
-                        "stand over the toilet and start peeing under " + boyName + "'s spectation."
-                    });
-                }
-                else
-                {
-                    switch (getTimesPeeDenied())
-                    {
-                        case 0:
-                            return new String[]
-                            {
-                                "You ask " + boyName + " if you can pee.",
-                                "No, you can't pee in a cabin. I want you to wet yourself.,",
-                                boyName + " says."
-                            };
-                        case 1:
-                            return new String[]
-                            {
-                                "You ask " + boyName + " if you can pee again.",
-                                "No, you can't pee in a cabin. I want you to wet yourself. You're doing it now.",
-                                boyName + " demands."
-                            };
-                        case 2:
-                            return new String[]
-                            {
-                                "You ask " + boyName + " if you can pee again desperately.",
-                                "No, you can't pee in a cabin. You will wet yourself right now,",
-                                boyName + " demands.",
-                                "Then " + boyName + " pressed your bladder..."
-                            };
-                        default:
-                            return null;
-                    }
-                }
-            }
-
-            @Override
-            void operate()
-            {
-                if (success)
-                {
-                    rotatePlot(win);
-                }
-                else
-                {
-                    rotatePlot(surpriseWetPressure);
-                }
-            }
-        };
-
-        surpriseWetPressure = new Stage(fail)
-        {
-            @Override
-            public String[] getText()
-            {
-                return getWearDependentText(new String[]
-                {
-                    "Ouch... The sudden pain flash passes through your bladder...",
-                    "You try to hold the pee back, but you just can't.",
-                    "You feel the warm pee stream",
-                    "filling your " + getUndies().insert() + " and darkening your " + getLower().insert() + ".",
-                    "You close your eyes and ease your sphincter off.",
-                    "You feel the pee stream become much stronger."
-                },
-                        new String[]
-                        {
-                            "Ouch... The sudden pain flash passes through your bladder...",
-                            "You try to hold the pee back, but you just can't.",
-                            "You feel the warm pee stream",
-                            "filling your " + getUndies().insert() + ".",
-                            "You close your eyes and ease your sphincter off.",
-                            "You feel the pee stream become much stronger."
-                        },
-                        new String[]
-                        {
-                            "Ouch... The sudden pain flash passes through your bladder...",
-                            "You try to hold the pee back, but you just can't.",
-                            "You feel the warm pee stream",
-                            "filling your " + getLower().insert() + ".",
-                            "You close your eyes and ease your sphincter off.",
-                            "You feel the pee stream become much stronger."
-                        }, new String[]
-                        {
-                            "Ouch... The sudden pain flash passes through your bladder...",
-                            "You try to hold the pee back, but you just can't.",
-                            "You feel the warm pee stream",
-                            "running down your legs.",
-                            "You close your eyes and ease your sphincter off.",
-                            "You feel the pee stream become much stronger."
-                        });
-            }
-        };
     }
 
     private void askedByTeacher(GameFrame ui)
@@ -958,11 +1043,11 @@ public class StagePool
         }
     }
 
-    public static void caughtByClassmates(GameFrame ui)
+    public void caughtByClassmates(GameFrame ui)
     {
         if (chance((byte) (15 + classmatesAwareness)) & isHardcore())
         {
-            StageEngine.rotatePlot(caughtHoldingPee);
+            StageEngine.rotatePlot(this.caughtHoldingPee);
             StageEngine.runNextStage(ui);
         }
     }
@@ -974,5 +1059,78 @@ public class StagePool
             rotatePlot(classOver);
             runNextStage(ui);
         }
+    }
+
+    private void initStages_extended()
+    {
+        //TODO
+    }
+
+    private void initStages_holding()
+    {
+        holdCrotch = new Stage(new String[]
+        {
+            "You don't think anyone will see you doing it,",
+            "so you take your hand and hold yourself down there.",
+            "It feels a little better for now."
+        })
+        {
+            @Override
+            void operate(GameFrame ui)
+            {
+                rotatePlot(getPreviousStage());
+                rechargeSphPower(ui, 20);
+                offsetTime(ui, 3);
+            }
+        };
+
+        rubThigs = new Stage(new String[]
+        {
+            "You need to go, and it hurts, but you just",
+            "can't bring yourself to risk getting caught with your hand between",
+            "your legs. You rub your thighs hard but it doesn't really help."
+        })
+        {
+            @Override
+            void operate(GameFrame ui)
+            {
+                rechargeSphPower(ui, 2);
+                offsetTime(ui, 3);
+            }
+        };
+
+        giveUp = new Stage()
+        {
+            @Override
+            public String[] getText()
+            {
+                return getWearDependentText(new String[]
+                {
+                    "You get tired of holding all the urine in your aching bladder,",
+                    "and you decide to give up and pee in your " + getUndies().insert() + "."
+                },
+                        new String[]
+                        {
+                            "You get tired of holding all the urine in your aching bladder,",
+                            "and you decided to pee in your " + getLower().insert() + "."
+                        },
+                        new String[]
+                        {
+                            "You get tired of holding all the urine in your aching bladder,",
+                            "and you decide to give up and pee in your " + getUndies().insert() + "."
+                        },
+                        new String[]
+                        {
+                            "You get tired of holding all the urine in your aching bladder,",
+                            "and you decide to give up and pee where you are."
+                        });
+            }
+
+            @Override
+            void operate()
+            {
+                rotatePlot(wetting);
+            }
+        };
     }
 }

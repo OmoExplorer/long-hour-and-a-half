@@ -5,9 +5,9 @@ import java.util.Random;
 import static omo.Bladder.*;
 import static omo.Gender.*;
 import omo.stage.StageEngine;
-import omo.stage.StagePool;
 import omo.ui.GameFrame;
 import static omo.ui.GameFrame.MAX_LINES;
+import static omo.GameCore.STAGE_POOL;
 
 //TODO: Break down
 //TODO: Remove old stage engine functinality
@@ -217,7 +217,7 @@ public class NarrativeEngine
      * @return TRUE - if character's gender is male<br>FALSE - if character's
      * gender is female
      */
-    static boolean isMale()
+    public static boolean isMale()
     {
         return gender == MALE;
     }
@@ -445,7 +445,7 @@ public class NarrativeEngine
         if (getTime() >= 120)
         {
             stay = false;
-            StageEngine.rotatePlot(StagePool.classOver);
+            StageEngine.rotatePlot(STAGE_POOL.classOver);
             return true;
         }
         return false;
@@ -462,11 +462,11 @@ public class NarrativeEngine
         //Special hardcore scene trigger
         if (RANDOM.nextInt(100) <= 10 && isHardcore() & isFemale())
         {
-            StageEngine.rotatePlot(StagePool.surprise);
+            StageEngine.rotatePlot(STAGE_POOL.surprise);
         }
         if (stay)
         {
-            StageEngine.rotatePlot(StagePool.writeLines);
+            StageEngine.rotatePlot(STAGE_POOL.writeLines);
         }
     }
 

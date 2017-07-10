@@ -84,11 +84,11 @@ import static omo.ResetParametersStorage.*;
 import omo.Wear.WearType;
 import static omo.Wear.WearType.*;
 import static omo.stage.StageEngine.*;
-import static omo.stage.StagePool.leaveBed;
+import omo.stage.StagePool;
 import omo.ui.GameFrame;
 import omo.ui.GameSaveFileChooser;
-import omo.ui.WearFileChooser;
 import omo.ui.SetupFrame;
+import omo.ui.WearFileChooser;
 
 /**
  * Provides the basic game functions.
@@ -108,6 +108,8 @@ public class GameCore
      * JFileChooser object for picking save files.
      */
     private static GameSaveFileChooser fcGame;
+    
+    public final static StagePool STAGE_POOL = StagePool.getInstance();
     
     /**
      * Resets the game and values, optionally letting player to select new
@@ -215,10 +217,7 @@ public class GameCore
         ui.displayAllValues();
 
         initHardcoreMode(ui);
-
-        //Starting the game
-        setFirstStage(leaveBed);
-
+        
         postConstructor(ui);
     }
 
@@ -402,8 +401,6 @@ public class GameCore
     {
         assignFieldValuesFromParameters(name, gndr, diff, inc, bladder);
 
-        stashParametersForReset();
-
         setupFileChoosers(ui);
 
         initCrotchName();
@@ -411,6 +408,7 @@ public class GameCore
         ui.setup();
 
         scoreBeginning(bladder);
+//        StageEngine.setNextStage(leaveBed);
     }
 
     private void setupFileChoosers(GameFrame ui)
@@ -442,7 +440,9 @@ public class GameCore
         ui.setupWearLabels();
 
         initHardcoreMode(ui);
-
+        
+        setFirstStage(STAGE_POOL.leaveBed);
+        
         ui.handleNextClicked();
 
         ui.setVisible(true);

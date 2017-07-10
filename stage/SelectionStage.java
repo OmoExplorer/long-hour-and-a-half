@@ -5,7 +5,7 @@ import omo.ui.GameFrame;
 
 public class SelectionStage extends Stage
 {
-    private ArrayList<Action> actions;
+    private final ArrayList<Action> actions;
 
     /**
      * Contstructor for stages with static text.
@@ -39,7 +39,7 @@ public class SelectionStage extends Stage
      * @param actions list of provided choices
      * @param duration stage duration
      */
-    SelectionStage(ArrayList<omo.stage.Action> actions, short duration)
+    SelectionStage(ArrayList<Action> actions, short duration)
     {
         super(duration);
         this.actions = actions;
@@ -54,5 +54,12 @@ public class SelectionStage extends Stage
     {
         Action selection = (Action)ui.listChoice.getSelectedValue();
         StageEngine.rotatePlot(selection.getActionStage());
+    }
+    
+    @Override
+    void run(GameFrame ui)
+    {
+        super.run(ui);
+        runAction(ui);
     }
 }

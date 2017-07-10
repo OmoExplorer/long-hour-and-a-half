@@ -8,18 +8,20 @@ import omo.ui.GameFrame;
  */
 public class StageEngine
 {
+    private static Stage previousStage;
     private static Stage currentStage;
     private static Stage firstStage;
     private static Stage nextStage;
     
     /**
-     * Sets a specified satge as a story beginning point.
+     * Sets a specified stage as a story beginning point.
      * Resets current story flow, so <i>don't call it when story is already running</i>.
      * 
      * @param firstStage the story beginning stage to set
      */
     public static void setFirstStage(Stage firstStage)
     {
+        previousStage = null;
         StageEngine.firstStage = firstStage;
         currentStage = firstStage;
         nextStage = firstStage.getNextStage();
@@ -40,6 +42,16 @@ public class StageEngine
     public static void runNextStage(GameFrame ui)
     {
         nextStage.run(ui);
+        previousStage = currentStage;
+        currentStage = nextStage;
+    }
+    
+    public static void runPreviousStage(GameFrame ui)
+    {
+        getPreviousStage().run(ui);
+        nextStage = currentStage;
+        currentStage = getPreviousStage();
+        previousStage = null;
     }
     
     /**
@@ -49,6 +61,30 @@ public class StageEngine
      */
     public static void rotatePlot(Stage nextStage)
     {
-        StageEngine.nextStage = nextStage;
+        StageEngine.setNextStage(nextStage);
+    }
+
+    /**
+     * @return the nextStage
+     */
+    public static Stage getNextStage()
+    {
+        return nextStage;
+    }
+
+    /**
+     * @param aNextStage the nextStage to set
+     */
+    public static void setNextStage(Stage aNextStage)
+    {
+        nextStage = aNextStage;
+    }
+
+    /**
+     * @return the previousStage
+     */
+    public static Stage getPreviousStage()
+    {
+        return previousStage;
     }
 }

@@ -3,12 +3,9 @@ package omo;
 import java.awt.Color;
 import static omo.NarrativeEngine.*;
 import static omo.stage.StageEngine.*;
-import omo.stage.StagePool;
-import static omo.stage.StagePool.accident;
-import static omo.stage.StagePool.classOver;
-import static omo.stage.StagePool.drink;
 import omo.ui.GameFrame;
 import static omo.ui.GameFrame.*;
+import static omo.GameCore.STAGE_POOL;
 
 /**
  * Static class which provides bladder simulation functionality and stores the
@@ -18,7 +15,6 @@ import static omo.ui.GameFrame.*;
  */
 public class Bladder
 {
-
     /**
      * Current bladder fulness.
      */
@@ -283,11 +279,11 @@ public class Bladder
                 {
                     if (specialHardcoreStage)
                     {
-                        rotatePlot(StagePool.surpriseAccident);
+                        rotatePlot(STAGE_POOL.surpriseAccident);
                     }
                     else
                     {
-                        rotatePlot(StagePool.accident);
+                        rotatePlot(STAGE_POOL.accident);
                     }
                 }
             }
@@ -357,7 +353,7 @@ public class Bladder
             setThirst(getThirst() + amount);
             if (Bladder.getThirst() > Bladder.MAXIMAL_THIRST)
             {
-                rotatePlot(drink);
+                rotatePlot(STAGE_POOL.drink);
             }
         }
     }
@@ -367,7 +363,7 @@ public class Bladder
         if (Bladder.getTime() >= 90)
         {
             ui.setText("You hear the bell finally ring.");
-            rotatePlot(classOver);
+            rotatePlot(STAGE_POOL.classOver);
         }
     }
 
@@ -456,7 +452,7 @@ public class Bladder
                     }
                 }
             }
-            rotatePlot(accident);
+            rotatePlot(STAGE_POOL.accident);
             ui.handleNextClicked();
         }
     }

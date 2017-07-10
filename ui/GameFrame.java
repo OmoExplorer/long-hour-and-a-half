@@ -22,6 +22,7 @@ import omo.GameCore;
 import omo.NarrativeEngine;
 import static omo.NarrativeEngine.*;
 import omo.Save;
+import omo.stage.StageEngine;
 
 public class GameFrame extends JFrame
 {
@@ -102,7 +103,8 @@ public class GameFrame extends JFrame
     
     public void handleNextClicked()
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        StageEngine.runNextStage(this);
     }
 
     private void showScore()
@@ -1410,6 +1412,5 @@ public class GameFrame extends JFrame
         sphincterBar.setVisible(true);
         drynessBar.setVisible(true);
         timeBar.setVisible(true);
-        handleNextClicked();
     }
 }
