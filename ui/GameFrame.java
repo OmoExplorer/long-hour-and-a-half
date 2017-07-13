@@ -23,6 +23,7 @@ import omo.NarrativeEngine;
 import static omo.NarrativeEngine.*;
 import omo.Save;
 import omo.stage.StageEngine;
+import static omo.stage.StageEngine.getNextStage;
 
 public class GameFrame extends JFrame
 {
@@ -103,7 +104,7 @@ public class GameFrame extends JFrame
     
     public void handleNextClicked()
     {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//        throw new UnsupportedOperationException("Not supported yet.");
         StageEngine.runNextStage(this);
     }
 
@@ -1094,7 +1095,7 @@ public class GameFrame extends JFrame
     {
         try
         {
-            lblName.setText(getName());
+            lblName.setText(getCharacterName());
             lblBladder.setText("Bladder: " + Math.round(getFulness()) + "%");
             lblEmbarassment.setText("Embarassment: " + getEmbarassment());
             lblBelly.setText("Belly: " + Math.round(getBelly()) + "%");
@@ -1110,6 +1111,7 @@ public class GameFrame extends JFrame
             timeBar.setValue(getTime());
             lblThirst.setText("Thirst: " + Math.round(getThirst()) + "%");
             thirstBar.setValue((int) getThirst());
+            setText(getNextStage().getText());
         }
         catch (Exception e)
         {
@@ -1254,7 +1256,7 @@ public class GameFrame extends JFrame
         btnNewGame.setToolTipText("Start the game over with the another parameters.");
         contentPane.add(btnNewGame);
         //Name label setup
-        lblName = new JLabel(NarrativeEngine.getName());
+        lblName = new JLabel(NarrativeEngine.getCharacterName());
         lblName.setFont(new Font("Tahoma", Font.PLAIN, 18));
         lblName.setBounds(20, 170, 200, 32);
         contentPane.add(lblName);

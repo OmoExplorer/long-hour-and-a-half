@@ -3,11 +3,11 @@ package omo;
 import java.util.ArrayList;
 import java.util.Random;
 import static omo.Bladder.*;
+import static omo.GameCore.STAGE_POOL;
 import static omo.Gender.*;
 import omo.stage.StageEngine;
 import omo.ui.GameFrame;
 import static omo.ui.GameFrame.MAX_LINES;
-import static omo.GameCore.STAGE_POOL;
 
 //TODO: Break down
 //TODO: Remove old stage engine functinality
@@ -48,7 +48,7 @@ public class NarrativeEngine
     /**
      * Current character gender.
      */
-    static Gender gender;
+    private static Gender gender;
 
     static boolean specialHardcoreStage = false;
 
@@ -80,7 +80,7 @@ public class NarrativeEngine
     /**
      * Character's name.
      */
-    private static String name;
+    private static String characterName;
 
     /**
      * Whether or not charecter has to stay 30 minutes after class.
@@ -210,7 +210,7 @@ public class NarrativeEngine
      */
     public static boolean isFemale()
     {
-        return gender == FEMALE;
+        return getGender() == FEMALE;
     }
 
     /**
@@ -219,7 +219,7 @@ public class NarrativeEngine
      */
     public static boolean isMale()
     {
-        return gender == MALE;
+        return getGender() == MALE;
     }
 
     public static boolean isLowerRevealing()
@@ -382,17 +382,17 @@ public class NarrativeEngine
     /**
      * @return the name
      */
-    public static String getName()
+    public static String getCharacterName()
     {
-        return name;
+        return characterName;
     }
 
     /**
-     * @param aName the name to set
+     * @param characterName the name to set
      */
-    public static void setName(String name)
+    public static void setCharacterName(String characterName)
     {
-        NarrativeEngine.name = name;
+        NarrativeEngine.characterName = characterName;
     }
 
     /**
@@ -587,6 +587,22 @@ public class NarrativeEngine
         {
             return maleText;
         }
+    }
+
+    /**
+     * @return the gender
+     */
+    public static Gender getGender()
+    {
+        return gender;
+    }
+
+    /**
+     * @param aGender the gender to set
+     */
+    public static void setGender(Gender aGender)
+    {
+        gender = aGender;
     }
 
 }

@@ -391,7 +391,7 @@ public class StagePool
                         {
                             return new String[]
                             {
-                                "People around you are laughing loudly.", getName() + " peed herself! Ahaha!!!"
+                                "People around you are laughing loudly.", getCharacterName() + " peed herself! Ahaha!!!"
                             };
                         }
                         else
@@ -400,14 +400,14 @@ public class StagePool
                             {
                                 return new String[]
                                 {
-                                    "People around you are laughing loudly.", getName() + " peed himself! Ahaha!!!"
+                                    "People around you are laughing loudly.", getCharacterName() + " peed himself! Ahaha!!!"
                                 };
                             }
                             else
                             {
                                 return new String[]
                                 {
-                                    "People around you are laughing loudly.", getName() + " wet h" + (isFemale() ? "er " : "is ") + getUndies().insert() + "! Ahaha!!"
+                                    "People around you are laughing loudly.", getCharacterName() + " wet h" + (isFemale() ? "er " : "is ") + getUndies().insert() + "! Ahaha!!"
                                 };
                             }
                         }
@@ -418,7 +418,7 @@ public class StagePool
                         {
                             return new String[]
                             {
-                                "People around you are laughing loudly.", getName() + " peed her " + getLower().insert() + "! Ahaha!!"
+                                "People around you are laughing loudly.", getCharacterName() + " peed her " + getLower().insert() + "! Ahaha!!"
                             };
                         }
                         else
@@ -617,7 +617,7 @@ public class StagePool
                     setLinesAsDialogue(1, 3);
                     return new String[]
                     {
-                        "Next time you run into class, " + getName() + ",", "your teacher says,",
+                        "Next time you run into class, " + getCharacterName() + ",", "your teacher says,",
                         "make sure you're wearing something less... revealing!",
                         "A chuckle passes over the classroom, and you can't help but feel a",
                         "tad bit embarrassed about your rush into class."
@@ -642,7 +642,7 @@ public class StagePool
                         setLinesAsDialogue(1, 3);
                         return new String[]
                         {
-                            "Sit down, " + getName() + ". You're running late.",
+                            "Sit down, " + getCharacterName() + ". You're running late.",
                             "your teacher says,",
                             "And next time, don't make so much noise entering the classroom!",
                             "A chuckle passes over the classroom, and you can't help but feel a tad bit embarrassed",
@@ -868,7 +868,7 @@ public class StagePool
         //Asked by the teacher
         askedByTeacher = new Stage(schoolHolding, new String[]
         {
-            NarrativeEngine.getName() + ", why don't you come up to the board and solve this problem?,",
+            NarrativeEngine.getCharacterName() + ", why don't you come up to the board and solve this problem?,",
             "suddenly asks you the teacher. Of course, you don't have a clue how to solve it.",
             "You make your way to the front of the room and act lost, knowing you'll be stuck",
             "up there for a while as the teacher explains it.",

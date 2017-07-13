@@ -401,7 +401,7 @@ public class GameCore
     {
         assignFieldValuesFromParameters(name, gndr, diff, inc, bladder);
 
-        setupFileChoosers(ui);
+        setupFileChoosers();
 
         initCrotchName();
 
@@ -411,17 +411,17 @@ public class GameCore
 //        StageEngine.setNextStage(leaveBed);
     }
 
-    private void setupFileChoosers(GameFrame ui)
+    private void setupFileChoosers()
     {
         fcWear = new WearFileChooser();
         fcGame = new GameSaveFileChooser();
     }
 
-    private void assignFieldValuesFromParameters(String name1, Gender gndr, boolean diff, float inc, short bladder)
+    private void assignFieldValuesFromParameters(String name, Gender gndr, boolean diff, float inc, short bladder)
     {
         //Assigning constructor parameters to values
-        NarrativeEngine.setName(name1);
-        gender = gndr;
+        setCharacterName(name);
+        setGender(gndr);
         setHardcore(diff);
         setIncontinence(inc);
         setFulness(bladder);

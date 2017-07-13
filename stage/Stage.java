@@ -77,7 +77,7 @@ public class Stage
         {
             passTime(ui, duration);
         }
-        ui.setText(getText());
+        ui.update();
         operate(ui);
     }
 

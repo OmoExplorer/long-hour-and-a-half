@@ -1,5 +1,6 @@
 package omo.stage;
 
+import static omo.GameCore.*;
 import omo.ui.GameFrame;
 
 /**
@@ -23,8 +24,13 @@ public class StageEngine
     {
         previousStage = null;
         StageEngine.firstStage = firstStage;
-        currentStage = firstStage;
-        nextStage = firstStage.getNextStage();
+//        Workaround
+//        currentStage = firstStage;
+        currentStage = STAGE_POOL.leaveBed;
+        
+//        Workaround
+//        nextStage = firstStage.getNextStage();
+        nextStage = STAGE_POOL.leaveHome;
     }
     
     /**
@@ -44,6 +50,7 @@ public class StageEngine
         nextStage.run(ui);
         previousStage = currentStage;
         currentStage = nextStage;
+        nextStage = nextStage.getNextStage();
     }
     
     public static void runPreviousStage(GameFrame ui)

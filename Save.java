@@ -65,7 +65,7 @@ public class Save implements Serializable //"implements Serializable" is require
     public static void save(GameFrame ui)
     {
         GameSaveFileChooser fcGame = new GameSaveFileChooser();
-        fcGame.setSelectedFile(new File(getName()));
+        fcGame.setSelectedFile(new File(getCharacterName()));
         if (fcGame.showSaveDialog(ui) == JFileChooser.APPROVE_OPTION)
         {
             File file = new File(fcGame.getSelectedFile().getAbsolutePath() + ".lhhsav");
@@ -75,8 +75,8 @@ public class Save implements Serializable //"implements Serializable" is require
             try
             {
                 Save save = new Save();
-                save.name = getName();
-                save.gender = NarrativeEngine.gender;
+                save.name = getCharacterName();
+                save.gender = NarrativeEngine.getGender();
                 save.hardcore = isHardcore(); //TODO
                 save.incontinence = getIncontinence();
                 save.bladder = getFulness();

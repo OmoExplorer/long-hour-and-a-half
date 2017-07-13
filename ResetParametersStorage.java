@@ -24,8 +24,8 @@ class ResetParametersStorage
     static void stashParametersForReset()
     {
         //TODO
-        ResetParametersStorage.nameParam = NarrativeEngine.getName();
-        ResetParametersStorage.gndrParam = NarrativeEngine.gender;
+        ResetParametersStorage.nameParam = NarrativeEngine.getCharacterName();
+        ResetParametersStorage.gndrParam = NarrativeEngine.getGender();
         ResetParametersStorage.incParam = Bladder.getIncontinence();
         ResetParametersStorage.bladderParam = Bladder.getFulness();
         ResetParametersStorage.outerParam = getLower().getName();
