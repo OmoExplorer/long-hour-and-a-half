@@ -64,28 +64,6 @@ public class Wear implements Serializable //"implements Serializable" is require
     private WearType type;
 
     /**
-     * Assign wear parameters.
-     *
-     * @param name the wear name (e. g. "Regular panties")
-     * @param insertName the insert name used in the game text (e. g. "panties")
-     * @param pressure the pressure of an wear.<br>1 point of a pressure takes 1
-     * point from the maximal bladder capacity.
-     * @param absorption the absorption of an wear.<br>1 point of an absorption
-     * can store 1 point of a leaked pee.
-     * @param dryingOverTime the drying over time.<br>1 point = -1 pee unit per
-     * 3 minutes
-     */
-    private void setFieldValuesInConstructor(String name, String insertName, float pressure, float absorption, float dryingOverTime)
-    {
-        this.name = name;
-        this.insertName = insertName;
-        this.pressure = pressure;
-        this.absorption = absorption;
-        this.dryingOverTime = dryingOverTime;
-        missing = name.equals("No underwear") || name.equals("No outerwear");
-    }
-
-    /**
      * @param name the wear name (e. g. "Regular panties")
      * @param insertName the insert name used in the game text (e. g. "panties")
      * @param pressure the pressure of an wear.<br>1 point of a pressure takes 1
@@ -115,6 +93,28 @@ public class Wear implements Serializable //"implements Serializable" is require
     {
         setFieldValuesInConstructor(name, insertName, pressure, absorption, dryingOverTime);
         this.type = type;
+    }
+    
+    /**
+     * Assign wear parameters.
+     *
+     * @param name the wear name (e. g. "Regular panties")
+     * @param insertName the insert name used in the game text (e. g. "panties")
+     * @param pressure the pressure of an wear.<br>1 point of a pressure takes 1
+     * point from the maximal bladder capacity.
+     * @param absorption the absorption of an wear.<br>1 point of an absorption
+     * can store 1 point of a leaked pee.
+     * @param dryingOverTime the drying over time.<br>1 point = -1 pee unit per
+     * 3 minutes
+     */
+    private void setFieldValuesInConstructor(String name, String insertName, float pressure, float absorption, float dryingOverTime)
+    {
+        this.name = name;
+        this.insertName = insertName;
+        this.pressure = pressure;
+        this.absorption = absorption;
+        this.dryingOverTime = dryingOverTime;
+        missing = name.equals("No underwear") || name.equals("No outerwear");
     }
 
     /**
