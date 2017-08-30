@@ -3,7 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package omo;
+package omo.ui;
+
+import omo.Wear;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -102,11 +104,11 @@ public class WearEditor extends javax.swing.JFrame
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Wear editor");
 
-        nameLabel.setText("Wear name");
-        nameLabel.setToolTipText("Your wear name (e. g. \"Beautiful skirt\")");
+        nameLabel.setText("Wear characterName");
+        nameLabel.setToolTipText("Your wear characterName (e. g. \"Beautiful skirt\")");
         nameLabel.setName("nameLabel"); // NOI18N
 
-        nameField.setToolTipText("Your wear name (e. g. \"Beautiful skirt\")");
+        nameField.setToolTipText("Your wear characterName (e. g. \"Beautiful skirt\")");
         nameField.setName("nameField"); // NOI18N
 
         typeLabel.setText("Wear type");
@@ -161,11 +163,11 @@ public class WearEditor extends javax.swing.JFrame
             }
         });
 
-        insertNameLabel.setText("Wear insert name");
-        insertNameLabel.setToolTipText("Your wear name which is inserted in the game text (e. g. \"skirt\")");
+        insertNameLabel.setText("Wear insert characterName");
+        insertNameLabel.setToolTipText("Your wear characterName which is inserted in the game text (e. g. \"skirt\")");
         insertNameLabel.setName("insertNameLabel"); // NOI18N
 
-        insertNameField.setToolTipText("Your wear name which is inserted in the game text (e. g. \"skirt\")");
+        insertNameField.setToolTipText("Your wear characterName which is inserted in the game text (e. g. \"skirt\")");
         insertNameField.setName("insertNameField"); // NOI18N
 
         GroupLayout layout = new GroupLayout(getContentPane());
@@ -311,7 +313,7 @@ public class WearEditor extends javax.swing.JFrame
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try
         {
