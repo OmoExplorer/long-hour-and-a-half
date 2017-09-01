@@ -9,12 +9,18 @@ import java.io.Serializable
  */
 class Wear(
         val name: String,
-        var insertName: String,
+        var insertName: String = name.toLowerCase(),
         val pressure: Double = 0.0,
         val absorption: Double = 0.0,
         val dryingOverTime: Double = 0.0,
-        val type: WearType? = null
+        var type: WearType? = null
 ) : Serializable {
+    class GameState(
+            var color: String = ""
+    )
+
+    lateinit var gameState: GameState
+
     /**
      * Whether or not certain wear equals "No under/outerwear".
      */
@@ -29,9 +35,7 @@ class Wear(
         UNDERWEAR, OUTERWEAR, BOTH_SUITABLE
     }
 
-    lateinit var color: String
-
-    companion object {
+    public companion object {
         /**
          * List of all colors that clothes may have.
          */
@@ -51,8 +55,11 @@ class Wear(
 
         internal var underwearList = arrayOf(
                 //        Name      Insert characterName     Pressure, Absorption, Drying over time
-                Wear("Random", "<b><i>LACK OF WEAR HANDLING$" + Thread.currentThread().stackTrace[0].lineNumber + "</i></b>", 0.0, 0.0, 0.0),
-                Wear("No underwear", "<b><i>LACK OF WEAR HANDLING$" + Thread.currentThread().stackTrace[0].lineNumber + "</i></b>", 0.0, 0.0, 1.0),
+                Wear("Random", """<b><i>LACK OF WEAR HANDLING${"$"}
+                    |${Thread.currentThread().stackTrace[0].lineNumber}</i></b>""".trimMargin()),
+                Wear("Custom"),
+                Wear("No underwear", """<b><i>LACK OF WEAR HANDLING${"$"}
+                    |${Thread.currentThread().stackTrace[0].lineNumber}</i></b>""".trimMargin()),
                 Wear("Strings", "panties", 1.0, 2.0, 1.0),
                 Wear("Tanga panties", "panties", 1.5, 3.0, 1.0),
                 Wear("Regular panties", "panties", 2.0, 4.0, 1.0),
@@ -72,13 +79,18 @@ class Wear(
                 Wear("Super-absorbing diaper", "diaper", 18.0, 600.0, 0.0)
         )
 
+        public val underwearMap = mutableMapOf<String, Wear>()
+        public val outerwearMap = mutableMapOf<String, Wear>()
+
         /**
          * List of all outerwear types.
          */
         internal var outerwearList = arrayOf(
                 //        Name      Insert characterName     Pressure, Absorption, Drying over time
-                Wear("Random", "<b><i>LACK OF WEAR HANDLING$" + Thread.currentThread().stackTrace[0].lineNumber + "</i></b>", 0.0, 0.0, 0.0),
-                Wear("No outerwear", "<b><i>LACK O.0 WEAR HANDLING$" + Thread.currentThread().stackTrace[0].lineNumber + "</i></b>", 0.0, 0.0, 1.0),
+                Wear("Random", """<b><i>LACK OF WEAR HANDLING${"$"}
+                    |${Thread.currentThread().stackTrace[0].lineNumber}</i></b>""".trimMargin()),
+                Wear("No outerwear", """<b><i>LACK OF WEAR HANDLING${"$"}
+                    |${Thread.currentThread().stackTrace[0].lineNumber}</i></b>""".trimMargin()),
                 Wear("Long jeans", "jeans", 7.0, 12.0, 1.2),
                 Wear("Knee-length jeans", "jeans", 6.0, 10.0, 1.2),
                 Wear("Short jeans", "shorts", 5.0, 8.5, 1.2),
@@ -102,5 +114,10 @@ class Wear(
                 Wear("Normal male jeans", "jeans", 7.0, 12.0, 1.2),
                 Wear("Male trousers", "trousers", 9.0, 15.75, 1.4)
         )
+
+        init {
+            underwearList.forEach { underwearMap[it.name] = it }
+            outerwearList.forEach { outerwearMap[it.name] = it }
+        }
     }
 }

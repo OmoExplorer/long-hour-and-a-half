@@ -1,24 +1,27 @@
 package omo
 
-import java.util.*
+import java.io.Serializable
 
-enum class Gender {
+enum class Gender : Serializable {
     FEMALE, MALE
 }
 
 class Character(
         var name: String,
         var gender: Gender,
-        val bladder: Bladder,
+        var bladder: Bladder,
         var level: Int,
         var xp: Int
-) {
-    lateinit var undies: Wear
-    lateinit var lower: Wear
+) : Serializable {
+    class GameState(
+            var undies: Wear,
+            var lower: Wear
+    )
 
-    fun setupForSchool(initialBladderFullness: Double = Random().nextInt(75).toDouble(), undies: Wear, lower: Wear) {
-        this.bladder.fullness = initialBladderFullness
-        this.undies = undies
-        this.lower = lower
+    var gameState: GameState = GameState(Wear("Error", "error"), Wear("Error", "error"))
+
+    fun setupGameState(initialBladderFullness: Double, undies: Wear, lower: Wear) {
+        this.bladder.gameState = Bladder.GameState(initialBladderFullness)
+        gameState = GameState(undies, lower)
     }
 }

@@ -1,8 +1,15 @@
 package omo.ui;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
+import omo.ALongHourAndAHalf;
+import omo.Gender;
+import omo.Save;
+import omo.Wear;
+
+import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -12,32 +19,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.Random;
-import javax.swing.BorderFactory;
-import javax.swing.ButtonGroup;
-import javax.swing.GroupLayout;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JScrollPane;
-import javax.swing.JSlider;
-import javax.swing.JTextField;
-import javax.swing.JTextPane;
-import javax.swing.JTree;
-import javax.swing.LayoutStyle;
-import javax.swing.WindowConstants;
-import javax.swing.filechooser.FileFilter;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
-
-import omo.ALongHourAndAHalf;
-import omo.ALongHourAndAHalf.Gender;
-import omo.Save;
 
 /**
- *
  * @author JavaBird
  */
 public class setupFramePre extends javax.swing.JFrame {
@@ -53,23 +36,20 @@ public class setupFramePre extends javax.swing.JFrame {
      * Creates new form setupFrame
      */
     public setupFramePre() {
-		fcWear = new JFileChooser();
+        fcWear = new JFileChooser();
         fcWear.setFileFilter(new FileFilter() {
             @Override
-            public boolean accept(File f)
-            {
+            public boolean accept(File f) {
                 String extension = "";
                 int i = f.getName().lastIndexOf('.');
-                if (i > 0)
-                {
+                if (i > 0) {
                     extension = f.getName().substring(i + 1);
                 }
                 return extension.equals("lhhwear");
             }
 
             @Override
-            public String getDescription()
-            {
+            public String getDescription() {
                 return "A Long Hour and a Half Saved game";
             }
         });
@@ -77,20 +57,17 @@ public class setupFramePre extends javax.swing.JFrame {
         fcGame = new JFileChooser();
         fcGame.setFileFilter(new FileFilter() {
             @Override
-            public boolean accept(File f)
-            {
+            public boolean accept(File f) {
                 String extension = "";
                 int i = f.getName().lastIndexOf('.');
-                if (i > 0)
-                {
+                if (i > 0) {
                     extension = f.getName().substring(i + 1);
                 }
                 return extension.equals("lhhsav");
             }
 
             @Override
-            public String getDescription()
-            {
+            public String getDescription() {
                 return "A Long Hour and a Half Saved game";
             }
         });
@@ -104,8 +81,7 @@ public class setupFramePre extends javax.swing.JFrame {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents()
-    {
+    private void initComponents() {
 
         buttonGroup1 = new ButtonGroup();
         buttonGroup2 = new ButtonGroup();
@@ -167,10 +143,8 @@ public class setupFramePre extends javax.swing.JFrame {
         buttonGroup1.add(maleRadio);
         maleRadio.setText("Male");
         maleRadio.setName("maleRadio"); // NOI18N
-        maleRadio.addActionListener(new ActionListener()
-        {
-            public void actionPerformed(ActionEvent evt)
-            {
+        maleRadio.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 maleRadioActionPerformed(evt);
             }
         });
@@ -179,10 +153,8 @@ public class setupFramePre extends javax.swing.JFrame {
         femaleRadio.setSelected(true);
         femaleRadio.setText("Female");
         femaleRadio.setName("femaleRadio"); // NOI18N
-        femaleRadio.addActionListener(new ActionListener()
-        {
-            public void actionPerformed(ActionEvent evt)
-            {
+        femaleRadio.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 femaleRadioActionPerformed(evt);
             }
         });
@@ -195,10 +167,8 @@ public class setupFramePre extends javax.swing.JFrame {
         normalDiffRadio.setSelected(true);
         normalDiffRadio.setText("Normal");
         normalDiffRadio.setName("normalDiffRadio"); // NOI18N
-        normalDiffRadio.addActionListener(new ActionListener()
-        {
-            public void actionPerformed(ActionEvent evt)
-            {
+        normalDiffRadio.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 normalDiffRadioActionPerformed(evt);
             }
         });
@@ -211,17 +181,17 @@ public class setupFramePre extends javax.swing.JFrame {
         GroupLayout difficultyPanelLayout = new GroupLayout(difficultyPanel);
         difficultyPanel.setLayout(difficultyPanelLayout);
         difficultyPanelLayout.setHorizontalGroup(difficultyPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(difficultyPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(normalDiffRadio, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(100, 100, 100)
-                .addComponent(hardDiffRadio)
-                .addContainerGap())
+                .addGroup(difficultyPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(normalDiffRadio, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(100, 100, 100)
+                        .addComponent(hardDiffRadio)
+                        .addContainerGap())
         );
         difficultyPanelLayout.setVerticalGroup(difficultyPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(difficultyPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                .addComponent(normalDiffRadio)
-                .addComponent(hardDiffRadio))
+                .addGroup(difficultyPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(normalDiffRadio)
+                        .addComponent(hardDiffRadio))
         );
 
         incontLabel.setText("Incontinence");
@@ -253,10 +223,8 @@ public class setupFramePre extends javax.swing.JFrame {
         start.setText("Start");
         start.setToolTipText("Start new game");
         start.setName("start"); // NOI18N
-        start.addActionListener(new ActionListener()
-        {
-            public void actionPerformed(ActionEvent evt)
-            {
+        start.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 startActionPerformed(evt);
             }
         });
@@ -268,10 +236,8 @@ public class setupFramePre extends javax.swing.JFrame {
         buttonGroup3.add(basSliderRadio);
         basSliderRadio.setToolTipText("Defined value");
         basSliderRadio.setName("basSliderRadio"); // NOI18N
-        basSliderRadio.addActionListener(new ActionListener()
-        {
-            public void actionPerformed(ActionEvent evt)
-            {
+        basSliderRadio.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 basSliderRadioActionPerformed(evt);
             }
         });
@@ -281,10 +247,8 @@ public class setupFramePre extends javax.swing.JFrame {
         randomBasSlider.setText("Random");
         randomBasSlider.setToolTipText("Random value between 0% and 100%");
         randomBasSlider.setName("randomBasSlider"); // NOI18N
-        randomBasSlider.addActionListener(new ActionListener()
-        {
-            public void actionPerformed(ActionEvent evt)
-            {
+        randomBasSlider.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 randomBasSliderActionPerformed(evt);
             }
         });
@@ -434,10 +398,8 @@ public class setupFramePre extends javax.swing.JFrame {
         undiesColor_black.setToolTipText("Black");
         undiesColor_black.setName("undiesColor_black"); // NOI18N
         undiesColor_black.setPreferredSize(new Dimension(20, 20));
-        undiesColor_black.addMouseListener(new MouseAdapter()
-        {
-            public void mouseClicked(MouseEvent evt)
-            {
+        undiesColor_black.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
                 undiesColor_blackMouseClicked(evt);
             }
         });
@@ -445,10 +407,10 @@ public class setupFramePre extends javax.swing.JFrame {
         GroupLayout undiesColor_blackLayout = new GroupLayout(undiesColor_black);
         undiesColor_black.setLayout(undiesColor_blackLayout);
         undiesColor_blackLayout.setHorizontalGroup(undiesColor_blackLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 18, Short.MAX_VALUE)
+                .addGap(0, 18, Short.MAX_VALUE)
         );
         undiesColor_blackLayout.setVerticalGroup(undiesColor_blackLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 18, Short.MAX_VALUE)
+                .addGap(0, 18, Short.MAX_VALUE)
         );
 
         undiesColor_gray.setBackground(new Color(153, 153, 153));
@@ -456,10 +418,8 @@ public class setupFramePre extends javax.swing.JFrame {
         undiesColor_gray.setToolTipText("Gray");
         undiesColor_gray.setName("undiesColor_gray"); // NOI18N
         undiesColor_gray.setPreferredSize(new Dimension(20, 20));
-        undiesColor_gray.addMouseListener(new MouseAdapter()
-        {
-            public void mouseClicked(MouseEvent evt)
-            {
+        undiesColor_gray.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
                 undiesColor_grayMouseClicked(evt);
             }
         });
@@ -467,10 +427,10 @@ public class setupFramePre extends javax.swing.JFrame {
         GroupLayout undiesColor_grayLayout = new GroupLayout(undiesColor_gray);
         undiesColor_gray.setLayout(undiesColor_grayLayout);
         undiesColor_grayLayout.setHorizontalGroup(undiesColor_grayLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 18, Short.MAX_VALUE)
+                .addGap(0, 18, Short.MAX_VALUE)
         );
         undiesColor_grayLayout.setVerticalGroup(undiesColor_grayLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 18, Short.MAX_VALUE)
+                .addGap(0, 18, Short.MAX_VALUE)
         );
 
         undiesColor_red.setBackground(new Color(255, 0, 0));
@@ -478,10 +438,8 @@ public class setupFramePre extends javax.swing.JFrame {
         undiesColor_red.setToolTipText("Red");
         undiesColor_red.setName("undiesColor_red"); // NOI18N
         undiesColor_red.setPreferredSize(new Dimension(20, 20));
-        undiesColor_red.addMouseListener(new MouseAdapter()
-        {
-            public void mouseClicked(MouseEvent evt)
-            {
+        undiesColor_red.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
                 undiesColor_redMouseClicked(evt);
             }
         });
@@ -489,10 +447,10 @@ public class setupFramePre extends javax.swing.JFrame {
         GroupLayout undiesColor_redLayout = new GroupLayout(undiesColor_red);
         undiesColor_red.setLayout(undiesColor_redLayout);
         undiesColor_redLayout.setHorizontalGroup(undiesColor_redLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 18, Short.MAX_VALUE)
+                .addGap(0, 18, Short.MAX_VALUE)
         );
         undiesColor_redLayout.setVerticalGroup(undiesColor_redLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 18, Short.MAX_VALUE)
+                .addGap(0, 18, Short.MAX_VALUE)
         );
 
         undiesColor_orange.setBackground(new Color(255, 153, 0));
@@ -500,10 +458,8 @@ public class setupFramePre extends javax.swing.JFrame {
         undiesColor_orange.setToolTipText("Orange");
         undiesColor_orange.setName("undiesColor_orange"); // NOI18N
         undiesColor_orange.setPreferredSize(new Dimension(20, 20));
-        undiesColor_orange.addMouseListener(new MouseAdapter()
-        {
-            public void mouseClicked(MouseEvent evt)
-            {
+        undiesColor_orange.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
                 undiesColor_orangeMouseClicked(evt);
             }
         });
@@ -511,10 +467,10 @@ public class setupFramePre extends javax.swing.JFrame {
         GroupLayout undiesColor_orangeLayout = new GroupLayout(undiesColor_orange);
         undiesColor_orange.setLayout(undiesColor_orangeLayout);
         undiesColor_orangeLayout.setHorizontalGroup(undiesColor_orangeLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 18, Short.MAX_VALUE)
+                .addGap(0, 18, Short.MAX_VALUE)
         );
         undiesColor_orangeLayout.setVerticalGroup(undiesColor_orangeLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 18, Short.MAX_VALUE)
+                .addGap(0, 18, Short.MAX_VALUE)
         );
 
         undiesColor_yellow.setBackground(new Color(255, 255, 0));
@@ -522,10 +478,8 @@ public class setupFramePre extends javax.swing.JFrame {
         undiesColor_yellow.setToolTipText("Yellow");
         undiesColor_yellow.setName("undiesColor_yellow"); // NOI18N
         undiesColor_yellow.setPreferredSize(new Dimension(20, 20));
-        undiesColor_yellow.addMouseListener(new MouseAdapter()
-        {
-            public void mouseClicked(MouseEvent evt)
-            {
+        undiesColor_yellow.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
                 undiesColor_yellowMouseClicked(evt);
             }
         });
@@ -533,10 +487,10 @@ public class setupFramePre extends javax.swing.JFrame {
         GroupLayout undiesColor_yellowLayout = new GroupLayout(undiesColor_yellow);
         undiesColor_yellow.setLayout(undiesColor_yellowLayout);
         undiesColor_yellowLayout.setHorizontalGroup(undiesColor_yellowLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 18, Short.MAX_VALUE)
+                .addGap(0, 18, Short.MAX_VALUE)
         );
         undiesColor_yellowLayout.setVerticalGroup(undiesColor_yellowLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 18, Short.MAX_VALUE)
+                .addGap(0, 18, Short.MAX_VALUE)
         );
 
         undiesColor_green.setBackground(new Color(0, 255, 0));
@@ -544,10 +498,8 @@ public class setupFramePre extends javax.swing.JFrame {
         undiesColor_green.setToolTipText("Green");
         undiesColor_green.setName("undiesColor_green"); // NOI18N
         undiesColor_green.setPreferredSize(new Dimension(20, 20));
-        undiesColor_green.addMouseListener(new MouseAdapter()
-        {
-            public void mouseClicked(MouseEvent evt)
-            {
+        undiesColor_green.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
                 undiesColor_greenMouseClicked(evt);
             }
         });
@@ -555,10 +507,10 @@ public class setupFramePre extends javax.swing.JFrame {
         GroupLayout undiesColor_greenLayout = new GroupLayout(undiesColor_green);
         undiesColor_green.setLayout(undiesColor_greenLayout);
         undiesColor_greenLayout.setHorizontalGroup(undiesColor_greenLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 18, Short.MAX_VALUE)
+                .addGap(0, 18, Short.MAX_VALUE)
         );
         undiesColor_greenLayout.setVerticalGroup(undiesColor_greenLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 18, Short.MAX_VALUE)
+                .addGap(0, 18, Short.MAX_VALUE)
         );
 
         undiesColor_blue.setBackground(new Color(0, 255, 204));
@@ -566,10 +518,8 @@ public class setupFramePre extends javax.swing.JFrame {
         undiesColor_blue.setToolTipText("Blue");
         undiesColor_blue.setName("undiesColor_blue"); // NOI18N
         undiesColor_blue.setPreferredSize(new Dimension(20, 20));
-        undiesColor_blue.addMouseListener(new MouseAdapter()
-        {
-            public void mouseClicked(MouseEvent evt)
-            {
+        undiesColor_blue.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
                 undiesColor_blueMouseClicked(evt);
             }
         });
@@ -577,10 +527,10 @@ public class setupFramePre extends javax.swing.JFrame {
         GroupLayout undiesColor_blueLayout = new GroupLayout(undiesColor_blue);
         undiesColor_blue.setLayout(undiesColor_blueLayout);
         undiesColor_blueLayout.setHorizontalGroup(undiesColor_blueLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 18, Short.MAX_VALUE)
+                .addGap(0, 18, Short.MAX_VALUE)
         );
         undiesColor_blueLayout.setVerticalGroup(undiesColor_blueLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 18, Short.MAX_VALUE)
+                .addGap(0, 18, Short.MAX_VALUE)
         );
 
         undiesColor_darkBlue.setBackground(new Color(0, 0, 204));
@@ -588,10 +538,8 @@ public class setupFramePre extends javax.swing.JFrame {
         undiesColor_darkBlue.setToolTipText("Dark blue");
         undiesColor_darkBlue.setName("undiesColor_darkBlue"); // NOI18N
         undiesColor_darkBlue.setPreferredSize(new Dimension(20, 20));
-        undiesColor_darkBlue.addMouseListener(new MouseAdapter()
-        {
-            public void mouseClicked(MouseEvent evt)
-            {
+        undiesColor_darkBlue.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
                 undiesColor_darkBlueMouseClicked(evt);
             }
         });
@@ -599,10 +547,10 @@ public class setupFramePre extends javax.swing.JFrame {
         GroupLayout undiesColor_darkBlueLayout = new GroupLayout(undiesColor_darkBlue);
         undiesColor_darkBlue.setLayout(undiesColor_darkBlueLayout);
         undiesColor_darkBlueLayout.setHorizontalGroup(undiesColor_darkBlueLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 18, Short.MAX_VALUE)
+                .addGap(0, 18, Short.MAX_VALUE)
         );
         undiesColor_darkBlueLayout.setVerticalGroup(undiesColor_darkBlueLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 18, Short.MAX_VALUE)
+                .addGap(0, 18, Short.MAX_VALUE)
         );
 
         undiesColor_purple.setBackground(new Color(153, 0, 153));
@@ -610,10 +558,8 @@ public class setupFramePre extends javax.swing.JFrame {
         undiesColor_purple.setToolTipText("Purple");
         undiesColor_purple.setName("undiesColor_purple"); // NOI18N
         undiesColor_purple.setPreferredSize(new Dimension(20, 20));
-        undiesColor_purple.addMouseListener(new MouseAdapter()
-        {
-            public void mouseClicked(MouseEvent evt)
-            {
+        undiesColor_purple.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
                 undiesColor_purpleMouseClicked(evt);
             }
         });
@@ -621,10 +567,10 @@ public class setupFramePre extends javax.swing.JFrame {
         GroupLayout undiesColor_purpleLayout = new GroupLayout(undiesColor_purple);
         undiesColor_purple.setLayout(undiesColor_purpleLayout);
         undiesColor_purpleLayout.setHorizontalGroup(undiesColor_purpleLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 18, Short.MAX_VALUE)
+                .addGap(0, 18, Short.MAX_VALUE)
         );
         undiesColor_purpleLayout.setVerticalGroup(undiesColor_purpleLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 18, Short.MAX_VALUE)
+                .addGap(0, 18, Short.MAX_VALUE)
         );
 
         undiesColor_pink.setBackground(new Color(255, 51, 255));
@@ -632,10 +578,8 @@ public class setupFramePre extends javax.swing.JFrame {
         undiesColor_pink.setToolTipText("Pink");
         undiesColor_pink.setName("undiesColor_pink"); // NOI18N
         undiesColor_pink.setPreferredSize(new Dimension(20, 20));
-        undiesColor_pink.addMouseListener(new MouseAdapter()
-        {
-            public void mouseClicked(MouseEvent evt)
-            {
+        undiesColor_pink.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
                 undiesColor_pinkMouseClicked(evt);
             }
         });
@@ -643,10 +587,10 @@ public class setupFramePre extends javax.swing.JFrame {
         GroupLayout undiesColor_pinkLayout = new GroupLayout(undiesColor_pink);
         undiesColor_pink.setLayout(undiesColor_pinkLayout);
         undiesColor_pinkLayout.setHorizontalGroup(undiesColor_pinkLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 18, Short.MAX_VALUE)
+                .addGap(0, 18, Short.MAX_VALUE)
         );
         undiesColor_pinkLayout.setVerticalGroup(undiesColor_pinkLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 18, Short.MAX_VALUE)
+                .addGap(0, 18, Short.MAX_VALUE)
         );
 
         lowerColor_pink1.setBackground(new Color(255, 51, 255));
@@ -654,10 +598,8 @@ public class setupFramePre extends javax.swing.JFrame {
         lowerColor_pink1.setToolTipText("Pink");
         lowerColor_pink1.setName("lowerColor_pink1"); // NOI18N
         lowerColor_pink1.setPreferredSize(new Dimension(20, 20));
-        lowerColor_pink1.addMouseListener(new MouseAdapter()
-        {
-            public void mouseClicked(MouseEvent evt)
-            {
+        lowerColor_pink1.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
                 lowerColor_pink1MouseClicked(evt);
             }
         });
@@ -665,10 +607,10 @@ public class setupFramePre extends javax.swing.JFrame {
         GroupLayout lowerColor_pink1Layout = new GroupLayout(lowerColor_pink1);
         lowerColor_pink1.setLayout(lowerColor_pink1Layout);
         lowerColor_pink1Layout.setHorizontalGroup(lowerColor_pink1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 18, Short.MAX_VALUE)
+                .addGap(0, 18, Short.MAX_VALUE)
         );
         lowerColor_pink1Layout.setVerticalGroup(lowerColor_pink1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 18, Short.MAX_VALUE)
+                .addGap(0, 18, Short.MAX_VALUE)
         );
 
         lowerColor_black1.setBackground(new Color(0, 0, 0));
@@ -676,10 +618,8 @@ public class setupFramePre extends javax.swing.JFrame {
         lowerColor_black1.setToolTipText("Black");
         lowerColor_black1.setName("lowerColor_black1"); // NOI18N
         lowerColor_black1.setPreferredSize(new Dimension(20, 20));
-        lowerColor_black1.addMouseListener(new MouseAdapter()
-        {
-            public void mouseClicked(MouseEvent evt)
-            {
+        lowerColor_black1.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
                 lowerColor_black1MouseClicked(evt);
             }
         });
@@ -687,10 +627,10 @@ public class setupFramePre extends javax.swing.JFrame {
         GroupLayout lowerColor_black1Layout = new GroupLayout(lowerColor_black1);
         lowerColor_black1.setLayout(lowerColor_black1Layout);
         lowerColor_black1Layout.setHorizontalGroup(lowerColor_black1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 18, Short.MAX_VALUE)
+                .addGap(0, 18, Short.MAX_VALUE)
         );
         lowerColor_black1Layout.setVerticalGroup(lowerColor_black1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 18, Short.MAX_VALUE)
+                .addGap(0, 18, Short.MAX_VALUE)
         );
 
         lowerColor_gray1.setBackground(new Color(153, 153, 153));
@@ -698,10 +638,8 @@ public class setupFramePre extends javax.swing.JFrame {
         lowerColor_gray1.setToolTipText("Gray");
         lowerColor_gray1.setName("lowerColor_gray1"); // NOI18N
         lowerColor_gray1.setPreferredSize(new Dimension(20, 20));
-        lowerColor_gray1.addMouseListener(new MouseAdapter()
-        {
-            public void mouseClicked(MouseEvent evt)
-            {
+        lowerColor_gray1.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
                 lowerColor_gray1MouseClicked(evt);
             }
         });
@@ -709,10 +647,10 @@ public class setupFramePre extends javax.swing.JFrame {
         GroupLayout lowerColor_gray1Layout = new GroupLayout(lowerColor_gray1);
         lowerColor_gray1.setLayout(lowerColor_gray1Layout);
         lowerColor_gray1Layout.setHorizontalGroup(lowerColor_gray1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 18, Short.MAX_VALUE)
+                .addGap(0, 18, Short.MAX_VALUE)
         );
         lowerColor_gray1Layout.setVerticalGroup(lowerColor_gray1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 18, Short.MAX_VALUE)
+                .addGap(0, 18, Short.MAX_VALUE)
         );
 
         lowerColor_red1.setBackground(new Color(255, 0, 0));
@@ -720,10 +658,8 @@ public class setupFramePre extends javax.swing.JFrame {
         lowerColor_red1.setToolTipText("Red");
         lowerColor_red1.setName("lowerColor_red1"); // NOI18N
         lowerColor_red1.setPreferredSize(new Dimension(20, 20));
-        lowerColor_red1.addMouseListener(new MouseAdapter()
-        {
-            public void mouseClicked(MouseEvent evt)
-            {
+        lowerColor_red1.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
                 lowerColor_red1MouseClicked(evt);
             }
         });
@@ -731,10 +667,10 @@ public class setupFramePre extends javax.swing.JFrame {
         GroupLayout lowerColor_red1Layout = new GroupLayout(lowerColor_red1);
         lowerColor_red1.setLayout(lowerColor_red1Layout);
         lowerColor_red1Layout.setHorizontalGroup(lowerColor_red1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 18, Short.MAX_VALUE)
+                .addGap(0, 18, Short.MAX_VALUE)
         );
         lowerColor_red1Layout.setVerticalGroup(lowerColor_red1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 18, Short.MAX_VALUE)
+                .addGap(0, 18, Short.MAX_VALUE)
         );
 
         lowerColor_orange1.setBackground(new Color(255, 153, 0));
@@ -742,10 +678,8 @@ public class setupFramePre extends javax.swing.JFrame {
         lowerColor_orange1.setToolTipText("Orange");
         lowerColor_orange1.setName("lowerColor_orange1"); // NOI18N
         lowerColor_orange1.setPreferredSize(new Dimension(20, 20));
-        lowerColor_orange1.addMouseListener(new MouseAdapter()
-        {
-            public void mouseClicked(MouseEvent evt)
-            {
+        lowerColor_orange1.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
                 lowerColor_orange1MouseClicked(evt);
             }
         });
@@ -753,10 +687,10 @@ public class setupFramePre extends javax.swing.JFrame {
         GroupLayout lowerColor_orange1Layout = new GroupLayout(lowerColor_orange1);
         lowerColor_orange1.setLayout(lowerColor_orange1Layout);
         lowerColor_orange1Layout.setHorizontalGroup(lowerColor_orange1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 18, Short.MAX_VALUE)
+                .addGap(0, 18, Short.MAX_VALUE)
         );
         lowerColor_orange1Layout.setVerticalGroup(lowerColor_orange1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 18, Short.MAX_VALUE)
+                .addGap(0, 18, Short.MAX_VALUE)
         );
 
         lowerColor_yellow1.setBackground(new Color(255, 255, 0));
@@ -764,10 +698,8 @@ public class setupFramePre extends javax.swing.JFrame {
         lowerColor_yellow1.setToolTipText("Yellow");
         lowerColor_yellow1.setName("lowerColor_yellow1"); // NOI18N
         lowerColor_yellow1.setPreferredSize(new Dimension(20, 20));
-        lowerColor_yellow1.addMouseListener(new MouseAdapter()
-        {
-            public void mouseClicked(MouseEvent evt)
-            {
+        lowerColor_yellow1.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
                 lowerColor_yellow1MouseClicked(evt);
             }
         });
@@ -775,10 +707,10 @@ public class setupFramePre extends javax.swing.JFrame {
         GroupLayout lowerColor_yellow1Layout = new GroupLayout(lowerColor_yellow1);
         lowerColor_yellow1.setLayout(lowerColor_yellow1Layout);
         lowerColor_yellow1Layout.setHorizontalGroup(lowerColor_yellow1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 18, Short.MAX_VALUE)
+                .addGap(0, 18, Short.MAX_VALUE)
         );
         lowerColor_yellow1Layout.setVerticalGroup(lowerColor_yellow1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 18, Short.MAX_VALUE)
+                .addGap(0, 18, Short.MAX_VALUE)
         );
 
         lowerColor_green1.setBackground(new Color(0, 255, 0));
@@ -786,10 +718,8 @@ public class setupFramePre extends javax.swing.JFrame {
         lowerColor_green1.setToolTipText("Green");
         lowerColor_green1.setName("lowerColor_green1"); // NOI18N
         lowerColor_green1.setPreferredSize(new Dimension(20, 20));
-        lowerColor_green1.addMouseListener(new MouseAdapter()
-        {
-            public void mouseClicked(MouseEvent evt)
-            {
+        lowerColor_green1.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
                 lowerColor_green1MouseClicked(evt);
             }
         });
@@ -797,10 +727,10 @@ public class setupFramePre extends javax.swing.JFrame {
         GroupLayout lowerColor_green1Layout = new GroupLayout(lowerColor_green1);
         lowerColor_green1.setLayout(lowerColor_green1Layout);
         lowerColor_green1Layout.setHorizontalGroup(lowerColor_green1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 18, Short.MAX_VALUE)
+                .addGap(0, 18, Short.MAX_VALUE)
         );
         lowerColor_green1Layout.setVerticalGroup(lowerColor_green1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 18, Short.MAX_VALUE)
+                .addGap(0, 18, Short.MAX_VALUE)
         );
 
         lowerColor_blue1.setBackground(new Color(0, 255, 204));
@@ -808,10 +738,8 @@ public class setupFramePre extends javax.swing.JFrame {
         lowerColor_blue1.setToolTipText("Blue");
         lowerColor_blue1.setName("lowerColor_blue1"); // NOI18N
         lowerColor_blue1.setPreferredSize(new Dimension(20, 20));
-        lowerColor_blue1.addMouseListener(new MouseAdapter()
-        {
-            public void mouseClicked(MouseEvent evt)
-            {
+        lowerColor_blue1.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
                 lowerColor_blue1MouseClicked(evt);
             }
         });
@@ -819,10 +747,10 @@ public class setupFramePre extends javax.swing.JFrame {
         GroupLayout lowerColor_blue1Layout = new GroupLayout(lowerColor_blue1);
         lowerColor_blue1.setLayout(lowerColor_blue1Layout);
         lowerColor_blue1Layout.setHorizontalGroup(lowerColor_blue1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 18, Short.MAX_VALUE)
+                .addGap(0, 18, Short.MAX_VALUE)
         );
         lowerColor_blue1Layout.setVerticalGroup(lowerColor_blue1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 18, Short.MAX_VALUE)
+                .addGap(0, 18, Short.MAX_VALUE)
         );
 
         lowerColor_darkBlue1.setBackground(new Color(0, 0, 204));
@@ -830,10 +758,8 @@ public class setupFramePre extends javax.swing.JFrame {
         lowerColor_darkBlue1.setToolTipText("Dark blue");
         lowerColor_darkBlue1.setName("lowerColor_darkBlue1"); // NOI18N
         lowerColor_darkBlue1.setPreferredSize(new Dimension(20, 20));
-        lowerColor_darkBlue1.addMouseListener(new MouseAdapter()
-        {
-            public void mouseClicked(MouseEvent evt)
-            {
+        lowerColor_darkBlue1.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
                 lowerColor_darkBlue1MouseClicked(evt);
             }
         });
@@ -841,10 +767,10 @@ public class setupFramePre extends javax.swing.JFrame {
         GroupLayout lowerColor_darkBlue1Layout = new GroupLayout(lowerColor_darkBlue1);
         lowerColor_darkBlue1.setLayout(lowerColor_darkBlue1Layout);
         lowerColor_darkBlue1Layout.setHorizontalGroup(lowerColor_darkBlue1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 18, Short.MAX_VALUE)
+                .addGap(0, 18, Short.MAX_VALUE)
         );
         lowerColor_darkBlue1Layout.setVerticalGroup(lowerColor_darkBlue1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 18, Short.MAX_VALUE)
+                .addGap(0, 18, Short.MAX_VALUE)
         );
 
         lowerColor_purple1.setBackground(new Color(153, 0, 153));
@@ -852,10 +778,8 @@ public class setupFramePre extends javax.swing.JFrame {
         lowerColor_purple1.setToolTipText("Purple");
         lowerColor_purple1.setName("lowerColor_purple1"); // NOI18N
         lowerColor_purple1.setPreferredSize(new Dimension(20, 20));
-        lowerColor_purple1.addMouseListener(new MouseAdapter()
-        {
-            public void mouseClicked(MouseEvent evt)
-            {
+        lowerColor_purple1.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
                 lowerColor_purple1MouseClicked(evt);
             }
         });
@@ -863,10 +787,10 @@ public class setupFramePre extends javax.swing.JFrame {
         GroupLayout lowerColor_purple1Layout = new GroupLayout(lowerColor_purple1);
         lowerColor_purple1.setLayout(lowerColor_purple1Layout);
         lowerColor_purple1Layout.setHorizontalGroup(lowerColor_purple1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 18, Short.MAX_VALUE)
+                .addGap(0, 18, Short.MAX_VALUE)
         );
         lowerColor_purple1Layout.setVerticalGroup(lowerColor_purple1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 18, Short.MAX_VALUE)
+                .addGap(0, 18, Short.MAX_VALUE)
         );
 
         undiesColor_random.setBackground(new Color(204, 204, 204));
@@ -874,10 +798,8 @@ public class setupFramePre extends javax.swing.JFrame {
         undiesColor_random.setToolTipText("Random");
         undiesColor_random.setName("undiesColor_random"); // NOI18N
         undiesColor_random.setPreferredSize(new Dimension(20, 20));
-        undiesColor_random.addMouseListener(new MouseAdapter()
-        {
-            public void mouseClicked(MouseEvent evt)
-            {
+        undiesColor_random.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
                 undiesColor_randomMouseClicked(evt);
             }
         });
@@ -885,10 +807,10 @@ public class setupFramePre extends javax.swing.JFrame {
         GroupLayout undiesColor_randomLayout = new GroupLayout(undiesColor_random);
         undiesColor_random.setLayout(undiesColor_randomLayout);
         undiesColor_randomLayout.setHorizontalGroup(undiesColor_randomLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 14, Short.MAX_VALUE)
+                .addGap(0, 14, Short.MAX_VALUE)
         );
         undiesColor_randomLayout.setVerticalGroup(undiesColor_randomLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 14, Short.MAX_VALUE)
+                .addGap(0, 14, Short.MAX_VALUE)
         );
 
         lowerColor_random1.setBackground(new Color(204, 204, 204));
@@ -896,10 +818,8 @@ public class setupFramePre extends javax.swing.JFrame {
         lowerColor_random1.setToolTipText("Random");
         lowerColor_random1.setName("lowerColor_random1"); // NOI18N
         lowerColor_random1.setPreferredSize(new Dimension(20, 20));
-        lowerColor_random1.addMouseListener(new MouseAdapter()
-        {
-            public void mouseClicked(MouseEvent evt)
-            {
+        lowerColor_random1.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
                 lowerColor_random1MouseClicked(evt);
             }
         });
@@ -907,19 +827,17 @@ public class setupFramePre extends javax.swing.JFrame {
         GroupLayout lowerColor_random1Layout = new GroupLayout(lowerColor_random1);
         lowerColor_random1.setLayout(lowerColor_random1Layout);
         lowerColor_random1Layout.setHorizontalGroup(lowerColor_random1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 14, Short.MAX_VALUE)
+                .addGap(0, 14, Short.MAX_VALUE)
         );
         lowerColor_random1Layout.setVerticalGroup(lowerColor_random1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 14, Short.MAX_VALUE)
+                .addGap(0, 14, Short.MAX_VALUE)
         );
 
         wearEditorButton.setText("Wear editor");
         wearEditorButton.setToolTipText("Create your own wear and use it in game.");
         wearEditorButton.setName("wearEditorButton"); // NOI18N
-        wearEditorButton.addActionListener(new ActionListener()
-        {
-            public void actionPerformed(ActionEvent evt)
-            {
+        wearEditorButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 wearEditorButtonActionPerformed(evt);
             }
         });
@@ -927,10 +845,8 @@ public class setupFramePre extends javax.swing.JFrame {
         loadGame.setText("Load game...");
         loadGame.setToolTipText("Load a paused game");
         loadGame.setName("loadGame"); // NOI18N
-        loadGame.addActionListener(new ActionListener()
-        {
-            public void actionPerformed(ActionEvent evt)
-            {
+        loadGame.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 loadGameActionPerformed(evt);
             }
         });
@@ -938,162 +854,162 @@ public class setupFramePre extends javax.swing.JFrame {
         GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane3, GroupLayout.DEFAULT_SIZE, 782, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
                         .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                    .addComponent(nameField)
-                                    .addComponent(difficultyPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jScrollPane1, GroupLayout.Alignment.TRAILING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(nameLabel)
-                                        .addGap(0, 0, Short.MAX_VALUE)))
-                                .addGap(5, 5, 5))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                    .addComponent(underwearLabel)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(6, 6, 6)
-                                        .addComponent(undiesColor_black, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jScrollPane3, GroupLayout.DEFAULT_SIZE, 782, Short.MAX_VALUE)
+                                .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                .addGroup(layout.createSequentialGroup()
+                                                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                                .addComponent(nameField)
+                                                                .addComponent(difficultyPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                                .addComponent(jScrollPane1, GroupLayout.Alignment.TRAILING)
+                                                                .addGroup(layout.createSequentialGroup()
+                                                                        .addComponent(nameLabel)
+                                                                        .addGap(0, 0, Short.MAX_VALUE)))
+                                                        .addGap(5, 5, 5))
+                                                .addGroup(layout.createSequentialGroup()
+                                                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                                .addComponent(underwearLabel)
+                                                                .addGroup(layout.createSequentialGroup()
+                                                                        .addGap(6, 6, 6)
+                                                                        .addComponent(undiesColor_black, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                                        .addComponent(undiesColor_gray, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                                        .addComponent(undiesColor_red, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                                        .addComponent(undiesColor_orange, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                                        .addComponent(undiesColor_yellow, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                                        .addComponent(undiesColor_green, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                                        .addComponent(undiesColor_blue, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                                        .addComponent(undiesColor_darkBlue, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                                        .addComponent(undiesColor_purple, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                                        .addComponent(undiesColor_pink, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                        .addGap(18, 18, 18)
+                                                                        .addComponent(undiesColor_random, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+                                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                .addGroup(layout.createSequentialGroup()
+                                                        .addComponent(basSliderRadio)
+                                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(basSlider, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(randomBasSlider))
+                                                .addComponent(jScrollPane2)
+                                                .addComponent(incontSlider, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addGroup(layout.createSequentialGroup()
+                                                        .addComponent(femaleRadio)
+                                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(maleRadio))
+                                                .addGroup(layout.createSequentialGroup()
+                                                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                                .addComponent(outerwearLabel)
+                                                                .addComponent(incontLabel)
+                                                                .addComponent(bladAtStartLabel)
+                                                                .addGroup(layout.createSequentialGroup()
+                                                                        .addComponent(lowerColor_black1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                                        .addComponent(lowerColor_gray1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                                        .addComponent(lowerColor_red1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                                        .addComponent(lowerColor_orange1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                                        .addComponent(lowerColor_yellow1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                                        .addComponent(lowerColor_green1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                                        .addComponent(lowerColor_blue1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                                        .addComponent(lowerColor_darkBlue1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                                        .addComponent(lowerColor_purple1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                                        .addComponent(lowerColor_pink1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                        .addGap(18, 18, 18)
+                                                                        .addComponent(lowerColor_random1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+                                                        .addGap(0, 0, Short.MAX_VALUE))))
+                                .addGroup(layout.createSequentialGroup()
+                                        .addComponent(loadGame, GroupLayout.PREFERRED_SIZE, 129, GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(undiesColor_gray, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(start, GroupLayout.PREFERRED_SIZE, 455, GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(undiesColor_red, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(undiesColor_orange, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(undiesColor_yellow, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(undiesColor_green, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(undiesColor_blue, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(undiesColor_darkBlue, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(undiesColor_purple, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(undiesColor_pink, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(undiesColor_random, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(basSliderRadio)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(basSlider, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(randomBasSlider))
-                            .addComponent(jScrollPane2)
-                            .addComponent(incontSlider, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(femaleRadio)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(maleRadio))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                    .addComponent(outerwearLabel)
-                                    .addComponent(incontLabel)
-                                    .addComponent(bladAtStartLabel)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(lowerColor_black1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(lowerColor_gray1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(lowerColor_red1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(lowerColor_orange1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(lowerColor_yellow1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(lowerColor_green1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(lowerColor_blue1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(lowerColor_darkBlue1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(lowerColor_purple1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(lowerColor_pink1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(lowerColor_random1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-                                .addGap(0, 0, Short.MAX_VALUE))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(loadGame, GroupLayout.PREFERRED_SIZE, 129, GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(start, GroupLayout.PREFERRED_SIZE, 455, GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(wearEditorButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap())
+                                        .addComponent(wearEditorButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addContainerGap())
         );
         layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(nameLabel)
-                        .addGap(8, 8, 8)
-                        .addComponent(nameField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(difficultyPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(underwearLabel)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, GroupLayout.PREFERRED_SIZE, 155, GroupLayout.PREFERRED_SIZE))
-                    .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                            .addComponent(femaleRadio)
-                            .addComponent(maleRadio))
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(bladAtStartLabel)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
                         .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                            .addComponent(basSlider, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                            .addComponent(basSliderRadio)
-                            .addComponent(randomBasSlider))
-                        .addGap(8, 8, 8)
-                        .addComponent(incontLabel)
+                                .addGroup(layout.createSequentialGroup()
+                                        .addComponent(nameLabel)
+                                        .addGap(8, 8, 8)
+                                        .addComponent(nameField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(difficultyPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(underwearLabel)
+                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jScrollPane1, GroupLayout.PREFERRED_SIZE, 155, GroupLayout.PREFERRED_SIZE))
+                                .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                                .addComponent(femaleRadio)
+                                                .addComponent(maleRadio))
+                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(bladAtStartLabel)
+                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                .addComponent(basSlider, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(basSliderRadio)
+                                                .addComponent(randomBasSlider))
+                                        .addGap(8, 8, 8)
+                                        .addComponent(incontLabel)
+                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(incontSlider, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(outerwearLabel)
+                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jScrollPane2, GroupLayout.PREFERRED_SIZE, 155, GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                .addComponent(undiesColor_black, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(undiesColor_gray, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(undiesColor_red, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(undiesColor_orange, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(undiesColor_green, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(undiesColor_blue, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(undiesColor_darkBlue, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(undiesColor_purple, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(undiesColor_pink, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(undiesColor_yellow, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lowerColor_black1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lowerColor_gray1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lowerColor_red1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lowerColor_orange1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lowerColor_green1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lowerColor_blue1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lowerColor_darkBlue1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lowerColor_purple1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lowerColor_pink1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lowerColor_yellow1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(undiesColor_random, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lowerColor_random1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(incontSlider, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jScrollPane3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(outerwearLabel)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane2, GroupLayout.PREFERRED_SIZE, 155, GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(undiesColor_black, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(undiesColor_gray, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(undiesColor_red, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(undiesColor_orange, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(undiesColor_green, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(undiesColor_blue, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(undiesColor_darkBlue, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(undiesColor_purple, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(undiesColor_pink, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(undiesColor_yellow, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lowerColor_black1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lowerColor_gray1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lowerColor_red1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lowerColor_orange1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lowerColor_green1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lowerColor_blue1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lowerColor_darkBlue1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lowerColor_purple1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lowerColor_pink1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lowerColor_yellow1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(undiesColor_random, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lowerColor_random1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                    .addComponent(start, GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
-                    .addComponent(wearEditorButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(loadGame, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                .addComponent(start, GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
+                                .addComponent(wearEditorButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(loadGame, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap())
         );
 
         pack();
@@ -1108,10 +1024,10 @@ public class setupFramePre extends javax.swing.JFrame {
         String underwearToAssign = "Random";
         String outerwearToAssign = "Random";
 
-        if(femaleRadio.isSelected())
+        if (femaleRadio.isSelected())
             gnd = Gender.FEMALE;
 
-        if(basSliderRadio.isSelected())
+        if (basSliderRadio.isSelected())
             bas = basSlider.getValue();
         else
             bas = rnd.nextInt(51);
@@ -1120,49 +1036,37 @@ public class setupFramePre extends javax.swing.JFrame {
             diff = true;
         }
 
-        float incont = incontSlider.getValue()/10;
-        if(incont<1)
+        float incont = incontSlider.getValue() / 10;
+        if (incont < 1)
             incont += 0.5;
 
-        try
-        {
+        try {
             System.out.println(underwearTree.getLastSelectedPathComponent().toString());
-        }
-        catch(NullPointerException e)
-        {
+        } catch (NullPointerException e) {
             System.out.println("null");
         }
 
-        try
-        {
+        try {
             System.out.println(outerwearTree.getLastSelectedPathComponent().toString());
-        }
-        catch(NullPointerException e)
-        {
+        } catch (NullPointerException e) {
             System.out.println("null");
         }
 
-        try
-        {
+        try {
             System.out.println(lowerColor);
-        }
-        catch(NullPointerException e)
-        {
+        } catch (NullPointerException e) {
             System.out.println("null");
         }
 
-        try
-        {
+        try {
             System.out.println(undiesColor);
-        }
-        catch(NullPointerException e)
-        {
+        } catch (NullPointerException e) {
             System.out.println("null");
         }
 
-        if(underwearTree.getLastSelectedPathComponent()!=null)
+        if (underwearTree.getLastSelectedPathComponent() != null)
             underwearToAssign = underwearTree.getLastSelectedPathComponent().toString();
-        if(outerwearTree.getLastSelectedPathComponent()!=null)
+        if (outerwearTree.getLastSelectedPathComponent() != null)
             outerwearToAssign = outerwearTree.getLastSelectedPathComponent().toString();
 
 
@@ -1186,15 +1090,15 @@ public class setupFramePre extends javax.swing.JFrame {
 //                        case "Skirts":
 //                            break;
 //                        default:
-                            new ALongHourAndAHalf(nameField.getText(),
-                            gnd,
-                            diff,
-                            incont, (short) bas,
-                            underwearToAssign,
-                            outerwearToAssign,
-                            undiesColor,
-                            lowerColor);
-                            this.dispose();
+        new ALongHourAndAHalf(nameField.getText(),
+                gnd,
+                diff,
+                incont, (short) bas,
+                Wear.Companion.getUnderwearMap().get(underwearToAssign),
+                Wear.Companion.getOuterwearMap().get(outerwearToAssign),
+                undiesColor,
+                lowerColor);
+        this.dispose();
 //                    }
 //            }
 //        } catch (NullPointerException e) {
@@ -1215,12 +1119,12 @@ public class setupFramePre extends javax.swing.JFrame {
     }//GEN-LAST:event_randomBasSliderActionPerformed
 
     private void maleRadioActionPerformed(ActionEvent evt) {//GEN-FIRST:event_maleRadioActionPerformed
-        if(nameField.getText().equals("Mrs. Nobody"))
+        if (nameField.getText().equals("Mrs. Nobody"))
             nameField.setText("Mr. Nobody");
     }//GEN-LAST:event_maleRadioActionPerformed
 
     private void femaleRadioActionPerformed(ActionEvent evt) {//GEN-FIRST:event_femaleRadioActionPerformed
-        if(nameField.getText().equals("Mr. Nobody"))
+        if (nameField.getText().equals("Mr. Nobody"))
             nameField.setText("Mrs. Nobody");
     }//GEN-LAST:event_femaleRadioActionPerformed
 
@@ -1316,7 +1220,7 @@ public class setupFramePre extends javax.swing.JFrame {
         undiesColor_pink.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
         undiesColor_random.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
 
-         undiesColor = "Yellow";
+        undiesColor = "Yellow";
     }//GEN-LAST:event_undiesColor_yellowMouseClicked
 
     private void undiesColor_greenMouseClicked(MouseEvent evt)//GEN-FIRST:event_undiesColor_greenMouseClicked
@@ -1659,18 +1563,15 @@ public class setupFramePre extends javax.swing.JFrame {
 
     private void loadGameActionPerformed(ActionEvent evt)//GEN-FIRST:event_loadGameActionPerformed
     {//GEN-HEADEREND:event_loadGameActionPerformed
-        if (fcGame.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
-        {
+        if (fcGame.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             File file = fcGame.getSelectedFile();
-            try
-            {
+            try {
                 FileInputStream fin = new FileInputStream(file);
                 ObjectInputStream ois = new ObjectInputStream(fin);
                 Save save = (Save) ois.readObject();
                 new ALongHourAndAHalf(save);
                 dispose();
-            } catch (IOException | ClassNotFoundException e)
-            {
+            } catch (IOException | ClassNotFoundException e) {
                 JOptionPane.showMessageDialog(this, "File error.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
