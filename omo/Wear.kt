@@ -19,6 +19,13 @@ class Wear(
             var color: String = ""
     )
 
+    enum class Mode {
+        BOTH,
+        UNDIES,
+        LOWER,
+        NONE
+    }
+
     lateinit var gameState: GameState
 
     /**
