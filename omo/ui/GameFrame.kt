@@ -21,10 +21,10 @@ class GameFrame(val game: ALongHourAndAHalf) : JFrame() {
     private val btnLoad = JButton("Load")
 
     val textLabel = JLabel()
-    val lblBelly = JLabel("Belly: ${Math.round(game.`character.gameState.belly`)} %")
+    val lblBelly = JLabel("Belly: ${Math.round(game.character.gameState.belly)} %")
     val lblBladder = JLabel("Bladder: ${Math.round(game.character.bladder.gameState!!.fullness)} %")
     val lblChoice = JLabel()
-    val lbjEmbarrassment = JLabel("Embarrassment: ${game.`character.gameState.embarrassment`}")
+    val lblEmbarrassment = JLabel("Embarrassment: ${game.character.gameState.embarrassment}")
     val lblIncontinence = JLabel("Incontinence: ${game.character.bladder}x")
     val lblMinutes = JLabel("Time: ${game.time}")
     val lblName = JLabel(game.character.name)
@@ -33,9 +33,9 @@ class GameFrame(val game: ALongHourAndAHalf) : JFrame() {
         |${game.character.gameState.undies.name.toLowerCase()}""".trimMargin())
     val lblLower = JLabel("""Lower: ${game.character.gameState.lower.gameState.color}
         |${game.character.gameState.undies.name.toLowerCase()}""".trimMargin())
-    val lblSphPower = JLabel("Sphincter power: ${game.`character.bladder.gameState.sphincterStrength`}")
-    val lblDryness = JLabel("Clothes `character.gameState.dryness`: ${game.`character.gameState.dryness`}")
-    val lblThirst = JLabel("Thirst: ${Math.round(game.`character.gameState.thirst`)}%")
+    val lblSphPower = JLabel("Sphincter power: ${game.character.bladder.gameState.sphincterStrength}")
+    val lblDryness = JLabel("Clothes character.gameState.dryness: ${game.character.gameState.dryness}")
+    val lblThirst = JLabel("Thirst: ${game.character.gameState.thirst.toInt()}%")
     val listChoice = JList<Any>()
 
     val listScroller = JScrollPane()
@@ -158,14 +158,14 @@ class GameFrame(val game: ALongHourAndAHalf) : JFrame() {
         contentPane.add(lblBladder)
 
         //Embarrassment label setup
-        lbjEmbarrassment.setBounds(20, 240, 200, 32)
-        lbjEmbarrassment.toolTipText = "Makes leaks more frequent"
-        lbjEmbarrassment.font = Font("Tahoma", Font.PLAIN, 15)
-        contentPane.add(lbjEmbarrassment)
+        lblEmbarrassment.setBounds(20, 240, 200, 32)
+        lblEmbarrassment.toolTipText = "Makes leaks more frequent"
+        lblEmbarrassment.font = Font("Tahoma", Font.PLAIN, 15)
+        contentPane.add(lblEmbarrassment)
 
         //Belly label setup
         lblBelly.setBounds(20, 270, 200, 32)
-        lblBelly.toolTipText = """<html>The water in your `character.gameState.belly`.
+        lblBelly.toolTipText = """<html>The water in your belly.
             |<br>Any amount of water speeds the bladder filling up.</html>""".trimMargin()
         lblBelly.font = Font("Tahoma", Font.PLAIN, 15)
         contentPane.add(lblBelly)
@@ -173,15 +173,15 @@ class GameFrame(val game: ALongHourAndAHalf) : JFrame() {
         //Thirst label setup
         if (game.hardcore) {
             lblThirst.setBounds(20, 480, 200, 32)
-            lblThirst.toolTipText = "Character will automatically drink water at 30% of `character.gameState.thirst`."
+            lblThirst.toolTipText = "Character will automatically drink water at 30% of thirst."
             lblThirst.font = Font("Tahoma", Font.PLAIN, 15)
             contentPane.add(lblThirst)
 
             //Thirst bar setup
             thirstBar.setBounds(16, 482, 455, 25)
             thirstBar.maximum = game.MAXIMAL_THIRST
-            thirstBar.value = game.`character.gameState.thirst`.toInt()
-            thirstBar.toolTipText = "Character will automatically drink water at 30% of `character.gameState.thirst`."
+            thirstBar.value = game.character.gameState.thirst.toInt()
+            thirstBar.toolTipText = "Character will automatically drink water at 30% of thirst."
             contentPane.add(thirstBar)
         }
 
@@ -199,16 +199,16 @@ class GameFrame(val game: ALongHourAndAHalf) : JFrame() {
 
         //Sphincter power label setup
         lblSphPower.setBounds(20, 360, 200, 32)
-        lblSphPower.toolTipText = """<html>Ability to hold pee.<br>Drains faster on higher bladder fulnesses.
+        lblSphPower.toolTipText = """<html>Ability to hold pee.<br>Drains faster on higher bladder fullness.
             |<br>Leaking when 0%.
             |<br>Refill it by holding crotch and rubbing thighs.</html>""".trimMargin()
         lblSphPower.font = Font("Tahoma", Font.PLAIN, 15)
         lblSphPower.isVisible = false
         contentPane.add(lblSphPower)
 
-        //Clothing `character.gameState.dryness` label setup
+        //Clothing character.gameState.dryness label setup
         lblDryness.setBounds(20, 390, 200, 32)
-        lblDryness.toolTipText = """<html>Estimating `character.gameState.dryness` to absorb leaked pee.
+        lblDryness.toolTipText = """<html>Estimating character.gameState.dryness to absorb leaked pee.
             |<br>Refills by itself with the time.</html>""".trimMargin()
         lblDryness.font = Font("Tahoma", Font.PLAIN, 15)
         lblDryness.isVisible = false
@@ -244,7 +244,7 @@ class GameFrame(val game: ALongHourAndAHalf) : JFrame() {
         //Sphincter bar setup
         sphincterBar.setBounds(16, 362, 455, 25)
         sphincterBar.maximum = game.character.bladder.maximalSphincterStrength.toInt()
-        sphincterBar.value = game.`character.bladder.gameState.sphincterStrength`.toInt()
+        sphincterBar.value = game.character.bladder.gameState.sphincterStrength.toInt()
         sphincterBar.isVisible = false
         sphincterBar.toolTipText = """<html>Ability to hold pee.
             |<br>Drains faster on higher bladder fullness.
@@ -254,11 +254,11 @@ class GameFrame(val game: ALongHourAndAHalf) : JFrame() {
 
         //Dryness bar setup
         drynessBar.setBounds(16, 392, 455, 25)
-        drynessBar.value = game.`character.gameState.dryness`.toInt()
+        drynessBar.value = game.character.gameState.dryness.toInt()
         drynessBar.minimum = ALongHourAndAHalf.MINIMAL_DRYNESS
         drynessBar.isVisible = false
         drynessBar.toolTipText =
-                "<html>Estimating `character.gameState.dryness` to absorb leaked pee.<br>Refills by itself with the time.</html>"
+                "<html>Estimating character.gameState.dryness to absorb leaked pee.<br>Refills by itself with the time.</html>"
         contentPane.add(drynessBar)
 
         //Time bar setup

@@ -152,7 +152,7 @@ class ALongHourAndAHalf {
     var timesCaught = 0
 
     /**
-     * Amount of `character.gameState.embarrassment` raising every time character caught holding pee.
+     * Amount of character.gameState.embarrassment raising every time character caught holding pee.
      */
     var classmatesAwareness = 0
 
@@ -213,7 +213,7 @@ class ALongHourAndAHalf {
 
         //Making bladder smaller in the hardcore mode, adding hardcore label
         if (hardcore) {
-            `character.bladder.maximalFullness` = 100.0
+            character.bladder.maximalFullness = 100.0
             gameFrame.lblName.text = gameFrame.lblName.text + " [Hardcore]"
         }
 
@@ -411,7 +411,7 @@ class ALongHourAndAHalf {
                         "your bladder filling as the liquids you drank earlier start to make their way down.")
                 passTime()
                 nextStage = ASK_ACTION
-                scorer += `character.gameState.embarrassment`.toInt()
+                scorer += character.gameState.embarrassment.toInt()
             }
 
             ASK_ACTION -> {
@@ -868,7 +868,7 @@ class ALongHourAndAHalf {
                                 "looking pill, and you take it.")
                         character.bladder.incontinence = JOptionPane.showInputDialog("How incontinent are you now?").toDouble()
                         character.bladder.maximalSphincterStrength = 100 / character.bladder.incontinence
-                        `character.bladder.gameState.sphincterStrength` = character.bladder.maximalSphincterStrength
+                        character.bladder.gameState.sphincterStrength = character.bladder.maximalSphincterStrength
                         nextStage = ASK_ACTION
                     }
 
@@ -1007,7 +1007,7 @@ class ALongHourAndAHalf {
 
             WET -> {
                 emptyBladder()
-                `character.gameState.embarrassment` = 100
+                character.gameState.embarrassment = 100
                 if (!character.gameState.lower.isMissing) {
                     if (!character.gameState.undies.isMissing) {
                         setText("Before you can move an inch, pee quickly soaks through your " + character.gameState.undies.insert() + ",",
@@ -1188,7 +1188,7 @@ class ALongHourAndAHalf {
                 setLinesAsDialogue(1)
                 setText("What do you want from me?!",
                         "He has brought you in the restroom and quickly put you on the windowsill.",
-                        boyName + " has locked the restroom door (seems he has stolen the key), then he puts his palm on your `character.gameState.belly` and says:",
+                        boyName + " has locked the restroom door (seems he has stolen the key), then he puts his palm on your character.gameState.belly and says:",
                         "I want you to wet yourself.")
                 offsetEmbarassment(10)
                 nextStage = SURPRISE_DIALOGUE
@@ -1198,7 +1198,7 @@ class ALongHourAndAHalf {
                 setLinesAsDialogue(1)
                 setText("No, please, don't do it, no...",
                         "I want to see you wet...",
-                        "He slightly presses your `character.gameState.belly` again, you shook from the terrible pain",
+                        "He slightly presses your character.gameState.belly again, you shook from the terrible pain",
                         "in your bladder and subconsciously rubbed your crotch. You have to do something!")
                 offsetEmbarassment(10)
 
@@ -1478,8 +1478,8 @@ class ALongHourAndAHalf {
             DRINK -> {
                 setText("You take your bottle with water,",
                         "open it and take a small sip of water.")
-                offsetBelly(`character.gameState.thirst`.toDouble())
-                `character.gameState.thirst` = 0.0
+                offsetBelly(character.gameState.thirst.toDouble())
+                character.gameState.thirst = 0.0
                 nextStage = ASK_ACTION
             }
 
@@ -1560,18 +1560,18 @@ class ALongHourAndAHalf {
         //Decrementing sphincter power for every 3 minutes
         for (i in 0..time - 1) {
             decaySphPower()
-            if (`character.gameState.belly` != 0.0) {
-                if (`character.gameState.belly` > 3) {
+            if (character.gameState.belly != 0.0) {
+                if (character.gameState.belly > 3) {
                     offsetBladder(2.0)
                 } else {
-                    offsetBladder(`character.gameState.belly`)
+                    offsetBladder(character.gameState.belly)
                     emptyBelly()
                 }
             }
         }
         if (hardcore) {
-            `character.gameState.thirst` += 2f
-            if (`character.gameState.thirst` > MAXIMAL_THIRST) {
+            character.gameState.thirst += 2f
+            if (character.gameState.thirst > MAXIMAL_THIRST) {
                 nextStage = DRINK
             }
         }
@@ -1584,9 +1584,9 @@ class ALongHourAndAHalf {
      */
     fun testWet() {
         //If bladder is filled more than 130 points in the normal mode and 100 points in the hardcore mode, forcing wetting
-        if ((character.bladder.gameState!!.fullness >= `character.bladder.maximalFullness`) && !hardcore) {
-            `character.bladder.gameState.sphincterStrength` = 0.0
-            if (`character.gameState.dryness` < MINIMAL_DRYNESS) {
+        if ((character.bladder.gameState!!.fullness >= character.bladder.maximalFullness) && !hardcore) {
+            character.bladder.gameState.sphincterStrength = 0.0
+            if (character.gameState.dryness < MINIMAL_DRYNESS) {
                 if (specialHardcoreStage) {
                     nextStage = SURPRISE_ACCIDENT
                 } else {
@@ -1596,13 +1596,13 @@ class ALongHourAndAHalf {
         } else
         //If bladder is filled more than 100 points in the normal mode and 50 points in the hardcore mode, character has a chance to wet
         {
-            if ((character.bladder.gameState!!.fullness > `character.bladder.maximalFullness` - 30) && !hardcore
-                    || ((character.bladder.gameState!!.fullness > `character.bladder.maximalFullness` - 20) && hardcore)) {
+            if ((character.bladder.gameState!!.fullness > character.bladder.maximalFullness - 30) && !hardcore
+                    || ((character.bladder.gameState!!.fullness > character.bladder.maximalFullness - 20) && hardcore)) {
                 if (!hardcore) {
-                    val wetChance = (3 * (character.bladder.gameState!!.fullness - 100) + `character.gameState.embarrassment`)
+                    val wetChance = (3 * (character.bladder.gameState!!.fullness - 100) + character.gameState.embarrassment)
                     if (random.nextInt(100) < wetChance) {
-                        `character.bladder.gameState.sphincterStrength` = 0.0
-                        if (`character.gameState.dryness` < MINIMAL_DRYNESS) {
+                        character.bladder.gameState.sphincterStrength = 0.0
+                        if (character.gameState.dryness < MINIMAL_DRYNESS) {
                             if (specialHardcoreStage) {
                                 nextStage = SURPRISE_ACCIDENT
                             } else {
@@ -1613,8 +1613,8 @@ class ALongHourAndAHalf {
                 } else {
                     val wetChance = (5 * (character.bladder.gameState!!.fullness - 80))
                     if (random.nextInt(100) < wetChance) {
-                        `character.bladder.gameState.sphincterStrength` = 0.0
-                        if (`character.gameState.dryness` < MINIMAL_DRYNESS) {
+                        character.bladder.gameState.sphincterStrength = 0.0
+                        if (character.gameState.dryness < MINIMAL_DRYNESS) {
                             if (specialHardcoreStage) {
                                 nextStage = SURPRISE_ACCIDENT
                             } else {
@@ -1652,24 +1652,24 @@ class ALongHourAndAHalf {
     }
 
     /**
-     * Empties the `character.gameState.belly`.
+     * Empties the character.gameState.belly.
      */
     fun emptyBelly() {
-        offsetBelly(-`character.gameState.belly`)
+        offsetBelly(-character.gameState.belly)
     }
 
     fun offsetBelly(amount: Double) {
-        `character.gameState.belly` += amount
-        if (`character.gameState.belly` < 0) {
-            `character.gameState.belly` = 0.0
+        character.gameState.belly += amount
+        if (character.gameState.belly < 0) {
+            character.gameState.belly = 0.0
         }
         updateUI()
     }
 
     fun offsetEmbarassment(amount: Int) {
-        `character.gameState.embarrassment` += amount.toShort()
-        if (`character.gameState.embarrassment` < 0) {
-            `character.gameState.embarrassment` = 0
+        character.gameState.embarrassment += amount.toShort()
+        if (character.gameState.embarrassment < 0) {
+            character.gameState.embarrassment = 0
         }
         updateUI()
     }
@@ -1680,12 +1680,12 @@ class ALongHourAndAHalf {
             emptyBladder()
         }
         //Clothes drying over time
-        if (`character.gameState.dryness` < character.gameState.lower.absorption + character.gameState.undies.absorption) {
-            `character.gameState.dryness` += character.gameState.lower.dryingOverTime + character.gameState.undies.dryingOverTime * (amount / 3)
+        if (character.gameState.dryness < character.gameState.lower.absorption + character.gameState.undies.absorption) {
+            character.gameState.dryness += character.gameState.lower.dryingOverTime + character.gameState.undies.dryingOverTime * (amount / 3)
         }
 
-        if (`character.gameState.dryness` > character.gameState.lower.absorption + character.gameState.undies.absorption) {
-            `character.gameState.dryness` = character.gameState.lower.absorption + character.gameState.undies.absorption
+        if (character.gameState.dryness > character.gameState.lower.absorption + character.gameState.undies.absorption) {
+            character.gameState.dryness = character.gameState.lower.absorption + character.gameState.undies.absorption
         }
         updateUI()
     }
@@ -1694,12 +1694,12 @@ class ALongHourAndAHalf {
      * Decreases the sphincter power.
      */
     fun decaySphPower() {
-        `character.bladder.gameState.sphincterStrength` -= (character.bladder.gameState!!.fullness / 30).toShort()
-        if (`character.bladder.gameState.sphincterStrength` < 0) {
-            `character.gameState.dryness` -= 5f //Decreasing `character.gameState.dryness`
+        character.bladder.gameState.sphincterStrength -= (character.bladder.gameState!!.fullness / 30).toShort()
+        if (character.bladder.gameState.sphincterStrength < 0) {
+            character.gameState.dryness -= 5f //Decreasing character.gameState.dryness
             character.bladder.gameState!!.fullness -= 2.5 //Decreasing bladder level
-            `character.bladder.gameState.sphincterStrength` = 0.0
-            if (`character.gameState.dryness` > MINIMAL_DRYNESS) {
+            character.bladder.gameState.sphincterStrength = 0.0
+            if (character.gameState.dryness > MINIMAL_DRYNESS) {
                 //Naked
                 if (character.gameState.lower.isMissing && character.gameState.undies.isMissing) {
                     setText("You feel the leak running down your thighs...",
@@ -1721,7 +1721,7 @@ class ALongHourAndAHalf {
                 }
             }
 
-            if (`character.gameState.dryness` < MINIMAL_DRYNESS) {
+            if (character.gameState.dryness < MINIMAL_DRYNESS) {
                 if (character.gameState.lower.isMissing && character.gameState.undies.isMissing) {
                     if (cornered) {
                         setText("You see a puddle forming on the floor beneath you, you're peeing!",
@@ -1761,9 +1761,9 @@ class ALongHourAndAHalf {
      * @param amount the sphincter recharge amount
      */
     fun rechargeSphPower(amount: Int) {
-        `character.bladder.gameState.sphincterStrength` += amount.toShort()
-        if (`character.bladder.gameState.sphincterStrength` > character.bladder.maximalSphincterStrength) {
-            `character.bladder.gameState.sphincterStrength` = character.bladder.maximalSphincterStrength
+        character.bladder.gameState.sphincterStrength += amount.toShort()
+        if (character.bladder.gameState.sphincterStrength > character.bladder.maximalSphincterStrength) {
+            character.bladder.gameState.sphincterStrength = character.bladder.maximalSphincterStrength
         }
         updateUI()
     }
@@ -1810,20 +1810,20 @@ class ALongHourAndAHalf {
         /*
         gameFrame.lblName.text = character.name
         gameFrame.lblBladder.text = "bladder: " + Math.round(this.character.bladder.gameState.fullness) + "%"
-        gameFrame.lbjEmbarrassment.text = "Embarassment: " + `character.gameState.embarrassment`
-        gameFrame.lblBelly.text = "Belly: " + Math.round(`character.gameState.belly`) + "%"
+        gameFrame.lbjEmbarrassment.text = "Embarassment: " + character.gameState.embarrassment
+        gameFrame.lblBelly.text = "Belly: " + Math.round(character.gameState.belly) + "%"
         gameFrame.lblIncontinence.text = "Incontinence: " + character.bladder.gameState.fullness.incontinence + "x"
         gameFrame.lblMinutes.text = "Minutes: $time of 90"
-        gameFrame.lblSphPower.text = "Pee holding ability: " + Math.round(`character.bladder.gameState.sphincterStrength`) + "%"
-        gameFrame.lblDryness.text = "Clothes `character.gameState.dryness`: " + Math.round(`character.gameState.dryness`)
+        gameFrame.lblSphPower.text = "Pee holding ability: " + Math.round(character.bladder.gameState.sphincterStrength) + "%"
+        gameFrame.lblDryness.text = "Clothes character.gameState.dryness: " + Math.round(character.gameState.dryness)
         gameFrame.lblUndies.text = "Undies: " + character.gameState.undies.gameState.color + " " + character.gameState.undies.name.toLowerCase()
         gameFrame.lblLower.text = "Lower: " + character.gameState.lower.gameState.color + " " + character.gameState.lower.name.toLowerCase()
         gameFrame.bladderBar.value = character.bladder.gameState.fullness.toInt()
-        gameFrame.sphincterBar.value = Math.round(`character.bladder.gameState.sphincterStrength`).toInt()
-        gameFrame.drynessBar.value = `character.gameState.dryness`.toInt()
+        gameFrame.sphincterBar.value = Math.round(character.bladder.gameState.sphincterStrength).toInt()
+        gameFrame.drynessBar.value = character.gameState.dryness.toInt()
         gameFrame.timeBar.value = time.toInt()
-        gameFrame.lblThirst.text = "Thirst: " + Math.round(`character.gameState.thirst`) + "%"
-        gameFrame.thirstBar.value = `character.gameState.thirst`.toInt()
+        gameFrame.lblThirst.text = "Thirst: " + Math.round(character.gameState.thirst) + "%"
+        gameFrame.thirstBar.value = character.gameState.thirst.toInt()
         */
     }
 
@@ -1865,7 +1865,7 @@ class ALongHourAndAHalf {
 
 
         /**
-         * The `character.gameState.dryness` game over minimal threshold.
+         * The character.gameState.dryness game over minimal threshold.
          */
         const val MINIMAL_DRYNESS = 0
 

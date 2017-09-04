@@ -29,6 +29,7 @@ class Character(
     undies.isMissing = ${undies.isMissing}
     lower.isMissing = ${lower.isMissing}""")
         }
+        var dryness = undies.absorption + lower.absorption
     }
 
     var gameState: GameState = GameState(Wear("Error", "error"), Wear("Error", "error"))
