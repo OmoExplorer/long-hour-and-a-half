@@ -78,7 +78,7 @@ class Stage(
                                             Text.Line("You make it to your seat without a minute to spare.")
                                     )
                                 else Text(
-                                        Text.Line("""Trying your best to make up lost time,
+                                        Text.Line("""Trying your best to make up lost `lesson.time`,
                                                     |you rush into class and sit down to your seat without a minute to spare."""
                                                 .trimMargin())
                                 )
@@ -120,7 +120,7 @@ class Stage(
                                 if (game.character.gameState.lower.insert() == "skirt"
                                         || game.character.gameState.lower.insert() == "skirt and tights"
                                         || game.character.gameState.lower.insert() == "shorts") Text(
-                                        Text.Line("Next time you run into class, ${game.character.name},", true),
+                                        Text.Line("Next `lesson.time` you run into class, ${game.character.name},", true),
                                         Text.Line("your teacher says,"),
                                         Text.Line("make sure you're wearing something less... revealing!"),
                                         Text.Line("A chuckle passes over the classroom, and you can't help but feel"),
@@ -128,7 +128,7 @@ class Stage(
                                 ) else Text(
                                         Text.Line("Sit down, ${game.character.name}. You're running late.", true),
                                         Text.Line("your teacher says,"),
-                                        Text.Line("And next time, don't make so much noise entering the classroom!"),
+                                        Text.Line("And next `lesson.time`, don't make so much noise entering the classroom!"),
                                         Text.Line("A chuckle passes over the classroom, and you can't help but feel"),
                                         Text.Line("a tad bit embarrassed about your rush into class.")
                                 )
@@ -174,7 +174,7 @@ class Stage(
                                     3 -> Action("Take a chance and ask the teacher (RISKY)", "ASK_TO_PEE_THOUGHTS")
                                     else -> null
                                 },
-                                if (!game.cornered) {
+                                if (!game.`character.gameState.cornered`) {
                                     if (game.character.gender == Gender.FEMALE) {
                                         Action("Press on your crotch", "HOLD_CROTCH")
                                     } else {
@@ -266,7 +266,7 @@ class Stage(
                         {
                             game.rechargeSphPower(20)
                         },
-                        if ((Random().nextInt(100) <= 15 + game.classmatesAwareness) && game.hardcore) {
+                        if ((Random().nextInt(100) <= 15 + game.`lesson.Classmates.holdingAwareness`) && game.hardcore) {
                             "CAUGHT"
                         } else {
                             "ASK_ACTION"
@@ -282,7 +282,7 @@ class Stage(
                         {
                             game.rechargeSphPower(2)
                         },
-                        if ((Random().nextInt(100) <= 3 + game.classmatesAwareness) && game.hardcore) {
+                        if ((Random().nextInt(100) <= 3 + game.`lesson.Classmates.holdingAwareness`) && game.hardcore) {
                             "CAUGHT"
                         } else {
                             "ASK_ACTION"
@@ -336,7 +336,7 @@ class Stage(
                                     Text.Line("Before you can move an inch, pee quickly soaks through your " + game.character.gameState.undies.insert() + ", and streaks down your legs."),
                                     Text.Line("A large puddle quickly forms, and you can't stop tears from falling down your cheeks.")
                             )
-                            Wear.Mode.NONE -> if (game.cornered)
+                            Wear.Mode.NONE -> if (game.`character.gameState.cornered`)
                                 Text(
                                         Text.Line("The heavy pee jets are hitting the floor and loudly leaking out from your " + game.character.gameState.undies.insert() + "."),
                                         Text.Line("A large puddle quickly forms, and you can't stop tears from falling down your cheeks.")
@@ -354,7 +354,7 @@ class Stage(
                         "POST_WET"
                 ),
                 "POST_WET" to Stage(
-                        if (game.stay)
+                        if (game.`lesson.teacher.stay`)
                             Text(
                                     Text.Line("Teacher is laughing loudly."),
                                     Text.Line("Oh, you peed yourself? This is a great punishment."),
@@ -446,7 +446,7 @@ class Stage(
                                 2 -> 12
                                 else -> 20
                             })
-                            game.classmatesAwareness += 5
+                            game.`lesson.Classmates.holdingAwareness` += 5
                             game.timesCaught++
                         },
                         "ASK_ACTION",

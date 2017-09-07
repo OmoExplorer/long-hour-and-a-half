@@ -18,7 +18,12 @@ class Character(
             var lower: Wear,
             var embarrassment: Int = 0,
             var belly: Double = 0.0,
-            var thirst: Int = 0
+            var thirst: Int = 0,
+            /**
+             * Whether or not character currently stands in the corner and unable to
+             * hold crotch.
+             */
+            var cornered: Boolean = false
     ) {
         var wearMode = when {
             undies.isMissing && lower.isMissing -> Wear.Mode.NONE

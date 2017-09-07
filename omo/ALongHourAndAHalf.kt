@@ -1,75 +1,75 @@
 /*
-*ALongHourAndAHalf Vers. 1.3
-*
-*Dev: Rosalie Elodie, JavaBird
-*
-*Version History:
-*0.1    Default game mechanics shown, non interactable. No playability, no customization. Not all game mechanics even implemented, purely a showcase program.
-*0.2    MASSIVE REWRITE! (Thanks to Anna May! This is definitely the format I want!)
-*1.0    Added interactivity, improved code, added hardcore mode(this isn't working now) and... cheats!
-*1.1    Reintegrated the two versions
-*1.2    New hardcore features:
-*           Classmates can be aware that you've to go
-*           Less bladder capacity
-*       Improved bladder: it's more realistic now
-*       Balanced pee holding methods
-*       New game options frame
-*       Even more clothes
-*       Cleaned and documented code a bit
-*1.3    Bug fixes
-*       Interface improvements
-*       Game text refining
-*1.3.1  Bug fixes
-*1.4    Character can drink during the class
-*       Saving/loading games
-*       Bug fixes
-*1.4.1  Bug fixes
-*
-*A Long Hour and a Half (ALongHourAndAHalf) is a game where
-*one must make it through class with a rather full bladder.
-*This game will be more of a narrative game, being extremely text based,
-*but it will have choices that can hurt and help your ability to hold.
-*Some randomization elements are going to be in the game, but until completion,
-*it's unknown how many.
-*
-*Many options are already planned for full release, such as:
-*Name (friends and teacher may say it. Also heard in mutterings if an accident occurs)
-*Male and Female (only affects character.gender pronouns (yes, that means crossdressing's allowed!))
-*Random bladder amount upon awaking (Or preset)
-*Choice of clothing (or, if in a rush, random choice of clothing (will be "character.gender conforming" clothing)
-*Ability to add positives (relative to holding capabilities)
-*Ability to add negatives (relative to holding capabilities)
-*Called upon in class if unlucky (every 15 minutes)
-*Incontinence (continence?) level selectable (multiplier basis. Maybe just presets, but having ability to choose may also be nice).
-*
-*
-*Other options, which may be added in later or not, are these:
-*Extended game ("Can [name] get through an entire school day AND make it home?") (probably will be in the next update)
-*Better Dialog (lines made by someone that's not me >_< )
-*Story editor (players can create their own stories and play them)
-*Wear editor (players can create their own wear types and use it in A Long hour and a Half and custom stories
-*Save/load game states
-*Character presets
-*
-*
-*If you have any questions, bugs or suggestions,
-*create an issue or a pull request on GitHub:
-*https://github.com/javabird25/long-hour-and-a-half/
-*
-*Developers' usernames table
-*   Code documentation  |GitHub                                      |Omorashi.org
-*   --------------------|--------------------------------------------|---------------------------------------------------------------------
-*   Rosalie Elodie      |REDev987532 (https://github.com/REDev987532)|Justice (https://www.omorashi.org/profile/25796-justice/)
-*   JavaBird            |javabird25 (https://github.com/javabird25)  |FromRUSForum (https://www.omorashi.org/profile/89693-fromrusforum/)
-*   Anna May            |AnnahMay (https://github.com/AnnahMay)      |Anna May (https://www.omorashi.org/profile/10087-anna-may/)
-*   notwillnotcast      |?                                           |thisonestays (https://www.omorashi.org/profile/14935-thisonestays/)
-*
-*FINAL NOTE: While this is created by Rosalie Dev, she allows it to be posted
-*freely, so long as she's creditted. She also states that this program is
-*ABSOLUTELY FREE, not to mention she hopes you enjoy ^_^
-*
-*
-*DEV NOTES: Look for bugs, there is always a bunch of them
+ * ALongHourAndAHalf Vers. 1.3
+ *
+ * Dev: Rosalie Elodie, JavaBird
+ *
+ * Version History:
+ * 0.1    Default game mechanics shown, non interactable. No playability, no customization. Not all game mechanics even implemented, purely a showcase program.
+ * 0.2    MASSIVE REWRITE! (Thanks to Anna May! This is definitely the format I want!)
+ * 1.0    Added interactivity, improved code, added hardcore mode(this isn't working now) and... cheats!
+ * 1.1    Reintegrated the two versions
+ * 1.2    New hardcore features:
+ *            Classmates can be aware that you've to go
+ *            Less bladder capacity
+ *        Improved bladder: it's more realistic now
+ *        Balanced pee holding methods
+ *        New game options frame
+ *        Even more clothes
+ *        Cleaned and documented code a bit
+ * 1.3    Bug fixes
+ *        Interface improvements
+ *        Game text refining
+ * 1.3.1  Bug fixes
+ * 1.4    Character can drink during the class
+ *        Saving/loading games
+ *        Bug fixes
+ * 1.4.1  Bug fixes
+ *
+ * A Long Hour and a Half (ALongHourAndAHalf) is a game where
+ * one must make it through class with a rather full bladder.
+ * This game will be more of a narrative game, being extremely text based,
+ * but it will have choices that can hurt and help your ability to hold.
+ * Some randomization elements are going to be in the game, but until completion,
+ * it's unknown how many.
+ *
+ * Many options are already planned for full release, such as:
+ * Name (friends and teacher may say it. Also heard in mutterings if an accident occurs)
+ * Male and Female (only affects character.gender pronouns (yes, that means crossdressing's allowed!))
+ * Random bladder amount upon awaking (Or preset)
+ * Choice of clothing (or, if in a rush, random choice of clothing (will be "character.gender conforming" clothing)
+ * Ability to add positives (relative to holding capabilities)
+ * Ability to add negatives (relative to holding capabilities)
+ * Called upon in class if unlucky (every 15 minutes)
+ * Incontinence (continence?) level selectable (multiplier basis. Maybe just presets, but having ability to choose may also be nice).
+ *
+ *
+ * Other options, which may be added in later or not, are these:
+ * Extended game ("Can [name] get through an entire school day AND make it home?") (probably will be in the next update)
+ * Better Dialog (lines made by someone that's not me >_< )
+ * Story editor (players can create their own stories and play them)
+ * Wear editor (players can create their own wear types and use it in A Long hour and a Half and custom stories
+ * Save/load game states
+ * Character presets
+ *
+ *
+ * If you have any questions, bugs or suggestions,
+ * create an issue or a pull request on GitHub:
+ * https://github.com/javabird25/long-hour-and-a-half/
+ *
+ * Developers' usernames table
+ *    Code documentation  |GitHub                                      |Omorashi.org
+ *    --------------------|--------------------------------------------|---------------------------------------------------------------------
+ *    Rosalie Elodie      |REDev987532 (https://github.com/REDev987532)|Justice (https://www.omorashi.org/profile/25796-justice/)
+ *    JavaBird            |javabird25 (https://github.com/javabird25)  |FromRUSForum (https://www.omorashi.org/profile/89693-fromrusforum/)
+ *    Anna May            |AnnahMay (https://github.com/AnnahMay)      |Anna May (https://www.omorashi.org/profile/10087-anna-may/)
+ *    notwillnotcast      |?                                           |thisonestays (https://www.omorashi.org/profile/14935-thisonestays/)
+ *
+ * FINAL NOTE: While this is created by Rosalie Dev, she allows it to be posted
+ * freely, so long as she's creditted. She also states that this program is
+ * ABSOLUTELY FREE, not to mention she hopes you enjoy ^_^
+ *
+ *
+ * DEV NOTES: Look for bugs, there is always a bunch of them
  */
 package omo
 
@@ -99,6 +99,8 @@ class ALongHourAndAHalf {
 
     lateinit var character: Character
 
+    var lesson = Lesson()
+
     var hardcore: Boolean = false
 
     val random = Random()
@@ -122,14 +124,7 @@ class ALongHourAndAHalf {
     /**
      * A stage after the current stage.
      */
-    var nextStage: Stage = Stage.map["LEAVE_BED"]
-
-    /**
-     * Text to be displayed after the game which shows how many score
-     * did you get.
-     * TODO: Remove in 2.0
-     */
-    var scoreText = ""
+    var nextStage: Stage = Stage.map["LEAVE_BED"]!!
 
     /**
      * Maximal time without squirming and leaking.
@@ -137,40 +132,10 @@ class ALongHourAndAHalf {
     //var character.bladder.gameState.fullness.maximalSphincterStrength = 100 / character.bladder.gameState.fullness.incontinence
 
     /**
-     * The class time.
-     */
-    var time = 0
-
-    /**
-     * Times teacher denied character to go out.
-     */
-    var timesPeeDenied = 0
-
-    /**
-     * Number of times player got caught holding pee.
-     */
-    var timesCaught = 0
-
-    /**
-     * Amount of character.gameState.embarrassment raising every time character caught holding pee.
-     */
-    var classmatesAwareness = 0
-
-    /**
-     * Whether or not charecter has to stay 30 minutes after class.
-     */
-    var stay = false
-
-    /**
-     * Whether or not character currently stands in the corner and unable to
-     * hold crotch.
-     */
-    var cornered = false
-
-    /**
      * Whether or not player has used cheats.
      */
     var cheatsUsed = false
+
     var specialHardcoreStage = false
 
     val MAXIMAL_THIRST = 30
@@ -193,6 +158,8 @@ class ALongHourAndAHalf {
     constructor(character: Character, hardcore: Boolean) {
         this.character = character
         this.hardcore = hardcore
+
+        lesson = Lesson(hardcore)
 
 
         handleSpecialWear(UNDERWEAR)
@@ -218,7 +185,7 @@ class ALongHourAndAHalf {
         }
 
         //Starting the game
-        nextStage = Stage.map["LEAVE_BED"]
+        nextStage = Stage.map["LEAVE_BED"]!!
         handleNextClicked()
         gameFrame.isVisible = true
     }
@@ -346,7 +313,7 @@ class ALongHourAndAHalf {
                                 "You make it to your seat without a minute to spare.")
                     } else {
                         //Nothing is blowing in wind
-                        setText("Trying your best to make up lost time, you rush into class and sit down to your seat without a minute to spare.")
+                        setText("Trying your best to make up lost lesson.time, you rush into class and sit down to your seat without a minute to spare.")
                     }
                 } else {
                     if (!character.gameState.undies.isMissing) {
@@ -377,7 +344,7 @@ class ALongHourAndAHalf {
                 //If character.gameState.lower clothes is a skirt
                 if (character.gameState.lower.insert() == "skirt" || character.gameState.lower.insert() == "skirt and tights" || character.gameState.lower.insert() == "skirt and tights") {
                     setLinesAsDialogue(1, 3)
-                    setText("Next time you run into class, ${character.name},",
+                    setText("Next lesson.time you run into class, ${character.name},",
                             "your teacher says,",
                             "make sure you're wearing something less... revealing!",
                             "A chuckle passes over the classroom, and you can't help but feel a",
@@ -398,7 +365,7 @@ class ALongHourAndAHalf {
                         setLinesAsDialogue(1, 3)
                         setText("Sit down, ${character.name}. You're running late.",
                                 "your teacher says,",
-                                "And next time, don't make so much noise entering the classroom!",
+                                "And next lesson.time, don't make so much noise entering the classroom!",
                                 "A chuckle passes over the classroom, and you can't help but feel a tad bit embarrassed",
                                 "about your rush into class.")
                     }
@@ -430,7 +397,7 @@ class ALongHourAndAHalf {
                 gameFrame.showActionUI("What now?")
 
                 //Adding action choices
-                when (timesPeeDenied) {
+                when (lesson.teacher.timesPeeDenied) {
                     0 -> actionList.add("Ask the teacher to go pee")
                     1 -> actionList.add("Ask the teacher to go pee again")
                     2 -> actionList.add("Try to ask the teacher again")
@@ -438,7 +405,7 @@ class ALongHourAndAHalf {
                     else -> actionList.add("[Unavailable]")
                 }
 
-                if (!cornered) {
+                if (!`character.gameState.cornered`) {
                     if (character.gender == Gender.FEMALE) {
                         actionList.add("Press on your crotch")
                     } else {
@@ -509,7 +476,7 @@ class ALongHourAndAHalf {
                         offsetTime(3)
 
                         //Chance to be caught by classmates in hardcore mode
-                        if ((random.nextInt(100) <= 15 + classmatesAwareness) and hardcore) {
+                        if ((random.nextInt(100) <= 15 + lesson.Classmates.holdingAwareness) and hardcore) {
                             nextStage = CAUGHT
                         } else {
                             nextStage = ASK_ACTION
@@ -537,7 +504,7 @@ class ALongHourAndAHalf {
                         offsetTime(3)
 
                         //Chance to be caught by classmates in hardcore mode
-                        if ((random.nextInt(100) <= 3 + classmatesAwareness) and hardcore) {
+                        if ((random.nextInt(100) <= 3 + lesson.Classmates.holdingAwareness) and hardcore) {
                             nextStage = CAUGHT
                         } else {
                             nextStage = ASK_ACTION
@@ -571,7 +538,7 @@ class ALongHourAndAHalf {
                         val timeOffset: Int
                         try {
                             timeOffset = JOptionPane.showInputDialog("How much to wait?").toInt()
-                            if (time < 1 || time > 125) {
+                            if (lesson.time < 1 || lesson.time > 125) {
                                 throw NumberFormatException()
                             }
                             passTime(timeOffset)
@@ -582,7 +549,7 @@ class ALongHourAndAHalf {
                         }
 
                         //Chance to be caught by classmates in hardcore mode
-                        if ((random.nextInt(100) <= 1 + classmatesAwareness) and hardcore) {
+                        if ((random.nextInt(100) <= 1 + lesson.Classmates.holdingAwareness) and hardcore) {
                             nextStage = CAUGHT
 
                         } else {
@@ -605,7 +572,7 @@ class ALongHourAndAHalf {
             }
 
             ASK_TO_PEE -> {
-                when (timesPeeDenied) {
+                when (lesson.teacher.timesPeeDenied) {
                     0 ->
                         //Success
                         if ((random.nextInt(100) <= 40) and !hardcore) {
@@ -648,7 +615,7 @@ class ALongHourAndAHalf {
                             setText("You ask the teacher if you can go out to the restroom.",
                                     "No, you can't go out, the director prohibited it.",
                                     "says the teacher.")
-                            timesPeeDenied++
+                            lesson.teacher.timesPeeDenied++
                         }
 
                     1 -> if ((random.nextInt(100) <= 10) and !hardcore) {
@@ -690,7 +657,7 @@ class ALongHourAndAHalf {
                         setText("You ask the teacher again if you can go out to the restroom.",
                                 "No, you can't! I already told you that the director prohibited it!",
                                 "says the teacher.")
-                        timesPeeDenied++
+                        lesson.teacher.timesPeeDenied++
                     }
 
                     2 -> if ((random.nextInt(100) <= 30) and !hardcore) {
@@ -732,7 +699,7 @@ class ALongHourAndAHalf {
                         setText("You ask the teacher once more if you can go out to the restroom.",
                                 "No, you can't! Stop asking me or there will be consequences!",
                                 "says the teacher.")
-                        timesPeeDenied++
+                        lesson.teacher.timesPeeDenied++
                     }
 
                     3 -> {
@@ -776,24 +743,24 @@ class ALongHourAndAHalf {
                                 setText("Desperately, you ask the teacher if you can go out to the restroom.",
                                         "NO NO NO! YOU CAN'T GO OUT! STAY IN THAT CORNER!,",
                                         "yells the teacher.")
-                                cornered = true
+                                `character.gameState.cornered` = true
                                 //                            score += 1.3 * (90 - min / 3);
                                 //                            scoreText = scoreText.concat("\nStayed on corner " + (90 - min) + " minutes: +" + 1.3 * (90 - min / 3) + " score");
-                                scorer += (1.3 * (90 - time / 3)).toInt()
+                                scorer += (1.3 * (90 - lesson.time / 3)).toInt()
                                 offsetEmbarassment(5)
                             } else {
                                 setText("Desperately, you ask the teacher if you can go out to the restroom.",
                                         "NO NO NO! YOU CAN'T GO OUT! YOU WILL WRITE LINES AFTER THE LESSON!,",
                                         "yells the teacher.")
                                 offsetEmbarassment(5)
-                                stay = true
+                                lesson.teacher.stay = true
                                 gameFrame.timeBar.maximum = 120
                                 //                            scoreText = scoreText.concat("\nWrote lines after the lesson: +60% score");
                                 //                            score *= 1.6;
                                 scorer *= 2
                             }
                         }
-                        timesPeeDenied++
+                        lesson.teacher.timesPeeDenied++
                     }
                 }
                 nextStage = ASK_ACTION
@@ -815,13 +782,13 @@ class ALongHourAndAHalf {
                 when (gameFrame.hideActionUI()) {
                     0 -> {
                         setText("You walk to the front corner of the classroom.")
-                        cornered = true
+                        `character.gameState.cornered` = true
                         nextStage = ASK_ACTION
                     }
 
                     1 -> {
-                        setText("You decide to stay after class.")
-                        stay = true
+                        setText("You decide to lesson.teacher.stay after class.")
+                        lesson.teacher.stay = true
                         gameFrame.timeBar.maximum = 120
                         nextStage = ASK_ACTION
                     }
@@ -837,16 +804,16 @@ class ALongHourAndAHalf {
                         setText("A voice comes over the loudspeaker:",
                                 "All classes are now dismissed for no reason at all! Bye!",
                                 "Looks like your luck changed for the better.")
-                        time = 89
+                        lesson.time = 89
                         nextStage = CLASS_OVER
                     }
 
                     4 -> {
                         setText("The teacher feels sorry for you. Try asking to pee.")
-                        timesPeeDenied = 0
-                        stay = false
+                        lesson.teacher.timesPeeDenied = 0
+                        lesson.teacher.stay = false
                         gameFrame.timeBar.maximum = 90
-                        cornered = false
+                        `character.gameState.cornered` = false
                         nextStage = ASK_ACTION
                     }
 
@@ -915,7 +882,7 @@ class ALongHourAndAHalf {
                     nextStage = SURPRISE
                     return
                 }
-                if (stay) {
+                if (lesson.teacher.stay) {
                     nextStage = AFTER_CLASS
                     return
                 }
@@ -958,14 +925,14 @@ class ALongHourAndAHalf {
             }
 
             AFTER_CLASS -> {
-                if (time >= 120) {
-                    stay = false
+                if (lesson.time >= 120) {
+                    lesson.teacher.stay = false
                     nextStage = CLASS_OVER
                     return
                 }
 
                 setLinesAsDialogue(1, 2, 3, 4)
-                setText("Hey, ${character.name}, you wanted to escape? You must stay after classes!",
+                setText("Hey, ${character.name}, you wanted to escape? You must lesson.teacher.stay after classes!",
                         "Please... let me go to the restroom... I can't hold it...",
                         "No, ${character.name}, you can't go to the restroom now! This will be as punishment.",
                         "And don't think you can hold yourself either! I'm watching you...")
@@ -1022,7 +989,7 @@ class ALongHourAndAHalf {
                         setText("Before you can move an inch, pee quickly soaks through your " + character.gameState.undies.insert() + ", and streaks down your legs.",
                                 "A large puddle quickly forms, and you can't stop tears from falling down your cheeks.")
                     } else {
-                        if (!cornered) {
+                        if (!`character.gameState.cornered`) {
                             setText("The heavy pee jets are hitting the seat and loudly leaking out from your " + character.gameState.undies.insert() + ".",
                                     "A large puddle quickly forms, and you can't stop tears from falling down your cheeks.")
                         } else {
@@ -1036,7 +1003,7 @@ class ALongHourAndAHalf {
 
             POST_WET -> {
                 setLinesAsDialogue(2)
-                if (!stay) {
+                if (!lesson.teacher.stay) {
                     if (character.gameState.lower.isMissing) {
                         if (character.gender == Gender.FEMALE && character.gameState.undies.isMissing) {
                             setText("People around you are laughing loudly.",
@@ -1110,14 +1077,14 @@ class ALongHourAndAHalf {
             }
 
             CAUGHT -> {
-                when (timesCaught) {
+                when (lesson.Classmates.timesCaught) {
                     0 -> {
                         setText("It looks like a classmate has spotted that you've got to go badly.",
                                 "Damn, he may spread that fact...")
                         offsetEmbarassment(3)
-                        classmatesAwareness += 5
+                        lesson.Classmates.holdingAwareness += 5
                         scorer += 3
-                        timesCaught++
+                        lesson.Classmates.timesCaught++
                     }
 
                     1 -> {
@@ -1126,9 +1093,9 @@ class ALongHourAndAHalf {
                                 "Listening to the whisper, you've found out that they're saying that you need to go.",
                                 "If I hold it until the lesson ends, I will beat them.")
                         offsetEmbarassment(8)
-                        classmatesAwareness += 5
+                        lesson.Classmates.holdingAwareness += 5
                         scorer += 8
-                        timesCaught++
+                        lesson.Classmates.timesCaught++
                     }
 
                     2 -> {
@@ -1145,9 +1112,9 @@ class ALongHourAndAHalf {
                                     ", you think to yourself.")
                         }
                         offsetEmbarassment(12)
-                        classmatesAwareness += 5
+                        lesson.Classmates.holdingAwareness += 5
                         scorer += 12
-                        timesCaught++
+                        lesson.Classmates.timesCaught++
                     }
 
                     else -> {
@@ -1155,9 +1122,9 @@ class ALongHourAndAHalf {
                                 "Everyone is watching you.",
                                 "Oh god... this is so embarassing...")
                         offsetEmbarassment(20)
-                        classmatesAwareness += 5
+                        lesson.Classmates.holdingAwareness += 5
                         scorer += 20
-                        timesCaught++
+                        lesson.Classmates.timesCaught++
                     }
                 }
                 nextStage = ASK_ACTION
@@ -1171,8 +1138,8 @@ class ALongHourAndAHalf {
              */
             SURPRISE -> {
 
-                //Resetting timesPeeDenied to use for that boy
-                timesPeeDenied = 0
+                //Resetting lesson.teacher.timesPeeDenied to use for that boy
+                lesson.teacher.timesPeeDenied = 0
 
                 specialHardcoreStage = true
 
@@ -1203,7 +1170,7 @@ class ALongHourAndAHalf {
                 offsetEmbarassment(10)
 
                 actionList.add("Hit him")
-                when (timesPeeDenied) {
+                when (lesson.teacher.timesPeeDenied) {
                     0 -> actionList.add("Try to persuade him to let you pee")
                     1 -> actionList.add("Try to persuade him to let you pee again")
                     2 -> actionList.add("Take a chance and try to persuade him (RISKY)")
@@ -1286,7 +1253,7 @@ class ALongHourAndAHalf {
                         boyName + " pressed your bladder violently...")
             }
 
-            PERSUADE -> when (timesPeeDenied) {
+            PERSUADE -> when (lesson.teacher.timesPeeDenied) {
                 0 -> if (random.nextInt(100) <= 10) {
                     setLinesAsDialogue(1)
                     if (!character.gameState.lower.isMissing) {
@@ -1320,7 +1287,7 @@ class ALongHourAndAHalf {
                     setText("You ask $boyName if you can pee.",
                             "No, you can't pee in a cabin. I want you to wet yourself.,",
                             boyName + " says.")
-                    timesPeeDenied++
+                    lesson.teacher.timesPeeDenied++
                     nextStage = SURPRISE_DIALOGUE
                 }
 
@@ -1356,7 +1323,7 @@ class ALongHourAndAHalf {
                     setText("You ask $boyName if you can pee again.",
                             "No, you can't pee in a cabin. I want you to wet yourself. You're doing it now.",
                             boyName + " demands.")
-                    timesPeeDenied++
+                    lesson.teacher.timesPeeDenied++
                     nextStage = SURPRISE_DIALOGUE
                 }
 
@@ -1541,7 +1508,7 @@ class ALongHourAndAHalf {
     }
 
     /**
-     * Increments the time by # minutes and all time-related parameters.
+     * Increments the lesson.time by # minutes and all lesson.time-related parameters.
      *
      * @param time #
      */
@@ -1550,7 +1517,7 @@ class ALongHourAndAHalf {
         offsetBladder(time * 1.5)
         offsetBelly(-time * 1.5)
 
-        if (this.time >= 88) {
+        if (this.lesson.time >= 88) {
             setText("You hear the bell finally ring.")
             nextStage = CLASS_OVER
         }
@@ -1675,11 +1642,11 @@ class ALongHourAndAHalf {
     }
 
     fun offsetTime(amount: Int) {
-        time += amount.toByte()
-        if (drain and (time % 15 == 0)) {
+        lesson.time += amount.toByte()
+        if (drain and (lesson.time % 15 == 0)) {
             emptyBladder()
         }
-        //Clothes drying over time
+        //Clothes drying over lesson.time
         if (character.gameState.dryness < character.gameState.lower.absorption + character.gameState.undies.absorption) {
             character.gameState.dryness += character.gameState.lower.dryingOverTime + character.gameState.undies.dryingOverTime * (amount / 3)
         }
@@ -1723,7 +1690,7 @@ class ALongHourAndAHalf {
 
             if (character.gameState.dryness < MINIMAL_DRYNESS) {
                 if (character.gameState.lower.isMissing && character.gameState.undies.isMissing) {
-                    if (cornered) {
+                    if (`character.gameState.cornered`) {
                         setText("You see a puddle forming on the floor beneath you, you're peeing!",
                                 "It's too much...")
                         nextStage = ACCIDENT
@@ -1781,7 +1748,7 @@ class ALongHourAndAHalf {
      */
     private fun setText(vararg lines: String) {
         if (lines.size > MAX_LINES) {
-            System.err.println("You can't have more than $MAX_LINES lines at a time!")
+            System.err.println("You can't have more than $MAX_LINES lines at a lesson.time!")
             return
         }
         if (lines.size <= 0) {
@@ -1813,7 +1780,7 @@ class ALongHourAndAHalf {
         gameFrame.lbjEmbarrassment.text = "Embarassment: " + character.gameState.embarrassment
         gameFrame.lblBelly.text = "Belly: " + Math.round(character.gameState.belly) + "%"
         gameFrame.lblIncontinence.text = "Incontinence: " + character.bladder.gameState.fullness.incontinence + "x"
-        gameFrame.lblMinutes.text = "Minutes: $time of 90"
+        gameFrame.lblMinutes.text = "Minutes: $lesson.time of 90"
         gameFrame.lblSphPower.text = "Pee holding ability: " + Math.round(character.bladder.gameState.sphincterStrength) + "%"
         gameFrame.lblDryness.text = "Clothes character.gameState.dryness: " + Math.round(character.gameState.dryness)
         gameFrame.lblUndies.text = "Undies: " + character.gameState.undies.gameState.color + " " + character.gameState.undies.name.toLowerCase()
@@ -1821,7 +1788,7 @@ class ALongHourAndAHalf {
         gameFrame.bladderBar.value = character.bladder.gameState.fullness.toInt()
         gameFrame.sphincterBar.value = Math.round(character.bladder.gameState.sphincterStrength).toInt()
         gameFrame.drynessBar.value = character.gameState.dryness.toInt()
-        gameFrame.timeBar.value = time.toInt()
+        gameFrame.timeBar.value = lesson.time.toInt()
         gameFrame.lblThirst.text = "Thirst: " + Math.round(character.gameState.thirst) + "%"
         gameFrame.thirstBar.value = character.gameState.thirst.toInt()
         */
@@ -1875,5 +1842,5 @@ class ALongHourAndAHalf {
     }
 }
 /**
- * Increments the time by 3 minutes and all time-related parameters.
+ * Increments the lesson.time by 3 minutes and all lesson.time-related parameters.
  */

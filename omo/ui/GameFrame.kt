@@ -26,7 +26,7 @@ class GameFrame(val game: ALongHourAndAHalf) : JFrame() {
     val lblChoice = JLabel()
     val lblEmbarrassment = JLabel("Embarrassment: ${game.character.gameState.embarrassment}")
     val lblIncontinence = JLabel("Incontinence: ${game.character.bladder}x")
-    val lblMinutes = JLabel("Time: ${game.time}")
+    val lblMinutes = JLabel("Time: ${game.`lesson.time`}")
     val lblName = JLabel(game.character.name)
     private val btnNewGame = JButton("New game")
     val lblUndies = JLabel("""Undies: ${game.character.gameState.undies.gameState.color}
@@ -209,7 +209,7 @@ class GameFrame(val game: ALongHourAndAHalf) : JFrame() {
         //Clothing character.gameState.dryness label setup
         lblDryness.setBounds(20, 390, 200, 32)
         lblDryness.toolTipText = """<html>Estimating character.gameState.dryness to absorb leaked pee.
-            |<br>Refills by itself with the time.</html>""".trimMargin()
+            |<br>Refills by itself with the `lesson.time`.</html>""".trimMargin()
         lblDryness.font = Font("Tahoma", Font.PLAIN, 15)
         lblDryness.isVisible = false
         contentPane.add(lblDryness)
@@ -258,13 +258,13 @@ class GameFrame(val game: ALongHourAndAHalf) : JFrame() {
         drynessBar.minimum = ALongHourAndAHalf.MINIMAL_DRYNESS
         drynessBar.isVisible = false
         drynessBar.toolTipText =
-                "<html>Estimating character.gameState.dryness to absorb leaked pee.<br>Refills by itself with the time.</html>"
+                "<html>Estimating character.gameState.dryness to absorb leaked pee.<br>Refills by itself with the `lesson.time`.</html>"
         contentPane.add(drynessBar)
 
         //Time bar setup
         timeBar.setBounds(16, 332, 455, 25)
         timeBar.maximum = 90
-        timeBar.value = game.time
+        timeBar.value = game.`lesson.time`
         timeBar.isVisible = false
         contentPane.add(timeBar)
 

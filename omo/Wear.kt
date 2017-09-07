@@ -61,7 +61,7 @@ class Wear(
         private const val serialVersionUID = 1L
 
         internal var underwearList = arrayOf(
-                //        Name      Insert characterName     Pressure, Absorption, Drying over time
+                //        Name      Insert characterName     Pressure, Absorption, Drying over `lesson.time`
                 Wear("Random", """<b><i>LACK OF WEAR HANDLING${"$"}
                     |${Thread.currentThread().stackTrace[0].lineNumber}</i></b>""".trimMargin()),
                 Wear("Custom"),
@@ -93,7 +93,7 @@ class Wear(
          * List of all outerwear types.
          */
         internal var outerwearList = arrayOf(
-                //        Name      Insert characterName     Pressure, Absorption, Drying over time
+                //        Name      Insert characterName     Pressure, Absorption, Drying over `lesson.time`
                 Wear("Random", """<b><i>LACK OF WEAR HANDLING${"$"}
                     |${Thread.currentThread().stackTrace[0].lineNumber}</i></b>""".trimMargin()),
                 Wear("No outerwear", """<b><i>LACK OF WEAR HANDLING${"$"}

@@ -8,8 +8,6 @@ package omo.ui;
 import omo.Wear;
 
 import javax.swing.*;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.filechooser.FileFilter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -37,9 +35,9 @@ public class WearEditor extends javax.swing.JFrame
      */
     public WearEditor()
     {
-        fc = new JFileChooser();
+        this.fc = new JFileChooser();
 //        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        this.fc.setFileFilter(new FileFilter()
+        fc.setFileFilter(new FileFilter()
         {
             @Override
             public boolean accept(File pathname)
@@ -60,17 +58,17 @@ public class WearEditor extends javax.swing.JFrame
             }
         });
 
-        this.initComponents();
+        initComponents();
     }
 
     public static void main(String[] args) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+        /* If Nimbus (introduced in Java SE 6) is not available, `lesson.teacher.stay` with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
-            for (LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+            for (UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
@@ -98,96 +96,96 @@ public class WearEditor extends javax.swing.JFrame
     private void initComponents()
     {
 
-        this.nameLabel = new JLabel();
-        this.nameField = new JTextField();
-        this.typeLabel = new JLabel();
-        this.typeComboBox = new JComboBox<>();
-        this.pressureLabel = new JLabel();
-        this.pressureSpinner = new JSpinner();
-        this.absorptionLabe = new JLabel();
-        this.absorptionSpinner = new JSpinner();
-        this.dotLabel = new JLabel();
-        this.dotSpinner = new JSpinner();
-        this.saveButton = new JButton();
-        this.openButton = new JButton();
-        this.insertNameLabel = new JLabel();
-        this.insertNameField = new JTextField();
+        nameLabel = new JLabel();
+        nameField = new JTextField();
+        typeLabel = new JLabel();
+        typeComboBox = new JComboBox<>();
+        pressureLabel = new JLabel();
+        pressureSpinner = new JSpinner();
+        absorptionLabe = new JLabel();
+        absorptionSpinner = new JSpinner();
+        dotLabel = new JLabel();
+        dotSpinner = new JSpinner();
+        saveButton = new JButton();
+        openButton = new JButton();
+        insertNameLabel = new JLabel();
+        insertNameField = new JTextField();
 
-        this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        this.setTitle("Wear editor");
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Wear editor");
 
-        this.nameLabel.setText("Wear characterName");
-        this.nameLabel.setToolTipText("Your wear characterName (e. g. \"Beautiful skirt\")");
-        this.nameLabel.setName("nameLabel"); // NOI18N
+        nameLabel.setText("Wear characterName");
+        nameLabel.setToolTipText("Your wear characterName (e. g. \"Beautiful skirt\")");
+        nameLabel.setName("nameLabel"); // NOI18N
 
-        this.nameField.setToolTipText("Your wear characterName (e. g. \"Beautiful skirt\")");
-        this.nameField.setName("nameField"); // NOI18N
+        nameField.setToolTipText("Your wear characterName (e. g. \"Beautiful skirt\")");
+        nameField.setName("nameField"); // NOI18N
 
-        this.typeLabel.setText("Wear type");
-        this.typeLabel.setToolTipText("Type of your wear: undies or lower.");
-        this.typeLabel.setName("typeLabel"); // NOI18N
+        typeLabel.setText("Wear type");
+        typeLabel.setToolTipText("Type of your wear: undies or lower.");
+        typeLabel.setName("typeLabel"); // NOI18N
 
-        this.typeComboBox.setModel(new DefaultComboBoxModel<>(new String[]{"Underwear", "Outerwear", "Both are suitable"}));
-        this.typeComboBox.setSelectedIndex(2);
-        this.typeComboBox.setName("typeComboBox"); // NOI18N
+        typeComboBox.setModel(new DefaultComboBoxModel<>(new String[]{"Underwear", "Outerwear", "Both are suitable"}));
+        typeComboBox.setSelectedIndex(2);
+        typeComboBox.setName("typeComboBox"); // NOI18N
 
-        this.pressureLabel.setText("Pressure");
-        this.pressureLabel.setToolTipText("<html>\nDecreases the maximal bladder capacity.<br>\n<b>1 point = -1% of max. bladder capacity.</b>\n</html>");
-        this.pressureLabel.setName("pressureLabel"); // NOI18N
+        pressureLabel.setText("Pressure");
+        pressureLabel.setToolTipText("<html>\nDecreases the maximal bladder capacity.<br>\n<b>1 point = -1% of max. bladder capacity.</b>\n</html>");
+        pressureLabel.setName("pressureLabel"); // NOI18N
 
-        this.pressureSpinner.setModel(new SpinnerNumberModel(Float.valueOf(0.0f), Float.valueOf(0.0f), Float.valueOf(300.0f), Float.valueOf(1.0f)));
-        this.pressureSpinner.setToolTipText("<html> Decreases the maximal bladder capacity.<br> <b>1 point = -1% of max. bladder capacity.</b> </html>");
-        this.pressureSpinner.setName("pressureSpinner"); // NOI18N
+        pressureSpinner.setModel(new SpinnerNumberModel(Float.valueOf(0.0f), Float.valueOf(0.0f), Float.valueOf(300.0f), Float.valueOf(1.0f)));
+        pressureSpinner.setToolTipText("<html> Decreases the maximal bladder capacity.<br> <b>1 point = -1% of max. bladder capacity.</b> </html>");
+        pressureSpinner.setName("pressureSpinner"); // NOI18N
 
-        this.absorptionLabe.setText("Absorption");
-        this.absorptionLabe.setToolTipText("<html>\nAbsorbs the leaked pee.<br>\n<b>1 point = 0.5% of pee.</b>\n</html>\n");
-        this.absorptionLabe.setName("absorptionLabe"); // NOI18N
+        absorptionLabe.setText("Absorption");
+        absorptionLabe.setToolTipText("<html>\nAbsorbs the leaked pee.<br>\n<b>1 point = 0.5% of pee.</b>\n</html>\n");
+        absorptionLabe.setName("absorptionLabe"); // NOI18N
 
-        this.absorptionSpinner.setModel(new SpinnerNumberModel(Float.valueOf(0.0f), Float.valueOf(0.0f), Float.valueOf(300.0f), Float.valueOf(1.0f)));
-        this.absorptionSpinner.setToolTipText("<html> Absorbs the leaked pee.<br> <b>1 point = 0.5% of pee.</b> </html> ");
-        this.absorptionSpinner.setName("absorptionSpinner"); // NOI18N
+        absorptionSpinner.setModel(new SpinnerNumberModel(Float.valueOf(0.0f), Float.valueOf(0.0f), Float.valueOf(300.0f), Float.valueOf(1.0f)));
+        absorptionSpinner.setToolTipText("<html> Absorbs the leaked pee.<br> <b>1 point = 0.5% of pee.</b> </html> ");
+        absorptionSpinner.setName("absorptionSpinner"); // NOI18N
 
-        this.dotLabel.setText("Drying over time");
-        this.dotLabel.setToolTipText("<html>\nSpeed of wear drying.<br>\n<b>1 point = -1% of absorbed pee per 3 minutes.</b>\n</html>");
-        this.dotLabel.setName("dotLabel"); // NOI18N
+        dotLabel.setText("Drying over `lesson.time`");
+        dotLabel.setToolTipText("<html>\nSpeed of wear drying.<br>\n<b>1 point = -1% of absorbed pee per 3 minutes.</b>\n</html>");
+        dotLabel.setName("dotLabel"); // NOI18N
 
-        this.dotSpinner.setModel(new SpinnerNumberModel(Float.valueOf(0.0f), Float.valueOf(0.0f), Float.valueOf(100.0f), Float.valueOf(1.0f)));
-        this.dotSpinner.setToolTipText("<html> Speed of wear drying.<br> <b>1 point = -1% of absorbed pee per 3 minutes.</b> </html>");
-        this.dotSpinner.setName("dotSpinner"); // NOI18N
+        dotSpinner.setModel(new SpinnerNumberModel(Float.valueOf(0.0f), Float.valueOf(0.0f), Float.valueOf(100.0f), Float.valueOf(1.0f)));
+        dotSpinner.setToolTipText("<html> Speed of wear drying.<br> <b>1 point = -1% of absorbed pee per 3 minutes.</b> </html>");
+        dotSpinner.setName("dotSpinner"); // NOI18N
 
-        this.saveButton.setText("Save...");
-        this.saveButton.setName("saveButton"); // NOI18N
-        this.saveButton.addActionListener(new ActionListener()
+        saveButton.setText("Save...");
+        saveButton.setName("saveButton"); // NOI18N
+        saveButton.addActionListener(new ActionListener()
         {
             public void actionPerformed(ActionEvent evt)
             {
-                WearEditor.this.saveButtonActionPerformed(evt);
+                saveButtonActionPerformed(evt);
             }
         });
 
-        this.openButton.setText("Open...");
-        this.openButton.setName("openButton"); // NOI18N
-        this.openButton.addActionListener(new ActionListener()
+        openButton.setText("Open...");
+        openButton.setName("openButton"); // NOI18N
+        openButton.addActionListener(new ActionListener()
         {
             public void actionPerformed(ActionEvent evt)
             {
-                WearEditor.this.openButtonActionPerformed(evt);
+                openButtonActionPerformed(evt);
             }
         });
 
-        this.insertNameLabel.setText("Wear insert characterName");
-        this.insertNameLabel.setToolTipText("Your wear characterName which is inserted in the game text (e. g. \"skirt\")");
-        this.insertNameLabel.setName("insertNameLabel"); // NOI18N
+        insertNameLabel.setText("Wear insert characterName");
+        insertNameLabel.setToolTipText("Your wear characterName which is inserted in the game text (e. g. \"skirt\")");
+        insertNameLabel.setName("insertNameLabel"); // NOI18N
 
-        this.insertNameField.setToolTipText("Your wear characterName which is inserted in the game text (e. g. \"skirt\")");
-        this.insertNameField.setName("insertNameField"); // NOI18N
+        insertNameField.setToolTipText("Your wear characterName which is inserted in the game text (e. g. \"skirt\")");
+        insertNameField.setName("insertNameField"); // NOI18N
 
-        GroupLayout layout = new GroupLayout(this.getContentPane());
-        this.getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(layout.createParallelGroup(Alignment.LEADING)
+        GroupLayout layout = new GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                    .addGroup(layout.createParallelGroup(Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(nameLabel)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
@@ -240,43 +238,43 @@ public class WearEditor extends javax.swing.JFrame
                         .addComponent(this.dotLabel)
                         .addComponent(this.dotSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addGroup(layout.createParallelGroup(Alignment.BASELINE)
-                            .addComponent(this.saveButton)
-                            .addComponent(this.openButton))
+                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                            .addComponent(saveButton)
+                            .addComponent(openButton))
                 .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        this.pack();
+        pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void saveButtonActionPerformed(ActionEvent evt)//GEN-FIRST:event_saveButtonActionPerformed
     {//GEN-HEADEREND:event_saveButtonActionPerformed
-        this.fc.setSelectedFile(new File(this.nameField.getText()));
-        if (this.fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION)
+        fc.setSelectedFile(new File(nameField.getText()));
+        if (fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION)
         {
-            File file = new File(this.fc.getSelectedFile().getAbsolutePath() + ".lhhwear");
+            File file = new File(fc.getSelectedFile().getAbsolutePath() + ".lhhwear");
             FileOutputStream fout;
             ObjectOutputStream oos;
             try
             {
-                this.wear = new Wear(this.nameField.getText(), this.insertNameField.getText(), (float) this.pressureSpinner.getValue(), (float) this.absorptionSpinner.getValue(), (float) this.dotSpinner.getValue(), null);
-                switch (this.typeComboBox.getSelectedIndex())
+                wear = new Wear(nameField.getText(), insertNameField.getText(), (float) pressureSpinner.getValue(), (float) absorptionSpinner.getValue(), (float) dotSpinner.getValue(), null);
+                switch (typeComboBox.getSelectedIndex())
                 {
                     case 0:
-                        this.wear.setType(UNDERWEAR);
+                        wear.setType(UNDERWEAR);
                         break;
                     case 1:
-                        this.wear.setType(OUTERWEAR);
+                        wear.setType(OUTERWEAR);
                         break;
                     case 2:
-                        this.wear.setType(BOTH_SUITABLE);
+                        wear.setType(BOTH_SUITABLE);
                         break;
                 }
 
 //                writer = new PrintStream(file);
                 fout = new FileOutputStream(file);
                 oos = new ObjectOutputStream(fout);
-                oos.writeObject(this.wear);
+                oos.writeObject(wear);
             } catch (IOException ex)
             {
                 JOptionPane.showMessageDialog(this, "File error.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -287,34 +285,34 @@ public class WearEditor extends javax.swing.JFrame
 
     private void openButtonActionPerformed(ActionEvent evt)//GEN-FIRST:event_openButtonActionPerformed
     {//GEN-HEADEREND:event_openButtonActionPerformed
-        if (this.fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
+        if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
         {
-            File file = this.fc.getSelectedFile();
+            File file = fc.getSelectedFile();
             try
             {
                 FileInputStream fin = new FileInputStream(file);
                 ObjectInputStream ois = new ObjectInputStream(fin);
-                this.wear = (Wear) ois.readObject();
+                wear = (Wear) ois.readObject();
             } catch (IOException | ClassNotFoundException e)
             {
                 JOptionPane.showMessageDialog(this, "File error.", "Error", JOptionPane.ERROR_MESSAGE);
             }
-            this.nameField.setText(this.wear.getName());
-            this.insertNameField.setText(this.wear.insert());
-            this.pressureSpinner.setValue(this.wear.getPressure());
-            this.absorptionSpinner.setValue(this.wear.getAbsorption());
-            this.dotSpinner.setValue(this.wear.getDryingOverTime());
+            nameField.setText(wear.getName());
+            insertNameField.setText(wear.insert());
+            pressureSpinner.setValue(wear.getPressure());
+            absorptionSpinner.setValue(wear.getAbsorption());
+            dotSpinner.setValue(wear.getDryingOverTime());
 
-            switch (this.wear.getType())
+            switch (wear.getType())
             {
                 case UNDERWEAR:
-                    this.typeComboBox.setSelectedIndex(0);
+                    typeComboBox.setSelectedIndex(0);
                     break;
                 case OUTERWEAR:
-                    this.typeComboBox.setSelectedIndex(1);
+                    typeComboBox.setSelectedIndex(1);
                     break;
                 case BOTH_SUITABLE:
-                    this.typeComboBox.setSelectedIndex(2);
+                    typeComboBox.setSelectedIndex(2);
                     break;
             }
         }
