@@ -218,7 +218,7 @@ class ALongHourAndAHalf {
         }
 
         //Starting the game
-        nextStage = LEAVE_BED
+        nextStage = Stage.map["LEAVE_BED"]
         handleNextClicked()
         gameFrame.isVisible = true
     }

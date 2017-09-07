@@ -29,4 +29,8 @@ class Scorer {
     fun addFinalMultiplier(multiplier: Int) {
         finalMultipliers.add(multiplier)
     }
+
+    operator fun divAssign(multiplier: Double) {
+        score = (score / multiplier).toInt()
+    }
 }

@@ -26,8 +26,8 @@ class Character(
             !undies.isMissing && lower.isMissing -> Wear.Mode.UNDIES
             !undies.isMissing && !lower.isMissing -> Wear.Mode.BOTH
             else -> throw IllegalStateException("""Can't set wear mode
-    undies.isMissing = ${undies.isMissing}
-    lower.isMissing = ${lower.isMissing}""")
+                                                    |    undies.isMissing = ${undies.isMissing}
+                                                    |    lower.isMissing = ${lower.isMissing}""".trimMargin())
         }
         var dryness = undies.absorption + lower.absorption
     }
