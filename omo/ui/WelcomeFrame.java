@@ -13,12 +13,13 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 
+@SuppressWarnings("CyclicClassDependency")
 public class WelcomeFrame extends JFrame {
     private JButton newGameButton;
     private JButton loadGameButton;
     private JButton exitButton;
-    static JFileChooser characterFC = new JFileChooser();
-    static JFileChooser saveFC = new JFileChooser();
+    static final JFileChooser characterFC = new JFileChooser();
+    static final JFileChooser saveFC = new JFileChooser();
     private JPanel cont;
 
     private WelcomeFrame() {

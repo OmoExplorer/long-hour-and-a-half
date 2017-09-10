@@ -1,7 +1,6 @@
 package omo.ui;
 
 import omo.ALongHourAndAHalf;
-import omo.Bladder;
 import omo.Character;
 import omo.Wear;
 
@@ -57,20 +56,21 @@ public class SchoolSetup extends JDialog {
 
 
         //Setting game states
-        undies.setGameState(new Wear.GameState(undiesColor));
-        lower.setGameState(new Wear.GameState(lowerColor));
+//        undies.setGameState(new Wear.GameState(undiesColor));
+//        lower.setGameState(new Wear.GameState(lowerColor));
 
-        character.getBladder().setGameState(new Bladder.GameState(bladderFulness));
 
-        character.setGameState(new Character.GameState(undies, lower));
-
+//        character.getBladder().setGameState(new Bladder.GameState(bladderFulness));
+//
+//        character.setGameState(new Character.GameState(undies, lower));
 
         //Creating the game
-        new ALongHourAndAHalf(character,
-                undies,
-                lower,
-                hardcoreCheckBox.isSelected(),
-                bladderFulness,
+        ALongHourAndAHalf game = new ALongHourAndAHalf(character, hardcoreCheckBox.isSelected());
+        character.setupGameState(game.getGameFrame(), bladderSlider.getValue(),
+                Wear.Companion.getUnderwearMap().get(
+                        (String) ((DefaultMutableTreeNode) underwearTree.getLastSelectedPathComponent()).getUserObject()),
+                Wear.Companion.getOuterwearMap().get(
+                        (String) ((DefaultMutableTreeNode) outerwearTree.getLastSelectedPathComponent()).getUserObject()),
                 undiesColor, lowerColor);
         dispose();
     }
@@ -95,11 +95,11 @@ public class SchoolSetup extends JDialog {
     }
 
     private void createUIComponents() {
-        Hashtable underwerHashtable = new Hashtable<String, Wear>(Wear.Companion.getUnderwearMap());
-        Hashtable outerwerHashtable = new Hashtable<String, Wear>(Wear.Companion.getOuterwearMap());
+        Hashtable underwearHashtable = new Hashtable<String, Wear>(Wear.Companion.getUnderwearMap());
+        Hashtable outerwearHashtable = new Hashtable<String, Wear>(Wear.Companion.getOuterwearMap());
 
-        outerwearTree = new JTree(outerwerHashtable);
-        underwearTree = new JTree(underwerHashtable);
+        outerwearTree = new JTree(outerwearHashtable);
+        underwearTree = new JTree(underwearHashtable);
     }
 
     /**

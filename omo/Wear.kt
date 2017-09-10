@@ -15,7 +15,7 @@ class Wear(
         val dryingOverTime: Double = 0.0,
         var type: WearType? = null
 ) : Serializable {
-    class GameState(
+    inner class GameState(
             var color: String = ""
     )
 

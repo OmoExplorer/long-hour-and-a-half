@@ -8,25 +8,33 @@ open class Cheat(
 ) {
     companion object {
         private val goToCorner = Cheat("Go to the corner") {
-            TODO("Refactor Lesson class before")
+            it.character.gameState!!.cornered = !it.character.gameState!!.cornered
         }
         private val stayAfterClass = Cheat("Stay after class") {
-            TODO("Refactor Lesson class before")
+            it.lesson.teacher.stay = !it.lesson.teacher.stay
+        }
+        private val peeInBottle = Cheat("Pee in a bottle") {
+            it.nextStage = Stage.map[Stage.Companion.StageID.USE_BOTTLE] ?:
+                    throw StageNotFoundException(Stage.Companion.StageID.USE_BOTTLE)
         }
         private val endLesson = Cheat("End class right now") {
-            TODO("Refactor Stage class before")
+            it.nextStage = Stage.map[Stage.Companion.StageID.CLASS_OVER] ?:
+                    throw StageNotFoundException(Stage.Companion.StageID.CLASS_OVER)
         }
         private val calmTeacher = Cheat("Calm the teacher down") {
-            TODO("Refactor Lesson class before")
+            it.lesson.teacher.timesPeeDenied = 0
         }
         private val raiseHand = Cheat("Raise your hand") {
-            TODO("Refactor Stage class before")
+            it.nextStage = Stage.map[Stage.Companion.StageID.CALLED_ON] ?:
+                    throw StageNotFoundException(Stage.Companion.StageID.CALLED_ON)
         }
         private val drainPee = object : ToggleCheat("Make your pee disappear regularly", {}) {
             private var a = 0
             override val use: (game: ALongHourAndAHalf) -> Unit = { game ->
-                if (a >= 5)
+                if (a >= 5) {
                     game.character.bladder.gameState!!.fullness = 0.0
+                    a = 0
+                }
                 else
                     a++
             }
@@ -43,7 +51,8 @@ open class Cheat(
         val lesson = listOf(
                 goToCorner,
                 stayAfterClass,
-                endLesson
+                endLesson,
+                peeInBottle
         )
         val global = listOf(
                 drainPee,
