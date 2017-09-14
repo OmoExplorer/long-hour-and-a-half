@@ -2,6 +2,7 @@ package omo.ui;
 
 import omo.ALongHourAndAHalf;
 import omo.Character;
+import omo.GameState;
 import omo.Wear;
 
 import javax.swing.*;
@@ -56,22 +57,29 @@ public class SchoolSetup extends JDialog {
 
 
         //Setting game states
-//        undies.setGameState(new Wear.GameState(undiesColor));
-//        lower.setGameState(new Wear.GameState(lowerColor));
-
-
-//        character.getBladder().setGameState(new Bladder.GameState(bladderFulness));
-//
-//        character.setGameState(new Character.GameState(undies, lower));
 
         //Creating the game
-        ALongHourAndAHalf game = new ALongHourAndAHalf(character, hardcoreCheckBox.isSelected());
-        character.setupGameState(game.getGameFrame(), bladderSlider.getValue(),
-                Wear.Companion.getUnderwearMap().get(
-                        (String) ((DefaultMutableTreeNode) underwearTree.getLastSelectedPathComponent()).getUserObject()),
-                Wear.Companion.getOuterwearMap().get(
-                        (String) ((DefaultMutableTreeNode) outerwearTree.getLastSelectedPathComponent()).getUserObject()),
-                undiesColor, lowerColor);
+        ALongHourAndAHalf game =
+                new ALongHourAndAHalf(
+                        new GameState(
+                                new GameState.CharacterGameState(
+                                        character,
+                                        new GameState.CharacterGameState.BladderGameState(
+                                                character.getBladder(), bladderFulness
+                                        ),
+                                        new GameState.CharacterGameState.WearGameState(
+                                                undies, lower, Wear.Color.BLACK, Wear.Color.BLACK
+                                        )
+                                ),
+                                hardcoreCheckBox.isSelected()
+                        )
+                );
+//        character.setupGameState(bladderSlider.getValue(),
+//                Wear.Companion.getUnderwearMap().get(
+//                        (String) ((DefaultMutableTreeNode) underwearTree.getLastSelectedPathComponent()).getUserObject()),
+//                Wear.Companion.getOuterwearMap().get(
+//                        (String) ((DefaultMutableTreeNode) outerwearTree.getLastSelectedPathComponent()).getUserObject()),
+//                undiesColor, lowerColor);
         dispose();
     }
 

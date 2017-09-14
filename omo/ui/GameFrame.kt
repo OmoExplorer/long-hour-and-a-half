@@ -1,6 +1,7 @@
 package omo.ui
 
 import omo.ALongHourAndAHalf
+import omo.GameState
 import omo.Gender
 import java.awt.Color
 import java.awt.Font
@@ -14,6 +15,7 @@ class GameFrame(val game: ALongHourAndAHalf) : JFrame() {
     private val contentPane = JPanel()
     private val textPanel = JPanel()
 
+    private val btnNewGame = JButton("New game")
     val btnNext = JButton("Next")
     private val btnReset = JButton("Reset")
     private val btnQuit = JButton("Quit")
@@ -21,24 +23,23 @@ class GameFrame(val game: ALongHourAndAHalf) : JFrame() {
     private val btnLoad = JButton("Load")
 
     val textLabel = JLabel()
-    val lblBelly = JLabel("Belly: ${Math.round(game.character.gameState!!.belly)} %")
-    val lblBladder = JLabel("Bladder: ${Math.round(game.character.bladder.gameState!!.fullness)} %")
-    val lblChoice = JLabel()
-    val lblEmbarrassment = JLabel("Embarrassment: ${game.character.gameState!!.embarrassment}")
-    val lblIncontinence = JLabel("Incontinence: ${game.character.bladder}x")
-    val lblMinutes = JLabel("Time: ${game.lesson.time}")
-    val lblName = JLabel(game.character.name)
-    private val btnNewGame = JButton("New game")
-    val lblUndies = JLabel("Undies: ${game.character.gameState!!.undies.gameState.color} " +
-            "${game.character.gameState!!.undies.name.toLowerCase()}")
-    val lblLower = JLabel("Lower: ${game.character.gameState!!.lower.gameState.color} " +
-            "${game.character.gameState!!.undies.name.toLowerCase()}")
-    val lblSphPower = JLabel("Sphincter power: ${game.character.bladder.gameState!!.sphincterStrength}")
-    val lblDryness = JLabel("Clothes character.gameState.dryness: ${game.character.gameState!!.dryness}")
-    val lblThirst = JLabel("Thirst: ${game.character.gameState!!.thirst.toInt()}%")
+    val lblName = JLabel(game.state.characterState.character.name)
+    val lblBladder = JLabel("Bladder: ${Math.round(game.state.characterState.bladderState.fullness)} %")
+    val lblBelly = JLabel("Belly: ${Math.round(game.state.characterState.belly)} %")
+    val lblEmbarrassment = JLabel("Embarrassment: ${game.state.characterState.embarrassment}")
+    val lblIncontinence = JLabel("Incontinence: ${game.state.characterState.bladderState.bladder.incontinence}x")
+    val lblMinutes = JLabel("Time: ${game.state.lesson.time}")
+    val lblSphPower = JLabel("Sphincter power: ${game.state.characterState.bladderState.sphincterStrength}")
+    val lblDryness = JLabel("Clothes dryness: ${game.state.characterState.wearState.dryness}")
+    val lblThirst = JLabel("Thirst: ${game.state.characterState.thirst.toInt()}%")
+    val lblUndies = JLabel("Undies: ${game.state.characterState.wearState.undiesColor} " +
+            "${game.state.characterState.wearState.undies.name.toLowerCase()}")
+    val lblLower = JLabel("Lower: ${game.state.characterState.wearState.lowerColor} " +
+            "${game.state.characterState.wearState.undies.name.toLowerCase()}")
+    private val lblChoice = JLabel()
     val listChoice = JList<Any>()
 
-    val listScroller = JScrollPane()
+    private val listScroller = JScrollPane()
 
     val bladderBar = JProgressBar()
     val sphincterBar = JProgressBar()
@@ -47,7 +48,7 @@ class GameFrame(val game: ALongHourAndAHalf) : JFrame() {
     val thirstBar = JProgressBar()
 
     val fcGame = JFileChooser()
-    val fcWear = JFileChooser()
+    private val fcWear = JFileChooser()
 
     init {
         title = "A Long Hour and a Half"
@@ -114,7 +115,7 @@ class GameFrame(val game: ALongHourAndAHalf) : JFrame() {
 
         //"Reset" button setup
         btnReset.addActionListener(ActionListener {
-            game.reset(false)
+            game.reset(game.state, false)
             dispose()
         })
         btnReset.setBounds(
@@ -128,7 +129,7 @@ class GameFrame(val game: ALongHourAndAHalf) : JFrame() {
 
         //"New game" button setup
         btnNewGame.addActionListener(ActionListener {
-            game.reset(true)
+            game.reset(game.state, true)
             dispose()
         })
         btnNewGame.setBounds(
@@ -171,7 +172,7 @@ class GameFrame(val game: ALongHourAndAHalf) : JFrame() {
         contentPane.add(lblBelly)
 
         //Thirst label setup
-        if (game.hardcore) {
+        if (game.state.hardcore) {
             lblThirst.setBounds(20, 480, 200, 32)
             lblThirst.toolTipText = "Character will automatically drink water at 30% of thirst."
             lblThirst.font = Font("Tahoma", Font.PLAIN, 15)
@@ -179,8 +180,8 @@ class GameFrame(val game: ALongHourAndAHalf) : JFrame() {
 
             //Thirst bar setup
             thirstBar.setBounds(16, 482, 455, 25)
-            thirstBar.maximum = game.MAXIMAL_THIRST
-            thirstBar.value = game.character.gameState!!.thirst.toInt()
+            thirstBar.maximum = GameState.CharacterGameState.MAXIMAL_THIRST
+            thirstBar.value = game.state.characterState.thirst.toInt()
             thirstBar.toolTipText = "Character will automatically drink water at 30% of thirst."
             contentPane.add(thirstBar)
         }
@@ -231,7 +232,7 @@ class GameFrame(val game: ALongHourAndAHalf) : JFrame() {
         //Bladder bar setup
         bladderBar.setBounds(16, 212, 455, 25)
         bladderBar.maximum = 130
-        bladderBar.value = game.character.bladder.gameState!!.fullness.toInt()
+        bladderBar.value = game.state.characterState.bladderState.fullness.toInt()
         bladderBar.toolTipText = """<html>Normal game:
             |<br>100% = need to hold, regular leaks
             |<br>130% = peeing(game over)
@@ -243,8 +244,8 @@ class GameFrame(val game: ALongHourAndAHalf) : JFrame() {
 
         //Sphincter bar setup
         sphincterBar.setBounds(16, 362, 455, 25)
-        sphincterBar.maximum = game.character.bladder.maximalSphincterStrength.toInt()
-        sphincterBar.value = game.character.bladder.gameState!!.sphincterStrength.toInt()
+        sphincterBar.maximum = game.state.characterState.bladderState.bladder.maximalSphincterStrength.toInt()
+        sphincterBar.value = game.state.characterState.bladderState.sphincterStrength.toInt()
         sphincterBar.isVisible = false
         sphincterBar.toolTipText = """<html>Ability to hold pee.
             |<br>Drains faster on higher bladder fullness.
@@ -254,7 +255,7 @@ class GameFrame(val game: ALongHourAndAHalf) : JFrame() {
 
         //Dryness bar setup
         drynessBar.setBounds(16, 392, 455, 25)
-        drynessBar.value = game.character.gameState!!.dryness.toInt()
+        drynessBar.value = game.state.characterState.wearState.dryness.toInt()
         drynessBar.minimum = ALongHourAndAHalf.MINIMAL_DRYNESS
         drynessBar.isVisible = false
         drynessBar.toolTipText =
@@ -264,20 +265,20 @@ class GameFrame(val game: ALongHourAndAHalf) : JFrame() {
         //Time bar setup
         timeBar.setBounds(16, 332, 455, 25)
         timeBar.maximum = 90
-        timeBar.value = game.lesson.time
+        timeBar.value = game.state.lesson.time
         timeBar.isVisible = false
         contentPane.add(timeBar)
 
         //Coloring the characterName label according to the gender
-        if (game.character.gender == Gender.FEMALE) {
+        if (game.state.characterState.character.gender == Gender.FEMALE) {
             lblName.foreground = Color.MAGENTA
         } else {
             lblName.foreground = Color.CYAN
         }
 
         //Assigning the blank characterName if player didn't selected the characterName
-        if (game.character.name.isEmpty()) {
-            if (game.character.gender == Gender.FEMALE) {
+        if (game.state.characterState.character.name.isEmpty()) {
+            if (game.state.characterState.character.gender == Gender.FEMALE) {
                 this.name = "Mrs. Nobody"
             } else {
                 this.name = "Mr. Nobody"
@@ -291,17 +292,17 @@ class GameFrame(val game: ALongHourAndAHalf) : JFrame() {
         isVisible = true
     }
 
-    internal fun hideActionUI(): Int {
-        val choice = listChoice.selectedIndex
-        game.actionList.clear()
-        lblChoice.isVisible = false
-        listScroller.isVisible = false
-        return choice
-    }
-
-    internal fun showActionUI(actionGroupName: String) {
-        lblChoice.isVisible = true
-        lblChoice.text = actionGroupName
-        listScroller.isVisible = true
-    }
+//    internal fun hideActionUI(): Int {
+//        val choice = listChoice.selectedIndex
+//        game.actionList.clear()
+//        lblChoice.isVisible = false
+//        listScroller.isVisible = false
+//        return choice
+//    }
+//
+//    internal fun showActionUI(actionGroupName: String) {
+//        lblChoice.isVisible = true
+//        lblChoice.text = actionGroupName
+//        listScroller.isVisible = true
+//    }
 }

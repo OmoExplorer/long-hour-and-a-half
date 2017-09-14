@@ -3,11 +3,20 @@ package omo
 class Scorer {
     private val finalMultipliers = mutableListOf<Int>()
 
-    var score = 0
+    /**
+     * Backing property for [score].
+     * @suppress
+     */
+    private var _score = 0
+
+    var score: Int
         get() {
-            var score = this.score
+            var score = _score
             finalMultipliers.forEach { score *= it }
             return score
+        }
+        set(value) {
+            _score = value
         }
 
     operator fun plusAssign(amount: Int) {

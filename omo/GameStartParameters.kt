@@ -1,11 +1,9 @@
 package omo
 
 class GameStartParameters(game: ALongHourAndAHalf) {
-    val character: Character = game.character
-    val hardcore: Boolean = game.hardcore
+    val state = game.state
 
     fun load(game: ALongHourAndAHalf) {
-        game.character = character
-        game.hardcore = hardcore
+        game.state = state
     }
 }

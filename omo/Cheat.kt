@@ -2,50 +2,50 @@ package omo
 
 import javax.swing.JOptionPane
 
+//TODO: Make accessible
 open class Cheat(
         val name: String,
         open val use: (game: ALongHourAndAHalf) -> Unit
 ) {
     companion object {
         private val goToCorner = Cheat("Go to the corner") {
-            it.character.gameState!!.cornered = !it.character.gameState!!.cornered
+            it.state.characterState.cornered = !it.state.characterState.cornered
         }
         private val stayAfterClass = Cheat("Stay after class") {
-            it.lesson.teacher.stay = !it.lesson.teacher.stay
+            it.state.lesson.teacher.stay = !it.state.lesson.teacher.stay
         }
         private val peeInBottle = Cheat("Pee in a bottle") {
-            it.nextStage = Stage.map[Stage.Companion.StageID.USE_BOTTLE] ?:
-                    throw StageNotFoundException(Stage.Companion.StageID.USE_BOTTLE)
+            it.nextStage = it.stageMap[StageID.USE_BOTTLE] ?:
+                    throw StageNotFoundException(StageID.USE_BOTTLE)
         }
         private val endLesson = Cheat("End class right now") {
-            it.nextStage = Stage.map[Stage.Companion.StageID.CLASS_OVER] ?:
-                    throw StageNotFoundException(Stage.Companion.StageID.CLASS_OVER)
+            it.nextStage = it.stageMap[StageID.CLASS_OVER] ?:
+                    throw StageNotFoundException(StageID.CLASS_OVER)
         }
         private val calmTeacher = Cheat("Calm the teacher down") {
-            it.lesson.teacher.timesPeeDenied = 0
+            it.state.lesson.teacher.timesPeeDenied = 0
         }
         private val raiseHand = Cheat("Raise your hand") {
-            it.nextStage = Stage.map[Stage.Companion.StageID.CALLED_ON] ?:
-                    throw StageNotFoundException(Stage.Companion.StageID.CALLED_ON)
+            it.nextStage = it.stageMap[StageID.CALLED_ON] ?:
+                    throw StageNotFoundException(StageID.CALLED_ON)
         }
         private val drainPee = object : ToggleCheat("Make your pee disappear regularly", {}) {
             private var a = 0
-            override val use: (game: ALongHourAndAHalf) -> Unit = { game ->
+            override val use: (game: ALongHourAndAHalf) -> Unit = {
                 if (a >= 5) {
-                    game.character.bladder.gameState!!.fullness = 0.0
+                    it.state.characterState.bladderState.fullness = 0.0
                     a = 0
-                }
-                else
+                } else
                     a++
             }
         }
-        private val toggleHardcore = Cheat("Toggle hardcore mode") { game ->
-            game.hardcore = !game.hardcore
+        private val toggleHardcore = Cheat("Toggle hardcore mode") {
+            it.state.hardcore = !it.state.hardcore
         }
-        private val setFullness = Cheat("Set bladder fullness") { game ->
-            val new = JOptionPane.showInputDialog(game.gameFrame, "Enter new bladder fullness:",
-                    game.character.bladder.gameState!!.fullness).toDouble()
-            game.character.bladder.gameState!!.fullness = new
+        private val setFullness = Cheat("Set bladder fullness") {
+            val new = JOptionPane.showInputDialog(it.gameFrame, "Enter new bladder fullness:",
+                    it.state.characterState.bladderState.fullness).toDouble()
+            it.state.characterState.bladderState.fullness = new
         }
 
         val lesson = listOf(

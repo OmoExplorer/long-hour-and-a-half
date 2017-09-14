@@ -70,9 +70,26 @@ public class WelcomeFrame extends JFrame {
     }
 
     public static void main(String[] args) {
+        setNimbusSkin();
         EventQueue.invokeLater(() -> {
             new WelcomeFrame();
         });
+    }
+
+    private static void setNimbusSkin() {
+        try {
+//            throw new Exception();
+            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Unable to set Nimbus UI skin.\n" +
+                    "Update Java to fix this.", "", JOptionPane.WARNING_MESSAGE);
+            System.err.println("Nimbus skin isn't available. Metal skin is used instead.");
+        }
     }
 
     private void loadGame() {

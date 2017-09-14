@@ -15,10 +15,6 @@ class Wear(
         val dryingOverTime: Double = 0.0,
         var type: WearType? = null
 ) : Serializable {
-    inner class GameState(
-            var color: String = ""
-    )
-
     enum class Mode {
         BOTH,
         UNDIES,
@@ -26,7 +22,18 @@ class Wear(
         NONE
     }
 
-    lateinit var gameState: GameState
+    enum class Color(val textRepresentation: String) {
+        BLACK("Black"),
+        GRAY("Gray"),
+        RED("Red"),
+        ORANGE("Orange"),
+        YELLOW("Yellow"),
+        GREEN("Green"),
+        BLUE("Blue"),
+        DARK_BLUE("Dark blue"),
+        PURPLE("Purple"),
+        PINK("Pink")
+    }
 
     /**
      * Whether or not certain wear equals "No under/outerwear".
@@ -43,21 +50,8 @@ class Wear(
     }
 
     public companion object {
-        /**
-         * List of all colors that clothes may have.
-         */
-        internal var colorList = arrayOf(
-                "Black",
-                "Gray",
-                "Red",
-                "Orange",
-                "Yellow",
-                "Green",
-                "Blue",
-                "Dark blue",
-                "Purple",
-                "Pink"
-        )
+
+
         private const val serialVersionUID = 1L
 
         internal var underwearList = arrayOf(
