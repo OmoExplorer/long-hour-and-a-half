@@ -75,6 +75,7 @@ package omo
 
 import omo.Wear.WearType.*
 import omo.ui.GameFrame
+import omo.ui.GameOverDialog
 import omo.ui.SchoolSetup
 import java.awt.Color
 import java.io.*
@@ -99,7 +100,7 @@ class ALongHourAndAHalf {
 
         parametersStorage = GameStartParameters(this)
         gameFrame = GameFrame(this)
-        nextStage = save.stage
+        currentStage = save.stage
         gameFrame.isVisible = true
     }
 
@@ -112,7 +113,7 @@ class ALongHourAndAHalf {
     /**
      * A stage after the current stage.
      */
-    var nextStage: Stage
+    var currentStage: Stage
 
     /**
      * Maximal time without squirming and leaking.
@@ -166,32 +167,59 @@ class ALongHourAndAHalf {
         stageMap = StageMap(this)
 
         //Starting the game
-        nextStage = stageMap[StageID.LEAVE_BED]!!
+        currentStage = stageMap[StageID.LEAVE_BED]!!
         handleNextClicked()
         gameFrame.isVisible = true
     }
 
+    //TODO: Fix the action processing, implement RPG elements
     internal fun handleNextClicked() {
-        when {
-            nextStage.nextStage == null && nextStage.actions == null -> {
-                gameFrame.btnNext.isEnabled = false
-                return@handleNextClicked
-            }
-            nextStage.nextStage != null && nextStage.actions == null -> nextStage = stageMap[nextStage.nextStage!!] as Stage
-            nextStage.actions != null -> when (nextStage.nextStagePriority) {
-                Stage.NextStagePriority.ACTION -> if (gameFrame.listChoice.selectedValue == null)
-                    nextStage = stageMap[nextStage.nextStage!!] as Stage
-                else
-                    nextStage = stageMap[gameFrame.listChoice.selectedValue as StageID]!!
+        advanceToNextStage()
+        currentStage.operations()
+        updateUIForNewStage()
+    }
 
-                Stage.NextStagePriority.DEFINED -> if (nextStage.nextStage == null)
-                    gameFrame.btnNext.isEnabled = false
+    private fun updateUIForNewStage() {
+        val actions = currentStage.actions
+        if (!actions.isEmpty()) {
+            gameFrame.lblChoice.text = currentStage.actionGroupName
+            gameFrame.listChoice.setListData(actions.toTypedArray())
+            gameFrame.listChoice.isVisible = true
+        } else
+            gameFrame.listChoice.isVisible = false
+
+        setText(currentStage.text)
+    }
+
+    private fun advanceToNextStage() {
+        val actions = currentStage.actions
+        val selectedAction = (gameFrame.listChoice.selectedValue as? Action)?.stage
+        val selectedActionStage = if (selectedAction == null)
+            null
+        else
+            stageMap[selectedAction]
+        val nextStageID = currentStage.nextStage
+        val nextStage = if (nextStageID != null)
+            stageMap[nextStageID]
+        else
+            null
+        when {
+            nextStage == null && actions.isEmpty() ->
+                gameFinished()
+            actions.isEmpty() && nextStage != null ->
+                currentStage = nextStage
+            !actions.isEmpty() ->
+                if (currentStage.nextStagePriority == Stage.NextStagePriority.ACTION)
+                    currentStage = selectedActionStage ?: nextStage ?: currentStage
                 else
-                    nextStage = stageMap[nextStage.nextStage!!] as Stage
-            }
+                    currentStage = nextStage ?: selectedActionStage ?: currentStage
         }
-        nextStage.operations()
-        setText(nextStage.text ?: Stage.Text.empty)
+    }
+
+    private fun gameFinished() {
+        gameFrame.btnNext.isEnabled = false
+        GameOverDialog(state.characterState.character, scorer.score)
+        TODO()
     }
 
     private fun handleSpecialWear(type: Wear.WearType) {
@@ -319,7 +347,7 @@ class ALongHourAndAHalf {
         if (state.hardcore) {
             state.characterState.thirst += 2
             if (state.characterState.thirst > GameState.CharacterGameState.MAXIMAL_THIRST) {
-                nextStage = stageMap[StageID.DRINK] ?: throw StageNotFoundException(StageID.DRINK)
+                currentStage = stageMap[StageID.DRINK] ?: throw StageNotFoundException(StageID.DRINK)
             }
         }
         //Updating labels
@@ -335,9 +363,9 @@ class ALongHourAndAHalf {
             state.characterState.bladderState.sphincterStrength = 0.0
             if (state.characterState.wearState.dryness < MINIMAL_DRYNESS) {
                 if (state.specialHardcoreStage) {
-                    nextStage = stageMap[StageID.SURPRISE_ACCIDENT] ?: throw StageNotFoundException(StageID.SURPRISE_ACCIDENT)
+                    currentStage = stageMap[StageID.SURPRISE_ACCIDENT] ?: throw StageNotFoundException(StageID.SURPRISE_ACCIDENT)
                 } else {
-                    nextStage = stageMap[StageID.ACCIDENT] ?: throw StageNotFoundException(StageID.ACCIDENT)
+                    currentStage = stageMap[StageID.ACCIDENT] ?: throw StageNotFoundException(StageID.ACCIDENT)
                 }
             }
         } else
@@ -351,9 +379,9 @@ class ALongHourAndAHalf {
                         state.characterState.bladderState.sphincterStrength = 0.0
                         if (state.characterState.wearState.dryness < MINIMAL_DRYNESS) {
                             if (state.specialHardcoreStage) {
-                                nextStage = stageMap[StageID.SURPRISE_ACCIDENT] ?: throw StageNotFoundException(StageID.SURPRISE_ACCIDENT)
+                                currentStage = stageMap[StageID.SURPRISE_ACCIDENT] ?: throw StageNotFoundException(StageID.SURPRISE_ACCIDENT)
                             } else {
-                                nextStage = stageMap[StageID.ACCIDENT] ?: throw StageNotFoundException(StageID.ACCIDENT)
+                                currentStage = stageMap[StageID.ACCIDENT] ?: throw StageNotFoundException(StageID.ACCIDENT)
                             }
                         }
                     }
@@ -363,9 +391,9 @@ class ALongHourAndAHalf {
                         state.characterState.bladderState.sphincterStrength = 0.0
                         if (state.characterState.wearState.dryness < MINIMAL_DRYNESS) {
                             if (state.specialHardcoreStage) {
-                                nextStage = stageMap[StageID.SURPRISE_ACCIDENT] ?: throw StageNotFoundException(StageID.SURPRISE_ACCIDENT)
+                                currentStage = stageMap[StageID.SURPRISE_ACCIDENT] ?: throw StageNotFoundException(StageID.SURPRISE_ACCIDENT)
                             } else {
-                                nextStage = stageMap[StageID.ACCIDENT] ?: throw StageNotFoundException(StageID.ACCIDENT)
+                                currentStage = stageMap[StageID.ACCIDENT] ?: throw StageNotFoundException(StageID.ACCIDENT)
                             }
                         }
                     }
@@ -478,7 +506,7 @@ class ALongHourAndAHalf {
                     }
                 })
             }
-            nextStage = stageMap[StageID.ACCIDENT] ?:
+            currentStage = stageMap[StageID.ACCIDENT] ?:
                     throw StageNotFoundException(StageID.ACCIDENT)
             handleNextClicked()
             updateUI()

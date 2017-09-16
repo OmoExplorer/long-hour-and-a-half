@@ -37,6 +37,6 @@ enum class StageID {
     SURPRISE_WET_PRESSURE,
     DRINK,
     DRINK_WATER_THOUGHTS,
-
-    ASK_WAIT_TIME
+    ASK_WAIT_TIME,
+    NULL
 }

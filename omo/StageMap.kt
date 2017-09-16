@@ -153,7 +153,7 @@ class StageMap(game: ALongHourAndAHalf) {
                     {
                         game.scorer += state.characterState.embarrassment.toInt()
                     },
-                    StageID.ASK_ACTION, null
+                    StageID.ASK_ACTION
             ),
             StageID.ASK_ACTION to Stage(
                     game.getBladderStatus(),
@@ -179,18 +179,18 @@ class StageMap(game: ALongHourAndAHalf) {
                                 }
                             } else null,
 
-                            Action("Rub thighs", StageID.RUB_THIGHS!!),
+                            Action("Rub thighs", StageID.RUB_THIGHS),
                             if (state.characterState.bladderState.fullness >= 100)
-                                Action("Give up and pee yourself", StageID.GIVE_UP_THOUGHTS!!)
+                                Action("Give up and pee yourself", StageID.GIVE_UP_THOUGHTS)
                             else null,
 
                             if (state.hardcore)
-                                Action("Drink water", StageID.DRINK_WATER_THOUGHTS!!)
+                                Action("Drink water", StageID.DRINK_WATER_THOUGHTS)
                             else
                                 null,
 
                             Action("Just wait", StageID.ASK_WAIT_TIME)
-                    ),
+                    ).filterNotNull(),
                     duration = 3,
                     cheatLists = listOf(Cheat.global, Cheat.lesson),
                     nextStagePriority = Stage.NextStagePriority.DEFINED
@@ -396,7 +396,7 @@ class StageMap(game: ALongHourAndAHalf) {
                         )
                         Wear.Mode.LOWER -> Stage.Text(
                                 Stage.Text.Line("No matter how hard you tried... It doesn't seem to matter, even to think about it..."),
-                                Stage.Text.Line("Your ${state.characterState.wearState.lower.insert()} is clinging to your skin, a sign of your failure..."), //TODO: Add "is/are" depending on character.gameState.lower clothes type
+                                Stage.Text.Line("Your ${state.characterState.wearState.lower.insert()} is clinging to your skin, a sign of your failure..."), //TODO: Add "is/are" depending on lower clothes type
                                 Stage.Text.Line("...unless, of course, you meant for this to happen?"),
                                 Stage.Text.Line("No, nobody would be as sadistic as that, especially to themselves..."),
                                 Stage.Text.Line("Game over!")
@@ -596,7 +596,7 @@ class StageMap(game: ALongHourAndAHalf) {
                                 else -> null
                             },
                             Action("Pee yourself", StageID.SURPRISE_WET_VOLUNTARY!!)
-                    )
+                    ).filterNotNull()
             ),
             StageID.HIT to Stage(
                     if (hitSuccessful)
@@ -719,7 +719,8 @@ class StageMap(game: ALongHourAndAHalf) {
                         state.characterState.bladderState.fullness = 0.0
                     },
                     StageID.END_GAME
-            )
+            ),
+            StageID.NULL to Stage()
     )
 
     operator fun get(key: StageID) = this.map[key]

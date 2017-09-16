@@ -36,7 +36,7 @@ class GameFrame(val game: ALongHourAndAHalf) : JFrame() {
             "${game.state.characterState.wearState.undies.name.toLowerCase()}")
     val lblLower = JLabel("Lower: ${game.state.characterState.wearState.lowerColor} " +
             "${game.state.characterState.wearState.undies.name.toLowerCase()}")
-    private val lblChoice = JLabel()
+    internal val lblChoice = JLabel()
     val listChoice = JList<Any>()
 
     private val listScroller = JScrollPane()

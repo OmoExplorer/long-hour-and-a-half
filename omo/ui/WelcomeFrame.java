@@ -22,7 +22,7 @@ public class WelcomeFrame extends JFrame {
     static final JFileChooser saveFC = new JFileChooser();
     private JPanel cont;
 
-    private WelcomeFrame() {
+    public WelcomeFrame() {
         $$$setupUI$$$();
         setContentPane(cont);
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.PAGE_AXIS));

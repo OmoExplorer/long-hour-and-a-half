@@ -15,18 +15,18 @@ open class Cheat(
             it.state.lesson.teacher.stay = !it.state.lesson.teacher.stay
         }
         private val peeInBottle = Cheat("Pee in a bottle") {
-            it.nextStage = it.stageMap[StageID.USE_BOTTLE] ?:
+            it.currentStage = it.stageMap[StageID.USE_BOTTLE] ?:
                     throw StageNotFoundException(StageID.USE_BOTTLE)
         }
         private val endLesson = Cheat("End class right now") {
-            it.nextStage = it.stageMap[StageID.CLASS_OVER] ?:
+            it.currentStage = it.stageMap[StageID.CLASS_OVER] ?:
                     throw StageNotFoundException(StageID.CLASS_OVER)
         }
         private val calmTeacher = Cheat("Calm the teacher down") {
             it.state.lesson.teacher.timesPeeDenied = 0
         }
         private val raiseHand = Cheat("Raise your hand") {
-            it.nextStage = it.stageMap[StageID.CALLED_ON] ?:
+            it.currentStage = it.stageMap[StageID.CALLED_ON] ?:
                     throw StageNotFoundException(StageID.CALLED_ON)
         }
         private val drainPee = object : ToggleCheat("Make your pee disappear regularly", {}) {
