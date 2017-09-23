@@ -27,9 +27,9 @@ class GameFrame(val game: ALongHourAndAHalf) : JFrame() {
     val lblBladder = JLabel("Bladder: ${Math.round(game.state.characterState.bladderState.fullness)} %")
     val lblBelly = JLabel("Belly: ${Math.round(game.state.characterState.belly)} %")
     val lblEmbarrassment = JLabel("Embarrassment: ${game.state.characterState.embarrassment}")
-    val lblIncontinence = JLabel("Incontinence: ${game.state.characterState.bladderState.bladder.incontinence}x")
+    private val lblIncontinence = JLabel("Incontinence: ${game.state.characterState.bladderState.bladder.incontinence}x")
     val lblMinutes = JLabel("Time: ${game.state.lesson.time}")
-    val lblSphPower = JLabel("Sphincter power: ${game.state.characterState.bladderState.sphincterStrength}")
+    val lblSphPower = JLabel("Pee holding ability: ${game.state.characterState.bladderState.sphincterStrength}")
     val lblDryness = JLabel("Clothes dryness: ${game.state.characterState.wearState.dryness}")
     val lblThirst = JLabel("Thirst: ${game.state.characterState.thirst.toInt()}%")
     val lblUndies = JLabel("Undies: ${game.state.characterState.wearState.undiesColor} " +
@@ -180,7 +180,7 @@ class GameFrame(val game: ALongHourAndAHalf) : JFrame() {
 
             //Thirst bar setup
             thirstBar.setBounds(16, 482, 455, 25)
-            thirstBar.maximum = GameState.CharacterGameState.MAXIMAL_THIRST
+            thirstBar.maximum = GameState.MAXIMAL_THIRST
             thirstBar.value = game.state.characterState.thirst.toInt()
             thirstBar.toolTipText = "Character will automatically drink water at 30% of thirst."
             contentPane.add(thirstBar)
@@ -256,7 +256,7 @@ class GameFrame(val game: ALongHourAndAHalf) : JFrame() {
         //Dryness bar setup
         drynessBar.setBounds(16, 392, 455, 25)
         drynessBar.value = game.state.characterState.wearState.dryness.toInt()
-        drynessBar.minimum = ALongHourAndAHalf.MINIMAL_DRYNESS
+        drynessBar.minimum = GameState.MINIMAL_DRYNESS
         drynessBar.isVisible = false
         drynessBar.toolTipText =
                 "<html>Estimating character.gameState.dryness to absorb leaked pee.<br>Refills by itself with the lesson.time.</html>"

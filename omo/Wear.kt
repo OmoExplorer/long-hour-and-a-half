@@ -9,7 +9,7 @@ import java.io.Serializable
  */
 class Wear(
         val name: String,
-        var insertName: String = name.toLowerCase(),
+        var insert: String = name.toLowerCase(),
         val pressure: Double = 0.0,
         val absorption: Double = 0.0,
         val dryingOverTime: Double = 0.0,
@@ -40,18 +40,11 @@ class Wear(
      */
     internal val isMissing = name == "No underwear" || name == "No outerwear"
 
-    /**
-     * @return the insert characterName used in the game text (e. g. "panties")
-     */
-    fun insert(): String? = insertName
-
     enum class WearType {
         UNDERWEAR, OUTERWEAR, BOTH_SUITABLE
     }
 
     public companion object {
-
-
         private const val serialVersionUID = 1L
 
         internal var underwearList = arrayOf(
@@ -64,7 +57,7 @@ class Wear(
                 Wear("Strings", "panties", 1.0, 2.0, 1.0),
                 Wear("Tanga panties", "panties", 1.5, 3.0, 1.0),
                 Wear("Regular panties", "panties", 2.0, 4.0, 1.0),
-                Wear("\"Boy shorts\" panties", "panties", 4.0, 7.0, 1.0),
+                Wear("Briefs", "briefs", 4.0, 7.0, 1.0),
                 Wear("String bikini", "bikini panties", 1.0, 1.0, 2.0),
                 Wear("Regular bikini", "bikini panties", 2.0, 2.0, 2.0),
                 Wear("Swimsuit", "swimsuit", 4.0, 2.5, 2.5),

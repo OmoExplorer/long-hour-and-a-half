@@ -61,18 +61,7 @@ public class SchoolSetup extends JDialog {
         //Creating the game
         ALongHourAndAHalf game =
                 new ALongHourAndAHalf(
-                        new GameState(
-                                new GameState.CharacterGameState(
-                                        character,
-                                        new GameState.CharacterGameState.BladderGameState(
-                                                character.getBladder(), bladderFulness
-                                        ),
-                                        new GameState.CharacterGameState.WearGameState(
-                                                undies, lower, Wear.Color.BLACK, Wear.Color.BLACK
-                                        )
-                                ),
-                                hardcoreCheckBox.isSelected()
-                        )
+                        new GameState()
                 );
 //        character.setupGameState(bladderSlider.getValue(),
 //                Wear.Companion.getUnderwearMap().get(

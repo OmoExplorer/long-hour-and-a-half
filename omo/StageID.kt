@@ -38,5 +38,8 @@ enum class StageID {
     DRINK,
     DRINK_WATER_THOUGHTS,
     ASK_WAIT_TIME,
-    NULL
+    NULL,
+    GAME_START,
+    LEAK,
+    FATAL_LEAK
 }
