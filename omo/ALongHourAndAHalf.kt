@@ -82,7 +82,6 @@ import java.io.*
 import java.util.*
 import javax.swing.JFileChooser
 import javax.swing.JOptionPane
-import javax.swing.filechooser.FileNameExtensionFilter
 
 @Suppress("UNCHECKED_CAST")
 fun <T> File.userObject() = ObjectInputStream(FileInputStream(this)).readObject() as T
@@ -123,15 +122,6 @@ class ALongHourAndAHalf {
     val parametersStorage: GameStartParameters
 
     var scorer = Scorer()
-
-    private val fileChoosers = object {
-        val wear = JFileChooser().also {
-            it.fileFilter = FileNameExtensionFilter("A Long Hour and a Half Wear", "lhhwear")
-        }
-        val save = JFileChooser().also {
-            it.fileFilter = FileNameExtensionFilter("A Long Hour and a Half Save", "lhhsav")
-        }
-    }
 
     val gameFrame: GameFrame
 
@@ -242,9 +232,10 @@ class ALongHourAndAHalf {
                 targetWear = randomWear(type)
             }
             "Custom" -> {
-                fileChoosers.wear.showOpenDialog(gameFrame)
+                val fc = WearFileChooser()
+                fc.showOpenDialog(gameFrame)
                 try {
-                    val wear: Wear = fileChoosers.wear.selectedFile.userObject()
+                    val wear: Wear = fc.selectedFile.userObject()
                     if (wear.type == OUTERWEAR) {   //TODO: Move validation to SchoolSetup
                         JOptionPane.showMessageDialog(gameFrame, "Incorrect wear type.", null, JOptionPane.ERROR_MESSAGE)
                         gameFrame.dispose()
