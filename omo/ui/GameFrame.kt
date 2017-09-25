@@ -1,7 +1,7 @@
 package omo.ui
 
 import omo.ALongHourAndAHalf
-import omo.GameState
+import omo.CharacterGameState
 import omo.Gender
 import java.awt.Color
 import java.awt.Font
@@ -180,7 +180,7 @@ class GameFrame(val game: ALongHourAndAHalf) : JFrame() {
 
             //Thirst bar setup
             thirstBar.setBounds(16, 482, 455, 25)
-            thirstBar.maximum = GameState.CharacterGameState.MAXIMAL_THIRST
+            thirstBar.maximum = CharacterGameState.MAXIMAL_THIRST
             thirstBar.value = game.state.characterState.thirst.toInt()
             thirstBar.toolTipText = "Character will automatically drink water at 30% of thirst."
             contentPane.add(thirstBar)

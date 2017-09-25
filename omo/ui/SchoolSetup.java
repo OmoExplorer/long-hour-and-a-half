@@ -1,9 +1,7 @@
 package omo.ui;
 
-import omo.ALongHourAndAHalf;
+import omo.*;
 import omo.Character;
-import omo.GameState;
-import omo.Wear;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -62,12 +60,12 @@ public class SchoolSetup extends JDialog {
         ALongHourAndAHalf game =
                 new ALongHourAndAHalf(
                         new GameState(
-                                new GameState.CharacterGameState(
+                                new CharacterGameState(
                                         character,
-                                        new GameState.CharacterGameState.BladderGameState(
+                                        new BladderGameState(
                                                 character.getBladder(), bladderFulness
                                         ),
-                                        new GameState.CharacterGameState.WearGameState(
+                                        new WearGameState(
                                                 undies, lower, Wear.Color.BLACK, Wear.Color.BLACK
                                         )
                                 ),

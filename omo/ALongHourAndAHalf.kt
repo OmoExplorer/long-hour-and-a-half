@@ -346,7 +346,7 @@ class ALongHourAndAHalf {
         }
         if (state.hardcore) {
             state.characterState.thirst += 2
-            if (state.characterState.thirst > GameState.CharacterGameState.MAXIMAL_THIRST) {
+            if (state.characterState.thirst > CharacterGameState.MAXIMAL_THIRST) {
                 currentStage = stageMap[StageID.DRINK] ?: throw StageNotFoundException(StageID.DRINK)
             }
         }
