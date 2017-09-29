@@ -300,13 +300,13 @@ private Wear wear;
             {
                 JOptionPane.showMessageDialog(this, "File error.", "Error", JOptionPane.ERROR_MESSAGE);
             }
-            this.nameField.setText(this.wear.getName());
-            this.insertNameField.setText(this.wear.insert());
-            this.pressureSpinner.setValue(this.wear.getPressure());
-            this.absorptionSpinner.setValue(this.wear.getAbsorption());
-            this.dotSpinner.setValue(this.wear.getDryingOverTime());
+            nameField.setText(wear.getName());
+            insertNameField.setText(wear.getInsert());
+            pressureSpinner.setValue(wear.getPressure());
+            absorptionSpinner.setValue(wear.getAbsorption());
+            dotSpinner.setValue(wear.getDryingOverTime());
 
-            switch (this.wear.getType())
+            switch (wear.getType())
             {
                 case UNDERWEAR:
                     this.typeComboBox.setSelectedIndex(0);

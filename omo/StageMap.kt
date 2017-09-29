@@ -26,6 +26,9 @@ class StageMap(game: ALongHourAndAHalf) {
     private val hitSuccessful = random.nextInt(100) <= 20
 
     private val map: Map<StageID, Stage> = mapOf(
+            StageID.GAME_START to Stage(
+                    nextStage = StageID.LEAVE_BED   //TODO: Bring back WAKE_UP stage
+            ),
             StageID.LEAVE_BED to Stage(
                     Stage.Text(
                             Stage.Text.Line("Wh-what? Did I forget to set my alarm?!", true),
@@ -34,11 +37,11 @@ class StageMap(game: ALongHourAndAHalf) {
                             //TODO: What if bladder isn't so full to give a jolt?
                             Stage.Text.Line(when (state.characterState.wearState.wearMode) {
                                 Wear.Mode.BOTH -> "You hurriedly slip on some " +
-                                        "${state.characterState.wearState.undies.insert()} and " +
-                                        "${state.characterState.wearState.lower.insert()},"
+                                        "${state.characterState.wearState.undies.insert} and " +
+                                        "${state.characterState.wearState.lower.insert},"
                                 Wear.Mode.LOWER -> "You hurriedly slip on some" +
-                                        "${state.characterState.wearState.lower.insert()},"
-                                Wear.Mode.UNDIES -> "You hurriedly slip on ${state.characterState.wearState.undies.insert()},"
+                                        "${state.characterState.wearState.lower.insert},"
+                                Wear.Mode.UNDIES -> "You hurriedly slip on ${state.characterState.wearState.undies.insert},"
                                 Wear.Mode.NONE -> ""
                             })
                     ),
@@ -63,12 +66,12 @@ class StageMap(game: ALongHourAndAHalf) {
                         Wear.Mode.BOTH,
                         Wear.Mode.LOWER ->
                             //Nothing is blowing in wind
-                            if (state.characterState.wearState.lower.insert() == "skirt")
+                            if (state.characterState.wearState.lower.insert == "skirt")
                                 Stage.Text(
                                         Stage.Text.Line("You rush into class, your " +
-                                                "${state.characterState.wearState.lower.insert()} blowing in the wind."),
+                                                "${state.characterState.wearState.lower.insert} blowing in the wind."),
                                         Stage.Text.Line("Normally, you'd be worried your " +
-                                                "${state.characterState.wearState.undies.insert()} would be seen, " +
+                                                "${state.characterState.wearState.undies.insert} would be seen, " +
                                                 "but you can't worry about it right now."),
                                         Stage.Text.Line("You make it to your seat without a minute to spare.")
                                 )
@@ -79,11 +82,11 @@ class StageMap(game: ALongHourAndAHalf) {
                         Wear.Mode.UNDIES -> Stage.Text(
                                 Stage.Text.Line("You rush into class; " +
                                         "your classmates are looking at your " +
-                                        "${state.characterState.wearState.undies.insert()}."),
+                                        "${state.characterState.wearState.undies.insert}."),
                                 Stage.Text.Line("You can't understand how you forgot " +
                                         "to even put on any lower clothing,"),
                                 Stage.Text.Line("and you know that your " +
-                                        "${state.characterState.wearState.undies.insert()} have definitely been seen."),
+                                        "${state.characterState.wearState.undies.insert} have definitely been seen."),
                                 Stage.Text.Line("You make it to your seat without a minute to spare.")
                         )
                         Wear.Mode.NONE ->
@@ -110,9 +113,9 @@ class StageMap(game: ALongHourAndAHalf) {
                     when (state.characterState.wearState.wearMode) {
                         Wear.Mode.BOTH,
                         Wear.Mode.LOWER ->
-                            if (state.characterState.wearState.lower.insert() == "skirt"
-                                    || state.characterState.wearState.lower.insert() == "skirt and tights"
-                                    || state.characterState.wearState.lower.insert() == "shorts") Stage.Text(
+                            if (state.characterState.wearState.lower.insert == "skirt"
+                                    || state.characterState.wearState.lower.insert == "skirt and tights"
+                                    || state.characterState.wearState.lower.insert == "shorts") Stage.Text(
                                     Stage.Text.Line("Next time you run into class, ${state.characterState.character.name},", true),
                                     Stage.Text.Line("your teacher says,"),
                                     Stage.Text.Line("make sure you're wearing something less... revealing!"),
@@ -136,9 +139,9 @@ class StageMap(game: ALongHourAndAHalf) {
                     operations = {
                         when (state.characterState.wearState.wearMode) {
                             Wear.Mode.BOTH,
-                            Wear.Mode.LOWER -> if (state.characterState.wearState.lower.insert() == "skirt"
-                                    || state.characterState.wearState.lower.insert() == "skirt and tights"
-                                    || state.characterState.wearState.lower.insert() == "shorts") state.characterState.embarrassment += 5
+                            Wear.Mode.LOWER -> if (state.characterState.wearState.lower.insert == "skirt"
+                                    || state.characterState.wearState.lower.insert == "skirt and tights"
+                                    || state.characterState.wearState.lower.insert == "shorts") state.characterState.embarrassment += 5
                             Wear.Mode.UNDIES,
                             Wear.Mode.NONE -> state.characterState.embarrassment += 25
                         }
@@ -224,6 +227,42 @@ class StageMap(game: ALongHourAndAHalf) {
                     nextStage = StageID.ASK_ACTION,
                     duration = 5, score = 5
             ),
+            StageID.LEAK to Stage(
+                    Stage.Text(
+                            Stage.Text.Line(when (state.characterState.wearState.wearMode) {
+                                Wear.Mode.BOTH,
+                                Wear.Mode.LOWER -> "You see the wet spot expand on your ${game.state.characterState.wearState.lower.insert}!"
+                                Wear.Mode.UNDIES -> "You see the wet spot expand on your ${game.state.characterState.wearState.undies.insert}!"
+                                Wear.Mode.NONE -> "You feel the leak running down your thighs..."
+                            }),
+                            Stage.Text.Line("You're about to pee! You must stop it!")
+                    )
+            ),
+            StageID.FATAL_LEAK to Stage(
+                    when (game.state.characterState.wearState.wearMode) {
+                        Wear.Mode.BOTH,
+                        Wear.Mode.LOWER -> Stage.Text(
+                                Stage.Text.Line("You see the wet spot expanding on your ${game.state.characterState.wearState.lower.insert}!"),
+                                Stage.Text.Line("It's too much...")
+                        )
+                        Wear.Mode.UNDIES -> Stage.Text(
+                                Stage.Text.Line("You see the wet spot expanding on your ${game.state.characterState.wearState.undies.insert}!"),
+                                Stage.Text.Line("It's too much...")
+                        )
+                        Wear.Mode.NONE -> if (game.state.characterState.cornered) {
+                            Stage.Text(
+                                    Stage.Text.Line("You see a puddle forming on the floor beneath you, you're peeing!"),
+                                    Stage.Text.Line("It's too much...")
+                            )
+                        } else {
+                            Stage.Text(
+                                    Stage.Text.Line("Feeling the pee hit the chair and soon fall over the sides,"),
+                                    Stage.Text.Line("you see a puddle forming under your chair, you're peeing!"),
+                                    Stage.Text.Line("It's too much...")
+                            )
+                        }
+                    }
+            ),
             StageID.ASK_TO_PEE_THOUGHTS to Stage(
                     Stage.Text(
                             Stage.Text.Line("You think to yourself:"),
@@ -279,7 +318,7 @@ class StageMap(game: ALongHourAndAHalf) {
                             Stage.Text.Line("It feels a little better for now.")
                     ),
                     {
-                        game.rechargeSphPower(20)
+                        game.state.characterState.bladderState.sphincterStrength += 20.0
                     },
                     if ((random.nextInt(100) <= 15 + state.lesson.classmates.holdingAwareness) && state.hardcore) {
                         StageID.CAUGHT
@@ -295,7 +334,7 @@ class StageMap(game: ALongHourAndAHalf) {
                             Stage.Text.Line("your legs. You rub your thighs hard but it doesn't really help.")
                     ),
                     {
-                        game.rechargeSphPower(2)
+                        game.state.characterState.bladderState.sphincterStrength += 2
                     },
                     if ((random.nextInt(100) <= 3 + state.lesson.classmates.holdingAwareness) && state.hardcore) {
                         StageID.CAUGHT
@@ -317,8 +356,8 @@ class StageMap(game: ALongHourAndAHalf) {
                             Stage.Text.Line("You get tired of holding all the urine in your aching bladder,"),
                             Stage.Text.Line(when (state.characterState.wearState.wearMode) {
                                 Wear.Mode.BOTH,
-                                Wear.Mode.UNDIES -> "and you decide to give up and pee in your ${state.characterState.wearState.undies.insert()}."
-                                Wear.Mode.LOWER -> "and you decide to give up and pee in your ${state.characterState.wearState.lower.insert()}."
+                                Wear.Mode.UNDIES -> "and you decide to give up and pee in your ${state.characterState.wearState.undies.insert}."
+                                Wear.Mode.LOWER -> "and you decide to give up and pee in your ${state.characterState.wearState.lower.insert}."
                                 Wear.Mode.NONE -> "and you decide to give up and pee where you are."
                             })
                     ),
@@ -339,26 +378,26 @@ class StageMap(game: ALongHourAndAHalf) {
             StageID.WET to Stage(
                     when (state.characterState.wearState.wearMode) {
                         Wear.Mode.BOTH -> Stage.Text(
-                                Stage.Text.Line("Before you can move an inch, pee quickly soaks through your " + state.characterState.wearState.undies.insert() + ","),
-                                Stage.Text.Line("floods your " + state.characterState.wearState.lower.insert() + ", and streaks down your legs."),
+                                Stage.Text.Line("Before you can move an inch, pee quickly soaks through your " + state.characterState.wearState.undies.insert + ","),
+                                Stage.Text.Line("floods your " + state.characterState.wearState.lower.insert + ", and streaks down your legs."),
                                 Stage.Text.Line("A large puddle quickly forms, and you can't stop tears from falling down your cheeks.")
                         )
                         Wear.Mode.LOWER -> Stage.Text(
-                                Stage.Text.Line("Before you can move an inch, pee quickly darkens your " + state.characterState.wearState.lower.insert() + " and streaks down your legs."),
+                                Stage.Text.Line("Before you can move an inch, pee quickly darkens your " + state.characterState.wearState.lower.insert + " and streaks down your legs."),
                                 Stage.Text.Line("A large puddle quickly forms, and you can't stop tears from falling down your cheeks.")
                         )
                         Wear.Mode.UNDIES -> Stage.Text(
-                                Stage.Text.Line("Before you can move an inch, pee quickly soaks through your " + state.characterState.wearState.undies.insert() + ", and streaks down your legs."),
+                                Stage.Text.Line("Before you can move an inch, pee quickly soaks through your " + state.characterState.wearState.undies.insert + ", and streaks down your legs."),
                                 Stage.Text.Line("A large puddle quickly forms, and you can't stop tears from falling down your cheeks.")
                         )
                         Wear.Mode.NONE -> if (state.characterState.cornered)
                             Stage.Text(
-                                    Stage.Text.Line("The heavy pee jets are hitting the floor and loudly leaking out from your " + state.characterState.wearState.undies.insert() + "."),
+                                    Stage.Text.Line("The heavy pee jets are hitting the floor and loudly leaking out from your " + state.characterState.wearState.undies.insert + "."),
                                     Stage.Text.Line("A large puddle quickly forms, and you can't stop tears from falling down your cheeks.")
                             )
                         else
                             Stage.Text(
-                                    Stage.Text.Line("The heavy pee jets are hitting the seat and loudly leaking out from your " + state.characterState.wearState.undies.insert() + "."),
+                                    Stage.Text.Line("The heavy pee jets are hitting the seat and loudly leaking out from your " + state.characterState.wearState.undies.insert + "."),
                                     Stage.Text.Line("A large puddle quickly forms, and you can't stop tears from falling down your cheeks.")
                             )
                     },
@@ -389,21 +428,21 @@ class StageMap(game: ALongHourAndAHalf) {
                     when (state.characterState.wearState.wearMode) {
                         Wear.Mode.BOTH -> Stage.Text(
                                 Stage.Text.Line("No matter how hard you tried... It doesn't seem to matter, even to think about it..."),
-                                Stage.Text.Line("Your ${state.characterState.wearState.lower.insert()} and ${state.characterState.wearState.undies.insert()} are both clinging to your skin, a sign of your failure..."),
+                                Stage.Text.Line("Your ${state.characterState.wearState.lower.insert} and ${state.characterState.wearState.undies.insert} are both clinging to your skin, a sign of your failure..."),
                                 Stage.Text.Line("...unless, of course, you meant for this to happen?"),
                                 Stage.Text.Line("No, nobody would be as sadistic as that, especially to themselves..."),
                                 Stage.Text.Line("Game over!")
                         )
                         Wear.Mode.LOWER -> Stage.Text(
                                 Stage.Text.Line("No matter how hard you tried... It doesn't seem to matter, even to think about it..."),
-                                Stage.Text.Line("Your ${state.characterState.wearState.lower.insert()} is clinging to your skin, a sign of your failure..."), //TODO: Add "is/are" depending on lower clothes type
+                                Stage.Text.Line("Your ${state.characterState.wearState.lower.insert} is clinging to your skin, a sign of your failure..."), //TODO: Add "is/are" depending on lower clothes type
                                 Stage.Text.Line("...unless, of course, you meant for this to happen?"),
                                 Stage.Text.Line("No, nobody would be as sadistic as that, especially to themselves..."),
                                 Stage.Text.Line("Game over!")
                         )
                         Wear.Mode.UNDIES -> Stage.Text(
                                 Stage.Text.Line("No matter how hard you tried... It doesn't seem to matter, even to think about it..."),
-                                Stage.Text.Line("Your ${state.characterState.wearState.undies.insert()} are clinging to your skin, a sign of your failure..."),
+                                Stage.Text.Line("Your ${state.characterState.wearState.undies.insert} are clinging to your skin, a sign of your failure..."),
                                 Stage.Text.Line("...unless, of course, you meant for this to happen?"),
                                 Stage.Text.Line("No, nobody would be as sadistic as that, especially to themselves..."),
                                 Stage.Text.Line("Game over!")
@@ -486,7 +525,7 @@ class StageMap(game: ALongHourAndAHalf) {
                             Stage.Text.Line("open it and take a small sip.")
                     ),
                     {
-                        game.offsetBelly(state.characterState.thirst.toDouble())
+                        game.state.characterState.belly += state.characterState.thirst.toDouble()
                         state.characterState.thirst = 0
                     },
                     StageID.ASK_ACTION
@@ -510,7 +549,7 @@ class StageMap(game: ALongHourAndAHalf) {
                     ),
                     nextStage = when {
                         state.lesson.teacher.stay -> StageID.AFTER_CLASS
-                        random.nextInt(100) <= 10 && state.lesson.hard && state.characterState.character.gender == Gender.FEMALE ->
+                        random.nextInt(100) <= 10 && state.hardcore && state.characterState.character.gender == Gender.FEMALE ->
                             StageID.SURPRISE
                         else -> if (random.nextBoolean()) StageID.SCHOOL_RESTROOM_LINE else StageID.PEE_SCHOOL_RESTROOM
                     }
@@ -525,12 +564,12 @@ class StageMap(game: ALongHourAndAHalf) {
                             Stage.Text.Line("Thank god, one cabin is free!"),
                             Stage.Text.Line(when (state.characterState.wearState.wearMode) {
                                 Wear.Mode.BOTH ->
-                                    "You enter it, pull down your ${state.characterState.wearState.lower.insert()} " +
-                                            "and ${state.characterState.wearState.undies.insert()},"
+                                    "You enter it, pull down your ${state.characterState.wearState.lower.insert} " +
+                                            "and ${state.characterState.wearState.undies.insert},"
                                 Wear.Mode.LOWER ->
-                                    "You enter it, pull down your ${state.characterState.wearState.lower.insert()},"
+                                    "You enter it, pull down your ${state.characterState.wearState.lower.insert},"
                                 Wear.Mode.UNDIES ->
-                                    "You enter it, pull down your ${state.characterState.wearState.undies.insert()},"
+                                    "You enter it, pull down your ${state.characterState.wearState.undies.insert},"
                                 Wear.Mode.NONE ->
                                     "You enter it,"
                             }),
@@ -588,14 +627,14 @@ class StageMap(game: ALongHourAndAHalf) {
                     StageID.SURPRISE_WET_PRESSURE,
                     "Don't let him to do it!",
                     listOf(
-                            Action("Hit him", StageID.HIT!!),
+                            Action("Hit him", StageID.HIT),
                             when (state.lesson.surpriseBoy.timesPeeDenied) {
-                                0 -> Action("Try to persuade him to let you pee", StageID.PERSUADE!!)
-                                1 -> Action("Try to persuade him to let you pee again", StageID.PERSUADE!!)
-                                2 -> Action("Take a chance and try to persuade him (RISKY)", StageID.PERSUADE!!)
+                                0 -> Action("Try to persuade him to let you pee", StageID.PERSUADE)
+                                1 -> Action("Try to persuade him to let you pee again", StageID.PERSUADE)
+                                2 -> Action("Take a chance and try to persuade him (RISKY)", StageID.PERSUADE)
                                 else -> null
                             },
-                            Action("Pee yourself", StageID.SURPRISE_WET_VOLUNTARY!!)
+                            Action("Pee yourself", StageID.SURPRISE_WET_VOLUNTARY)
                     ).filterNotNull()
             ),
             StageID.HIT to Stage(
@@ -607,9 +646,9 @@ class StageMap(game: ALongHourAndAHalf) {
                                 Stage.Text.Line("You got off from the windowsill while holding your crotch,"),
                                 Stage.Text.Line(when (state.characterState.wearState.wearMode) {
                                     Wear.Mode.BOTH -> "opened the cabin door, entered it, pulled down your " +
-                                            "${state.characterState.wearState.lower.insert()} and ${state.characterState.wearState.undies.insert()},"
-                                    Wear.Mode.LOWER -> "opened the cabin door, entered it, pulled down your " + state.characterState.wearState.lower.insert() + ","
-                                    Wear.Mode.UNDIES -> "opened the cabin door, entered it, pulled down your " + state.characterState.wearState.undies.insert() + ","
+                                            "${state.characterState.wearState.lower.insert} and ${state.characterState.wearState.undies.insert},"
+                                    Wear.Mode.LOWER -> "opened the cabin door, entered it, pulled down your " + state.characterState.wearState.lower.insert + ","
+                                    Wear.Mode.UNDIES -> "opened the cabin door, entered it, pulled down your " + state.characterState.wearState.undies.insert + ","
                                     Wear.Mode.NONE -> "opened the cabin door, entered it,"
                                 }),
                                 Stage.Text.Line("wearily flop down on the toilet and start peeing.")
@@ -633,9 +672,9 @@ class StageMap(game: ALongHourAndAHalf) {
                                 Stage.Text.Line("Ok, you may, but you'll let me watch you pee.", true),
                                 Stage.Text.Line("states ${state.lesson.surpriseBoy.name}. You enter the cabin,"),
                                 when (state.characterState.wearState.wearMode) {
-                                    Wear.Mode.BOTH -> Stage.Text.Line("pull down your " + state.characterState.wearState.lower.insert() + " and " + state.characterState.wearState.undies.insert() + ",")
-                                    Wear.Mode.LOWER -> Stage.Text.Line("pull down your " + state.characterState.wearState.lower.insert() + ",")
-                                    Wear.Mode.UNDIES -> Stage.Text.Line("pull down your " + state.characterState.wearState.undies.insert() + ",")
+                                    Wear.Mode.BOTH -> Stage.Text.Line("pull down your " + state.characterState.wearState.lower.insert + " and " + state.characterState.wearState.undies.insert + ",")
+                                    Wear.Mode.LOWER -> Stage.Text.Line("pull down your " + state.characterState.wearState.lower.insert + ",")
+                                    Wear.Mode.UNDIES -> Stage.Text.Line("pull down your " + state.characterState.wearState.undies.insert + ",")
                                     else -> Stage.Text.Line("")   //TODO
                                 },
                                 Stage.Text.Line("stand over the toilet and start peeing under ${state.lesson.surpriseBoy.name}'s spectation.")
@@ -687,10 +726,10 @@ class StageMap(game: ALongHourAndAHalf) {
                     Stage.Text(
                             Stage.Text.Line("You feel the warm pee stream"),
                             Stage.Text.Line(when (state.characterState.wearState.wearMode) {
-                                Wear.Mode.BOTH -> "filling your ${state.characterState.wearState.undies.insert()} " +
-                                        "and darkening your ${state.characterState.wearState.lower.insert()}."
-                                Wear.Mode.LOWER -> "filling your ${state.characterState.wearState.lower.insert()}."
-                                Wear.Mode.UNDIES -> "filling your ${state.characterState.wearState.undies.insert()}."
+                                Wear.Mode.BOTH -> "filling your ${state.characterState.wearState.undies.insert} " +
+                                        "and darkening your ${state.characterState.wearState.lower.insert}."
+                                Wear.Mode.LOWER -> "filling your ${state.characterState.wearState.lower.insert}."
+                                Wear.Mode.UNDIES -> "filling your ${state.characterState.wearState.undies.insert}."
                                 Wear.Mode.NONE -> "running down your legs."
                             })
                     ),
@@ -706,10 +745,10 @@ class StageMap(game: ALongHourAndAHalf) {
                             Stage.Text.Line("You try to hold the pee back, but you just can't."),
                             Stage.Text.Line("You feel the warm pee stream"),
                             Stage.Text.Line(when (state.characterState.wearState.wearMode) {
-                                Wear.Mode.BOTH -> "filling your ${state.characterState.wearState.undies.insert()} " +
-                                        "and darkening your ${state.characterState.wearState.lower.insert()}."
-                                Wear.Mode.LOWER -> "filling your ${state.characterState.wearState.lower.insert()}."
-                                Wear.Mode.UNDIES -> "filling your ${state.characterState.wearState.undies.insert()}."
+                                Wear.Mode.BOTH -> "filling your ${state.characterState.wearState.undies.insert} " +
+                                        "and darkening your ${state.characterState.wearState.lower.insert}."
+                                Wear.Mode.LOWER -> "filling your ${state.characterState.wearState.lower.insert}."
+                                Wear.Mode.UNDIES -> "filling your ${state.characterState.wearState.undies.insert}."
                                 Wear.Mode.NONE -> "running down your legs."
                             }),
                             Stage.Text.Line("You close your eyes and ease your sphincter off"),
