@@ -97,7 +97,7 @@ class ALongHourAndAHalf {
         scorer = save.scorer
         stageMap = StageMap(this)
 
-        parametersStorage = GameStartParameters(this)
+        parametersStorage = Save(this)
         gameFrame = GameFrame(this)
         currentStage = save.stage
         gameFrame.isVisible = true
@@ -119,14 +119,29 @@ class ALongHourAndAHalf {
      */
     //var character.bladder.gameState.fullness.maximalSphincterStrength = 100 / character.bladder.gameState.fullness.incontinence
 
-    val parametersStorage: GameStartParameters
+    val parametersStorage: Save
 
     var scorer = Scorer()
 
     val gameFrame: GameFrame
 
-    constructor(state: GameState) {
-        this.state = state
+    constructor(parameters: GameStartData) {
+        this.state = GameState(
+                CharacterGameState(
+                        parameters.character!!,
+                        BladderGameState(
+                                parameters.character!!.bladder,
+                                parameters.fullness!!
+                        ),
+                        WearGameState(
+                                parameters.undies!!,
+                                parameters.lower!!,
+                                parameters.undiesColor!!,
+                                parameters.lowerColor!!
+                        )
+                ),
+                parameters.hardcore!!
+        )
 
         gameFrame = GameFrame(this)
 
@@ -152,7 +167,7 @@ class ALongHourAndAHalf {
             gameFrame.lblName.text = gameFrame.lblName.text + " [Hardcore]"
         }
 
-        parametersStorage = GameStartParameters(this)
+        parametersStorage = Save(this)
 
         stageMap = StageMap(this)
 
@@ -592,7 +607,7 @@ class ALongHourAndAHalf {
             SchoolSetup(state.characterState.character)
         } else {
             gameFrame.dispose()
-            ALongHourAndAHalf(state)    //TODO
+            ALongHourAndAHalf(parametersStorage)    //TODO
         }
     }
 
