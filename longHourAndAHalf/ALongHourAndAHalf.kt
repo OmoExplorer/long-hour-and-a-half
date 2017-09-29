@@ -95,73 +95,56 @@ import javax.swing.filechooser.FileFilter
  */
 class Wear : Serializable {
     /**
-     * The wear characterName (e. g. "Regular panties")
-     */
-    /**
-     * @return the wear characterName (e. g. "Regular panties")
+     * The wear name (e. g. "Regular panties")
      */
     val name: String
+
     /**
-     * The pressure of an wear.<br></br>1 point of a pressure takes 1 point from the
+     * The pressure of an wear.
+     * 1 point of a pressure takes 1 point from the
      * maximal bladder capacity.
      */
-    /**
-     * @return the pressure of an wear
-     */
     val pressure: Double
+
     /**
-     * The absorption of an wear.<br></br>1 point of an absorption can store 1 point
+     * The absorption of an wear.
+     * 1 point of an absorption can store 1 point
      * of a leaked pee.
      */
-    /**
-     * @return the absorption of an wear
-     */
     val absorption: Double
+
     /**
-     * The drying over time.<br></br>1 point = -1 pee unit per 3 minutes
-     */
-    /**
-     * @return the drying over time.<br></br>1 = -1 pee unit per 3 minutes
+     * The drying over time.
+     * 1 point = -1 pee unit per 3 minutes
      */
     val dryingOverTime: Double
+
     /**
      * Whether or not certain wear equals "No under/outerwear".
      */
-    /**
-     * @return whether or not certain wear equals "No under/outerwear".
-     */
     val isMissing: Boolean
+
     /**
      * The insert characterName used in the game text (e. g. "panties")
      */
     private var insertName: String? = null
+
     /**
      * The wear assigned color.
      */
-    /**
-     * @return the color
-     */
-    /**
-     * @param color the color to set
-     */
     var color: String? = null
-    /**
-     * @return the type
-     */
-    /**
-     * @param type the type to set
-     */
+
     var type: WearType? = null
 
     /**
-     * @param name           the wear characterName (e. g. "Regular panties")
-     * @param insertName     the insert characterName used in the game text (e. g. "panties")
-     * @param pressure       the pressure of an wear.<br></br>1 point of a pressure takes 1
-     * point from the maximal bladder capacity.
-     * @param absorption     the absorption of an wear.<br></br>1 point of an absorption
-     * can store 1 point of a leaked pee.
-     * @param dryingOverTime the drying over time.<br></br>1 point = -1 pee unit per
-     * 3 minutes
+     * @param name           the wear name (e. g. "Regular panties")
+     * @param insertName     the insert name used in the game text (e. g. "panties")
+     * @param pressure       the pressure of an wear.
+     *                          1 point of a pressure takes 1 point from the maximal bladder capacity.
+     * @param absorption     the absorption of an wear.
+     *                          1 point of an absorption can store 1 point of a leaked pee.
+     * @param dryingOverTime the drying over time.
+     *                          1 point = -1 pee unit per 3 minutes
      */
     constructor(name: String, insertName: String, pressure: Double, absorption: Double, dryingOverTime: Double) {
         this.name = name
@@ -175,12 +158,12 @@ class Wear : Serializable {
     /**
      * @param name           the wear characterName (e. g. "Regular panties")
      * @param insertName     the insert characterName used in the game text (e. g. "panties")
-     * @param pressure       the pressure of an wear.<br></br>1 point of a pressure takes 1
-     * point from the maximal bladder capacity.
-     * @param absorption     the absorption of an wear.<br></br>1 point of an absorption
-     * can store 1 point of a leaked pee.
-     * @param dryingOverTime the drying over time.<br></br>1 point = -1 pee unit per
-     * 3 minutes
+     * @param pressure       the pressure of an wear.
+     *                          1 point of a pressure takes 1 point from the maximal bladder capacity.
+     * @param absorption     the absorption of an wear.
+     *                          1 point of an absorption can store 1 point of a leaked pee.
+     * @param dryingOverTime the drying over time.
+     *                          1 point = -1 pee unit per 3 minutes
      * @param type           the wear type
      */
     constructor(name: String, insertName: String, pressure: Double, absorption: Double, dryingOverTime: Double, type: WearType) {
@@ -194,14 +177,14 @@ class Wear : Serializable {
     }
 
     /**
-     * @param insertName the insert characterName (used in game text) to set
+     * @param insertName the insert name (used in game text) to set
      */
     fun setInsertName(insertName: String) {
         this.insertName = insertName
     }
 
     /**
-     * @return the insert characterName used in the game text (e. g. "panties")
+     * @return the insert name used in the game text (e. g. "panties")
      */
     fun insert(): String? {
         return insertName
@@ -212,7 +195,6 @@ class Wear : Serializable {
     }
 
     companion object {
-
         private const val serialVersionUID = 1L
         /**
          * List of all colors that clothes may have.
@@ -224,114 +206,138 @@ class Wear : Serializable {
 class ALongHourAndAHalf : JFrame {
     private val MAXIMAL_THIRST = 30
     /**
-     * Character's characterName.
+     * Character's name.
      */
     var characterName: String? = null
+
     /**
      * Character's lower body clothing.
      */
     var lower: Wear? = null
+
     /**
      * Character's undies.
      */
     var undies: Wear? = null
+
     /**
      * Current character gender.
      */
     var gender: Gender? = null
+
     /**
      * Text to be displayed after the game which shows how many [score]
      * did you get.
      */
     var scoreText: String? = ""
+
     /**
      * Current bladdder fulness.
      */
     var bladder = 5.0
+
     /**
      * Maximal bladder fulness.
      */
     var maxBladder: Int = 130
+
     /**
      * Makes the wetting chance higher after reaching 100% of the bladder
      * fulness.
      */
     var embarassment: Int = 0
+
     /**
      * Amount of a water in a belly.
      */
     var belly = 5.0
+
     /**
      * Amount of the character thirstiness.
      * Used only in hardcore mode.
      */
     var thirst = 0
+
     /**
-     * Before 1.1:<br></br>
-     * simply multiplies a bladder increasement.<br></br>
-     * <br></br>
-     * 1.1 and after:<br></br>
+     * Before 1.1:
+     * simply multiplies a bladder increasement.
+     *
+     * 1.1 and after:
      * defines the sphincter weakening speed.
      */
     var incon = 1.0
+
     /**
      * Maximal time without squirming and leaking.
      */
     var maxSphincterPower: Int = 0
+
     /**
      * Current sphincter power. The higher bladder level, the faster power
      * consumption.
      */
     var sphincterPower: Int = 0
+
     /**
      * Amount of pee that clothes can store.
      */
     var dryness: Double = 0.0
+
     /**
      * The class time.
      */
     var time: Int = 0
+
     /**
      * Times teacher denied character to go out.
      */
     var timesPeeDenied: Int = 0
+
     /**
      * A number that shows a game difficulty - the higher score, the harder was
      * the game. Specific actions (for example, peeing in a restroom during a
      * lesson) reduce score points. Using the cheats will zero the score points.
      */
     var score = 0
+
     /**
      * Number of times player got caught holding pee.
      */
     var timesCaught = 0
+
     /**
      * Amount of embarassment raising every time character caught holding pee.
      */
     var classmatesAwareness = 0
+
     /**
      * Whether or not charecter has to stay 30 minutes after class.
      */
     var stay = false
+
     /**
      * Whether or not character currently stands in the corner and unable to
      * hold crotch.
      */
     var cornered = false
+
     /**
      * Whether or not pee drain cheat enabled: pee mysteriously vanishes every
      * 15 minutes.
      */
     var drain = false
+
     /**
      * Whether or not hardcore mode enabled: teacher never lets you pee, it's
      * harder to hold pee, you may get caught holding pee
      */
     var hardcore = false
+
     /**
      * Whether or not player has used cheats.
      */
     var cheatsUsed = false
+
     /**
      * List of all underwear types.
      */
@@ -357,6 +363,7 @@ class ALongHourAndAHalf : JFrame {
             Wear("Anti-gravity pants", "pants", 0.0, 4.0, 1.0),
             Wear("Super-absorbing diaper", "diaper", 18.0, 600.0, 0.0)
     )
+
     /**
      * List of all outerwear types.
      */
@@ -387,6 +394,7 @@ class ALongHourAndAHalf : JFrame {
             Wear("Normal male jeans", "jeans", 7.0, 12.0, 1.2),
             Wear("Male trousers", "trousers", 9.0, 15.75, 1.4)
     )
+
     /**
      * List of all cheats.
      */
@@ -402,14 +410,17 @@ class ALongHourAndAHalf : JFrame {
             "Toggle hardcore mode",
             "Set bladder fulness"
     )
+
     /**
      * List of all boy names for special hardcore scene.
      */
     internal var names = arrayOf("Mark", "Mike", "Jim", "Alex", "Ben", "Bill", "Dan")
+
     /**
-     * Special hardcore scene boy characterName.
+     * Special hardcore scene boy name.
      */
     internal var boyName: String? = names[generator.nextInt(names.size)]
+
     /**
      * Actions list.
      */
@@ -440,10 +451,12 @@ class ALongHourAndAHalf : JFrame {
     private var sphincterBar: JProgressBar? = null
     private var drynessBar: JProgressBar? = null
     private var timeBar: JProgressBar? = null
+
     /**
      * A stage after the current stage.
      */
     private var nextStage: GameStage? = null
+
     /**
      * An array that contains boolean values that define *dialogue lines*.
      * Dialogue lines, unlike normal lines, are *italic*.
@@ -458,15 +471,15 @@ class ALongHourAndAHalf : JFrame {
     private var thirstBar: JProgressBar? = null
 
     /**
-     * @return TRUE - if character's gender is female<br></br>FALSE - if character's
-     * gender is male
+     * @return TRUE - if character's gender is female
+     * FALSE - if character's gender is male
      */
     val isFemale: Boolean
         get() = gender == FEMALE
 
     /**
-     * @return TRUE - if character's gender is male<br></br>FALSE - if character's
-     * gender is female
+     * @return TRUE - if character's gender is male
+     * FALSE - if character's gender is female
      */
     val isMale: Boolean
         get() = gender == MALE
@@ -2742,7 +2755,6 @@ class ALongHourAndAHalf : JFrame {
     }
 
     companion object {
-
         //Maximal lines of a text
         private val MAX_LINES = 9
         /**
@@ -2766,10 +2778,9 @@ class ALongHourAndAHalf : JFrame {
         internal var outerColorParam: String? = null
 
         /**
-         * Resets the game and values, optionally letting player to select new
-         * parameters.
+         * Resets the game and values, optionally letting player to select new parameters.
          *
-         * @param newValues
+         * @param newValues whether to suggest user to select new game parameters
          */
         private fun reset(newValues: Boolean) {
             if (newValues) {
@@ -2780,6 +2791,3 @@ class ALongHourAndAHalf : JFrame {
         }
     }
 }
-/**
- * Increments the time by 3 minutes and all time-related parameters.
- */
