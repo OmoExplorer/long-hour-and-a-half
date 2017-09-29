@@ -16,4 +16,8 @@ class WearGameState(
                                             |    undies.isMissing = ${undies.isMissing}
                                             |    lower.isMissing = ${lower.isMissing}""".trimMargin())
     }
+
+    companion object {
+        const val MINIMAL_DRYNESS = 0
+    }
 }

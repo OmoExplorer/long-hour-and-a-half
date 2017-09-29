@@ -254,6 +254,7 @@ class ALongHourAndAHalf {
                 val fc = WearFileChooser()
                 fc.showOpenDialog(gameFrame)
                 try {
+                    if (fc.selectedFile == null) return
                     val wear: Wear = fc.selectedFile.userObject()
                     if (wear.type == OUTERWEAR) {   //TODO: Move validation to SchoolSetup
                         JOptionPane.showMessageDialog(gameFrame, "Incorrect wear type.", null, JOptionPane.ERROR_MESSAGE)
@@ -339,7 +340,7 @@ class ALongHourAndAHalf {
         state.characterState.bladderState.fullness += time * 1.5
         state.characterState.belly -= time * 1.5
 
-        state.characterState.bladderState.testWet()
+        state.characterState.bladderState.testLeak(this)
 
         //Decrementing sphincter power for every 3 minutes
         for (i in 0..time - 1) {
