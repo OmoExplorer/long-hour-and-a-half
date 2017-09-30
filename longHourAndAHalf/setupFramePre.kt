@@ -1097,14 +1097,27 @@ class setupFramePre : javax.swing.JFrame() {
         //                        case "Skirts":
         //                            break;
         //                        default:
-        ALongHourAndAHalf(nameField!!.text,
-                gnd,
-                diff,
-                incont.toDouble(), bas.toDouble(),
-                underwearToAssign,
-                outerwearToAssign,
-                undiesColor,
-                lowerColor)
+//        ALongHourAndAHalf(nameField!!.text,
+//                gnd,
+//                diff,
+//                incont.toDouble(), bas.toDouble(),
+//                underwearToAssign,
+//                outerwearToAssign,
+//                undiesColor,
+//                lowerColor)
+        ALongHourAndAHalf(
+                Character(
+                        nameField!!.text,
+                        gnd,
+                        incont.toDouble(), bas.toDouble(),
+                        underwearToAssign,
+                        outerwearToAssign,
+                        undiesColor,
+                        lowerColor
+                ),
+                diff
+        )
+
         this.dispose()
         //                    }
         //            }
