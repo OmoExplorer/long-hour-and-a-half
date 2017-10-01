@@ -77,16 +77,13 @@ import longHourAndAHalf.ALongHourAndAHalf.GameStage.*
 import longHourAndAHalf.Wear.WearType.OUTERWEAR
 import longHourAndAHalf.Wear.WearType.UNDERWEAR
 import java.awt.Color
-import java.awt.Font
-import java.awt.event.MouseAdapter
-import java.awt.event.MouseEvent
 import java.io.*
 import java.util.*
-import javax.swing.*
-import javax.swing.border.EmptyBorder
+import javax.swing.JFileChooser
+import javax.swing.JOptionPane
 import javax.swing.filechooser.FileFilter
 
-class ALongHourAndAHalf : JFrame {
+class ALongHourAndAHalf {
     var character: Character? = null
 
     constructor(character: Character, hardcore: Boolean) : this(
@@ -125,7 +122,9 @@ class ALongHourAndAHalf : JFrame {
             lowerColor
     )
 
-    private val MAXIMAL_THIRST = 30
+    private lateinit var ui: StandardGameUI
+
+    val MAXIMAL_THIRST = 30
 
     //TODO: Safe delete
 
@@ -214,32 +213,6 @@ class ALongHourAndAHalf : JFrame {
      * Actions list.
      */
     internal var actionList = ArrayList<String>()
-    //Game frame variables declaration
-    private var contentPane: JPanel? = null
-    private var textPanel: JPanel? = null
-    private var btnNext: JButton? = null
-    private var btnReset: JButton? = null
-    private var btnQuit: JButton? = null
-    private var textLabel: JLabel? = null
-    private var lblBelly: JLabel? = null
-    private var lblBladder: JLabel? = null
-    private var lblChoice: JLabel? = null
-    private var lblEmbarassment: JLabel? = null
-    private var lblIncon: JLabel? = null
-    private var lblMinutes: JLabel? = null
-    private var lblName: JLabel? = null
-    private var btnNewGame: JButton? = null
-    private var lblUndies: JLabel? = null
-    private var lblLower: JLabel? = null
-    private var lblSphPower: JLabel? = null
-    private var lblDryness: JLabel? = null
-    private var lblDefaultColor: Color? = null
-    private var listChoice: JList<Any>? = null
-    private var listScroller: JScrollPane? = null
-    private var bladderBar: JProgressBar? = null
-    private var sphincterBar: JProgressBar? = null
-    private var drynessBar: JProgressBar? = null
-    private var timeBar: JProgressBar? = null
 
     /**
      * A stage after the current stage.
@@ -254,10 +227,6 @@ class ALongHourAndAHalf : JFrame {
     private var specialHardcoreStage = false
     private var fcWear: JFileChooser? = null
     private var fcGame: JFileChooser? = null
-    private var btnSave: JButton? = null
-    private var btnLoad: JButton? = null
-    private var lblThirst: JLabel? = null
-    private var thirstBar: JProgressBar? = null
 
     internal constructor(
             character: Character,
@@ -283,16 +252,16 @@ class ALongHourAndAHalf : JFrame {
                     character!!.undies = ois.readObject() as Wear
                     if (character!!.undies!!.type == OUTERWEAR) {
                         JOptionPane.showMessageDialog(null, "This isn't an underwear.", "Wrong wear type", JOptionPane.ERROR_MESSAGE)
-                        dispose()
+                        ui.dispose()
                         setupFramePre.main(arrayOf(""))
                     }
                 } catch (e: IOException) {
                     JOptionPane.showMessageDialog(null, "File error.", "Error", JOptionPane.ERROR_MESSAGE)
-                    dispose()
+                    ui.dispose()
                     setupFramePre.main(arrayOf(""))
                 } catch (e: ClassNotFoundException) {
                     JOptionPane.showMessageDialog(null, "File error.", "Error", JOptionPane.ERROR_MESSAGE)
-                    dispose()
+                    ui.dispose()
                     setupFramePre.main(arrayOf(""))
                 }
 
@@ -346,16 +315,16 @@ class ALongHourAndAHalf : JFrame {
 
                     if (character!!.lower!!.type == UNDERWEAR) {
                         JOptionPane.showMessageDialog(null, "This isn't an outerwear.", "Wrong wear type", JOptionPane.ERROR_MESSAGE)
-                        dispose()
+                        ui.dispose()
                         setupFramePre.main(arrayOf(""))
                     }
                 } catch (e: IOException) {
                     JOptionPane.showMessageDialog(null, "File error.", "Error", JOptionPane.ERROR_MESSAGE)
-                    dispose()
+                    ui.dispose()
                     setupFramePre.main(arrayOf(""))
                 } catch (e: ClassNotFoundException) {
                     JOptionPane.showMessageDialog(null, "File error.", "Error", JOptionPane.ERROR_MESSAGE)
-                    dispose()
+                    ui.dispose()
                     setupFramePre.main(arrayOf(""))
                 }
 
@@ -392,18 +361,12 @@ class ALongHourAndAHalf : JFrame {
             character!!.lower!!.color = ""
         }
 
-        //Displaying all values
-        lblMinutes!!.isVisible = true
-        lblSphPower!!.isVisible = true
-        lblDryness!!.isVisible = true
-        sphincterBar!!.isVisible = true
-        drynessBar!!.isVisible = true
-        timeBar!!.isVisible = true
+        ui.showBladderAndTime()
 
         //Making bladder smaller in the hardcore mode, adding hardcore label
         if (hardcore) {
             character.maxBladder = 100
-            lblName!!.text = lblName!!.text + " [Hardcore]"
+            ui.hardcoreModeToggled(true)
         }
         //Starting the game
         nextStage = LEAVE_BED
@@ -433,12 +396,8 @@ class ALongHourAndAHalf : JFrame {
         boyName = save.boyName
 
         //Displaying all values
-        lblMinutes!!.isVisible = true
-        lblSphPower!!.isVisible = true
-        lblDryness!!.isVisible = true
-        sphincterBar!!.isVisible = true
-        drynessBar!!.isVisible = true
-        timeBar!!.isVisible = true
+        ui.showBladderAndTime()
+
         handleNextClicked()
         postConstructor()
     }
@@ -458,6 +417,7 @@ class ALongHourAndAHalf : JFrame {
      */
     internal fun preConstructor(character: Character, name: String, gndr: Gender, diff: Boolean, inc: Double, bladder: Double) {
         this.character = character
+        ui = StandardGameUI(this)
 
         //Saving parameters for the reset
         nameParam = name
@@ -518,239 +478,6 @@ class ALongHourAndAHalf : JFrame {
             Wear.underwearList[1].setInsertName("crotch")
         }
 
-        //Game window setup
-        isResizable = true
-        title = "A Long Hour and a Half"
-        defaultCloseOperation = JFrame.EXIT_ON_CLOSE
-        setBounds(100, 100, 770, 594)
-        setLocationRelativeTo(null)
-
-        contentPane = JPanel()
-        contentPane!!.background = Color.LIGHT_GRAY
-        contentPane!!.border = EmptyBorder(5, 5, 5, 5)
-        setContentPane(contentPane)
-        contentPane!!.layout = null
-
-        //Text panel setup
-        textPanel = JPanel()
-        textPanel!!.setBounds(10, 11, 740, 150)
-        contentPane!!.add(textPanel)
-        textPanel!!.layout = null
-        textLabel = JLabel("")
-        textLabel!!.horizontalAlignment = SwingConstants.CENTER
-        textLabel!!.setBounds(0, 0, 740, 150)
-        textPanel!!.add(textLabel)
-
-        //"Next" button setup
-        btnNext = JButton("Next")
-        //        btnNext.setToolTipText("Hold down for the time warp");
-        btnNext!!.addMouseListener(object : MouseAdapter() {
-            override fun mouseClicked(arg0: MouseEvent?) {
-                handleNextClicked()
-            }
-        })
-
-        btnNext!!.setBounds(470, ACTION_BUTTONS_TOP_BORDER, 285, 35)
-        contentPane!!.add(btnNext)
-
-        //"Quit" button setup
-        btnQuit = JButton("Quit")
-        btnQuit!!.addMouseListener(object : MouseAdapter() {
-            override fun mouseClicked(arg0: MouseEvent?) {
-                System.exit(0)
-            }
-        })
-        btnQuit!!.setBounds(192, ACTION_BUTTONS_TOP_BORDER, ACTION_BUTTONS_WIDTH, ACTION_BUTTONS_HEIGHT)
-        contentPane!!.add(btnQuit)
-
-        //"Save" button setup
-        btnSave = JButton("Save")
-        btnSave!!.addMouseListener(object : MouseAdapter() {
-            override fun mouseClicked(arg0: MouseEvent?) {
-                save()
-            }
-        })
-        btnSave!!.setBounds(284, ACTION_BUTTONS_TOP_BORDER, ACTION_BUTTONS_WIDTH, ACTION_BUTTONS_HEIGHT)
-        contentPane!!.add(btnSave)
-
-        //"Load" button setup
-        btnLoad = JButton("Load")
-        btnLoad!!.addMouseListener(object : MouseAdapter() {
-            override fun mouseClicked(arg0: MouseEvent?) {
-                load()
-            }
-        })
-        btnLoad!!.setBounds(376, ACTION_BUTTONS_TOP_BORDER, ACTION_BUTTONS_WIDTH, ACTION_BUTTONS_HEIGHT)
-        contentPane!!.add(btnLoad)
-
-        //"Reset" button setup
-        btnReset = JButton("Reset")
-        btnReset!!.addMouseListener(object : MouseAdapter() {
-            override fun mouseClicked(arg0: MouseEvent?) {
-                ALongHourAndAHalf.reset(character, false)
-                dispose()
-            }
-        })
-        btnReset!!.setBounds(10, ACTION_BUTTONS_TOP_BORDER, ACTION_BUTTONS_WIDTH, ACTION_BUTTONS_HEIGHT)
-        btnReset!!.toolTipText = "Start the game over with the same parameters."
-        contentPane!!.add(btnReset)
-
-        //"New game" button setup
-        btnNewGame = JButton("New game")
-        btnNewGame!!.addMouseListener(object : MouseAdapter() {
-            override fun mouseClicked(arg0: MouseEvent?) {
-                ALongHourAndAHalf.reset(character, true)
-                dispose()
-            }
-        })
-        btnNewGame!!.setBounds(102, ACTION_BUTTONS_TOP_BORDER, ACTION_BUTTONS_WIDTH, ACTION_BUTTONS_HEIGHT)
-        btnNewGame!!.toolTipText = "Start the game over with the another parameters."
-        contentPane!!.add(btnNewGame)
-
-        //Name label setup
-        lblName = JLabel(name)
-        lblName!!.font = Font("Tahoma", Font.PLAIN, 18)
-        lblName!!.setBounds(20, 170, 200, 32)
-        contentPane!!.add(lblName)
-
-        //Bladder label setup
-        lblBladder = JLabel("Bladder: " + character.bladder + "%")
-        lblBladder!!.toolTipText = "<html>Normal game:<br>100% = need to hold, regular leaks<br>130% = peeing(game over)<br><br>Hardcore:<br>80% = need to hold, regular leaks<br>100% = peeing(game over)</html>"
-        lblBladder!!.font = Font("Tahoma", Font.PLAIN, 15)
-        lblBladder!!.setBounds(20, 210, 200, 32)
-        contentPane!!.add(lblBladder)
-        lblDefaultColor = lblBladder!!.foreground
-
-        //Embarassment label setup
-        lblEmbarassment = JLabel("Embarassment: " + character.embarrassment)
-        lblEmbarassment!!.font = Font("Tahoma", Font.PLAIN, 15)
-        lblEmbarassment!!.setBounds(20, 240, 200, 32)
-        lblEmbarassment!!.toolTipText = "Makes leaks more frequent"
-        contentPane!!.add(lblEmbarassment)
-
-        //Belly label setup
-        lblBelly = JLabel("Belly: " + character.belly + "%")
-        lblBelly!!.font = Font("Tahoma", Font.PLAIN, 15)
-        lblBelly!!.setBounds(20, 270, 200, 32)
-        lblBelly!!.toolTipText = "<html>The water in your belly.<br>Any amount of water speeds the bladder filling up.</html>"
-        contentPane!!.add(lblBelly)
-
-        //Thirst label setup
-        lblThirst = JLabel("Thirst: " + character.thirst + "%")
-        lblThirst!!.font = Font("Tahoma", Font.PLAIN, 15)
-        lblThirst!!.setBounds(20, 480, 200, 32)
-        lblThirst!!.toolTipText = "Character will automatically drink water at 30% of thirst."
-        if (hardcore) {
-            contentPane!!.add(lblThirst)
-        }
-
-        //Thirst bar setup
-        thirstBar = JProgressBar()
-        thirstBar!!.setBounds(16, 482, 455, 25)
-        thirstBar!!.maximum = MAXIMAL_THIRST.toInt()
-        thirstBar!!.value = character.thirst.toInt()
-        thirstBar!!.toolTipText = "Character will automatically drink water at 30% of thirst."
-        if (hardcore) {
-            contentPane!!.add(thirstBar)
-        }
-
-        //Incontinence label setup
-        lblIncon = JLabel("Incontinence: " + character.incon + "x")
-        lblIncon!!.font = Font("Tahoma", Font.PLAIN, 15)
-        lblIncon!!.setBounds(20, 300, 200, 32)
-        lblIncon!!.toolTipText = "Makes your bladder weaker"
-        contentPane!!.add(lblIncon)
-
-        //Time label setup
-        lblMinutes = JLabel("Minutes: $time of 90")
-        lblMinutes!!.font = Font("Tahoma", Font.PLAIN, 15)
-        lblMinutes!!.setBounds(20, 330, 200, 32)
-        lblMinutes!!.isVisible = false
-        contentPane!!.add(lblMinutes)
-
-        //Sphincter power label setup
-        lblSphPower = JLabel("Pee holding ability: " + character!!.sphincterPower + "%")
-        lblSphPower!!.font = Font("Tahoma", Font.PLAIN, 15)
-        lblSphPower!!.setBounds(20, 360, 200, 32)
-        lblSphPower!!.isVisible = false
-        lblSphPower!!.toolTipText = "<html>Ability to hold pee.<br>Drains faster on higher bladder fulnesses.<br>Leaking when 0%.<br>Refill it by holding crotch and rubbing thigs.</html>"
-        contentPane!!.add(lblSphPower)
-
-        //Clothing dryness label setup
-        lblDryness = JLabel("Clothes dryness: " + Math.round(character!!.dryness))
-        lblDryness!!.font = Font("Tahoma", Font.PLAIN, 15)
-        lblDryness!!.setBounds(20, 390, 200, 32)
-        lblDryness!!.isVisible = false
-        lblDryness!!.toolTipText = "<html>Estimating dryness to absorb leaked pee.<br>Refills by itself with the time.</html>"
-        contentPane!!.add(lblDryness)
-
-        //Choice label ("What to do?") setup
-        lblChoice = JLabel()
-        lblChoice!!.font = Font("Tahoma", Font.BOLD, 12)
-        lblChoice!!.setBounds(480, 162, 280, 32)
-        lblChoice!!.isVisible = false
-        contentPane!!.add(lblChoice)
-
-        //Action list setup
-        listChoice = JList()
-        listChoice!!.selectionMode = ListSelectionModel.SINGLE_SELECTION
-        listChoice!!.layoutOrientation = JList.VERTICAL
-
-        listScroller = JScrollPane(listChoice)
-        listScroller!!.setBounds(472, 194, 280, 318)
-        listScroller!!.isVisible = false
-        contentPane!!.add(listScroller)
-
-        //Bladder bar setup
-        bladderBar = JProgressBar()
-        bladderBar!!.setBounds(16, 212, 455, 25)
-        bladderBar!!.maximum = 130
-        bladderBar!!.value = character.bladder.toInt()
-        bladderBar!!.toolTipText = "<html>Normal game:<br>100% = need to hold, regular leaks<br>130% = peeing(game over)<br><br>Hardcore:<br>80% = need to hold, regular leaks<br>100% = peeing(game over)</html>"
-        contentPane!!.add(bladderBar)
-
-        //Sphincter bar setup
-        sphincterBar = JProgressBar()
-        sphincterBar!!.setBounds(16, 362, 455, 25)
-        sphincterBar!!.maximum = character.maxSphincterPower
-        sphincterBar!!.value = character.sphincterPower
-        sphincterBar!!.isVisible = false
-        sphincterBar!!.toolTipText = "<html>Ability to hold pee.<br>Drains faster on higher bladder fulnesses.<br>Leaking when 0%.<br>Refill it by holding crotch and rubbing thigs.</html>"
-        contentPane!!.add(sphincterBar)
-
-        //Dryness bar setup
-        drynessBar = JProgressBar()
-        drynessBar!!.setBounds(16, 392, 455, 25)
-        drynessBar!!.value = character!!.dryness.toInt()
-        drynessBar!!.minimum = MINIMAL_DRYNESS
-        drynessBar!!.isVisible = false
-        drynessBar!!.toolTipText = "<html>Estimating dryness to absorb leaked pee.<br>Refills by itself with the time.</html>"
-        contentPane!!.add(drynessBar)
-
-        //Time bar setup
-        timeBar = JProgressBar()
-        timeBar!!.setBounds(16, 332, 455, 25)
-        timeBar!!.maximum = 90
-        timeBar!!.value = time
-        timeBar!!.isVisible = false
-        contentPane!!.add(timeBar)
-
-        //Coloring the characterName label according to the gender
-        if (character.gender == Gender.FEMALE) {
-            lblName!!.foreground = Color.MAGENTA
-        } else {
-            lblName!!.foreground = Color.CYAN
-        }
-
-        //Assigning the blank characterName if player didn't selected the characterName
-        if (name!!.isEmpty()) {
-            if (character.gender == Gender.FEMALE) {
-                this.character!!.name = "Mrs. Nobody"
-            } else {
-                this.character!!.name = "Mr. Nobody"
-            }
-        }
-
         //Scoring bladder at start
         score("Bladder at start - $bladder%", '+', bladder)
 
@@ -773,7 +500,7 @@ class ALongHourAndAHalf : JFrame {
         character!!.dryness = character!!.lower!!.absorption + character!!.undies!!.absorption
         character!!.maxBladder -= (character!!.lower!!.pressure + character!!.undies!!.pressure).toInt()
 
-        drynessBar!!.maximum = character!!.dryness.toInt()
+        ui.drynessBar!!.maximum = character!!.dryness.toInt()
 
         //Finishing saving parameters for game reset
         outerParam = character!!.lower!!.name
@@ -781,31 +508,19 @@ class ALongHourAndAHalf : JFrame {
         underColorParam = character!!.undies!!.color
         outerColorParam = character!!.lower!!.color
 
-        //Undies label setup
-        lblUndies = JLabel("Undies: " + character!!.undies!!.color + " " + character!!.undies!!.name.toLowerCase())
-        lblUndies!!.font = Font("Tahoma", Font.PLAIN, 15)
-        lblUndies!!.setBounds(20, 420, 400, 32)
-        contentPane!!.add(lblUndies)
-
-        //Lower label setup
-        lblLower = JLabel("Lower: " + character!!.lower.color + " " + character!!.lower!!.name.toLowerCase())
-        lblLower!!.font = Font("Tahoma", Font.PLAIN, 15)
-        lblLower!!.setBounds(20, 450, 400, 32)
-        contentPane!!.add(lblLower)
-
         //Making bladder smaller in the hardcore mode, adding hardcore label
         if (hardcore) {
             character!!.maxBladder = 100
-            lblName!!.name = lblName!!.name + " [Hardcore]"
+            ui.hardcoreModeToggled(true)
         }
 
         handleNextClicked()
 
         //Displaying the frame
-        isVisible = true
+        ui.isVisible = true
     }
 
-    private fun handleNextClicked() {
+    fun handleNextClicked() {
         updateUI()
         when (nextStage) {
             LEAVE_BED -> {
@@ -865,12 +580,7 @@ class ALongHourAndAHalf : JFrame {
 
             GO_TO_CLASS -> {
                 //Displaying all values
-                lblMinutes!!.isVisible = true
-                lblSphPower!!.isVisible = true
-                lblDryness!!.isVisible = true
-                sphincterBar!!.isVisible = true
-                drynessBar!!.isVisible = true
-                timeBar!!.isVisible = true
+                ui.showBladderAndTime()
 
                 if (!character!!.lower!!.isMissing) {
                     //Skirt blowing in the wind
@@ -1043,14 +753,14 @@ class ALongHourAndAHalf : JFrame {
                 actionList.add("Cheat (will reset your score)")
 
                 //Loading the choice array into the action selector
-                listChoice!!.setListData(actionList.toTypedArray())
+                ui.listChoice!!.setListData(actionList.toTypedArray())
                 nextStage = CHOSE_ACTION
                 passTime()
             }
 
             CHOSE_ACTION -> {
                 nextStage = ASK_ACTION
-                if (listChoice!!.isSelectionEmpty || listChoice!!.selectedValue == "[Unavailable]") {
+                if (ui.listChoice!!.isSelectionEmpty || ui.listChoice!!.selectedValue == "[Unavailable]") {
                     //                    setText("You spent a few minutes doing nothing.");
                     handleNextClicked()
                     return
@@ -1371,7 +1081,7 @@ class ALongHourAndAHalf : JFrame {
                                         "yells the teacher.")
                                 offsetEmbarassment(5)
                                 stay = true
-                                timeBar!!.maximum = 120
+                                ui.timeBar!!.maximum = 120
                                 //                            scoreText = scoreText.concat("\nWrote lines after the lesson: +60% score");
                                 //                            score *= 1.6;
                                 score("Wrote lines after the lesson", '*', 1.6)
@@ -1386,13 +1096,13 @@ class ALongHourAndAHalf : JFrame {
             ASK_CHEAT -> {
                 //                do
                 //                {
-                listChoice!!.setListData(cheatList)
+                ui.listChoice!!.setListData(cheatList)
                 showActionUI("Select a cheat:")
                 nextStage = CHOSE_CHEAT
             }
 
             CHOSE_CHEAT -> {
-                if (listChoice!!.isSelectionEmpty) {
+                if (ui.listChoice!!.isSelectionEmpty) {
                     nextStage = ASK_CHEAT
                     return
                 }
@@ -1406,7 +1116,7 @@ class ALongHourAndAHalf : JFrame {
                     1 -> {
                         setText("You decide to stay after class.")
                         stay = true
-                        timeBar!!.maximum = 120
+                        ui.timeBar!!.maximum = 120
                         nextStage = ASK_ACTION
                     }
 
@@ -1429,7 +1139,7 @@ class ALongHourAndAHalf : JFrame {
                         setText("The teacher feels sorry for you. Try asking to pee.")
                         timesPeeDenied = 0
                         stay = false
-                        timeBar!!.maximum = 90
+                        ui.timeBar!!.maximum = 90
                         character!!.cornered = false
                         nextStage = ASK_ACTION
                     }
@@ -1558,8 +1268,7 @@ class ALongHourAndAHalf : JFrame {
             }
 
             ACCIDENT -> {
-                listScroller!!.isVisible = false
-                lblChoice!!.isVisible = false
+                hideActionUI()
                 setText("You can't help it.. No matter how much pressure you use, the leaks won't stop.",
                         "Despite all this, you try your best, but suddenly you're forced to stop.",
                         "You can't move, or you risk peeing yourself. Heck, the moment you stood up you thought you could barely move for risk of peeing everywhere.",
@@ -1679,7 +1388,7 @@ class ALongHourAndAHalf : JFrame {
                                 "Game over!")
                     }
                 }
-                btnNext!!.isVisible = false
+                ui.btnNext.isVisible = false
             }
 
             END_GAME -> {
@@ -1689,8 +1398,8 @@ class ALongHourAndAHalf : JFrame {
                 }
                 val scoreText2 = "Your score: " + score + "\n" + scoreText
 
-                JOptionPane.showMessageDialog(this, scoreText2)
-                btnNext!!.isVisible = false
+                JOptionPane.showMessageDialog(ui, scoreText2)
+                ui.btnNext.isVisible = false
             }
 
             CAUGHT -> {
@@ -1794,13 +1503,13 @@ class ALongHourAndAHalf : JFrame {
                 }
                 actionList.add("Pee yourself")
 
-                listChoice!!.setListData(actionList.toTypedArray())
+                ui.listChoice!!.setListData(actionList.toTypedArray())
                 showActionUI("Don't let him to do it!")
                 nextStage = SURPRISE_CHOSE
             }
 
             SURPRISE_CHOSE -> {
-                if (listChoice!!.isSelectionEmpty) {
+                if (ui.listChoice!!.isSelectionEmpty) {
                     //No idling
                     setText("You will wet yourself right now,",
                             boyName!! + " demands.",
@@ -1809,7 +1518,7 @@ class ALongHourAndAHalf : JFrame {
                 }
 
                 //                actionNum = listChoice.getSelectedIndex();
-                if (listChoice!!.selectedValue == "[Unavailable]") {
+                if (ui.listChoice!!.selectedValue == "[Unavailable]") {
                     //No idling
                     setText("You will wet yourself right now,",
                             boyName!! + " demands.",
@@ -2171,7 +1880,7 @@ class ALongHourAndAHalf : JFrame {
      */
     fun emptyBladder() {
         character!!.bladder = 0.0
-        lblBladder!!.text = "Bladder: " + character!!.bladder + "%"
+        ui.lblBladder!!.text = "Bladder: " + character!!.bladder + "%"
         updateUI()
     }
 
@@ -2183,9 +1892,9 @@ class ALongHourAndAHalf : JFrame {
     fun offsetBladder(amount: Double) {
         character!!.bladder += amount/* * incon*///Incontinence does another job after 1.1
         if (character!!.bladder > 100 && !hardcore || character!!.bladder > 80 && hardcore) {
-            lblBladder!!.foreground = Color.RED
+            ui.lblBladder!!.foreground = Color.RED
         } else {
-            lblBladder!!.foreground = lblDefaultColor
+            ui.lblBladder!!.foreground = Color.BLACK
         }
         updateUI()
     }
@@ -2324,7 +2033,7 @@ class ALongHourAndAHalf : JFrame {
             return
         }
         if (lines.size <= 0) {
-            textLabel!!.text = ""
+            ui.textLabel!!.text = ""
             return
         }
 
@@ -2340,7 +2049,7 @@ class ALongHourAndAHalf : JFrame {
 
         }
         toSend += "</center></html>"
-        textLabel!!.text = toSend
+        ui.textLabel!!.text = toSend
         this.dialogueLines = BooleanArray(MAX_LINES)
     }
 
@@ -2403,45 +2112,41 @@ class ALongHourAndAHalf : JFrame {
     }
 
     internal fun updateUI() {
-        try {
-            lblName!!.text = character!!.name
-            lblBladder!!.text = "Bladder: " + character!!.bladder + "%"
-            lblEmbarassment!!.text = "Embarassment: " + character!!.embarrassment
-            lblBelly!!.text = "Belly: " + Math.round(character!!.belly) + "%"
-            lblIncon!!.text = "Incontinence: " + character!!.incon + "x"
-            lblMinutes!!.text = "Minutes: $time of 90"
-            lblSphPower!!.text = "Pee holding ability: " + character!!.sphincterPower + "%"
-            lblDryness!!.text = "Clothes dryness: " + Math.round(character!!.dryness)
-            lblUndies!!.text = "Undies: " + character!!.undies!!.color + " " + character!!.undies!!.name.toLowerCase()
-            lblLower!!.text = "Lower: " + character!!.lower!!.color + " " + character!!.lower!!.name.toLowerCase()
-            bladderBar!!.value = character!!.bladder.toInt()
-            sphincterBar!!.value = character!!.sphincterPower
-            drynessBar!!.value = character!!.dryness.toInt()
-            timeBar!!.value = time
-            lblThirst!!.text = "Thirst: " + character!!.thirst + "%"
-            thirstBar!!.value = character!!.thirst
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+        ui.lblName!!.text = character!!.name
+        ui.lblBladder!!.text = "Bladder: " + character!!.bladder + "%"
+        ui.lblEmbarassment!!.text = "Embarassment: " + character!!.embarrassment
+        ui.lblBelly!!.text = "Belly: " + Math.round(character!!.belly) + "%"
+        ui.lblIncon!!.text = "Incontinence: " + character!!.incon + "x"
+        ui.lblMinutes!!.text = "Minutes: $time of 90"
+        ui.lblSphPower!!.text = "Pee holding ability: " + character!!.sphincterPower + "%"
+        ui.lblDryness!!.text = "Clothes dryness: " + Math.round(character!!.dryness)
+        ui.lblUndies!!.text = "Undies: " + character!!.undies!!.color + " " + character!!.undies!!.name.toLowerCase()
+        ui.lblLower!!.text = "Lower: " + character!!.lower!!.color + " " + character!!.lower!!.name.toLowerCase()
+        ui.bladderBar!!.value = character!!.bladder.toInt()
+        ui.sphincterBar!!.value = character!!.sphincterPower
+        ui.drynessBar!!.value = character!!.dryness.toInt()
+        ui.timeBar!!.value = time
+        ui.lblThirst!!.text = "Thirst: " + character!!.thirst + "%"
+        ui.thirstBar!!.value = character!!.thirst
     }
 
     internal fun hideActionUI(): Int {
-        val choice = listChoice!!.selectedIndex
+        val choice = ui.listChoice!!.selectedIndex
         actionList.clear()
-        lblChoice!!.isVisible = false
-        listScroller!!.isVisible = false
+        ui.lblChoice!!.isVisible = false
+        ui.listScroller!!.isVisible = false
         return choice
     }
 
     internal fun showActionUI(actionGroupName: String) {
-        lblChoice!!.isVisible = true
-        lblChoice!!.text = actionGroupName
-        listScroller!!.isVisible = true
+        ui.lblChoice!!.isVisible = true
+        ui.lblChoice!!.text = actionGroupName
+        ui.listScroller!!.isVisible = true
     }
 
     internal fun save() {
         fcGame!!.selectedFile = File(character!!.name)
-        if (fcGame!!.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+        if (fcGame!!.showSaveDialog(ui) == JFileChooser.APPROVE_OPTION) {
             val file = File(fcGame!!.selectedFile.absolutePath + ".lhhsav")
             //            PrintStream writer;
             val fout: FileOutputStream
@@ -2449,8 +2154,8 @@ class ALongHourAndAHalf : JFrame {
             try {
                 val save = Save()
                 save.character = character!!
-                save.name = character!!.name
-                save.gender = character!!.gender
+                save.name = character!!.name!!
+                save.gender = character!!.gender!!
                 save.hardcore = hardcore
                 save.incontinence = character!!.incon
                 save.bladder = character!!.bladder
@@ -2479,27 +2184,27 @@ class ALongHourAndAHalf : JFrame {
                 oos.writeObject(save)
             } catch (e: IOException) {
                 e.printStackTrace()
-                JOptionPane.showMessageDialog(this, "File error.", "Error", JOptionPane.ERROR_MESSAGE)
+                JOptionPane.showMessageDialog(ui, "File error.", "Error", JOptionPane.ERROR_MESSAGE)
             }
 
         }
     }
 
     internal fun load() {
-        if (fcGame!!.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+        if (fcGame!!.showOpenDialog(ui) == JFileChooser.APPROVE_OPTION) {
             val file = fcGame!!.selectedFile
             try {
                 val fin = FileInputStream(file)
                 val ois = ObjectInputStream(fin)
                 val save = ois.readObject() as Save
                 ALongHourAndAHalf(save)
-                dispose()
+                ui.dispose()
             } catch (e: IOException) {
                 e.printStackTrace()
-                JOptionPane.showMessageDialog(this, "File error.", "Error", JOptionPane.ERROR_MESSAGE)
+                JOptionPane.showMessageDialog(ui, "File error.", "Error", JOptionPane.ERROR_MESSAGE)
             } catch (e: ClassNotFoundException) {
                 e.printStackTrace()
-                JOptionPane.showMessageDialog(this, "File error.", "Error", JOptionPane.ERROR_MESSAGE)
+                JOptionPane.showMessageDialog(ui, "File error.", "Error", JOptionPane.ERROR_MESSAGE)
             }
 
         }
@@ -2550,7 +2255,7 @@ class ALongHourAndAHalf : JFrame {
         /**
          * The dryness game over minimal threshold.
          */
-        private val MINIMAL_DRYNESS = 0
+        val MINIMAL_DRYNESS = 0
         private val ACTION_BUTTONS_HEIGHT = 35
         private val ACTION_BUTTONS_WIDTH = 89
         private val ACTION_BUTTONS_TOP_BORDER = 510
@@ -2572,7 +2277,7 @@ class ALongHourAndAHalf : JFrame {
          *
          * @param newValues whether to suggest user to select new game parameters
          */
-        private fun reset(character: Character, newValues: Boolean) {
+        fun reset(character: Character, newValues: Boolean) {
             if (newValues) {
                 setupFramePre().isVisible = true
             } else {
