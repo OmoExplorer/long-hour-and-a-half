@@ -1,27 +1,27 @@
 package longHourAndAHalf
 
+import java.io.Serializable
+
 /**
- * @property lower Character's lower body clothing.
+ * @property incontinence Defines the sphincter weakening speed.
  */
 class Character(
         var name: String,
-        var gender: ALongHourAndAHalf.Gender,
+        var gender: Gender,
         var incontinence: Double,
         var bladderFullness: Double,
-        var undies: Wear,
-        var lower: Wear,
-        var undiesColor: String,
-        var lowerColor: String
-) {
+        undies: Wear,
+        lower: Wear,
+        var undiesColor: String, var lowerColor: String
+) : Serializable {
     constructor(
             name: String,
-            gender: ALongHourAndAHalf.Gender,
+            gender: Gender,
             incontinence: Double,
             bladderFullness: Double,
             undies: String,
             lower: String,
-            undiesColor: String,
-            lowerColor: String
+            undiesColor: String, lowerColor: String
     ) : this(
             name,
             gender,
@@ -29,15 +29,38 @@ class Character(
             bladderFullness,
             Wear.getByName(undies, Wear.WearType.UNDERWEAR)!!,
             Wear.getByName(lower, Wear.WearType.OUTERWEAR)!!,
-            undiesColor,
-            lowerColor
+            undiesColor, lowerColor
     )
 
-    var game: ALongHourAndAHalf? = null
+    @Transient lateinit var ui: StandardGameUI
 
     var bladder = 0.0
     var belly = 0.0
-    var maxBladder: Int = 130
+    var maxBladder = 130 - (lower.pressure + undies.pressure).toInt()
+
+    private fun updateDryness() {
+        maximalDryness = calculateMaximalDryness()
+        dryness = maximalDryness
+        ui.drynessBar.value = dryness.toInt()
+    }
+
+    /**
+     * Character's undies.
+     */
+    var undies = undies
+        set(value) {
+            field = value
+            updateDryness()
+        }
+
+    /**
+     * Character's lower body clothing.
+     */
+    var lower = lower
+        set(value) {
+            field = value
+            updateDryness()
+        }
 
     /**
      * Makes the wetting chance higher after reaching 100% of the bladder
@@ -52,25 +75,24 @@ class Character(
     var thirst = 0
 
     /**
-     * Defines the sphincter weakening speed.
-     */
-    var incon = 1.0
-
-    /**
      * Maximal time without squirming and leaking.
      */
-    var maxSphincterPower = 0
+    var maxSphincterPower = (100 / incontinence).toInt()
 
     /**
      * Current sphincter power. The higher bladder level, the faster power
      * consumption.
      */
-    var sphincterPower = 0
+    var sphincterPower = maxSphincterPower
+
+    private fun calculateMaximalDryness() = lower.absorption + undies.absorption
+
+    var maximalDryness = calculateMaximalDryness()
 
     /**
      * Amount of pee that clothes can store.
      */
-    var dryness = 0.0
+    var dryness = maximalDryness
 
     /**
      * Whether or not character currently stands in the corner and unable to

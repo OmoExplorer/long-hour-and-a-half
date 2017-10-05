@@ -1,6 +1,5 @@
 package longHourAndAHalf
 
-import longHourAndAHalf.ALongHourAndAHalf.Gender
 import java.awt.Color
 import java.awt.Dimension
 import java.awt.Font
@@ -1112,8 +1111,7 @@ class setupFramePre : javax.swing.JFrame() {
                         incont.toDouble(), bas.toDouble(),
                         underwearToAssign,
                         outerwearToAssign,
-                        undiesColor,
-                        lowerColor
+                        undiesColor, lowerColor
                 ),
                 diff
         )

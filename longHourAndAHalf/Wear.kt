@@ -1,6 +1,7 @@
 package longHourAndAHalf
 
 import java.io.Serializable
+import java.util.*
 
 /**
  * Describes an underwear of an outerwear of a character.
@@ -190,6 +191,25 @@ class Wear : Serializable {
             }
 
             return null
+        }
+
+        fun getRandom(type: WearType): Wear {
+            val list = when (type) {
+                WearType.UNDERWEAR -> Wear.underwearList
+                WearType.OUTERWEAR -> Wear.outerwearList
+                WearType.BOTH_SUITABLE -> throw IllegalArgumentException("BOTH_SUITABLE argument isn't supported")
+            }
+            val random = Random()
+
+            fun nextRandom() = list[random.nextInt(list.size)]
+
+            var wearToReturn = nextRandom()
+
+            while (wearToReturn.name == "Random") {
+                wearToReturn = nextRandom()
+            }
+
+            return wearToReturn
         }
     }
 }

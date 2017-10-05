@@ -39,8 +39,8 @@ class StandardGameUI(val game: ALongHourAndAHalf) : JFrame("A Long Hour and a Ha
     val lblBladder = JLabel("Bladder: " + game.character!!.bladder + "%")
     val bladderBar = JProgressBar()
     val lblBelly = JLabel("Belly: " + game.character!!.belly + "%")
-    val lblEmbarassment = JLabel("Embarrassment: " + game.character!!.embarrassment)
-    val lblIncon = JLabel("Incontinence: " + game.character!!.incon + "x")
+    val lblEmbarrassment = JLabel("Embarrassment: " + game.character!!.embarrassment)
+    val lblIncontinence = JLabel("Incontinence: " + game.character!!.incontinence + "x")
     val lblSphPower = JLabel("Pee holding ability: " + game.character!!.sphincterPower + "%")
     val sphincterBar = JProgressBar()
     val lblMinutes = JLabel("Minutes: ${game.time} of 90")
@@ -104,13 +104,13 @@ class StandardGameUI(val game: ALongHourAndAHalf) : JFrame("A Long Hour and a Ha
 
         addUtilButton(
                 "Reset",
-                { ALongHourAndAHalf.reset(game.character!!, false); dispose() },
+                { ALongHourAndAHalf.reset(false); dispose() },
                 Rectangle(10, ACTION_BUTTONS_TOP_BORDER, ACTION_BUTTONS_WIDTH, ACTION_BUTTONS_HEIGHT),
                 "Start the game over with the same parameters."
         )
 
         addUtilButton("New game",
-                { ALongHourAndAHalf.reset(game.character!!, true); dispose() },
+                { ALongHourAndAHalf.reset(true); dispose() },
                 Rectangle(102, ACTION_BUTTONS_TOP_BORDER, ACTION_BUTTONS_WIDTH, ACTION_BUTTONS_HEIGHT),
                 "Start the game over with the another parameters."
         )
@@ -131,10 +131,10 @@ class StandardGameUI(val game: ALongHourAndAHalf) : JFrame("A Long Hour and a Ha
                 "<br>100% = peeing(game over)</html>"
         contentPane.add(lblBladder)
 
-        lblEmbarassment.font = tahomaFont15
-        lblEmbarassment.setBounds(20, 240, 200, 32)
-        lblEmbarassment.toolTipText = "Makes leaks more frequent"
-        contentPane.add(lblEmbarassment)
+        lblEmbarrassment.font = tahomaFont15
+        lblEmbarrassment.setBounds(20, 240, 200, 32)
+        lblEmbarrassment.toolTipText = "Makes leaks more frequent"
+        contentPane.add(lblEmbarrassment)
 
         lblBelly.font = tahomaFont15
         lblBelly.setBounds(20, 270, 200, 32)
@@ -157,10 +157,10 @@ class StandardGameUI(val game: ALongHourAndAHalf) : JFrame("A Long Hour and a Ha
             contentPane.add(thirstBar)
         }
 
-        lblIncon.font = tahomaFont15
-        lblIncon.setBounds(20, 300, 200, 32)
-        lblIncon.toolTipText = "Makes your bladder weaker"
-        contentPane.add(lblIncon)
+        lblIncontinence.font = tahomaFont15
+        lblIncontinence.setBounds(20, 300, 200, 32)
+        lblIncontinence.toolTipText = "Makes your bladder weaker"
+        contentPane.add(lblIncontinence)
 
         lblMinutes.font = tahomaFont15
         lblMinutes.setBounds(20, 330, 200, 32)
@@ -225,8 +225,9 @@ class StandardGameUI(val game: ALongHourAndAHalf) : JFrame("A Long Hour and a Ha
         contentPane.add(sphincterBar)
 
         drynessBar.setBounds(16, 392, 455, 25)
-        drynessBar.value = game.character!!.dryness.toInt()
+        drynessBar.value = game.character!!.maximalDryness.toInt()
         drynessBar.minimum = ALongHourAndAHalf.MINIMAL_DRYNESS
+        drynessBar.maximum = game.character!!.maximalDryness.toInt()
         drynessBar.isVisible = false
         drynessBar.toolTipText = "<html>Estimating dryness to absorb leaked pee.<br>Refills by itself with the time.</html>"
         contentPane.add(drynessBar)
@@ -238,7 +239,7 @@ class StandardGameUI(val game: ALongHourAndAHalf) : JFrame("A Long Hour and a Ha
         contentPane.add(timeBar)
 
         //Coloring the characterName label according to the gender
-        if (game.character!!.gender == ALongHourAndAHalf.Gender.FEMALE) {
+        if (game.character!!.gender == Gender.FEMALE) {
             lblName.foreground = Color.MAGENTA
         } else {
             lblName.foreground = Color.CYAN
@@ -246,7 +247,7 @@ class StandardGameUI(val game: ALongHourAndAHalf) : JFrame("A Long Hour and a Ha
 
         //Assigning the blank characterName if player didn't selected the characterName
         if (game.character!!.name.isEmpty()) {
-            if (game.character!!.gender == ALongHourAndAHalf.Gender.FEMALE) {
+            if (game.character!!.gender == Gender.FEMALE) {
                 game.character!!.name = "Mrs. Nobody"
             } else {
                 game.character!!.name = "Mr. Nobody"
