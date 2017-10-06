@@ -1,5 +1,8 @@
-package longHourAndAHalf
+package longHourAndAHalf.ui
 
+import longHourAndAHalf.ALongHourAndAHalf
+import longHourAndAHalf.Character
+import longHourAndAHalf.Gender
 import java.awt.Color
 import java.awt.Font
 import java.awt.Rectangle
@@ -151,7 +154,7 @@ class StandardGameUI(val game: ALongHourAndAHalf) : JFrame("A Long Hour and a Ha
 
         if (game.hardcore) {
             thirstBar.setBounds(16, 482, 455, 25)
-            thirstBar.maximum = game.MAXIMAL_THIRST.toInt()
+            thirstBar.maximum = Character.MAXIMAL_THIRST.toInt()
             thirstBar.value = game.character!!.thirst.toInt()
             thirstBar.toolTipText = "Character will automatically drink water at 30% of thirst."
             contentPane.add(thirstBar)

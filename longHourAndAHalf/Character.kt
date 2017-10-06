@@ -1,47 +1,44 @@
 package longHourAndAHalf
 
 import java.io.Serializable
+import java.util.*
 
 /**
+ * Game character.
+ *
+ * @property name Character's name.
+ * @property gender Character's gender.
+ * @property bladder Bladder fullness in percents.
  * @property incontinence Defines the sphincter weakening speed.
  */
 class Character(
         var name: String,
         var gender: Gender,
+        var bladder: Double = Random().nextInt(50).toDouble(),
         var incontinence: Double,
-        var bladderFullness: Double,
         undies: Wear,
-        lower: Wear,
-        var undiesColor: String, var lowerColor: String
+        lower: Wear
 ) : Serializable {
-    constructor(
-            name: String,
-            gender: Gender,
-            incontinence: Double,
-            bladderFullness: Double,
-            undies: String,
-            lower: String,
-            undiesColor: String, lowerColor: String
-    ) : this(
-            name,
-            gender,
-            incontinence,
-            bladderFullness,
-            Wear.getByName(undies, Wear.WearType.UNDERWEAR)!!,
-            Wear.getByName(lower, Wear.WearType.OUTERWEAR)!!,
-            undiesColor, lowerColor
-    )
 
-    @Transient lateinit var ui: StandardGameUI
+    /**
+     * Game instance to operate with.
+     */
+    @Transient lateinit var game: ALongHourAndAHalf
 
-    var bladder = 0.0
+    /**
+     * Amount of water in belly.
+     */
     var belly = 0.0
+
+    /**
+     * Maximal [bladder fullness][bladder].
+     */
     var maxBladder = 130 - (lower.pressure + undies.pressure).toInt()
 
     private fun updateDryness() {
         maximalDryness = calculateMaximalDryness()
         dryness = maximalDryness
-        ui.drynessBar.value = dryness.toInt()
+        game.ui.drynessBar.value = dryness.toInt()
     }
 
     /**
@@ -63,8 +60,7 @@ class Character(
         }
 
     /**
-     * Makes the wetting chance higher after reaching 100% of the bladder
-     * fullness.
+     * Makes the wetting chance higher after reaching 100% of the bladder fullness.
      */
     var embarrassment: Int = 0
 
@@ -87,10 +83,13 @@ class Character(
 
     private fun calculateMaximalDryness() = lower.absorption + undies.absorption
 
+    /**
+     * Maximal dryness of both clothes.
+     */
     var maximalDryness = calculateMaximalDryness()
 
     /**
-     * Amount of pee that clothes can store.
+     * Summary amount of pee that clothes can store.
      */
     var dryness = maximalDryness
 
@@ -99,4 +98,29 @@ class Character(
      * hold crotch.
      */
     var cornered = false
+
+    /**
+     * Sets sphincter power to 0 and checks if wear is too wet.
+     * Directs the game to accident ending if so.
+     */
+    fun sphincterSpasm() {
+        game.character.sphincterPower = 0
+
+        if (game.character.dryness > ALongHourAndAHalf.MINIMAL_DRYNESS) return
+
+        game.nextStage = if (game.specialHardcoreStage) {
+            ALongHourAndAHalf.GameStage.SURPRISE_ACCIDENT
+        } else {
+            ALongHourAndAHalf.GameStage.ACCIDENT
+        }
+    }
+
+    companion object {
+        /**
+         * Maximal thirst level limit.
+         * When [thirst] is higher than this value, character will automatically drink water.
+         */
+        @Suppress("KDocUnresolvedReference")
+        const val MAXIMAL_THIRST = 30
+    }
 }

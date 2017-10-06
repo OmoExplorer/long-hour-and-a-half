@@ -1,4 +1,4 @@
-package longHourAndAHalf
+package longHourAndAHalf.ui
 
 interface GameUI {
     fun hideBladderAndTime()

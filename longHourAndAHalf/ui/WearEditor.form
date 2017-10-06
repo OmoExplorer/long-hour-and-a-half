@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
+  <Properties>
+    <Property characterName="defaultCloseOperation" type="int" value="2"/>
+    <Property characterName="title" type="java.lang.String" value="Wear editor"/>
+  </Properties>
+  <SyntheticProperties>
+    <SyntheticProperty characterName="formSizePolicy" type="int" value="1"/>
+    <SyntheticProperty characterName="generateCenter" type="boolean" value="false"/>
+  </SyntheticProperties>
+  <AuxValues>
+    <AuxValue characterName="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
+    <AuxValue characterName="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="true"/>
+    <AuxValue characterName="FormSettings_generateFQN" type="java.lang.Boolean" value="false"/>
+    <AuxValue characterName="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
+    <AuxValue characterName="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
+    <AuxValue characterName="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
+    <AuxValue characterName="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
+    <AuxValue characterName="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
+    <AuxValue characterName="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
+  </AuxValues>
+
+  <Layout>
+    <DimensionLayout dim="0">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="nameLabel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="nameField" min="-2" pref="166" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="insertNameLabel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="insertNameField" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="typeLabel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="typeComboBox" max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="1" attributes="0">
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      <Component id="pressureLabel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="pressureSpinner" min="-2" pref="72" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="absorptionLabel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="absorptionSpinner" min="-2" pref="72" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="dotLabel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="dotSpinner" min="-2" pref="95" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" attributes="0">
+                      <Component id="saveButton" min="-2" pref="250" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
+                      <Component id="openButton" min="-2" pref="250" max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+          </Group>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="1">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="nameLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="nameField" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="insertNameLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="insertNameField" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="typeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="typeComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="pressureLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="pressureSpinner" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="absorptionLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="absorptionSpinner" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="dotLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="dotSpinner" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="saveButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="openButton" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="32767" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+  </Layout>
+  <SubComponents>
+    <Component class="javax.swing.JLabel" characterName="nameLabel">
+      <Properties>
+        <Property characterName="text" type="java.lang.String" value="Wear characterName"/>
+        <Property characterName="toolTipText" type="java.lang.String" value="Your wear characterName (e. g. &quot;Beautiful skirt&quot;)"/>
+        <Property characterName="characterName" type="java.lang.String" value="nameLabel" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" characterName="nameField">
+      <Properties>
+        <Property characterName="toolTipText" type="java.lang.String" value="Your wear characterName (e. g. &quot;Beautiful skirt&quot;)"/>
+        <Property characterName="characterName" type="java.lang.String" value="nameField" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" characterName="typeLabel">
+      <Properties>
+        <Property characterName="text" type="java.lang.String" value="Wear type"/>
+        <Property characterName="toolTipText" type="java.lang.String" value="Type of your wear: undies or lower."/>
+        <Property characterName="characterName" type="java.lang.String" value="typeLabel" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JComboBox" characterName="typeComboBox">
+      <Properties>
+        <Property characterName="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+          <StringArray count="3">
+            <StringItem index="0" value="Underwear"/>
+            <StringItem index="1" value="Outerwear"/>
+            <StringItem index="2" value="Both are suitable"/>
+          </StringArray>
+        </Property>
+        <Property characterName="selectedIndex" type="int" value="2"/>
+        <Property characterName="characterName" type="java.lang.String" value="typeComboBox" noResource="true"/>
+      </Properties>
+      <AuxValues>
+        <AuxValue characterName="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JLabel" characterName="pressureLabel">
+      <Properties>
+        <Property characterName="text" type="java.lang.String" value="Pressure"/>
+        <Property characterName="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;Decreases the maximal bladder capacity.&lt;br&gt;&#xa;&lt;b&gt;1 point = -1% of max. bladder capacity.&lt;/b&gt;&#xa;&lt;/html&gt;"/>
+        <Property characterName="characterName" type="java.lang.String" value="pressureLabel" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JSpinner" characterName="pressureSpinner">
+      <Properties>
+        <Property characterName="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
+          <SpinnerModel initial="0.0" maximum="300.0" minimum="0.0" numberType="java.lang.Float" stepSize="1.0" type="number"/>
+        </Property>
+        <Property characterName="toolTipText" type="java.lang.String" value="&lt;html&gt; Decreases the maximal bladder capacity.&lt;br&gt; &lt;b&gt;1 point = -1% of max. bladder capacity.&lt;/b&gt; &lt;/html&gt;"/>
+        <Property characterName="characterName" type="java.lang.String" value="pressureSpinner" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" characterName="absorptionLabel">
+      <Properties>
+        <Property characterName="text" type="java.lang.String" value="Absorption"/>
+        <Property characterName="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;Absorbs the leaked pee.&lt;br&gt;&#xa;&lt;b&gt;1 point = 0.5% of pee.&lt;/b&gt;&#xa;&lt;/html&gt;&#xa;"/>
+        <Property characterName="characterName" type="java.lang.String" value="absorptionLabel" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JSpinner" characterName="absorptionSpinner">
+      <Properties>
+        <Property characterName="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
+          <SpinnerModel initial="0.0" maximum="300.0" minimum="0.0" numberType="java.lang.Float" stepSize="1.0" type="number"/>
+        </Property>
+        <Property characterName="toolTipText" type="java.lang.String" value="&lt;html&gt; Absorbs the leaked pee.&lt;br&gt; &lt;b&gt;1 point = 0.5% of pee.&lt;/b&gt; &lt;/html&gt; "/>
+        <Property characterName="characterName" type="java.lang.String" value="absorptionSpinner" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" characterName="dotLabel">
+      <Properties>
+        <Property characterName="text" type="java.lang.String" value="Drying over time"/>
+        <Property characterName="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;Speed of wear drying.&lt;br&gt;&#xa;&lt;b&gt;1 point = -1% of absorbed pee per 3 minutes.&lt;/b&gt;&#xa;&lt;/html&gt;"/>
+        <Property characterName="characterName" type="java.lang.String" value="dotLabel" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JSpinner" characterName="dotSpinner">
+      <Properties>
+        <Property characterName="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
+          <SpinnerModel initial="0.0" maximum="100.0" minimum="0.0" numberType="java.lang.Float" stepSize="1.0" type="number"/>
+        </Property>
+        <Property characterName="toolTipText" type="java.lang.String" value="&lt;html&gt; Speed of wear drying.&lt;br&gt; &lt;b&gt;1 point = -1% of absorbed pee per 3 minutes.&lt;/b&gt; &lt;/html&gt;"/>
+        <Property characterName="characterName" type="java.lang.String" value="dotSpinner" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" characterName="saveButton">
+      <Properties>
+        <Property characterName="text" type="java.lang.String" value="Save..."/>
+        <Property characterName="characterName" type="java.lang.String" value="saveButton" noResource="true"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="saveButtonActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" characterName="openButton">
+      <Properties>
+        <Property characterName="text" type="java.lang.String" value="Open..."/>
+        <Property characterName="characterName" type="java.lang.String" value="openButton" noResource="true"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="openButtonActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" characterName="insertNameLabel">
+      <Properties>
+        <Property characterName="text" type="java.lang.String" value="Wear insert characterName"/>
+        <Property characterName="toolTipText" type="java.lang.String" value="Your wear characterName which is inserted in the game text (e. g. &quot;skirt&quot;)"/>
+        <Property characterName="characterName" type="java.lang.String" value="insertNameLabel" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" characterName="insertNameField">
+      <Properties>
+        <Property characterName="toolTipText" type="java.lang.String" value="Your wear characterName which is inserted in the game text (e. g. &quot;skirt&quot;)"/>
+        <Property characterName="characterName" type="java.lang.String" value="insertNameField" noResource="true"/>
+      </Properties>
+    </Component>
+  </SubComponents>
+</Form>

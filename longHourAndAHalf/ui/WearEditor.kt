@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package longHourAndAHalf
+package longHourAndAHalf.ui
 
-import longHourAndAHalf.Wear.WearType.*
+import longHourAndAHalf.Wear
+import longHourAndAHalf.WearType.*
 import java.awt.event.ActionEvent
 import java.io.*
-import java.util.*
 import javax.swing.*
 import javax.swing.GroupLayout.Alignment
 import javax.swing.LayoutStyle.ComponentPlacement
@@ -18,13 +18,10 @@ import javax.swing.filechooser.FileFilter
  * @author JavaBird
  */
 class WearEditor : javax.swing.JFrame() {
-
-    internal var fc: JFileChooser
-    internal var fs: Scanner? = null
-    //    PrintStream writer;
+    internal var fc = JFileChooser()
     internal var wear: Wear? = null
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private var absorptionLabe: JLabel? = null
+    private var absorptionLabel: JLabel? = null
     private var absorptionSpinner: JSpinner? = null
     private var dotLabel: JLabel? = null
     private var dotSpinner: JSpinner? = null
@@ -43,7 +40,6 @@ class WearEditor : javax.swing.JFrame() {
      * Creates new form WearEditor
      */
     init {
-        fc = JFileChooser()
         //        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
         this.fc.fileFilter = object : FileFilter() {
             override fun accept(pathname: File): Boolean {
@@ -77,7 +73,7 @@ class WearEditor : javax.swing.JFrame() {
         this.typeComboBox = JComboBox()
         this.pressureLabel = JLabel()
         this.pressureSpinner = JSpinner()
-        this.absorptionLabe = JLabel()
+        this.absorptionLabel = JLabel()
         this.absorptionSpinner = JSpinner()
         this.dotLabel = JLabel()
         this.dotSpinner = JSpinner()
@@ -112,9 +108,9 @@ class WearEditor : javax.swing.JFrame() {
         this.pressureSpinner!!.toolTipText = "<html> Decreases the maximal bladder capacity.<br> <b>1 point = -1% of max. bladder capacity.</b> </html>"
         this.pressureSpinner!!.name = "pressureSpinner" // NOI18N
 
-        this.absorptionLabe!!.text = "Absorption"
-        this.absorptionLabe!!.toolTipText = "<html>\nAbsorbs the leaked pee.<br>\n<b>1 point = 0.5% of pee.</b>\n</html>\n"
-        this.absorptionLabe!!.name = "absorptionLabe" // NOI18N
+        this.absorptionLabel!!.text = "Absorption"
+        this.absorptionLabel!!.toolTipText = "<html>\nAbsorbs the leaked pee.<br>\n<b>1 point = 0.5% of pee.</b>\n</html>\n"
+        this.absorptionLabel!!.name = "absorptionLabel" // NOI18N
 
         this.absorptionSpinner!!.model = SpinnerNumberModel(java.lang.Float.valueOf(0.0f), java.lang.Float.valueOf(0.0f), java.lang.Float.valueOf(300.0f), java.lang.Float.valueOf(1.0f))
         this.absorptionSpinner!!.toolTipText = "<html> Absorbs the leaked pee.<br> <b>1 point = 0.5% of pee.</b> </html> "
@@ -168,7 +164,7 @@ class WearEditor : javax.swing.JFrame() {
                                         .addGap(18, 18, 18)
                                         .addComponent(this.pressureSpinner!!, GroupLayout.PREFERRED_SIZE, 72, GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(ComponentPlacement.UNRELATED)
-                                        .addComponent(this.absorptionLabe)
+                                        .addComponent(this.absorptionLabel)
                                         .addPreferredGap(ComponentPlacement.RELATED)
                                         .addComponent(this.absorptionSpinner!!, GroupLayout.PREFERRED_SIZE, 72, GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(ComponentPlacement.UNRELATED)
@@ -196,7 +192,7 @@ class WearEditor : javax.swing.JFrame() {
                         .addGroup(layout.createParallelGroup(Alignment.BASELINE)
                                 .addComponent(this.pressureLabel)
                                 .addComponent(this.pressureSpinner!!, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                .addComponent(this.absorptionLabe)
+                                .addComponent(this.absorptionLabel)
                                 .addComponent(this.absorptionSpinner!!, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                 .addComponent(this.dotLabel)
                                 .addComponent(this.dotSpinner!!, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
@@ -251,7 +247,7 @@ class WearEditor : javax.swing.JFrame() {
             }
 
             this.nameField!!.text = this.wear!!.name
-            this.insertNameField!!.text = this.wear!!.insert()
+            this.insertNameField!!.text = this.wear!!.insert
             this.pressureSpinner!!.value = this.wear!!.pressure
             this.absorptionSpinner!!.value = this.wear!!.absorption
             this.dotSpinner!!.value = this.wear!!.dryingOverTime
@@ -289,7 +285,6 @@ class WearEditor : javax.swing.JFrame() {
             }
 
             //</editor-fold>
-
 
             /* Create and display the form */
             java.awt.EventQueue.invokeLater { WearEditor().isVisible = true }

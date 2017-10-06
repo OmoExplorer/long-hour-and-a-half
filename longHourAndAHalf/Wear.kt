@@ -4,119 +4,54 @@ import java.io.Serializable
 import java.util.*
 
 /**
- * Describes an underwear of an outerwear of a character.
+ * Underwear or outerwear of a character.
  *
  * @author JavaBird
+ *
+ * @property name Wear name (for example "Regular panties").
+ * @property insert Name used in a game text (for example "panties")
+ * @property pressure Pressure of this wear.
+ * 1 point of a pressure takes 1 point from a maximal bladder capacity.
+ * @property absorption Absorption of this wear.
+ * 1 point of an absorption can store 1 point of a leaked pee.
+ * @property dryingOverTime Drying over time.
+ * 1 point = -1 pee percent per 3 minutes
+ * @property type Whether this is an underwear or an outerwear.
  */
-class Wear : Serializable {
-    /**
-     * The wear name (e. g. "Regular panties")
-     */
-    val name: String
+class Wear(
+        val name: String,
+        var insert: String = name,
+        val pressure: Double,
+        val absorption: Double,
+        val dryingOverTime: Double,
+        var type: WearType? = null
+) : Serializable {
 
     /**
-     * The pressure of an wear.
-     * 1 point of a pressure takes 1 point from the maximal bladder capacity.
+     * Whether this wear equals "No under/outerwear".
      */
-    val pressure: Double
-
-    /**
-     * The absorption of an wear.
-     * 1 point of an absorption can store 1 point of a leaked pee.
-     */
-    val absorption: Double
-
-    /**
-     * The drying over time.
-     * 1 point = -1 pee unit per 3 minutes
-     */
-    val dryingOverTime: Double
-
-    /**
-     * Whether or not certain wear equals "No under/outerwear".
-     */
-    val isMissing: Boolean
-
-    /**
-     * The insert characterName used in the game text (e. g. "panties")
-     */
-    private var insertName: String? = null
+    val isMissing: Boolean = name == "No underwear" || name == "No outerwear"
 
     /**
      * The wear assigned color.
      */
-    var color: String? = null
-
-    var type: WearType? = null
-
-    /**
-     * @param name           the wear name (e. g. "Regular panties")
-     * @param insertName     the insert name used in the game text (e. g. "panties")
-     * @param pressure       the pressure of an wear.
-     *                          1 point of a pressure takes 1 point from the maximal bladder capacity.
-     * @param absorption     the absorption of an wear.
-     *                          1 point of an absorption can store 1 point of a leaked pee.
-     * @param dryingOverTime the drying over time.
-     *                          1 point = -1 pee unit per 3 minutes
-     */
-    constructor(name: String, insertName: String, pressure: Double, absorption: Double, dryingOverTime: Double) {
-        this.name = name
-        this.insertName = insertName
-        this.pressure = pressure
-        this.absorption = absorption
-        this.dryingOverTime = dryingOverTime
-        isMissing = name == "No underwear" || name == "No outerwear"
-    }
-
-    /**
-     * @param name           the wear characterName (e. g. "Regular panties")
-     * @param insertName     the insert characterName used in the game text (e. g. "panties")
-     * @param pressure       the pressure of an wear.
-     *                          1 point of a pressure takes 1 point from the maximal bladder capacity.
-     * @param absorption     the absorption of an wear.
-     *                          1 point of an absorption can store 1 point of a leaked pee.
-     * @param dryingOverTime the drying over time.
-     *                          1 point = -1 pee unit per 3 minutes
-     * @param type           the wear type
-     */
-    constructor(name: String, insertName: String, pressure: Double, absorption: Double, dryingOverTime: Double, type: WearType) {
-        this.name = name
-        this.insertName = insertName
-        this.pressure = pressure
-        this.absorption = absorption
-        this.dryingOverTime = dryingOverTime
-        this.type = type
-        isMissing = name == "No underwear" || name == "No outerwear"
-    }
-
-    /**
-     * @param insertName the insert name (used in game text) to set
-     */
-    fun setInsertName(insertName: String) {
-        this.insertName = insertName
-    }
-
-    /**
-     * @return the insert name used in the game text (e. g. "panties")
-     */
-    fun insert(): String? {
-        return insertName
-    }
-
-    enum class WearType {
-        UNDERWEAR, OUTERWEAR, BOTH_SUITABLE
-    }
+    lateinit var color: WearColor
 
     companion object {
+        @Suppress("KDocMissingDocumentation")
         const val serialVersionUID = 1L
 
         /**
          * List of all underwear types.
          */
-        var underwearList = arrayOf(
+        private val underwearList = listOf(
                 //        Name      Insert characterName     Pressure, Absotption, Drying over time
-                Wear("Random", "<b><i>LACK OF WEAR HANDLING$" + Thread.currentThread().stackTrace[0].lineNumber + "</i></b>", 0.0, 0.0, 0.0),
-                Wear("No underwear", "<b><i>LACK OF WEAR HANDLING$" + Thread.currentThread().stackTrace[0].lineNumber + "</i></b>", 0.0, 0.0, 1.0),
+                Wear("Random", "<b><i>LACK OF WEAR HANDLING$" +
+                        Thread.currentThread().stackTrace[0].lineNumber +
+                        "</i></b>", 0.0, 0.0, 0.0),
+                Wear("No underwear", "<b><i>LACK OF WEAR HANDLING$" +
+                        Thread.currentThread().stackTrace[0].lineNumber +
+                        "</i></b>", 0.0, 0.0, 1.0),
                 Wear("Strings", "panties", 1.0, 2.0, 1.0),
                 Wear("Tanga panties", "panties", 1.5, 3.0, 1.0),
                 Wear("Regular panties", "panties", 2.0, 4.0, 1.0),
@@ -139,10 +74,14 @@ class Wear : Serializable {
         /**
          * List of all outerwear types.
          */
-        var outerwearList = arrayOf(
+        private val outerwearList = listOf(
                 //        Name      Insert characterName     Pressure, Absotption, Drying over time
-                Wear("Random", "<b><i>LACK OF WEAR HANDLING$" + Thread.currentThread().stackTrace[0].lineNumber + "</i></b>", 0.0, 0.0, 0.0),
-                Wear("No outerwear", "<b><i>LACK OF WEAR HANDLING$" + Thread.currentThread().stackTrace[0].lineNumber + "</i></b>", 0.0, 0.0, 1.0),
+                Wear("Random", "<b><i>LACK OF WEAR HANDLING$" +
+                        Thread.currentThread().stackTrace[0].lineNumber +
+                        "</i></b>", 0.0, 0.0, 0.0),
+                Wear("No outerwear", "<b><i>LACK OF WEAR HANDLING$" +
+                        Thread.currentThread().stackTrace[0].lineNumber +
+                        "</i></b>", 0.0, 0.0, 0.0),
                 Wear("Long jeans", "jeans", 7.0, 12.0, 1.2),
                 Wear("Knee-length jeans", "jeans", 6.0, 10.0, 1.2),
                 Wear("Short jeans", "shorts", 5.0, 8.5, 1.2),
@@ -168,32 +107,24 @@ class Wear : Serializable {
         )
 
         /**
-         * List of all colors that clothes may have.
-         */
-        var colorList = arrayOf("Black", "Gray", "Red", "Orange", "Yellow", "Green", "Blue", "Dark blue", "Purple", "Pink")
-
-        /**
          * @param name name of a wear to return.
-         * @param type type of a wear to search in.
-         * @return wear object with corresponding name, or `null` if no wear found.
-         * @throws `IllegalArgumentException` - if `type` is `BOTH_SUITABLE`.
+         * @return wear with the corresponding name, or `null` if no wear found.
          */
-        fun getByName(name: String, type: Wear.WearType): Wear? {
-            val list = when (type) {
-                WearType.OUTERWEAR -> Wear.outerwearList
-                WearType.UNDERWEAR -> Wear.underwearList
-                WearType.BOTH_SUITABLE -> throw IllegalArgumentException("BOTH_SUITABLE wear type isn't supported")
-            }
+        fun getByName(name: String): Wear? {
+            val list = Wear.underwearList + Wear.outerwearList
 
-            for (iWear in list) {
-                if (iWear.name == name)
-                    return iWear
+            list.forEach {
+                if (it.name == name)
+                    return@getByName it
             }
 
             return null
         }
 
-        fun getRandom(type: WearType): Wear {
+        /**
+         * @return random wear of a specified type.
+         */
+        fun getRandom(type: WearType): Wear {   //TODO: Gender conforming random
             val list = when (type) {
                 WearType.UNDERWEAR -> Wear.underwearList
                 WearType.OUTERWEAR -> Wear.outerwearList
@@ -203,11 +134,11 @@ class Wear : Serializable {
 
             fun nextRandom() = list[random.nextInt(list.size)]
 
-            var wearToReturn = nextRandom()
+            var wearToReturn: Wear
 
-            while (wearToReturn.name == "Random") {
+            do {
                 wearToReturn = nextRandom()
-            }
+            } while (wearToReturn.name == "Random")
 
             return wearToReturn
         }
