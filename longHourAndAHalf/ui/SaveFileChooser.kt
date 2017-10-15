@@ -1,4 +1,4 @@
-package longHourAndAHalf
+package longHourAndAHalf.ui
 
 import javax.swing.JFileChooser
 import javax.swing.filechooser.FileNameExtensionFilter

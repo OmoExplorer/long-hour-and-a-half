@@ -5,12 +5,12 @@ import java.io.Serializable
 class Save(
         game: ALongHourAndAHalf
 ) : Serializable {
-    val character = game.character!!
+    val character = game.character
     val hardcore = game.hardcore
     var time = game.time
-    var stage = game.nextStage!!
+    var stage = game.nextStage
     var score = game.score
-    var scoreText = game.scoreText!!
+    var scoreText = game.scoreText
     var timesPeeDenied = game.timesPeeDenied
     var timesCaught = game.timesCaught
     var classmatesAwareness = game.classmatesAwareness

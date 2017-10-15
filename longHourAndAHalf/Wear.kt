@@ -4,11 +4,22 @@ import java.io.Serializable
 import java.util.*
 
 /**
+ * @property name Wear name (for example, "Random").
+ */
+abstract class AbstractWear(val name: String) {
+    override fun toString() = name
+}
+
+/**
+ * Wear stubs that aren't intended to be used in game.
+ */
+class MaintenanceWear(name: String, val instead: () -> Wear) : AbstractWear(name)
+
+/**
  * Underwear or outerwear of a character.
  *
  * @author JavaBird
  *
- * @property name Wear name (for example "Regular panties").
  * @property insert Name used in a game text (for example "panties")
  * @property pressure Pressure of this wear.
  * 1 point of a pressure takes 1 point from a maximal bladder capacity.
@@ -18,14 +29,14 @@ import java.util.*
  * 1 point = -1 pee percent per 3 minutes
  * @property type Whether this is an underwear or an outerwear.
  */
-class Wear(
-        val name: String,
+open class Wear(
+        name: String,
         var insert: String = name,
         val pressure: Double,
         val absorption: Double,
         val dryingOverTime: Double,
         var type: WearType? = null
-) : Serializable {
+) : AbstractWear(name), Serializable {
 
     /**
      * Whether this wear equals "No under/outerwear".
@@ -45,17 +56,15 @@ class Wear(
          * List of all underwear types.
          */
         private val underwearList = listOf(
-                //        Name      Insert characterName     Pressure, Absotption, Drying over time
-                Wear("Random", "<b><i>LACK OF WEAR HANDLING$" +
-                        Thread.currentThread().stackTrace[0].lineNumber +
-                        "</i></b>", 0.0, 0.0, 0.0),
-                Wear("No underwear", "<b><i>LACK OF WEAR HANDLING$" +
-                        Thread.currentThread().stackTrace[0].lineNumber +
-                        "</i></b>", 0.0, 0.0, 1.0),
+                //        Name      Insert characterName     Pressure, Absorption, Drying over time
+                MaintenanceWear("Random underwear") {
+                    Wear.getRandom(WearType.UNDERWEAR)
+                },
+                Wear("No underwear", "", 0.0, 0.0, 1.0),
                 Wear("Strings", "panties", 1.0, 2.0, 1.0),
                 Wear("Tanga panties", "panties", 1.5, 3.0, 1.0),
                 Wear("Regular panties", "panties", 2.0, 4.0, 1.0),
-                Wear("\"Boy shorts\" panties", "panties", 4.0, 7.0, 1.0),
+                Wear("Briefs", "panties", 4.0, 7.0, 1.0),
                 Wear("String bikini", "bikini panties", 1.0, 1.0, 2.0),
                 Wear("Regular bikini", "bikini panties", 2.0, 2.0, 2.0),
                 Wear("Swimsuit", "swimsuit", 4.0, 2.5, 2.5),
@@ -75,13 +84,11 @@ class Wear(
          * List of all outerwear types.
          */
         private val outerwearList = listOf(
-                //        Name      Insert characterName     Pressure, Absotption, Drying over time
-                Wear("Random", "<b><i>LACK OF WEAR HANDLING$" +
-                        Thread.currentThread().stackTrace[0].lineNumber +
-                        "</i></b>", 0.0, 0.0, 0.0),
-                Wear("No outerwear", "<b><i>LACK OF WEAR HANDLING$" +
-                        Thread.currentThread().stackTrace[0].lineNumber +
-                        "</i></b>", 0.0, 0.0, 0.0),
+                //        Name      Insert characterName     Pressure, Absorption, Drying over time
+                MaintenanceWear("Random outerwear") {
+                    Wear.getRandom(WearType.UNDERWEAR)
+                },
+                Wear("No outerwear", "", 0.0, 0.0, 1.0),
                 Wear("Long jeans", "jeans", 7.0, 12.0, 1.2),
                 Wear("Knee-length jeans", "jeans", 6.0, 10.0, 1.2),
                 Wear("Short jeans", "shorts", 5.0, 8.5, 1.2),
@@ -110,7 +117,7 @@ class Wear(
          * @param name name of a wear to return.
          * @return wear with the corresponding name, or `null` if no wear found.
          */
-        fun getByName(name: String): Wear? {
+        fun getByName(name: String): AbstractWear? {
             val list = Wear.underwearList + Wear.outerwearList
 
             list.forEach {
@@ -134,13 +141,24 @@ class Wear(
 
             fun nextRandom() = list[random.nextInt(list.size)]
 
-            var wearToReturn: Wear
+            var wearToReturn: AbstractWear
 
             do {
                 wearToReturn = nextRandom()
-            } while (wearToReturn.name == "Random")
+            } while (wearToReturn !is Wear)
 
             return wearToReturn
         }
     }
+}
+
+class Skirt(
+        name: String,
+        insert: String,
+        pressure: Double,
+        absorption: Double,
+        dryingOverTime: Double,
+        type: WearType?
+) : Wear(name, insert, pressure, absorption, dryingOverTime, type) {
+    var tights = false
 }

@@ -16,12 +16,12 @@ import javax.swing.tree.DefaultTreeModel
 
 @Suppress("ClassName")
 /**
- * @author JavaBird
+ * @author NetBeans Frame Generator, JavaBird
  */
 class setupFramePre : JFrame() {
     internal var game: Save? = null
-    private var undiesColor = "Random"
-    private var lowerColor = "Random"
+    private var undiesColor = WearColor.RANDOM
+    private var lowerColor = WearColor.RANDOM
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private var basSlider: JSlider? = null
     private var basSliderRadio: JRadioButton? = null
@@ -146,13 +146,13 @@ class setupFramePre : JFrame() {
         buttonGroup1!!.add(maleRadio)
         maleRadio!!.text = "Male"
         maleRadio!!.name = "maleRadio" // NOI18N
-        maleRadio!!.addActionListener { evt -> maleRadioActionPerformed() }
+        maleRadio!!.addActionListener { maleRadioActionPerformed() }
 
         buttonGroup1!!.add(femaleRadio)
         femaleRadio!!.isSelected = true
         femaleRadio!!.text = "Female"
         femaleRadio!!.name = "femaleRadio" // NOI18N
-        femaleRadio!!.addActionListener { evt -> femaleRadioActionPerformed() }
+        femaleRadio!!.addActionListener { femaleRadioActionPerformed() }
 
         difficultyPanel!!.border = BorderFactory.createTitledBorder("Difficulty")
         difficultyPanel!!.toolTipText = ""
@@ -217,7 +217,7 @@ class setupFramePre : JFrame() {
         start!!.text = "Start"
         start!!.toolTipText = "Start new game"
         start!!.name = "start" // NOI18N
-        start!!.addActionListener { evt -> startActionPerformed() }
+        start!!.addActionListener { startActionPerformed() }
 
         nameLabel!!.font = Font("sansserif", 1, 12) // NOI18N
         nameLabel!!.text = "Name"
@@ -236,54 +236,54 @@ class setupFramePre : JFrame() {
         jScrollPane1!!.name = "jScrollPane1" // NOI18N
 
         var treeNode1 = DefaultMutableTreeNode("root")
-        var treeNode2 = DefaultMutableTreeNode("Random")
+        var treeNode2 = DefaultMutableTreeNode(Wear.getByName("Random underwear"))
         treeNode1.add(treeNode2)
         treeNode2 = DefaultMutableTreeNode("Female")
         var treeNode3 = DefaultMutableTreeNode("Panties")
-        var treeNode4 = DefaultMutableTreeNode("Strings")
+        var treeNode4 = DefaultMutableTreeNode(Wear.getByName("Strings"))
         treeNode3.add(treeNode4)
-        treeNode4 = DefaultMutableTreeNode("Tanga panties")
+        treeNode4 = DefaultMutableTreeNode(Wear.getByName("Tanga panties"))
         treeNode3.add(treeNode4)
-        treeNode4 = DefaultMutableTreeNode("Regular panties")
+        treeNode4 = DefaultMutableTreeNode(Wear.getByName("Regular panties"))
         treeNode3.add(treeNode4)
-        treeNode4 = DefaultMutableTreeNode("\"Boy shorts\" panties")
+        treeNode4 = DefaultMutableTreeNode(Wear.getByName("Briefs"))
         treeNode3.add(treeNode4)
         treeNode2.add(treeNode3)
         treeNode3 = DefaultMutableTreeNode("Swimwear")
-        treeNode4 = DefaultMutableTreeNode("String bikini")
+        treeNode4 = DefaultMutableTreeNode(Wear.getByName("String bikini"))
         treeNode3.add(treeNode4)
-        treeNode4 = DefaultMutableTreeNode("Regular bikini")
+        treeNode4 = DefaultMutableTreeNode(Wear.getByName("Regular bikini"))
         treeNode3.add(treeNode4)
-        treeNode4 = DefaultMutableTreeNode("Swimsuit")
+        treeNode4 = DefaultMutableTreeNode(Wear.getByName("Swimsuit"))
         treeNode3.add(treeNode4)
         treeNode2.add(treeNode3)
         treeNode3 = DefaultMutableTreeNode("Diapers")
-        treeNode4 = DefaultMutableTreeNode("Light diaper")
+        treeNode4 = DefaultMutableTreeNode(Wear.getByName("Light diaper"))
         treeNode3.add(treeNode4)
-        treeNode4 = DefaultMutableTreeNode("Normal diaper")
+        treeNode4 = DefaultMutableTreeNode(Wear.getByName("Normal diaper"))
         treeNode3.add(treeNode4)
-        treeNode4 = DefaultMutableTreeNode("Heavy diaper")
+        treeNode4 = DefaultMutableTreeNode(Wear.getByName("Heavy diaper"))
         treeNode3.add(treeNode4)
         treeNode2.add(treeNode3)
         treeNode3 = DefaultMutableTreeNode("Menstrual pads")
-        treeNode4 = DefaultMutableTreeNode("Light pad")
+        treeNode4 = DefaultMutableTreeNode(Wear.getByName("Light pad"))
         treeNode3.add(treeNode4)
-        treeNode4 = DefaultMutableTreeNode("Normal pad")
+        treeNode4 = DefaultMutableTreeNode(Wear.getByName("Normal pad"))
         treeNode3.add(treeNode4)
-        treeNode4 = DefaultMutableTreeNode("Big pad")
+        treeNode4 = DefaultMutableTreeNode(Wear.getByName("Big pad"))
         treeNode3.add(treeNode4)
         treeNode2.add(treeNode3)
         treeNode1.add(treeNode2)
         treeNode2 = DefaultMutableTreeNode("Male")
-        treeNode3 = DefaultMutableTreeNode("Pants")
+        treeNode3 = DefaultMutableTreeNode(Wear.getByName("Pants"))
         treeNode2.add(treeNode3)
-        treeNode3 = DefaultMutableTreeNode("Shorts-alike pants")
+        treeNode3 = DefaultMutableTreeNode(Wear.getByName("Shorts-alike pants"))
         treeNode2.add(treeNode3)
         treeNode1.add(treeNode2)
         treeNode2 = DefaultMutableTreeNode("Special")
-        treeNode3 = DefaultMutableTreeNode("Anti-gravity pants")
+        treeNode3 = DefaultMutableTreeNode(Wear.getByName("Anti-gravity pants"))
         treeNode2.add(treeNode3)
-        treeNode3 = DefaultMutableTreeNode("Super-absorbing diaper")
+        treeNode3 = DefaultMutableTreeNode(Wear.getByName("Super-absorbing diaper"))
         treeNode2.add(treeNode3)
         treeNode1.add(treeNode2)
         treeNode2 = DefaultMutableTreeNode("No underwear")
@@ -298,65 +298,65 @@ class setupFramePre : JFrame() {
         jScrollPane2!!.name = "jScrollPane2" // NOI18N
 
         treeNode1 = DefaultMutableTreeNode("root")
-        treeNode2 = DefaultMutableTreeNode("Random")
+        treeNode2 = DefaultMutableTreeNode("Random outerwear")
         treeNode1.add(treeNode2)
         treeNode2 = DefaultMutableTreeNode("Female")
         treeNode3 = DefaultMutableTreeNode("Jeans")
-        treeNode4 = DefaultMutableTreeNode("Long jeans")
+        treeNode4 = DefaultMutableTreeNode(Wear.getByName("Long jeans"))
         treeNode3.add(treeNode4)
-        treeNode4 = DefaultMutableTreeNode("Knee-length jeans")
+        treeNode4 = DefaultMutableTreeNode(Wear.getByName("Knee-length jeans"))
         treeNode3.add(treeNode4)
-        treeNode4 = DefaultMutableTreeNode("Short jeans")
+        treeNode4 = DefaultMutableTreeNode(Wear.getByName("Short jeans"))
         treeNode3.add(treeNode4)
-        treeNode4 = DefaultMutableTreeNode("Very short jeans")
+        treeNode4 = DefaultMutableTreeNode(Wear.getByName("Very short jeans"))
         treeNode3.add(treeNode4)
         treeNode2.add(treeNode3)
         treeNode3 = DefaultMutableTreeNode("Trousers")
-        treeNode4 = DefaultMutableTreeNode("Long trousers")
+        treeNode4 = DefaultMutableTreeNode(Wear.getByName("Long trousers"))
         treeNode3.add(treeNode4)
-        treeNode4 = DefaultMutableTreeNode("Knee-length trousers")
+        treeNode4 = DefaultMutableTreeNode(Wear.getByName("Knee-length trousers"))
         treeNode3.add(treeNode4)
-        treeNode4 = DefaultMutableTreeNode("Short trousers")
+        treeNode4 = DefaultMutableTreeNode(Wear.getByName("Short trousers"))
         treeNode3.add(treeNode4)
-        treeNode4 = DefaultMutableTreeNode("Very short trousers")
+        treeNode4 = DefaultMutableTreeNode(Wear.getByName("Very short trousers"))
         treeNode3.add(treeNode4)
         treeNode2.add(treeNode3)
         treeNode3 = DefaultMutableTreeNode("Skirts")
-        treeNode4 = DefaultMutableTreeNode("Long skirt")
+        treeNode4 = DefaultMutableTreeNode(Wear.getByName("Long skirt"))
         treeNode3.add(treeNode4)
-        treeNode4 = DefaultMutableTreeNode("Knee-length skirt")
+        treeNode4 = DefaultMutableTreeNode(Wear.getByName("Knee-length skirt"))
         treeNode3.add(treeNode4)
-        treeNode4 = DefaultMutableTreeNode("Short skirt")
+        treeNode4 = DefaultMutableTreeNode(Wear.getByName("Short skirt"))
         treeNode3.add(treeNode4)
-        treeNode4 = DefaultMutableTreeNode("Mini skirt")
+        treeNode4 = DefaultMutableTreeNode(Wear.getByName("Mini skirt"))
         treeNode3.add(treeNode4)
-        treeNode4 = DefaultMutableTreeNode("Micro skirt")
+        treeNode4 = DefaultMutableTreeNode(Wear.getByName("Micro skirt"))
         treeNode3.add(treeNode4)
-        treeNode4 = DefaultMutableTreeNode("Long skirt and tights")
+        treeNode4 = DefaultMutableTreeNode(Wear.getByName("Long skirt and tights"))
         treeNode3.add(treeNode4)
-        treeNode4 = DefaultMutableTreeNode("Knee-length skirt and tights")
+        treeNode4 = DefaultMutableTreeNode(Wear.getByName("Knee-length skirt and tights"))
         treeNode3.add(treeNode4)
-        treeNode4 = DefaultMutableTreeNode("Short skirt and tights")
+        treeNode4 = DefaultMutableTreeNode(Wear.getByName("Short skirt and tights"))
         treeNode3.add(treeNode4)
-        treeNode4 = DefaultMutableTreeNode("Mini skirt and tights")
+        treeNode4 = DefaultMutableTreeNode(Wear.getByName("Mini skirt and tights"))
         treeNode3.add(treeNode4)
-        treeNode4 = DefaultMutableTreeNode("Micro skirt and tights")
+        treeNode4 = DefaultMutableTreeNode(Wear.getByName("Micro skirt and tights"))
         treeNode3.add(treeNode4)
         treeNode2.add(treeNode3)
-        treeNode3 = DefaultMutableTreeNode("Leggings")
+        treeNode3 = DefaultMutableTreeNode(Wear.getByName("Leggings"))
         treeNode2.add(treeNode3)
         treeNode1.add(treeNode2)
         treeNode2 = DefaultMutableTreeNode("Male")
         treeNode3 = DefaultMutableTreeNode("Jeans")
-        treeNode4 = DefaultMutableTreeNode("Short male jeans")
+        treeNode4 = DefaultMutableTreeNode(Wear.getByName("Short male jeans"))
         treeNode3.add(treeNode4)
-        treeNode4 = DefaultMutableTreeNode("Normal male jeans")
+        treeNode4 = DefaultMutableTreeNode(Wear.getByName("Normal male jeans"))
         treeNode3.add(treeNode4)
         treeNode2.add(treeNode3)
-        treeNode3 = DefaultMutableTreeNode("Male trousers")
+        treeNode3 = DefaultMutableTreeNode(Wear.getByName("Male trousers"))
         treeNode2.add(treeNode3)
         treeNode1.add(treeNode2)
-        treeNode2 = DefaultMutableTreeNode("No outerwear")
+        treeNode2 = DefaultMutableTreeNode(Wear.getByName("No outerwear"))
         treeNode1.add(treeNode2)
         treeNode2 = DefaultMutableTreeNode("Custom")
         treeNode1.add(treeNode2)
@@ -369,7 +369,13 @@ class setupFramePre : JFrame() {
 
         jTextPane1!!.isEditable = false
         jTextPane1!!.font = Font("Tahoma", 0, 12) // NOI18N
-        jTextPane1!!.text = "This program is thanks to the wonderful help of the following users:\nAnna May, FromRUSForum, and notwillnotcast of Omo.org, and two others (who choose to not be credited for differing reasons —\n                                            helping a ton, along with a few others helping with my minor mistakes!\n\nIf your (user)characterName is not here and you want it here, just shoot me a message and I'll add it post-haste!"
+        jTextPane1!!.text = "This program is thanks to the wonderful help of the following users:\n" +
+                "Anna May, FromRUSForum, and notwillnotcast of Omo.org, " +
+                "and two others (who choose to not be credited for differing reasons —\n" +
+                "                                            helping a ton, " +
+                "along with a few others helping with my minor mistakes!\n\n" +
+                "If your (user)characterName is not here and you want it here, " +
+                "just shoot me a message and I'll add it post-haste!"
         jTextPane1!!.name = "creditsPane" // NOI18N
         jScrollPane3!!.setViewportView(jTextPane1)
 
@@ -816,12 +822,12 @@ class setupFramePre : JFrame() {
         wearEditorButton!!.text = "Wear editor"
         wearEditorButton!!.toolTipText = "Create your own wear and use it in game."
         wearEditorButton!!.name = "wearEditorButton" // NOI18N
-        wearEditorButton!!.addActionListener { evt -> wearEditorButtonActionPerformed() }
+        wearEditorButton!!.addActionListener { wearEditorButtonActionPerformed() }
 
         loadGame!!.text = "Load game..."
         loadGame!!.toolTipText = "Load a paused game"
         loadGame!!.name = "loadGame" // NOI18N
-        loadGame!!.addActionListener { evt -> loadGameActionPerformed() }
+        loadGame!!.addActionListener { loadGameActionPerformed() }
 
         val layout = GroupLayout(contentPane)
         contentPane.layout = layout
@@ -988,27 +994,44 @@ class setupFramePre : JFrame() {
     }// </editor-fold>//GEN-END:initComponents
 
     private fun startActionPerformed() {//GEN-FIRST:event_startActionPerformed
-        var gnd = Gender.MALE
-        val bas: Int
         val rnd = Random()
-        var diff = false
-        var underwearToAssign = "Random"
-        var outerwearToAssign = "Random"
 
-        if (femaleRadio!!.isSelected)
-            gnd = Gender.FEMALE
-
-        if (basSliderRadio!!.isSelected)
-            bas = basSlider!!.value
+        val gnd = if (femaleRadio!!.isSelected)
+            Gender.FEMALE
         else
-            bas = rnd.nextInt(51)
+            Gender.MALE
 
-        if (hardDiffRadio!!.isSelected) {
-            diff = true
+        val bas = if (basSliderRadio!!.isSelected)
+            basSlider!!.value
+        else
+            rnd.nextInt(51)
+
+        val diff = hardDiffRadio!!.isSelected
+
+        var underwearToAssign = underwearTree!!.lastSelectedPathComponent as? AbstractWear ?: Wear.getByName("Random underwear")!!
+        var outerwearToAssign = outerwearTree!!.lastSelectedPathComponent as? AbstractWear ?: Wear.getByName("Random outerwear")!!
+
+        //TODO: Random and custom wear resolution
+
+        fun Wear.setConcreteColorByInconcreteColor(color: WearColor) {
+            var colorToAssign = color
+            while (colorToAssign == WearColor.RANDOM)
+                colorToAssign = WearColor.values().randomItem()
+            this.color = colorToAssign
         }
 
-        var incont = (incontSlider!!.value / 10).toDouble()
+        if (underwearToAssign is MaintenanceWear)
+            underwearToAssign = underwearToAssign.instead()
+        if (outerwearToAssign is MaintenanceWear)
+            outerwearToAssign = outerwearToAssign.instead()
 
+        assert(underwearToAssign is Wear)
+        assert(outerwearToAssign is Wear)
+
+        (underwearToAssign as Wear).setConcreteColorByInconcreteColor(undiesColor)
+        (outerwearToAssign as Wear).setConcreteColorByInconcreteColor(lowerColor)
+
+        var incont = (incontSlider!!.value / 10).toDouble()
         if (incont < 1)
             incont += 0.5
 
@@ -1020,29 +1043,19 @@ class setupFramePre : JFrame() {
 
         println(undiesColor)
 
-        if (underwearTree!!.lastSelectedPathComponent != null)
-            underwearToAssign = underwearTree!!.lastSelectedPathComponent.toString()
-        if (outerwearTree!!.lastSelectedPathComponent != null)
-            outerwearToAssign = outerwearTree!!.lastSelectedPathComponent.toString()
-
         ALongHourAndAHalf(
                 Character(
                         nameField!!.text,
                         gnd,
                         bas.toDouble(),
                         incont.toDouble(),
-                        Wear.getByName(underwearToAssign)!!,
-                        Wear.getByName(outerwearToAssign)!!
+                        underwearToAssign,
+                        outerwearToAssign
                 ),
                 diff
         )
 
         this.dispose()
-        //                    }
-        //            }
-        //        } catch (NullPointerException e) {
-        //            System.err.println("Duh");
-        //        }
     }//GEN-LAST:event_startActionPerformed
 
     private fun maleRadioActionPerformed() {//GEN-FIRST:event_maleRadioActionPerformed
@@ -1071,7 +1084,7 @@ class setupFramePre : JFrame() {
         undiesColor_pink!!.border = BorderFactory.createLineBorder(Color(0, 0, 0), 1)
         undiesColor_random!!.border = BorderFactory.createLineBorder(Color(0, 0, 0), 1)
 
-        undiesColor = "Black"
+        undiesColor = WearColor.BLACK
     }//GEN-LAST:event_undiesColor_blackMouseClicked
 
     private fun undiesColor_grayMouseClicked()//GEN-FIRST:event_undiesColor_grayMouseClicked
@@ -1090,7 +1103,7 @@ class setupFramePre : JFrame() {
         undiesColor_pink!!.border = BorderFactory.createLineBorder(Color(0, 0, 0), 1)
         undiesColor_random!!.border = BorderFactory.createLineBorder(Color(0, 0, 0), 1)
 
-        undiesColor = "Gray"
+        undiesColor = WearColor.GRAY
     }//GEN-LAST:event_undiesColor_grayMouseClicked
 
     private fun undiesColor_redMouseClicked()//GEN-FIRST:event_undiesColor_redMouseClicked
@@ -1109,7 +1122,7 @@ class setupFramePre : JFrame() {
         undiesColor_pink!!.border = BorderFactory.createLineBorder(Color(0, 0, 0), 1)
         undiesColor_random!!.border = BorderFactory.createLineBorder(Color(0, 0, 0), 1)
 
-        undiesColor = "Red"
+        undiesColor = WearColor.RED
     }//GEN-LAST:event_undiesColor_redMouseClicked
 
     private fun undiesColor_orangeMouseClicked()//GEN-FIRST:event_undiesColor_orangeMouseClicked
@@ -1128,7 +1141,7 @@ class setupFramePre : JFrame() {
         undiesColor_pink!!.border = BorderFactory.createLineBorder(Color(0, 0, 0), 1)
         undiesColor_random!!.border = BorderFactory.createLineBorder(Color(0, 0, 0), 1)
 
-        undiesColor = "Orange"
+        undiesColor = WearColor.ORANGE
     }//GEN-LAST:event_undiesColor_orangeMouseClicked
 
     private fun undiesColor_yellowMouseClicked()//GEN-FIRST:event_undiesColor_yellowMouseClicked
@@ -1147,7 +1160,7 @@ class setupFramePre : JFrame() {
         undiesColor_pink!!.border = BorderFactory.createLineBorder(Color(0, 0, 0), 1)
         undiesColor_random!!.border = BorderFactory.createLineBorder(Color(0, 0, 0), 1)
 
-        undiesColor = "Yellow"
+        undiesColor = WearColor.YELLOW
     }//GEN-LAST:event_undiesColor_yellowMouseClicked
 
     private fun undiesColor_greenMouseClicked()//GEN-FIRST:event_undiesColor_greenMouseClicked
@@ -1166,7 +1179,7 @@ class setupFramePre : JFrame() {
         undiesColor_pink!!.border = BorderFactory.createLineBorder(Color(0, 0, 0), 1)
         undiesColor_random!!.border = BorderFactory.createLineBorder(Color(0, 0, 0), 1)
 
-        undiesColor = "Green"
+        undiesColor = WearColor.GREEN
     }//GEN-LAST:event_undiesColor_greenMouseClicked
 
     private fun undiesColor_blueMouseClicked()//GEN-FIRST:event_undiesColor_blueMouseClicked
@@ -1185,7 +1198,7 @@ class setupFramePre : JFrame() {
         undiesColor_pink!!.border = BorderFactory.createLineBorder(Color(0, 0, 0), 1)
         undiesColor_random!!.border = BorderFactory.createLineBorder(Color(0, 0, 0), 1)
 
-        undiesColor = "Blue"
+        undiesColor = WearColor.BLUE
     }//GEN-LAST:event_undiesColor_blueMouseClicked
 
     private fun undiesColor_darkBlueMouseClicked()//GEN-FIRST:event_undiesColor_darkBlueMouseClicked
@@ -1204,7 +1217,7 @@ class setupFramePre : JFrame() {
         undiesColor_pink!!.border = BorderFactory.createLineBorder(Color(0, 0, 0), 1)
         undiesColor_random!!.border = BorderFactory.createLineBorder(Color(0, 0, 0), 1)
 
-        undiesColor = "Dark blue"
+        undiesColor = WearColor.DARK_BLUE
     }//GEN-LAST:event_undiesColor_darkBlueMouseClicked
 
     private fun undiesColor_purpleMouseClicked()//GEN-FIRST:event_undiesColor_purpleMouseClicked
@@ -1223,7 +1236,7 @@ class setupFramePre : JFrame() {
         undiesColor_pink!!.border = BorderFactory.createLineBorder(Color(0, 0, 0), 1)
         undiesColor_random!!.border = BorderFactory.createLineBorder(Color(0, 0, 0), 1)
 
-        undiesColor = "Purple"
+        undiesColor = WearColor.PURPLE
     }//GEN-LAST:event_undiesColor_purpleMouseClicked
 
     private fun undiesColor_pinkMouseClicked()//GEN-FIRST:event_undiesColor_pinkMouseClicked
@@ -1242,7 +1255,7 @@ class setupFramePre : JFrame() {
         undiesColor_gray!!.border = BorderFactory.createLineBorder(Color(0, 0, 0), 1)
         undiesColor_random!!.border = BorderFactory.createLineBorder(Color(0, 0, 0), 1)
 
-        undiesColor = "Pink"
+        undiesColor = WearColor.PINK
     }//GEN-LAST:event_undiesColor_pinkMouseClicked
 
     private fun lowerColor_pink1MouseClicked()//GEN-FIRST:event_lowerColor_pink1MouseClicked
@@ -1261,7 +1274,7 @@ class setupFramePre : JFrame() {
         lowerColor_gray1!!.border = BorderFactory.createLineBorder(Color(0, 0, 0), 1)
         lowerColor_random1!!.border = BorderFactory.createLineBorder(Color(0, 0, 0), 1)
 
-        lowerColor = "Pink"
+        lowerColor = WearColor.PINK
     }//GEN-LAST:event_lowerColor_pink1MouseClicked
 
     private fun lowerColor_black1MouseClicked()//GEN-FIRST:event_lowerColor_black1MouseClicked
@@ -1280,7 +1293,7 @@ class setupFramePre : JFrame() {
         lowerColor_pink1!!.border = BorderFactory.createLineBorder(Color(0, 0, 0), 1)
         lowerColor_random1!!.border = BorderFactory.createLineBorder(Color(0, 0, 0), 1)
 
-        lowerColor = "Black"
+        lowerColor = WearColor.BLACK
     }//GEN-LAST:event_lowerColor_black1MouseClicked
 
     private fun lowerColor_gray1MouseClicked()//GEN-FIRST:event_lowerColor_gray1MouseClicked
@@ -1299,7 +1312,7 @@ class setupFramePre : JFrame() {
         lowerColor_pink1!!.border = BorderFactory.createLineBorder(Color(0, 0, 0), 1)
         lowerColor_random1!!.border = BorderFactory.createLineBorder(Color(0, 0, 0), 1)
 
-        lowerColor = "Gray"
+        lowerColor = WearColor.GRAY
     }//GEN-LAST:event_lowerColor_gray1MouseClicked
 
     private fun lowerColor_red1MouseClicked()//GEN-FIRST:event_lowerColor_red1MouseClicked
@@ -1318,7 +1331,7 @@ class setupFramePre : JFrame() {
         lowerColor_pink1!!.border = BorderFactory.createLineBorder(Color(0, 0, 0), 1)
         lowerColor_random1!!.border = BorderFactory.createLineBorder(Color(0, 0, 0), 1)
 
-        lowerColor = "Red"
+        lowerColor = WearColor.RED
     }//GEN-LAST:event_lowerColor_red1MouseClicked
 
     private fun lowerColor_orange1MouseClicked()//GEN-FIRST:event_lowerColor_orange1MouseClicked
@@ -1337,7 +1350,7 @@ class setupFramePre : JFrame() {
         lowerColor_pink1!!.border = BorderFactory.createLineBorder(Color(0, 0, 0), 1)
         lowerColor_random1!!.border = BorderFactory.createLineBorder(Color(0, 0, 0), 1)
 
-        lowerColor = "Orange"
+        lowerColor = WearColor.ORANGE
     }//GEN-LAST:event_lowerColor_orange1MouseClicked
 
     private fun lowerColor_yellow1MouseClicked()//GEN-FIRST:event_lowerColor_yellow1MouseClicked
@@ -1356,7 +1369,7 @@ class setupFramePre : JFrame() {
         lowerColor_pink1!!.border = BorderFactory.createLineBorder(Color(0, 0, 0), 1)
         lowerColor_random1!!.border = BorderFactory.createLineBorder(Color(0, 0, 0), 1)
 
-        lowerColor = "Yellow"
+        lowerColor = WearColor.YELLOW
     }//GEN-LAST:event_lowerColor_yellow1MouseClicked
 
     private fun lowerColor_green1MouseClicked()//GEN-FIRST:event_lowerColor_green1MouseClicked
@@ -1375,7 +1388,7 @@ class setupFramePre : JFrame() {
         lowerColor_pink1!!.border = BorderFactory.createLineBorder(Color(0, 0, 0), 1)
         lowerColor_random1!!.border = BorderFactory.createLineBorder(Color(0, 0, 0), 1)
 
-        lowerColor = "Green"
+        lowerColor = WearColor.GREEN
     }//GEN-LAST:event_lowerColor_green1MouseClicked
 
     private fun lowerColor_blue1MouseClicked()//GEN-FIRST:event_lowerColor_blue1MouseClicked
@@ -1394,7 +1407,7 @@ class setupFramePre : JFrame() {
         lowerColor_pink1!!.border = BorderFactory.createLineBorder(Color(0, 0, 0), 1)
         lowerColor_random1!!.border = BorderFactory.createLineBorder(Color(0, 0, 0), 1)
 
-        lowerColor = "Blue"
+        lowerColor = WearColor.BLUE
     }//GEN-LAST:event_lowerColor_blue1MouseClicked
 
     private fun lowerColor_darkBlue1MouseClicked()//GEN-FIRST:event_lowerColor_darkBlue1MouseClicked
@@ -1413,7 +1426,7 @@ class setupFramePre : JFrame() {
         lowerColor_pink1!!.border = BorderFactory.createLineBorder(Color(0, 0, 0), 1)
         lowerColor_random1!!.border = BorderFactory.createLineBorder(Color(0, 0, 0), 1)
 
-        lowerColor = "Dark blue"
+        lowerColor = WearColor.DARK_BLUE
     }//GEN-LAST:event_lowerColor_darkBlue1MouseClicked
 
     private fun lowerColor_purple1MouseClicked()//GEN-FIRST:event_lowerColor_purple1MouseClicked
@@ -1432,7 +1445,7 @@ class setupFramePre : JFrame() {
         lowerColor_pink1!!.border = BorderFactory.createLineBorder(Color(0, 0, 0), 1)
         lowerColor_random1!!.border = BorderFactory.createLineBorder(Color(0, 0, 0), 1)
 
-        lowerColor = "Purple"
+        lowerColor = WearColor.PURPLE
     }//GEN-LAST:event_lowerColor_purple1MouseClicked
 
     private fun undiesColor_randomMouseClicked()//GEN-FIRST:event_undiesColor_randomMouseClicked
@@ -1451,7 +1464,7 @@ class setupFramePre : JFrame() {
         undiesColor_pink!!.border = BorderFactory.createLineBorder(Color(0, 0, 0), 1)
         undiesColor_purple!!.border = BorderFactory.createLineBorder(Color(0, 0, 0), 1)
 
-        undiesColor = "Random"
+        undiesColor = WearColor.RANDOM
     }//GEN-LAST:event_undiesColor_randomMouseClicked
 
     private fun lowerColor_random1MouseClicked()//GEN-FIRST:event_lowerColor_random1MouseClicked
@@ -1470,7 +1483,7 @@ class setupFramePre : JFrame() {
         lowerColor_pink1!!.border = BorderFactory.createLineBorder(Color(0, 0, 0), 1)
         lowerColor_purple1!!.border = BorderFactory.createLineBorder(Color(0, 0, 0), 1)
 
-        lowerColor = "Random"
+        lowerColor = WearColor.RANDOM
     }//GEN-LAST:event_lowerColor_random1MouseClicked
 
     private fun wearEditorButtonActionPerformed()//GEN-FIRST:event_wearEditorButtonActionPerformed

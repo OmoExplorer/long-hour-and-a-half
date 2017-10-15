@@ -60,6 +60,7 @@ package longHourAndAHalf
 
 import longHourAndAHalf.ALongHourAndAHalf.GameStage.*
 import longHourAndAHalf.WearType.*
+import longHourAndAHalf.ui.SaveFileChooser
 import longHourAndAHalf.ui.StandardGameUI
 import longHourAndAHalf.ui.WearFileChooser
 import longHourAndAHalf.ui.setupFramePre
@@ -69,15 +70,17 @@ import java.util.*
 import javax.swing.JFileChooser
 import javax.swing.JOptionPane
 
-/**
- * @return random element from an array
- */
-fun <T> Array<T>.randomElement() = this[Random().nextInt(this.size)]
+private val random = Random()
 
 /**
- * @return random element from a list
+ * @return random item from this array
  */
-fun <T> List<T>.randomElement() = this[Random().nextInt(this.size)]
+fun <T> Array<T>.randomItem() = this[random.nextInt(this.size)]
+
+/**
+ * @return random item from this list
+ */
+fun <T> List<T>.randomItem() = this[random.nextInt(this.size)]
 
 @Suppress("KDocMissingDocumentation")
 class ALongHourAndAHalf {
@@ -258,7 +261,7 @@ class ALongHourAndAHalf {
         stay = false
         drain = false
         cheatsUsed = false
-        boyName = names.randomElement()
+        boyName = names.randomItem()
 
         fun onIncorrectWearSelected(type: WearType): Wear {
             JOptionPane.showMessageDialog(
@@ -274,23 +277,24 @@ class ALongHourAndAHalf {
             return Wear.getRandom(UNDERWEAR)
         }
 
-        this.character.undies = setupWear(character.undies, UNDERWEAR) ?: onIncorrectWearSelected(UNDERWEAR)
-
-        this.character.lower = setupWear(character.lower, OUTERWEAR) ?: onIncorrectWearSelected(OUTERWEAR)
-
         fun Wear.setupColor(color: WearColor) {
             this.color = if (!isMissing) {
                 if (color != WearColor.RANDOM)
                     color
                 else
-                    WearColor.values().randomElement()
+                    WearColor.values().randomItem()
             } else WearColor.NONE
         }
+
+        ui = StandardGameUI(this)
+
+        this.character.undies = setupWear(character.undies, UNDERWEAR) ?: onIncorrectWearSelected(UNDERWEAR)
+        this.character.lower = setupWear(character.lower, OUTERWEAR) ?: onIncorrectWearSelected(OUTERWEAR)
 
         this.character.undies.setupColor(this.character.undies.color)
         this.character.lower.setupColor(this.character.lower.color)
 
-        ui = StandardGameUI(this)
+        ui.finishSetup()
 
         scoreText = ""
 
@@ -332,6 +336,14 @@ class ALongHourAndAHalf {
         boyName = save.boyName
 
         ui = StandardGameUI(this)
+        ui.finishSetup()
+
+        ui.drynessBar.maximum = this.character.maximalDryness.toInt()
+        ui.drynessBar.value = this.character.dryness.toInt()
+
+        ui.showBladderAndTime()
+
+//        handleNextClicked()
 
         postConstructor()
     }

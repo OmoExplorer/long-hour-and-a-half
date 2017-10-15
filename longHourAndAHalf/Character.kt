@@ -3,6 +3,7 @@ package longHourAndAHalf
 import java.io.Serializable
 import java.util.*
 
+@Suppress("IfThenToSafeAccess")
 /**
  * Game character.
  *
@@ -16,9 +17,34 @@ class Character(
         var gender: Gender,
         var bladder: Double = Random().nextInt(50).toDouble(),
         var incontinence: Double,
-        undies: Wear,
-        lower: Wear
+        undies: AbstractWear,
+        lower: AbstractWear
 ) : Serializable {
+
+    private fun setupWear(wear: AbstractWear) = if (wear is MaintenanceWear)
+        wear.instead()
+    else
+        wear as Wear
+
+    /**
+     * Character's undies.
+     */
+    var undies = setupWear(undies)
+        set(value) {
+            field = value
+
+            updateDryness()
+        }
+
+    /**
+     * Character's lower body clothing.
+     */
+    var lower = setupWear(lower)
+        set(value) {
+            field = value
+
+            updateDryness()
+        }
 
     /**
      * Game instance to operate with.
@@ -30,11 +56,6 @@ class Character(
      */
     var belly = 0.0
 
-    /**
-     * Maximal [bladder fullness][bladder].
-     */
-    var maxBladder = 130 - (lower.pressure + undies.pressure).toInt()
-
     private fun updateDryness() {
         maximalDryness = calculateMaximalDryness()
         dryness = maximalDryness
@@ -42,27 +63,14 @@ class Character(
     }
 
     /**
-     * Character's undies.
+     * Maximal [bladder fullness][bladder].
      */
-    var undies = undies
-        set(value) {
-            field = value
-            updateDryness()
-        }
-
-    /**
-     * Character's lower body clothing.
-     */
-    var lower = lower
-        set(value) {
-            field = value
-            updateDryness()
-        }
+    var maxBladder = 130 - (this.lower.pressure + this.undies.pressure).toInt()
 
     /**
      * Makes the wetting chance higher after reaching 100% of the bladder fullness.
      */
-    var embarrassment: Int = 0
+    var embarrassment = 0
 
     /**
      * Amount of the character thirstiness.
@@ -116,6 +124,7 @@ class Character(
     }
 
     companion object {
+
         /**
          * Maximal thirst level limit.
          * When [thirst] is higher than this value, character will automatically drink water.

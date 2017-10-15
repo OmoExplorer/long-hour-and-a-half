@@ -38,22 +38,22 @@ class StandardGameUI(val game: ALongHourAndAHalf) : JFrame("A Long Hour and a Ha
 
     val btnNext: JButton
 
-    val lblName = JLabel(game.character!!.name)
-    val lblBladder = JLabel("Bladder: " + game.character!!.bladder + "%")
+    val lblName = JLabel(game.character.name)
+    val lblBladder = JLabel("Bladder: " + game.character.bladder + "%")
     val bladderBar = JProgressBar()
-    val lblBelly = JLabel("Belly: " + game.character!!.belly + "%")
-    val lblEmbarrassment = JLabel("Embarrassment: " + game.character!!.embarrassment)
-    val lblIncontinence = JLabel("Incontinence: " + game.character!!.incontinence + "x")
-    val lblSphPower = JLabel("Pee holding ability: " + game.character!!.sphincterPower + "%")
+    val lblBelly = JLabel("Belly: " + game.character.belly + "%")
+    val lblEmbarrassment = JLabel("Embarrassment: " + game.character.embarrassment)
+    val lblIncontinence = JLabel("Incontinence: " + game.character.incontinence + "x")
+    val lblSphPower = JLabel("Pee holding ability: " + game.character.sphincterPower + "%")
     val sphincterBar = JProgressBar()
     val lblMinutes = JLabel("Minutes: ${game.time} of 90")
     val timeBar = JProgressBar()
-    val lblThirst = JLabel("Thirst: " + game.character!!.thirst + "%")
+    val lblThirst = JLabel("Thirst: " + game.character.thirst + "%")
     val thirstBar = JProgressBar()
-    val lblDryness = JLabel("Clothes dryness: " + Math.round(game.character!!.dryness))
+    val lblDryness = JLabel("Clothes dryness: " + Math.round(game.character.dryness))
     val drynessBar = JProgressBar()
-    val lblUndies = JLabel("Undies: " + game.character!!.undies.color + " " + game.character!!.undies.name.toLowerCase())
-    val lblLower = JLabel("Lower: " + game.character!!.lower.color + " " + game.character!!.lower.name.toLowerCase())
+    val lblUndies = JLabel()
+    val lblLower = JLabel()
 
     val lblChoice = JLabel()
     val listChoice = JList<Any>()
@@ -281,5 +281,10 @@ class StandardGameUI(val game: ALongHourAndAHalf) : JFrame("A Long Hour and a Ha
             lblName.text = game.character!!.name + " [Hardcore]"
         else
             lblName.text = game.character!!.name
+    }
+
+    fun finishSetup() {
+        lblUndies.text = "Undies: " + game.character!!.undies.color + " " + game.character!!.undies.name.toLowerCase()
+        lblLower.text = "Lower: " + game.character!!.lower.color + " " + game.character!!.lower.name.toLowerCase()
     }
 }
