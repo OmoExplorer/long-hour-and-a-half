@@ -17,19 +17,13 @@ class Character(
         var gender: Gender,
         var bladder: Double = Random().nextInt(50).toDouble(),
         var incontinence: Double,
-        undies: AbstractWear,
-        lower: AbstractWear
+        undies: Wear,
+        lower: Wear
 ) : Serializable {
-
-    private fun setupWear(wear: AbstractWear) = if (wear is MaintenanceWear)
-        wear.instead()
-    else
-        wear as Wear
-
     /**
      * Character's undies.
      */
-    var undies = setupWear(undies)
+    var undies = undies
         set(value) {
             field = value
 
@@ -39,7 +33,7 @@ class Character(
     /**
      * Character's lower body clothing.
      */
-    var lower = setupWear(lower)
+    var lower = lower
         set(value) {
             field = value
 

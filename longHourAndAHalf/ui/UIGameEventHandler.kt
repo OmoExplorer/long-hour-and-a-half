@@ -1,6 +1,6 @@
 package longHourAndAHalf.ui
 
-interface GameUI {
+interface UIGameEventHandler {
     fun hideBladderAndTime()
     fun showBladderAndTime()
     fun hardcoreModeToggled(on: Boolean)

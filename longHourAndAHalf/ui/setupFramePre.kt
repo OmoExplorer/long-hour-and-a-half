@@ -1008,8 +1008,15 @@ class setupFramePre : JFrame() {
 
         val diff = hardDiffRadio!!.isSelected
 
-        var underwearToAssign = underwearTree!!.lastSelectedPathComponent as? AbstractWear ?: Wear.getByName("Random underwear")!!
-        var outerwearToAssign = outerwearTree!!.lastSelectedPathComponent as? AbstractWear ?: Wear.getByName("Random outerwear")!!
+        fun getSelectedWear(node: Any?, type: WearType) = if (node == null)
+            Wear.getRandom(type)
+        else
+            (node as DefaultMutableTreeNode).userObject as AbstractWear
+
+        var underwearToAssign = getSelectedWear(underwearTree!!.lastSelectedPathComponent,
+                WearType.UNDERWEAR)
+        var outerwearToAssign = getSelectedWear(outerwearTree!!.lastSelectedPathComponent,
+                WearType.OUTERWEAR)
 
         //TODO: Random and custom wear resolution
 
@@ -1039,9 +1046,9 @@ class setupFramePre : JFrame() {
 
         println(outerwearTree?.lastSelectedPathComponent.toString())
 
-        println(lowerColor)
-
         println(undiesColor)
+
+        println(lowerColor)
 
         ALongHourAndAHalf(
                 Character(

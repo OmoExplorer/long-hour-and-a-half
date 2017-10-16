@@ -91,6 +91,11 @@ class ALongHourAndAHalf {
     var character: Character
 
     /**
+     * Score counter.
+     */
+    val scorer: Scorer
+
+    /**
      * Whether hardcore mode is enabled.
      * Hardcore mode features:
      * - Teacher never lets you out
@@ -105,11 +110,6 @@ class ALongHourAndAHalf {
     var ui: StandardGameUI
 
     /**
-     * Text to be displayed after the game which shows how many [score] did player get.
-     */
-    var scoreText: String
-
-    /**
      * The lesson time.
      */
     var time: Int
@@ -118,13 +118,6 @@ class ALongHourAndAHalf {
      * Times teacher denied character to go out.
      */
     var timesPeeDenied: Int
-
-    /**
-     * A number that shows a game difficulty - the higher score, the harder was the game.
-     * Specific actions (for example, peeing in a restroom during a lesson) reduce score points.
-     * Using the cheats will zero the score points.
-     */
-    var score: Int
 
     /**
      * Number of times character got caught holding pee from classmates.
@@ -255,7 +248,7 @@ class ALongHourAndAHalf {
         nextStage = LEAVE_BED
         time = 0
         timesPeeDenied = 0
-        score = 0
+        scorer = Scorer()
         timesCaught = 0
         classmatesAwareness = 0
         stay = false
@@ -296,18 +289,20 @@ class ALongHourAndAHalf {
 
         ui.finishSetup()
 
-        scoreText = ""
-
         //Scoring bladder at start
-        score("Bladder at start - ${this.character.bladder}%", '+', this.character.bladder)
+        scorer.nominate("Bladder at start - ${this.character.bladder}%", this.character.bladder,
+                ArithmeticAction.ADD)
 
         //Scoring incontinence
-        score("Incontinence - ${Math.round(this.character.incontinence)}x", '*', this.character.incontinence)
+        scorer.nominate(
+                "Incontinence - ${this.character.incontinence}x", this.character.incontinence,
+                ArithmeticAction.MULTIPLY, true
+        )
 
         if (this.hardcore) {
             character.maxBladder = 100
             ui.hardcoreModeToggled(true)
-            score("Hardcore", '*', 2)
+            scorer.nominate("Hardcore", 2, ArithmeticAction.MULTIPLY)
         }
 
         ui.drynessBar.maximum = this.character.maximalDryness.toInt()
@@ -325,8 +320,7 @@ class ALongHourAndAHalf {
         hardcore = save.hardcore
         time = save.time
         nextStage = save.stage
-        score = save.score
-        scoreText = save.scoreText
+        scorer = save.scorer
         timesPeeDenied = save.timesPeeDenied
         timesCaught = save.timesCaught
         classmatesAwareness = save.classmatesAwareness
@@ -506,15 +500,18 @@ class ALongHourAndAHalf {
                         "your bladder filling as the liquids you drank earlier start to make their way down.")
                 passTime()
                 nextStage = ASK_ACTION
-                score("Embarrassment at start - ${character.incontinence} pts",
-                        '+', character.embarrassment)
+                scorer.nominate(
+                        "Embarrassment at start - ${character.incontinence} pts",
+                        character.embarrassment,
+                        ArithmeticAction.ADD
+                )
             }
 
             ASK_ACTION -> {
                 //Called by teacher if unlucky
                 actionList.clear()
                 if (generator.nextInt(20) == 5) {
-                    setText("Suddenly, you hear the teacher call your characterName.")
+                    setText("Suddenly, you hear the teacher call your name.")
                     nextStage = CALLED_ON
                     return
                 }
@@ -784,7 +781,8 @@ class ALongHourAndAHalf {
                             }
                             //score *= 0.2;
                             //scoreText = scoreText.concat("\nRestroom usage during the lesson: -80% of points");
-                            score("Restroom usage during the lesson", '/', 5)
+                            scorer.nominate("Restroom usage during the lesson", 80,
+                                    ArithmeticAction.TAKE_PERCENT)
                             emptyBladder()
                             nextStage = ASK_ACTION
                             //Fail
@@ -828,7 +826,7 @@ class ALongHourAndAHalf {
                         }
                         //score *= 0.22;
                         //scoreText = scoreText.concat("\nRestroom usage during the lesson: -70% of points");
-                        score("Restroom usage during the lesson", '/', 3.3)
+                        scorer.nominate("Restroom usage during the lesson", 70, ArithmeticAction.TAKE_PERCENT)
                         emptyBladder()
                         nextStage = ASK_ACTION
                     } else {
@@ -871,7 +869,7 @@ class ALongHourAndAHalf {
                         }
                         //score *= 0.23;
                         //scoreText = scoreText.concat("\nRestroom usage during the lesson: -60% of points");
-                        score("Restroom usage during the lesson", '/', 2.5)
+                        scorer.nominate("Restroom usage during the lesson", 60, ArithmeticAction.TAKE_PERCENT)
                         emptyBladder()
                         nextStage = ASK_ACTION
                     } else {
@@ -915,7 +913,7 @@ class ALongHourAndAHalf {
                             }
                             //score *= 0.3;
                             //scoreText = scoreText.concat("\nRestroom usage during the lesson: -50% of points");
-                            score("Restroom usage during the lesson", '/', 2)
+                            scorer.nominate("Restroom usage during the lesson", 50, ArithmeticAction.TAKE_PERCENT)
                             emptyBladder()
                             nextStage = ASK_ACTION
                         } else {
@@ -927,7 +925,10 @@ class ALongHourAndAHalf {
                                 //score += 1.3 * (90 - min / 3);
                                 //scoreText = scoreText.concat("\nStayed on corner " + (90 - min) + " minutes: +"
                                 //+ 1.3 * (90 - min / 3) + " score");
-                                score("Stayed on corner " + (90 - time) + " minutes", '+', 1.3 * (90 - time / 3))
+                                scorer.nominate(
+                                        "Stayed on corner ${90 - time} minutes",
+                                        1.3 * (90 - time / 3), ArithmeticAction.ADD
+                                )
                                 offsetEmbarrassment(5)
                             } else {
                                 setText("Desperately, you ask the teacher if you can go out to the restroom.",
@@ -938,7 +939,7 @@ class ALongHourAndAHalf {
                                 ui.timeBar.maximum = 120
                                 //scoreText = scoreText.concat("\nWrote lines after the lesson: +60% score");
                                 //score *= 1.6;
-                                score("Wrote lines after the lesson", '*', 1.6)
+                                scorer.nominate("Wrote lines after the lesson", 60, ArithmeticAction.ADD_PERCENT)
                             }
                         }
                         timesPeeDenied++
@@ -1053,7 +1054,7 @@ class ALongHourAndAHalf {
                         "up there for a while as the teacher explains it.",
                         "Well, you can't dare to hold yourself now...")
                 passTime(5)
-                score("Called on the lesson", '+', 5)
+                scorer.nominate("Called on the lesson", 5, ArithmeticAction.ADD)
                 nextStage = ASK_ACTION
             }
 
@@ -1072,7 +1073,7 @@ class ALongHourAndAHalf {
                     setText("Lesson is finally over, and you're running to the restroom as fast as you can.",
                             "No, please... All cabins are occupied, and there's a line. You have to wait!")
 
-                    score("Waited for a free cabin in the restroom", '+', 3)
+                    scorer.nominate("Waited for a free cabin in the restroom", 3, ArithmeticAction.ADD)
                     passTime()
                     return
                 } else {
@@ -1263,13 +1264,7 @@ class ALongHourAndAHalf {
             }
 
             END_GAME -> {
-                if (cheatsUsed) {
-                    score = 0
-                    scoreText = "\nYou've used the cheats, so you've got no score."
-                }
-                val scoreText2 = "Your score: $score\n$scoreText"
-
-                JOptionPane.showMessageDialog(ui, scoreText2)
+                scorer.showScoreDialog()
                 ui.btnNext.isVisible = false
             }
 
@@ -1280,7 +1275,7 @@ class ALongHourAndAHalf {
                                 "Damn, he may spread that fact...")
                         offsetEmbarrassment(3)
                         classmatesAwareness += 5
-                        score("Caught holding pee", '+', 3)
+                        scorer.nominate("Caught holding pee", 3, ArithmeticAction.ADD)
                         timesCaught++
                     }
 
@@ -1291,7 +1286,7 @@ class ALongHourAndAHalf {
                                 "If I hold it until the lesson ends, I will beat them.")
                         offsetEmbarrassment(8)
                         classmatesAwareness += 5
-                        score("Caught holding pee", '+', 8)
+                        scorer.nominate("Caught holding pee", 8, ArithmeticAction.ADD)
                         timesCaught++
                     }
 
@@ -1310,7 +1305,7 @@ class ALongHourAndAHalf {
                         }
                         offsetEmbarrassment(12)
                         classmatesAwareness += 5
-                        score("Caught holding pee", '+', 12)
+                        scorer.nominate("Caught holding pee", 12, ArithmeticAction.ADD)
                         timesCaught++
                     }
 
@@ -1320,7 +1315,7 @@ class ALongHourAndAHalf {
                                 "Oh god... this is so embarrassing...")
                         offsetEmbarrassment(20)
                         classmatesAwareness += 5
-                        score("Caught holding pee", '+', 20)
+                        scorer.nominate("Caught holding pee", 20, ArithmeticAction.ADD)
                         timesCaught++
                     }
                 }
@@ -1341,7 +1336,7 @@ class ALongHourAndAHalf {
 
                 specialHardcoreStage = true
 
-                score("Got the \"surprise\" by $boyName", '+', 70)
+                scorer.nominate("Got the \"surprise\" by $boyName", 70, ArithmeticAction.ADD)
                 setText("The lesson is finally over, and you're running to the restroom as fast as you can.",
                         "But... You see $boyName staying in front of the restroom.",
                         "Suddenly, he takes you, not letting you to escape.")
@@ -1409,7 +1404,7 @@ class ALongHourAndAHalf {
             HIT -> if (generator.nextInt(100) <= 20) {
                 setLinesAsDialogue(2)
                 nextStage = GameStage.END_GAME
-                score("Successful hit on $boyName's groin", '+', 40)
+                scorer.nominate("Successful hit on $boyName's groin", 40, ArithmeticAction.ADD)
                 if (!character.lower.isMissing) {
                     if (!character.undies.isMissing) {
                         setText("You hit $boyName's groin.",
@@ -1483,7 +1478,7 @@ class ALongHourAndAHalf {
                                     "stand over the toilet and start peeing under $boyName's watch.")
                         }
                     }
-                    score("Persuaded $boyName to pee", '+', 40)
+                    scorer.nominate("Persuaded $boyName to pee", 40, ArithmeticAction.ADD)
                     emptyBladder()
                     nextStage = END_GAME
                 } else {
@@ -1520,7 +1515,7 @@ class ALongHourAndAHalf {
                                     "stand over the toilet and start peeing under $boyName's watch.")
                         }
                     }
-                    score("Persuaded $boyName to pee", '+', 60)
+                    scorer.nominate("Persuaded $boyName to pee", 60, ArithmeticAction.ADD)
                     emptyBladder()
                     nextStage = END_GAME
                 } else {
@@ -1558,7 +1553,7 @@ class ALongHourAndAHalf {
                         }
                     }
 
-                    score("Persuaded $boyName to pee", '+', 80)
+                    scorer.nominate("Persuaded $boyName to pee", 80, ArithmeticAction.ADD)
                     emptyBladder()
                     nextStage = END_GAME
                 } else {
@@ -1915,64 +1910,6 @@ class ALongHourAndAHalf {
         toSend += "</center></html>"
         ui.textLabel.text = toSend
         this.dialogueLines = BooleanArray(MAX_LINES)
-    }
-
-    /**
-     * Operates the player score.
-     *
-     * @param message the reason to manipulate score
-     * @param mode    add, subtract, divide or multiply
-     * @param points  amount of points to operate
-     */
-    private fun score(message: String, mode: Char, points: Int) {
-        when (mode) {
-            '+' -> {
-                score += points
-                scoreText += "\n$message: +$points points"
-            }
-            '-' -> {
-                score -= points
-                scoreText += "\n$message: -$points points"
-            }
-            '*' -> {
-                score *= points
-                scoreText += "\n" + message + ": +" + points * 100 + "% of points"
-            }
-            '/' -> {
-                score /= points
-                scoreText += "\n" + message + ": -" + 100 / points + "% of points"
-            }
-            else -> System.err.println("score() method used incorrectly, message: \"" + message + "\"")
-        }
-    }
-
-    /**
-     * Operates the player score.
-     *
-     * @param message the reason to manipulate score
-     * @param mode    add, subtract, divide or multiply
-     * @param points  amount of points to operate
-     */
-    private fun score(message: String, mode: Char, points: Double) {
-        when (mode) {
-            '+' -> {
-                score += points.toInt()
-                scoreText += "\n$message: +$points points"
-            }
-            '-' -> {
-                score -= points.toInt()
-                scoreText += "\n$message: -$points points"
-            }
-            '*' -> {
-                score *= points.toInt()
-                scoreText += "\n" + message + ": +" + points * 100 + "% of points"
-            }
-            '/' -> {
-                score /= points.toInt()
-                scoreText += "\n" + message + ": -" + 100 / points + "% of points"
-            }
-            else -> System.err.println("score() method used incorrectly, message: \"" + message + "\"")
-        }
     }
 
     private fun updateUI() {

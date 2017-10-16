@@ -10,7 +10,7 @@ import java.awt.event.ActionListener
 import javax.swing.*
 import javax.swing.border.EmptyBorder
 
-class StandardGameUI(val game: ALongHourAndAHalf) : JFrame("A Long Hour and a Half"), GameUI {
+class StandardGameUI(val game: ALongHourAndAHalf) : JFrame("A Long Hour and a Half"), UIGameEventHandler {
     companion object {
         private const val ACTION_BUTTONS_HEIGHT = 35
         private const val ACTION_BUTTONS_WIDTH = 89

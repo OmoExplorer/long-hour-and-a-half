@@ -9,8 +9,7 @@ class Save(
     val hardcore = game.hardcore
     var time = game.time
     var stage = game.nextStage
-    var score = game.score
-    var scoreText = game.scoreText
+    var scorer = game.scorer
     var timesPeeDenied = game.timesPeeDenied
     var timesCaught = game.timesCaught
     var classmatesAwareness = game.classmatesAwareness

@@ -1,0 +1,98 @@
+package longHourAndAHalf
+
+import longHourAndAHalf.ArithmeticAction.*
+import java.awt.Component
+import javax.swing.JOptionPane
+
+/**
+ * Counts a game score.
+ * Score is a number that shows a game difficulty - the higher score, the harder was the game.
+ * Specific actions (for example, peeing in a restroom during a lesson) reduce score points.
+ * Using the cheats will zero the score points.
+ */
+class Scorer {
+    private val nominations = mutableListOf<ScoreNomination>()
+    private val ordinalNominations: List<ScoreNomination>
+        get() = nominations.filterNot { it.final }
+    private val finalNominations: List<ScoreNomination>
+        get() = nominations.filter { it.final }
+    /*
+    if (cheatsUsed) {
+                    score = 0
+                    scoreText = "\nYou've used the cheats, so you've got no score."
+                }
+                val scoreText2 = "Your score: $score\n$scoreText"
+
+                JOptionPane.showMessageDialog(ui, scoreText2)
+     */
+
+    /**
+     * Final score.
+     */
+    val finalScore: Int
+        get() {
+            fun List<ScoreNomination>.apply(beginningScore: Double): Double {
+                var score = beginningScore
+
+                this.forEach {
+                    when (it.arithmeticAction) {
+                        ADD -> score += it.score
+                        TAKE -> score -= it.score
+                        MULTIPLY -> score *= it.score
+                        DIVIDE -> score /= it.score
+                        ADD_PERCENT -> score *= 1 + it.score / 100
+                        TAKE_PERCENT -> score *= 1 - it.score / 100
+                    }
+                }
+
+                return score
+            }
+
+            var score = ordinalNominations.apply(0.0)
+            score = finalNominations.apply(score)
+
+            return score.toInt()
+        }
+
+    /**
+     * Adds a nomination.
+     * @param comment a nomination comment.
+     * @param score a nomination score/multiplier/divider.
+     * @param arithmeticAction an arithmetic action to perform with score.
+     * @param final whether to apply the nomination at the end.
+     */
+    fun nominate(comment: String, score: Double, arithmeticAction: ArithmeticAction, final: Boolean = false) =
+            nominations.add(ScoreNomination(comment, score, arithmeticAction, final))
+
+    /**
+     * Adds a nomination.
+     * @param comment a nomination comment.
+     * @param score a nomination score/multiplier/divider.
+     * @param arithmeticAction an arithmetic action to perform with score.
+     * @param final whether to apply the nomination at the end.
+     */
+    fun nominate(comment: String, score: Int, arithmeticAction: ArithmeticAction, final: Boolean = false) =
+            nominations.add(ScoreNomination(comment, score.toDouble(), arithmeticAction, final))
+
+    /**
+     * Text stating all score nominations.
+     */
+    val scoreText: String
+        get() {
+            var text = "Score: $finalScore\n"
+
+            ordinalNominations.forEach {
+                text += it.toString()
+            }
+
+            return text
+        }
+
+    /**
+     * Shows a dialog frame that displays all score nominations.
+     * @param parentComponent component to align a dialog frame with.
+     */
+    fun showScoreDialog(parentComponent: Component? = null) {
+        JOptionPane.showMessageDialog(parentComponent, scoreText)
+    }
+}
