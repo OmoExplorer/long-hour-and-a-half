@@ -140,7 +140,7 @@ class setupFramePre : JFrame() {
         isResizable = false
 
         nameField!!.text = "Mrs. Nobody"
-        nameField!!.toolTipText = "Your character's characterName"
+        nameField!!.toolTipText = "Your character's name"
         nameField!!.name = "nameField" // NOI18N
 
         buttonGroup1!!.add(maleRadio)
@@ -215,7 +215,7 @@ class setupFramePre : JFrame() {
 
         start!!.font = Font("sansserif", 1, 12) // NOI18N
         start!!.text = "Start"
-        start!!.toolTipText = "Start new game"
+        start!!.toolTipText = "Start new core"
         start!!.name = "start" // NOI18N
         start!!.addActionListener { startActionPerformed() }
 
@@ -374,7 +374,7 @@ class setupFramePre : JFrame() {
                 "and two others (who choose to not be credited for differing reasons —\n" +
                 "                                            helping a ton, " +
                 "along with a few others helping with my minor mistakes!\n\n" +
-                "If your (user)characterName is not here and you want it here, " +
+                "If your (user)name is not here and you want it here, " +
                 "just shoot me a message and I'll add it post-haste!"
         jTextPane1!!.name = "creditsPane" // NOI18N
         jScrollPane3!!.setViewportView(jTextPane1)
@@ -820,12 +820,12 @@ class setupFramePre : JFrame() {
         )
 
         wearEditorButton!!.text = "Wear editor"
-        wearEditorButton!!.toolTipText = "Create your own wear and use it in game."
+        wearEditorButton!!.toolTipText = "Create your own wear and use it in core."
         wearEditorButton!!.name = "wearEditorButton" // NOI18N
         wearEditorButton!!.addActionListener { wearEditorButtonActionPerformed() }
 
-        loadGame!!.text = "Load game..."
-        loadGame!!.toolTipText = "Load a paused game"
+        loadGame!!.text = "Load core..."
+        loadGame!!.toolTipText = "Load a paused core"
         loadGame!!.name = "loadGame" // NOI18N
         loadGame!!.addActionListener { loadGameActionPerformed() }
 

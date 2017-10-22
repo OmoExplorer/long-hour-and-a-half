@@ -7,7 +7,7 @@ class Save(
 ) : Serializable {
     val character = game.character
     val hardcore = game.hardcore
-    var time = game.time
+    var world = game.world
     var stage = game.nextStage
     var scorer = game.scorer
     var timesPeeDenied = game.timesPeeDenied

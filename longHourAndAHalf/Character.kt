@@ -1,5 +1,6 @@
 package longHourAndAHalf
 
+import java.awt.Color
 import java.io.Serializable
 import java.util.*
 
@@ -9,24 +10,45 @@ import java.util.*
  *
  * @property name Character's name.
  * @property gender Character's gender.
- * @property bladder Bladder fullness in percents.
+ * @property fullness Bladder fullness in percents.
  * @property incontinence Defines the sphincter weakening speed.
  */
 class Character(
-        var name: String,
+        name: String,
         var gender: Gender,
-        var bladder: Double = Random().nextInt(50).toDouble(),
-        var incontinence: Double,
+        fullness: Double = Random().nextInt(50).toDouble(),
+        incontinence: Double,
         undies: Wear,
         lower: Wear
 ) : Serializable {
+    var name = name
+        set(value) {
+            field = value
+            game.ui.characterNameChanged(name)
+        }
+
+    var fullness = fullness
+        set(value) {
+            field = value
+            game.ui.bladderFullnessChanged(fullness)
+            game.ui.lblBladder.foreground = if (fullness > 100 && !game.hardcore || fullness > 80 && game.hardcore)
+                Color.RED
+            else
+                Color.BLACK
+        }
+
+    var incontinence = incontinence
+        set(value) {
+            field = value
+            game.ui.incontinenceMultiplierChanged(incontinence)
+        }
+
     /**
      * Character's undies.
      */
     var undies = undies
         set(value) {
             field = value
-
             updateDryness()
         }
 
@@ -36,7 +58,6 @@ class Character(
     var lower = lower
         set(value) {
             field = value
-
             updateDryness()
         }
 
@@ -49,6 +70,10 @@ class Character(
      * Amount of water in belly.
      */
     var belly = 0.0
+        set(value) {
+            field = Math.max(value, 0.0)
+            game.ui.bellyWaterLevelChanged(belly)
+        }
 
     private fun updateDryness() {
         maximalDryness = calculateMaximalDryness()
@@ -57,20 +82,28 @@ class Character(
     }
 
     /**
-     * Maximal [bladder fullness][bladder].
+     * Maximal [bladder fullness][fullness].
      */
     var maxBladder = 130 - (this.lower.pressure + this.undies.pressure).toInt()
 
     /**
-     * Makes the wetting chance higher after reaching 100% of the bladder fullness.
+     * Makes the wetting chance higher after reaching 100% of the fullness fullness.
      */
     var embarrassment = 0
+        set(value) {
+            field = Math.max(value, 0)
+            game.ui.embarrassmentChanged(embarrassment)
+        }
 
     /**
      * Amount of the character thirstiness.
      * Used only in hardcore mode.
      */
     var thirst = 0
+        set(value) {
+            field = value
+            game.ui.thirstChanged(thirst)
+        }
 
     /**
      * Maximal time without squirming and leaking.
@@ -78,10 +111,14 @@ class Character(
     var maxSphincterPower = (100 / incontinence).toInt()
 
     /**
-     * Current sphincter power. The higher bladder level, the faster power
+     * Current sphincter power. The higher fullness level, the faster power
      * consumption.
      */
     var sphincterPower = maxSphincterPower
+        set(value) {
+            field = Math.min(value, maxSphincterPower)
+            game.ui.sphincterStrengthChanged(sphincterPower)
+        }
 
     private fun calculateMaximalDryness() = lower.absorption + undies.absorption
 
@@ -94,6 +131,10 @@ class Character(
      * Summary amount of pee that clothes can store.
      */
     var dryness = maximalDryness
+        set(value) {
+            field = value
+            game.ui.wearDrynessChanged(dryness)
+        }
 
     /**
      * Whether or not character currently stands in the corner and unable to
@@ -103,7 +144,7 @@ class Character(
 
     /**
      * Sets sphincter power to 0 and checks if wear is too wet.
-     * Directs the game to accident ending if so.
+     * Directs the core to accident ending if so.
      */
     fun sphincterSpasm() {
         game.character.sphincterPower = 0

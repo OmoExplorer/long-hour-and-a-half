@@ -11,7 +11,7 @@ abstract class AbstractWear(val name: String) {
 }
 
 /**
- * Wear stubs that aren't intended to be used in game.
+ * Wear stubs that aren't intended to be used in core.
  */
 class MaintenanceWear(name: String, val instead: () -> Wear) : AbstractWear(name)
 
@@ -20,9 +20,9 @@ class MaintenanceWear(name: String, val instead: () -> Wear) : AbstractWear(name
  *
  * @author JavaBird
  *
- * @property insert Name used in a game text (for example "panties")
+ * @property insert Name used in a core text (for example "panties")
  * @property pressure Pressure of this wear.
- * 1 point of a pressure takes 1 point from a maximal bladder capacity.
+ * 1 point of a pressure takes 1 point from a maximal fullness capacity.
  * @property absorption Absorption of this wear.
  * 1 point of an absorption can store 1 point of a leaked pee.
  * @property dryingOverTime Drying over time.
@@ -56,7 +56,7 @@ open class Wear(
          * List of all underwear types.
          */
         private val underwearList = listOf(
-                //        Name      Insert characterName     Pressure, Absorption, Drying over time
+                //        Name      Insert Name     Pressure, Absorption, Drying over time
                 MaintenanceWear("Random underwear") {
                     Wear.getRandom(WearType.UNDERWEAR)
                 },
@@ -84,7 +84,7 @@ open class Wear(
          * List of all outerwear types.
          */
         private val outerwearList = listOf(
-                //        Name      Insert characterName     Pressure, Absorption, Drying over time
+                //        Name      Insert Name     Pressure, Absorption, Drying over time
                 MaintenanceWear("Random outerwear") {
                     Wear.getRandom(WearType.UNDERWEAR)
                 },
@@ -157,8 +157,7 @@ class Skirt(
         insert: String,
         pressure: Double,
         absorption: Double,
-        dryingOverTime: Double,
-        type: WearType?
-) : Wear(name, insert, pressure, absorption, dryingOverTime, type) {
-    var tights = false
+        dryingOverTime: Double
+) : Wear(name, insert, pressure, absorption, dryingOverTime, WearType.OUTERWEAR) {
+    var pantyhoses = false
 }

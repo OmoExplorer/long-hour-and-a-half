@@ -1,8 +1,6 @@
 package longHourAndAHalf.ui
 
-import longHourAndAHalf.ALongHourAndAHalf
-import longHourAndAHalf.Character
-import longHourAndAHalf.Gender
+import longHourAndAHalf.*
 import java.awt.Color
 import java.awt.Font
 import java.awt.Rectangle
@@ -10,7 +8,53 @@ import java.awt.event.ActionListener
 import javax.swing.*
 import javax.swing.border.EmptyBorder
 
-class StandardGameUI(val game: ALongHourAndAHalf) : JFrame("A Long Hour and a Half"), UIGameEventHandler {
+class StandardGameUI(override val core: ALongHourAndAHalf) : JFrame("A Long Hour and a Half"), UIGameEventHandler {
+    override fun embarrassmentChanged(embarrassment: Int) {
+        lblEmbarrassment.text = "Embarrassment: $embarrassment"
+    }
+
+    override fun bellyWaterLevelChanged(bellyWaterLevel: Double) {
+        lblBelly.text = "Belly: ${Math.round(bellyWaterLevel)}%"
+    }
+
+    override fun incontinenceMultiplierChanged(incontinenceMultiplier: Double) {
+        lblIncontinence.text = "Incontinence: ${incontinenceMultiplier}x"
+    }
+
+    override fun timeChanged(time: Time) {
+        lblMinutes.text = "Minutes: ${Math.max(0,
+                (core.world.time - ALongHourAndAHalf.classBeginningTime).rawMinutes
+        )} of ${ALongHourAndAHalf.classDuration.rawMinutes}"
+        timeBar.value = (time - ALongHourAndAHalf.classBeginningTime).rawMinutes
+    }
+
+    override fun characterNameChanged(name: String) {
+        lblName.text = name
+    }
+
+    override fun sphincterStrengthChanged(sphincterStrength: Int) {
+        lblSphPower.text = "Pee holding ability: $sphincterStrength%"
+        sphincterBar.value = sphincterStrength
+    }
+
+    override fun wearDrynessChanged(wearDryness: Double) {
+        lblDryness.text = "Clothes dryness: ${Math.round(wearDryness)}"
+        drynessBar.value = wearDryness.toInt()
+    }
+
+    override fun thirstChanged(thirst: Int) {
+        lblThirst.text = "Thirst: $thirst%"
+        thirstBar.value = thirst
+    }
+
+    override fun underwearChanged(underwear: Wear) {
+        lblUndies.text = "Undies: ${underwear.color} ${underwear.name.toLowerCase()}"
+    }
+
+    override fun outerwearChanged(outerwear: Wear) {
+        lblUndies.text = "Lower: $outerwear.color} ${outerwear.name.toLowerCase()}"
+    }
+
     companion object {
         private const val ACTION_BUTTONS_HEIGHT = 35
         private const val ACTION_BUTTONS_WIDTH = 89
@@ -38,19 +82,19 @@ class StandardGameUI(val game: ALongHourAndAHalf) : JFrame("A Long Hour and a Ha
 
     val btnNext: JButton
 
-    val lblName = JLabel(game.character.name)
-    val lblBladder = JLabel("Bladder: " + game.character.bladder + "%")
+    val lblName = JLabel(core.character.name)
+    val lblBladder = JLabel("Bladder: " + core.character.fullness + "%")
     val bladderBar = JProgressBar()
-    val lblBelly = JLabel("Belly: " + game.character.belly + "%")
-    val lblEmbarrassment = JLabel("Embarrassment: " + game.character.embarrassment)
-    val lblIncontinence = JLabel("Incontinence: " + game.character.incontinence + "x")
-    val lblSphPower = JLabel("Pee holding ability: " + game.character.sphincterPower + "%")
+    val lblBelly = JLabel("Belly: " + core.character.belly + "%")
+    val lblEmbarrassment = JLabel("Embarrassment: " + core.character.embarrassment)
+    val lblIncontinence = JLabel("Incontinence: " + core.character.incontinence + "x")
+    val lblSphPower = JLabel("Pee holding ability: " + core.character.sphincterPower + "%")
     val sphincterBar = JProgressBar()
-    val lblMinutes = JLabel("Minutes: ${game.time} of 90")
+    val lblMinutes = JLabel("Minutes: ${(core.world.time - ALongHourAndAHalf.classBeginningTime).rawMinutes} of 90")
     val timeBar = JProgressBar()
-    val lblThirst = JLabel("Thirst: " + game.character.thirst + "%")
+    val lblThirst = JLabel("Thirst: " + core.character.thirst + "%")
     val thirstBar = JProgressBar()
-    val lblDryness = JLabel("Clothes dryness: " + Math.round(game.character.dryness))
+    val lblDryness = JLabel("Clothes dryness: " + Math.round(core.character.dryness))
     val drynessBar = JProgressBar()
     val lblUndies = JLabel()
     val lblLower = JLabel()
@@ -83,7 +127,7 @@ class StandardGameUI(val game: ALongHourAndAHalf) : JFrame("A Long Hour and a Ha
 
         btnNext = addUtilButton(
                 "Next",
-                { game.handleNextClicked() },
+                { core.handleNextClicked() },
                 Rectangle(470, ACTION_BUTTONS_TOP_BORDER, 285, 35)
         )
 
@@ -95,13 +139,13 @@ class StandardGameUI(val game: ALongHourAndAHalf) : JFrame("A Long Hour and a Ha
 
         addUtilButton(
                 "Save",
-                { game.save() },
+                { core.save() },
                 Rectangle(284, ACTION_BUTTONS_TOP_BORDER, ACTION_BUTTONS_WIDTH, ACTION_BUTTONS_HEIGHT)
         )
 
         addUtilButton(
                 "Load",
-                { game.load() },
+                { core.load() },
                 Rectangle(376, ACTION_BUTTONS_TOP_BORDER, ACTION_BUTTONS_WIDTH, ACTION_BUTTONS_HEIGHT)
         )
 
@@ -109,13 +153,13 @@ class StandardGameUI(val game: ALongHourAndAHalf) : JFrame("A Long Hour and a Ha
                 "Reset",
                 { ALongHourAndAHalf.reset(false); dispose() },
                 Rectangle(10, ACTION_BUTTONS_TOP_BORDER, ACTION_BUTTONS_WIDTH, ACTION_BUTTONS_HEIGHT),
-                "Start the game over with the same parameters."
+                "Start the core over with the same parameters."
         )
 
-        addUtilButton("New game",
+        addUtilButton("New core",
                 { ALongHourAndAHalf.reset(true); dispose() },
                 Rectangle(102, ACTION_BUTTONS_TOP_BORDER, ACTION_BUTTONS_WIDTH, ACTION_BUTTONS_HEIGHT),
-                "Start the game over with the another parameters."
+                "Start the core over with the another parameters."
         )
 
         lblName.font = tahomaFont18
@@ -124,14 +168,14 @@ class StandardGameUI(val game: ALongHourAndAHalf) : JFrame("A Long Hour and a Ha
 
         lblBladder.font = tahomaFont15
         lblBladder.setBounds(20, 210, 200, 32)
-        lblBladder.toolTipText = "<html>Normal game:" +
+        lblBladder.toolTipText = "<html>Normal core:" +
                 "<br>100% = need to hold, regular leaks" +
-                "<br>130% = peeing(game over)" +
+                "<br>130% = peeing(core over)" +
                 "<br>" +
                 "<br>" +
                 "Hardcore:" +
                 "<br>80% = need to hold, regular leaks" +
-                "<br>100% = peeing(game over)</html>"
+                "<br>100% = peeing(core over)</html>"
         contentPane.add(lblBladder)
 
         lblEmbarrassment.font = tahomaFont15
@@ -142,27 +186,27 @@ class StandardGameUI(val game: ALongHourAndAHalf) : JFrame("A Long Hour and a Ha
         lblBelly.font = tahomaFont15
         lblBelly.setBounds(20, 270, 200, 32)
         lblBelly.toolTipText = "<html>The water in your belly." +
-                "<br>Any amount of water speeds the bladder filling up.</html>"
+                "<br>Any amount of water speeds the fullness filling up.</html>"
         contentPane.add(lblBelly)
 
-        if (game.hardcore) {
+        if (core.hardcore) {
             lblThirst.font = tahomaFont15
             lblThirst.setBounds(20, 480, 200, 32)
             lblThirst.toolTipText = "Character will automatically drink water at 30% of thirst."
             contentPane.add(lblThirst)
         }
 
-        if (game.hardcore) {
+        if (core.hardcore) {
             thirstBar.setBounds(16, 482, 455, 25)
             thirstBar.maximum = Character.MAXIMAL_THIRST.toInt()
-            thirstBar.value = game.character!!.thirst.toInt()
+            thirstBar.value = core.character.thirst.toInt()
             thirstBar.toolTipText = "Character will automatically drink water at 30% of thirst."
             contentPane.add(thirstBar)
         }
 
         lblIncontinence.font = tahomaFont15
         lblIncontinence.setBounds(20, 300, 200, 32)
-        lblIncontinence.toolTipText = "Makes your bladder weaker"
+        lblIncontinence.toolTipText = "Makes your fullness weaker"
         contentPane.add(lblIncontinence)
 
         lblMinutes.font = tahomaFont15
@@ -174,7 +218,7 @@ class StandardGameUI(val game: ALongHourAndAHalf) : JFrame("A Long Hour and a Ha
         lblSphPower.setBounds(20, 360, 200, 32)
         lblSphPower.isVisible = false
         lblSphPower.toolTipText = "<html>Ability to hold pee." +
-                "<br>Drains faster on higher bladder fullness." +
+                "<br>Drains faster on higher fullness fullness." +
                 "<br>Leaking when 0%." +
                 "<br>Refill it by holding crotch and rubbing thighs.</html>"
         contentPane.add(lblSphPower)
@@ -208,52 +252,52 @@ class StandardGameUI(val game: ALongHourAndAHalf) : JFrame("A Long Hour and a Ha
 
         bladderBar.setBounds(16, 212, 455, 25)
         bladderBar.maximum = 130
-        bladderBar.value = game.character!!.bladder.toInt()
-        bladderBar.toolTipText = "<html>Normal game:" +
+        bladderBar.value = core.character.fullness.toInt()
+        bladderBar.toolTipText = "<html>Normal core:" +
                 "<br>100% = need to hold, regular leaks" +
-                "<br>130% = peeing(game over)" +
+                "<br>130% = peeing(core over)" +
                 "<br>" +
                 "<br>Hardcore:" +
                 "<br>80% = need to hold, regular leaks" +
-                "<br>100% = peeing(game over)</html>"
+                "<br>100% = peeing(core over)</html>"
         contentPane.add(bladderBar)
 
         sphincterBar.setBounds(16, 362, 455, 25)
-        sphincterBar.maximum = game.character!!.maxSphincterPower
-        sphincterBar.value = game.character!!.sphincterPower
+        sphincterBar.maximum = core.character.maxSphincterPower
+        sphincterBar.value = core.character.sphincterPower
         sphincterBar.isVisible = false
         sphincterBar.toolTipText = "<html>Ability to hold pee." +
-                "<br>Drains faster on higher bladder fullness." +
+                "<br>Drains faster on higher fullness fullness." +
                 "<br>Leaking when 0%.<br>Refill it by holding crotch and rubbing thighs.</html>"
         contentPane.add(sphincterBar)
 
         drynessBar.setBounds(16, 392, 455, 25)
-        drynessBar.value = game.character!!.maximalDryness.toInt()
+        drynessBar.value = core.character.maximalDryness.toInt()
         drynessBar.minimum = ALongHourAndAHalf.MINIMAL_DRYNESS
-        drynessBar.maximum = game.character!!.maximalDryness.toInt()
+        drynessBar.maximum = core.character.maximalDryness.toInt()
         drynessBar.isVisible = false
         drynessBar.toolTipText = "<html>Estimating dryness to absorb leaked pee.<br>Refills by itself with the time.</html>"
         contentPane.add(drynessBar)
 
         timeBar.setBounds(16, 332, 455, 25)
         timeBar.maximum = 90
-        timeBar.value = game.time
+        timeBar.value = (core.world.time - ALongHourAndAHalf.classBeginningTime).rawMinutes
         timeBar.isVisible = false
         contentPane.add(timeBar)
 
-        //Coloring the characterName label according to the gender
-        if (game.character!!.gender == Gender.FEMALE) {
+        //Coloring the name label according to the gender
+        if (core.character.gender == Gender.FEMALE) {
             lblName.foreground = Color.MAGENTA
         } else {
             lblName.foreground = Color.CYAN
         }
 
-        //Assigning the blank characterName if player didn't selected the characterName
-        if (game.character!!.name.isEmpty()) {
-            if (game.character!!.gender == Gender.FEMALE) {
-                game.character!!.name = "Mrs. Nobody"
+        //Assigning the blank name if player didn't selected it
+        if (core.character.name.isEmpty()) {
+            if (core.character.gender == Gender.FEMALE) {
+                core.character.name = "Mrs. Nobody"
             } else {
-                game.character!!.name = "Mr. Nobody"
+                core.character.name = "Mr. Nobody"
             }
         }
     }
@@ -278,13 +322,18 @@ class StandardGameUI(val game: ALongHourAndAHalf) : JFrame("A Long Hour and a Ha
 
     override fun hardcoreModeToggled(on: Boolean) {
         if (on)
-            lblName.text = game.character!!.name + " [Hardcore]"
+            lblName.text = core.character.name + " [Hardcore]"
         else
-            lblName.text = game.character!!.name
+            lblName.text = core.character.name
     }
 
     fun finishSetup() {
-        lblUndies.text = "Undies: " + game.character!!.undies.color + " " + game.character!!.undies.name.toLowerCase()
-        lblLower.text = "Lower: " + game.character!!.lower.color + " " + game.character!!.lower.name.toLowerCase()
+        lblUndies.text = "Undies: " + core.character.undies.color + " " + core.character.undies.name.toLowerCase()
+        lblLower.text = "Lower: " + core.character.lower.color + " " + core.character.lower.name.toLowerCase()
+    }
+
+    override fun bladderFullnessChanged(fullness: Double) {
+        lblBladder.text = "Bladder: $fullness%"
+        bladderBar.value = fullness.toInt()
     }
 }

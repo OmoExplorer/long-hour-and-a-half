@@ -85,11 +85,11 @@ class WearEditor : javax.swing.JFrame() {
         this.defaultCloseOperation = WindowConstants.DISPOSE_ON_CLOSE
         this.title = "Wear editor"
 
-        this.nameLabel!!.text = "Wear characterName"
-        this.nameLabel!!.toolTipText = "Your wear characterName (e. g. \"Beautiful skirt\")"
+        this.nameLabel!!.text = "Wear name"
+        this.nameLabel!!.toolTipText = "Your wear name (e. g. \"Beautiful skirt\")"
         this.nameLabel!!.name = "nameLabel" // NOI18N
 
-        this.nameField!!.toolTipText = "Your wear characterName (e. g. \"Beautiful skirt\")"
+        this.nameField!!.toolTipText = "Your wear name (e. g. \"Beautiful skirt\")"
         this.nameField!!.name = "nameField" // NOI18N
 
         this.typeLabel!!.text = "Wear type"
@@ -101,11 +101,11 @@ class WearEditor : javax.swing.JFrame() {
         this.typeComboBox!!.name = "typeComboBox" // NOI18N
 
         this.pressureLabel!!.text = "Pressure"
-        this.pressureLabel!!.toolTipText = "<html>\nDecreases the maximal bladder capacity.<br>\n<b>1 point = -1% of max. bladder capacity.</b>\n</html>"
+        this.pressureLabel!!.toolTipText = "<html>\nDecreases the maximal fullness capacity.<br>\n<b>1 point = -1% of max. fullness capacity.</b>\n</html>"
         this.pressureLabel!!.name = "pressureLabel" // NOI18N
 
         this.pressureSpinner!!.model = SpinnerNumberModel(java.lang.Float.valueOf(0.0f), java.lang.Float.valueOf(0.0f), java.lang.Float.valueOf(300.0f), java.lang.Float.valueOf(1.0f))
-        this.pressureSpinner!!.toolTipText = "<html> Decreases the maximal bladder capacity.<br> <b>1 point = -1% of max. bladder capacity.</b> </html>"
+        this.pressureSpinner!!.toolTipText = "<html> Decreases the maximal fullness capacity.<br> <b>1 point = -1% of max. fullness capacity.</b> </html>"
         this.pressureSpinner!!.name = "pressureSpinner" // NOI18N
 
         this.absorptionLabel!!.text = "Absorption"
@@ -132,11 +132,11 @@ class WearEditor : javax.swing.JFrame() {
         this.openButton!!.name = "openButton" // NOI18N
         this.openButton!!.addActionListener { evt -> this@WearEditor.openButtonActionPerformed(evt) }
 
-        this.insertNameLabel!!.text = "Wear insert characterName"
-        this.insertNameLabel!!.toolTipText = "Your wear characterName which is inserted in the game text (e. g. \"skirt\")"
+        this.insertNameLabel!!.text = "Wear insert name"
+        this.insertNameLabel!!.toolTipText = "Your wear name which is inserted in the core text (e. g. \"skirt\")"
         this.insertNameLabel!!.name = "insertNameLabel" // NOI18N
 
-        this.insertNameField!!.toolTipText = "Your wear characterName which is inserted in the game text (e. g. \"skirt\")"
+        this.insertNameField!!.toolTipText = "Your wear name which is inserted in the core text (e. g. \"skirt\")"
         this.insertNameField!!.name = "insertNameField" // NOI18N
 
         val layout = GroupLayout(this.contentPane)

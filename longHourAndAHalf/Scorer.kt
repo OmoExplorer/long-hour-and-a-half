@@ -5,8 +5,8 @@ import java.awt.Component
 import javax.swing.JOptionPane
 
 /**
- * Counts a game score.
- * Score is a number that shows a game difficulty - the higher score, the harder was the game.
+ * Counts a core score.
+ * Score is a number that shows a core difficulty - the higher score, the harder was the core.
  * Specific actions (for example, peeing in a restroom during a lesson) reduce score points.
  * Using the cheats will zero the score points.
  */

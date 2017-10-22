@@ -64,7 +64,6 @@ import longHourAndAHalf.ui.SaveFileChooser
 import longHourAndAHalf.ui.StandardGameUI
 import longHourAndAHalf.ui.WearFileChooser
 import longHourAndAHalf.ui.setupFramePre
-import java.awt.Color
 import java.io.*
 import java.util.*
 import javax.swing.JFileChooser
@@ -83,6 +82,9 @@ fun <T> Array<T>.randomItem() = this[random.nextInt(this.size)]
 fun <T> List<T>.randomItem() = this[random.nextInt(this.size)]
 
 @Suppress("KDocMissingDocumentation")
+/**
+ * Game core which is used for communication between modules.
+ */
 class ALongHourAndAHalf {
 
     /**
@@ -110,9 +112,9 @@ class ALongHourAndAHalf {
     var ui: StandardGameUI
 
     /**
-     * The lesson time.
+     * Virtual core world data.
      */
-    var time: Int
+    val world: World
 
     /**
      * Times teacher denied character to go out.
@@ -244,9 +246,9 @@ class ALongHourAndAHalf {
         this.character = character
         this.character.game = this
         this.hardcore = hardcore
+        world = World(this)
 
         nextStage = LEAVE_BED
-        time = 0
         timesPeeDenied = 0
         scorer = Scorer()
         timesCaught = 0
@@ -289,8 +291,8 @@ class ALongHourAndAHalf {
 
         ui.finishSetup()
 
-        //Scoring bladder at start
-        scorer.nominate("Bladder at start - ${this.character.bladder}%", this.character.bladder,
+        //Scoring fullness at start
+        scorer.nominate("Bladder at start - ${this.character.fullness}%", this.character.fullness,
                 ArithmeticAction.ADD)
 
         //Scoring incontinence
@@ -318,7 +320,7 @@ class ALongHourAndAHalf {
     constructor(save: Save) {
         character = save.character
         hardcore = save.hardcore
-        time = save.time
+        world = save.world
         nextStage = save.stage
         scorer = save.scorer
         timesPeeDenied = save.timesPeeDenied
@@ -343,19 +345,19 @@ class ALongHourAndAHalf {
     }
 
     private fun postConstructor() {
-        //Making bladder smaller in the hardcore mode, adding hardcore label
+        //Making fullness smaller in the hardcore mode, adding hardcore label
         if (hardcore) {
             character.maxBladder = 100
             ui.hardcoreModeToggled(true)
         }
 
-        gameStartSave = Save(this)   //Saving game for a reset
+        gameStartSave = Save(this)   //Saving core for a reset
 
         ui.isVisible = true     //Displaying the frame
     }
 
     fun handleNextClicked() {
-        updateUI()
+
         when (nextStage) {
             LEAVE_BED -> {
                 //Making line 1 italic
@@ -365,7 +367,7 @@ class ALongHourAndAHalf {
                     //Both lower clothes and undies
                     {
                         setText("Wh-what? Did I forget to set my alarm?!",
-                                "You cry, tumbling out of bed and feeling an instant jolt from your bladder.",
+                                "You cry, tumbling out of bed and feeling an instant jolt from your fullness.",
                                 "You hurriedly slip on some " +
                                         "${character.undies.insert} and ${character.lower.insert},",
                                 "not even worrying about what covers your chest.")
@@ -373,7 +375,7 @@ class ALongHourAndAHalf {
                     //Lower clothes only
                     {
                         setText("Wh-what? Did I forget to set my alarm?!",
-                                "You cry, tumbling out of bed and feeling an instant jolt from your bladder.",
+                                "You cry, tumbling out of bed and feeling an instant jolt from your fullness.",
                                 "You hurriedly slip on some ${character.lower.insert}, " +
                                         "quick to cover your ${character.undies.insert},",
                                 "not even worrying about what covers your chest.")
@@ -383,18 +385,18 @@ class ALongHourAndAHalf {
                     //Undies only
                     {
                         setText("Wh-what? Did I forget to set my alarm?!",
-                                "You cry, tumbling out of bed and feeling an instant jolt from your bladder.",
+                                "You cry, tumbling out of bed and feeling an instant jolt from your fullness.",
                                 "You hurriedly slip on ${character.undies.insert},",
                                 "not even worrying about what covers your chest and legs.")
                     } else
                     //No clothes at all
                     {
                         setText("Wh-what? Did I forget to set my alarm?!",
-                                "You cry, tumbling out of bed and feeling an instant jolt from your bladder.",
+                                "You cry, tumbling out of bed and feeling an instant jolt from your fullness.",
                                 "You are running downstairs fully naked.")
                     }
                 }
-                passTime(1)
+                world.time += 1
 
                 //Setting the next stage to "Leaving home"
                 nextStage = LEAVE_HOME
@@ -409,9 +411,9 @@ class ALongHourAndAHalf {
                         "The cold drink brings a chill down your spine " +
                                 "as you collect your things and rush out the door to school.")
 
-                passTime(1)
-                offsetEmbarrassment(3)
-                offsetBelly(10.0)
+                world.time += 1
+                character.embarrassment += 3
+                character.belly += 10.0
 
                 nextStage = GO_TO_CLASS
             }
@@ -455,7 +457,7 @@ class ALongHourAndAHalf {
                     }
                 }
 
-                offsetEmbarrassment(2)
+                character.embarrassment += 2
                 nextStage = WALK_IN
             }
 
@@ -469,7 +471,7 @@ class ALongHourAndAHalf {
                             "make sure you're wearing something less... revealing!",
                             "A chuckle passes over the classroom, and you can't help but feel a",
                             "tad bit embarrassed about your rush into class.")
-                    offsetEmbarrassment(5)
+                    character.embarrassment += 5
                 } else
                 //No outerwear
                 {
@@ -481,7 +483,7 @@ class ALongHourAndAHalf {
                                 "A chuckle passes over the classroom, " +
                                         "and you can't help but feel extremely embarrassed",
                                 "about your rush into class, let alone your nudity")
-                        offsetEmbarrassment(25)
+                        character.embarrassment += 25
                     } else {
                         setLinesAsDialogue(1, 3)
                         setText("Sit down, ${character.name}. You're running late.",
@@ -497,8 +499,8 @@ class ALongHourAndAHalf {
 
             SIT_DOWN -> {
                 setText("Subconsciously rubbing your thighs together, you feel the uncomfortable feeling of",
-                        "your bladder filling as the liquids you drank earlier start to make their way down.")
-                passTime()
+                        "your fullness filling as the liquids you drank earlier start to make their way down.")
+                world.time += 3
                 nextStage = ASK_ACTION
                 scorer.nominate(
                         "Embarrassment at start - ${character.incontinence} pts",
@@ -517,52 +519,52 @@ class ALongHourAndAHalf {
                 }
 
                 //Bladder: 0-20
-                if (character.bladder <= 20) {
+                if (character.fullness <= 20) {
                     setText("Feeling bored about the day, and not really caring about the class too much,",
                             "you look to the clock, watching the minutes tick by.")
                 }
                 //Bladder: 20-40
-                if (character.bladder > 20 && character.bladder <= 40) {
+                if (character.fullness > 20 && character.fullness <= 40) {
                     setText("Having to pee a little bit,",
                             "you look to the clock, " +
                                     "watching the minutes tick by and wishing the lesson to get over faster.")
                 }
                 //Bladder: 40-60
-                if (character.bladder > 40 && character.bladder <= 60) {
+                if (character.fullness > 40 && character.fullness <= 60) {
                     setText("Clearly having to pee,",
                             "you impatiently wait for the lesson end.")
                 }
                 //Bladder: 60-80
-                if (character.bladder > 60 && character.bladder <= 80) {
+                if (character.fullness > 60 && character.fullness <= 80) {
                     setLinesAsDialogue(2)
-                    setText("You feel the rather strong pressure in your bladder, " +
+                    setText("You feel the rather strong pressure in your fullness, " +
                             "and you're starting to get even more desperate.",
                             "Maybe I should ask teacher to go to the restroom? It hurts a bit...")
                 }
                 //Bladder: 80-100
-                if (character.bladder > 80 && character.bladder <= 100) {
+                if (character.fullness > 80 && character.fullness <= 100) {
                     setLinesAsDialogue(1, 3)
                     setText("Keeping all that urine inside will become impossible very soon.",
-                            "You feel the terrible pain and pressure in your bladder, " +
+                            "You feel the terrible pain and pressure in your fullness, " +
                                     "and you can almost definitely say ",
                             "you haven't needed to pee this badly in your life.",
                             "Ouch, it hurts a lot... I must do something about it now, or else...")
                 }
                 //Bladder: 100-130
-                if (character.bladder > 100 && character.bladder <= 130) {
+                if (character.fullness > 100 && character.fullness <= 130) {
                     setLinesAsDialogue(1, 3)
                     if (character.gender == Gender.FEMALE) {
                         setText("This is really bad...",
                                 "You know that you can't keep it any longer and " +
                                         "you may wet yourself in any moment and oh,",
-                                "You can clearly see your bladder as it bulging.",
+                                "You can clearly see your fullness as it bulging.",
                                 "Ahhh... I cant hold it anymore!!!",
                                 "Even holding your crotch doesn't seems to help you to keep it in.")
                     } else {
                         setText("This is really bad...",
                                 "You know that you can't keep it any longer and " +
                                         "you may wet yourself in any moment and oh,",
-                                "You can clearly see your bladder as it bulging.",
+                                "You can clearly see your fullness as it bulging.",
                                 "Ahhh... I cant hold it anymore!!!",
                                 "Even squeezing your penis doesn't seems to help you to keep it in.")
                     }
@@ -591,7 +593,7 @@ class ALongHourAndAHalf {
 
                 actionList.add("Rub thighs")
 
-                if (character.bladder >= 100) {
+                if (character.fullness >= 100) {
                     actionList.add("Give up and pee yourself")
                 } else {
                     actionList.add("[Unavailable]")
@@ -607,7 +609,7 @@ class ALongHourAndAHalf {
                 //Loading the choice array into the action selector
                 ui.listChoice.setListData(actionList.toTypedArray())
                 nextStage = CHOSE_ACTION
-                passTime()
+                world.time += 3
             }
 
             CHOSE_ACTION -> {
@@ -631,7 +633,7 @@ class ALongHourAndAHalf {
                 /*
                  * Press on crotch/squeeze penis
                  * 3 minutes
-                 * -2 bladder
+                 * -2 fullness
                  * Detection chance: 15
                  * Effectiveness: 0.4
                  * =========================
@@ -645,8 +647,8 @@ class ALongHourAndAHalf {
                                 "so you take your hand and hold yourself down there.",
                                 "It feels a little better for now.")
 
-                        rechargeSphPower(20)
-                        offsetTime(3)
+                        character.sphincterPower += 20
+                        world.time += 3
 
                         //Chance to be caught by classmates in hardcore mode
                         nextStage = if ((generator.nextInt(100) <= 15 + classmatesAwareness) and hardcore) {
@@ -659,7 +661,7 @@ class ALongHourAndAHalf {
                 /*
                      * Rub thighs
                      * 3 + 3 = 6 minutes
-                     * -0.2 bladder
+                     * -0.2 fullness
                      * Detection chance: 3
                      * Effectiveness: 6
                      * =========================
@@ -673,8 +675,8 @@ class ALongHourAndAHalf {
                                 "can't bring yourself to risk getting caught with your hand between",
                                 "your legs. You rub your thighs hard but it doesn't really help.")
 
-                        rechargeSphPower(2)
-                        offsetTime(3)
+                        character.sphincterPower += 2
+                        world.time += 3
 
                         //Chance to be caught by classmates in hardcore mode
                         nextStage = if ((generator.nextInt(100) <= 3 + classmatesAwareness) and hardcore) {
@@ -688,7 +690,7 @@ class ALongHourAndAHalf {
                     3 -> {
                         setText("You're absolutely desperate to pee, and you think you'll",
                                 "end up peeing yourself anyway, so it's probably best to admit",
-                                "defeat and get rid of the painful ache in your bladder.")
+                                "defeat and get rid of the painful ache in your fullness.")
                         nextStage = GIVE_UP
                     }
 
@@ -703,7 +705,7 @@ class ALongHourAndAHalf {
                      * Wait
                      * =========================
                      * 3 + 2 + n minutes
-                     * +(2.5n) bladder
+                     * +(2.5n) fullness
                      * Detection chance: 1
                      * Future effectiveness: 2.4(1), 0.4(2), 0.47(30)
                      */
@@ -712,10 +714,10 @@ class ALongHourAndAHalf {
                         val timeOffset: Int
                         try {
                             timeOffset = java.lang.Integer.parseInt(JOptionPane.showInputDialog("How much to wait?"))
-                            if (time < 1 || time > 125) {
+                            if (timeOffset < 1 || timeOffset > 125) {
                                 throw NumberFormatException()
                             }
-                            passTime(timeOffset)
+                            world.time += timeOffset
                         } //Ignoring invalid output
                         catch (e: Exception) {
                             nextStage = ASK_ACTION
@@ -783,7 +785,7 @@ class ALongHourAndAHalf {
                             //scoreText = scoreText.concat("\nRestroom usage during the lesson: -80% of points");
                             scorer.nominate("Restroom usage during the lesson", 80,
                                     ArithmeticAction.TAKE_PERCENT)
-                            emptyBladder()
+                            character.fullness = 0.0
                             nextStage = ASK_ACTION
                             //Fail
                         } else {
@@ -827,7 +829,7 @@ class ALongHourAndAHalf {
                         //score *= 0.22;
                         //scoreText = scoreText.concat("\nRestroom usage during the lesson: -70% of points");
                         scorer.nominate("Restroom usage during the lesson", 70, ArithmeticAction.TAKE_PERCENT)
-                        emptyBladder()
+                        character.fullness = 0.0
                         nextStage = ASK_ACTION
                     } else {
                         setText("You ask the teacher again if you can go out to the restroom.",
@@ -870,7 +872,7 @@ class ALongHourAndAHalf {
                         //score *= 0.23;
                         //scoreText = scoreText.concat("\nRestroom usage during the lesson: -60% of points");
                         scorer.nominate("Restroom usage during the lesson", 60, ArithmeticAction.TAKE_PERCENT)
-                        emptyBladder()
+                        character.fullness = 0.0
                         nextStage = ASK_ACTION
                     } else {
                         setText("You ask the teacher once more if you can go out to the restroom.",
@@ -914,7 +916,7 @@ class ALongHourAndAHalf {
                             //score *= 0.3;
                             //scoreText = scoreText.concat("\nRestroom usage during the lesson: -50% of points");
                             scorer.nominate("Restroom usage during the lesson", 50, ArithmeticAction.TAKE_PERCENT)
-                            emptyBladder()
+                            character.fullness = 0.0
                             nextStage = ASK_ACTION
                         } else {
                             if (generator.nextBoolean()) {
@@ -926,15 +928,15 @@ class ALongHourAndAHalf {
                                 //scoreText = scoreText.concat("\nStayed on corner " + (90 - min) + " minutes: +"
                                 //+ 1.3 * (90 - min / 3) + " score");
                                 scorer.nominate(
-                                        "Stayed on corner ${90 - time} minutes",
-                                        1.3 * (90 - time / 3), ArithmeticAction.ADD
+                                        "Stayed on corner ${(classEndingTime - world.time).rawMinutes} minutes",
+                                        1.3 * ((classEndingTime - world.time).rawMinutes / 3), ArithmeticAction.ADD
                                 )
-                                offsetEmbarrassment(5)
+                                character.embarrassment += 5
                             } else {
                                 setText("Desperately, you ask the teacher if you can go out to the restroom.",
                                         "NO!! NO!! NO!!! YOU CAN'T GO OUT!!! YOU WILL WRITE LINES AFTER THE LESSON!!!,",
                                         "yells the teacher.")
-                                offsetEmbarrassment(5)
+                                character.embarrassment += 5
                                 stay = true
                                 ui.timeBar.maximum = 120
                                 //scoreText = scoreText.concat("\nWrote lines after the lesson: +60% score");
@@ -984,7 +986,7 @@ class ALongHourAndAHalf {
                         setText("A voice comes over the loudspeaker:",
                                 "All classes are now dismissed for no reason at all! Bye!",
                                 "Looks like your luck changed for the better.")
-                        time = 89
+                        world.time = classEndingTime
                         nextStage = CLASS_OVER
                     }
 
@@ -1028,8 +1030,8 @@ class ALongHourAndAHalf {
                     }
 
                     9 -> {
-                        setText("Suddenly you felt something going on in your bladder.")
-                        character.incontinence = JOptionPane.showInputDialog("How your bladder is full now?")
+                        setText("Suddenly you felt something going on in your fullness.")
+                        character.incontinence = JOptionPane.showInputDialog("How your fullness is full now?")
                                 .toDouble()
                         nextStage = ASK_ACTION
                     }
@@ -1037,7 +1039,7 @@ class ALongHourAndAHalf {
             }
 
             USE_BOTTLE -> {
-                emptyBladder()
+                character.fullness = 0.0
                 setLinesAsDialogue(3)
                 setText("Luckily for you, you happen to have brought an empty bottle to pee in.",
                         "As quietly as you can, you put it in position and let go into it.",
@@ -1053,7 +1055,7 @@ class ALongHourAndAHalf {
                         "You make your way to the front of the room and act lost, knowing you'll be stuck",
                         "up there for a while as the teacher explains it.",
                         "Well, you can't dare to hold yourself now...")
-                passTime(5)
+                world.time += 5
                 scorer.nominate("Called on the lesson", 5, ArithmeticAction.ADD)
                 nextStage = ASK_ACTION
             }
@@ -1074,7 +1076,7 @@ class ALongHourAndAHalf {
                             "No, please... All cabins are occupied, and there's a line. You have to wait!")
 
                     scorer.nominate("Waited for a free cabin in the restroom", 3, ArithmeticAction.ADD)
-                    passTime()
+                    world.time += 3
                     return
                 } else {
                     if (!character.lower.isMissing) {
@@ -1108,7 +1110,7 @@ class ALongHourAndAHalf {
             }
 
             AFTER_CLASS -> {
-                if (time >= 120) {
+                if (world.time >= classEndingTime) {
                     stay = false
                     nextStage = CLASS_OVER
                     return
@@ -1120,7 +1122,7 @@ class ALongHourAndAHalf {
                         "No, ${character.name}, you can't go to the restroom now! This will be as punishment.",
                         "And don't think you can hold yourself either! I'm watching you...")
 
-                passTime()
+                world.time += 3
             }
 
             ACCIDENT -> {
@@ -1136,21 +1138,21 @@ class ALongHourAndAHalf {
             }
 
             GIVE_UP -> {
-                offsetEmbarrassment(80)
+                character.embarrassment += 80
                 if (!character.lower.isMissing) {
                     if (!character.undies.isMissing) {
-                        setText("You get tired of holding all the urine in your aching bladder,",
+                        setText("You get tired of holding all the urine in your aching fullness,",
                                 "and you decide to give up and pee in your " + character.undies.insert + ".")
                     } else {
-                        setText("You get tired of holding all the urine in your aching bladder,",
+                        setText("You get tired of holding all the urine in your aching fullness,",
                                 "and you decided to pee in your " + character.lower.insert + ".")
                     }
                 } else {
                     if (!character.undies.isMissing) {
-                        setText("You get tired of holding all the urine in your aching bladder,",
+                        setText("You get tired of holding all the urine in your aching fullness,",
                                 "and you decide to give up and pee in your " + character.undies.insert + ".")
                     } else {
-                        setText("You get tired of holding all the urine in your aching bladder,",
+                        setText("You get tired of holding all the urine in your aching fullness,",
                                 "and you decide to give up and pee where you are.")
                     }
                 }
@@ -1158,7 +1160,7 @@ class ALongHourAndAHalf {
             }
 
             WET -> {
-                emptyBladder()
+                character.fullness = 0.0
                 character.embarrassment = 100
                 if (!character.lower.isMissing) {
                     if (!character.undies.isMissing) {
@@ -1273,7 +1275,7 @@ class ALongHourAndAHalf {
                     0 -> {
                         setText("It looks like a classmate has spotted that you've got to go badly.",
                                 "Damn, he may spread that fact...")
-                        offsetEmbarrassment(3)
+                        character.embarrassment += 3
                         classmatesAwareness += 5
                         scorer.nominate("Caught holding pee", 3, ArithmeticAction.ADD)
                         timesCaught++
@@ -1284,7 +1286,7 @@ class ALongHourAndAHalf {
                         setText("You'he heard a suspicious whisper behind you.",
                                 "Listening to the whisper, you've found out that they're saying that you need to go.",
                                 "If I hold it until the lesson ends, I will beat them.")
-                        offsetEmbarrassment(8)
+                        character.embarrassment += 8
                         classmatesAwareness += 5
                         scorer.nominate("Caught holding pee", 8, ArithmeticAction.ADD)
                         timesCaught++
@@ -1303,7 +1305,7 @@ class ALongHourAndAHalf {
                                     "\"Shut up...\"",
                                     ", you think to yourself.")
                         }
-                        offsetEmbarrassment(12)
+                        character.embarrassment += 12
                         classmatesAwareness += 5
                         scorer.nominate("Caught holding pee", 12, ArithmeticAction.ADD)
                         timesCaught++
@@ -1313,7 +1315,7 @@ class ALongHourAndAHalf {
                         setText("The chuckles are continuously passing over the classroom.",
                                 "Everyone is watching you.",
                                 "Oh god... this is so embarrassing...")
-                        offsetEmbarrassment(20)
+                        character.embarrassment += 20
                         classmatesAwareness += 5
                         scorer.nominate("Caught holding pee", 20, ArithmeticAction.ADD)
                         timesCaught++
@@ -1340,7 +1342,7 @@ class ALongHourAndAHalf {
                 setText("The lesson is finally over, and you're running to the restroom as fast as you can.",
                         "But... You see $boyName staying in front of the restroom.",
                         "Suddenly, he takes you, not letting you to escape.")
-                offsetEmbarrassment(10)
+                character.embarrassment += 10
                 nextStage = SURPRISE_2
             }
 
@@ -1351,7 +1353,7 @@ class ALongHourAndAHalf {
                         boyName + " has locked the restroom door (seems he has stolen the key), " +
                                 "then he puts his palm on your belly and says:",
                         "I want you to wet yourself.")
-                offsetEmbarrassment(10)
+                character.embarrassment += 10
                 nextStage = SURPRISE_DIALOGUE
             }
 
@@ -1360,8 +1362,8 @@ class ALongHourAndAHalf {
                 setText("No, please, don't do it, no...",
                         "I want to see you wet...",
                         "He slightly presses your belly again, you shook from the terrible pain",
-                        "in your bladder and subconsciously rubbed your crotch. You have to do something!")
-                offsetEmbarrassment(10)
+                        "in your fullness and subconsciously rubbed your crotch. You have to do something!")
+                character.embarrassment += 10
 
                 actionList.add("Hit him")
                 when (timesPeeDenied) {
@@ -1381,7 +1383,7 @@ class ALongHourAndAHalf {
                     //No idling
                     setText("You will wet yourself right now,",
                             boyName + " demands.",
-                            "Then $boyName presses your bladder...")
+                            "Then $boyName presses your fullness...")
                     nextStage = SURPRISE_WET_PRESSURE
                 }
 
@@ -1390,7 +1392,7 @@ class ALongHourAndAHalf {
                     //No idling
                     setText("You will wet yourself right now,",
                             boyName + " demands.",
-                            "Then $boyName presses your bladder...")
+                            "Then $boyName presses your fullness...")
                     nextStage = SURPRISE_WET_PRESSURE
                 }
 
@@ -1446,8 +1448,8 @@ class ALongHourAndAHalf {
                 setLinesAsDialogue(2, 3)
                 setText("You hit $boyName's hand. Damn, you'd meant to hit his groin...",
                         "You're braver than I expected;",
-                        "now let's check the strength of your bladder!",
-                        boyName + " pressed your bladder violently...")
+                        "now let's check the strength of your fullness!",
+                        boyName + " pressed your fullness violently...")
             }
 
             PERSUADE -> when (timesPeeDenied) {
@@ -1479,7 +1481,7 @@ class ALongHourAndAHalf {
                         }
                     }
                     scorer.nominate("Persuaded $boyName to pee", 40, ArithmeticAction.ADD)
-                    emptyBladder()
+                    character.fullness = 0.0
                     nextStage = END_GAME
                 } else {
                     setText("You ask $boyName if you can pee.",
@@ -1516,7 +1518,7 @@ class ALongHourAndAHalf {
                         }
                     }
                     scorer.nominate("Persuaded $boyName to pee", 60, ArithmeticAction.ADD)
-                    emptyBladder()
+                    character.fullness = 0.0
                     nextStage = END_GAME
                 } else {
                     setText("You ask $boyName if you can pee again.",
@@ -1554,13 +1556,13 @@ class ALongHourAndAHalf {
                     }
 
                     scorer.nominate("Persuaded $boyName to pee", 80, ArithmeticAction.ADD)
-                    emptyBladder()
+                    character.fullness = 0.0
                     nextStage = END_GAME
                 } else {
                     setText("You ask $boyName if you can pee again desperately.",
                             "No, you can't pee in a cabin. You will wet yourself right now,",
                             boyName + " demands.",
-                            "Then $boyName pressed your bladder...")
+                            "Then $boyName pressed your fullness...")
                     nextStage = SURPRISE_WET_PRESSURE
                 }
             }
@@ -1570,7 +1572,7 @@ class ALongHourAndAHalf {
                 setText("Alright, as you say.,",
                         "you say to $boyName with a defeated sigh.",
                         "Whatever, I really can't hold it anymore anyways...")
-                emptyBladder()
+                character.fullness = 0.0
                 nextStage = SURPRISE_WET_VOLUNTARY2
             }
 
@@ -1601,14 +1603,14 @@ class ALongHourAndAHalf {
                                 "You feel the pee stream become much stronger.")
                     }
                 }
-                emptyBladder()
+                character.fullness = 0.0
                 nextStage = END_GAME
             }
 
             SURPRISE_WET_PRESSURE -> {
                 if (!character.undies.isMissing) {
                     if (!character.lower.isMissing) {
-                        setText("Ouch... The sudden pain flash passes through your bladder...",
+                        setText("Ouch... The sudden pain flash passes through your fullness...",
                                 "You try to hold the pee back, but you just can't.",
                                 "You feel the warm pee stream",
                                 "filling your " + character.undies.insert + " and darkening your " +
@@ -1616,7 +1618,7 @@ class ALongHourAndAHalf {
                                 "You close your eyes and ease your sphincter off.",
                                 "You feel the pee stream become much stronger.")
                     } else {
-                        setText("Ouch... The sudden pain flash passes through your bladder...",
+                        setText("Ouch... The sudden pain flash passes through your fullness...",
                                 "You try to hold the pee back, but you just can't.",
                                 "You feel the warm pee stream",
                                 "filling your " + character.undies.insert + ".",
@@ -1625,14 +1627,14 @@ class ALongHourAndAHalf {
                     }
                 } else {
                     if (!character.lower.isMissing) {
-                        setText("Ouch... The sudden pain flash passes through your bladder...",
+                        setText("Ouch... The sudden pain flash passes through your fullness...",
                                 "You try to hold the pee back, but you just can't.",
                                 "You feel the warm pee stream",
                                 "filling your " + character.lower.insert + ".",
                                 "You close your eyes and ease your sphincter off.",
                                 "You feel the pee stream become much stronger.")
                     } else {
-                        setText("Ouch... The sudden pain flash passes through your bladder...",
+                        setText("Ouch... The sudden pain flash passes through your fullness...",
                                 "You try to hold the pee back, but you just can't.",
                                 "You feel the warm pee stream",
                                 "running down your legs.",
@@ -1640,14 +1642,14 @@ class ALongHourAndAHalf {
                                 "You feel the pee stream become much stronger.")
                     }
                 }
-                emptyBladder()
+                character.fullness = 0.0
                 nextStage = END_GAME
             }
 
             DRINK -> {
                 setText("You take your bottle with water,",
                         "open it and take a small sip of water.")
-                offsetBelly(character.thirst.toDouble())
+                character.belly += character.thirst.toDouble()
                 character.thirst = 0
                 nextStage = ASK_ACTION
             }
@@ -1668,12 +1670,12 @@ class ALongHourAndAHalf {
      *
      * @param time amount of time increase.
      */
-    private fun passTime(time: Int = 3) {
-        offsetTime(time)
-        offsetBladder(time * 1.5)
-        offsetBelly(-time * 1.5)
+    fun passTime(time: Int = 3) {
+        world.time += time
+        character.fullness += time * 1.5
+        character.belly -= -time * 1.5
 
-        if (this.time >= 88) {
+        if (world.time >= classEndingTime) {
             setText("You hear the bell finally ring.")
             nextStage = CLASS_OVER
         }
@@ -1685,10 +1687,10 @@ class ALongHourAndAHalf {
             decaySphPower()
             if (character.belly != 0.0) {
                 if (character.belly > 3) {
-                    offsetBladder(2.0)
+                    character.fullness += 2.0
                 } else {
-                    offsetBladder(character.belly)
-                    emptyBelly()
+                    character.fullness += character.belly
+                    character.belly = 0.0
                 }
             }
         }
@@ -1698,8 +1700,6 @@ class ALongHourAndAHalf {
                 nextStage = DRINK
             }
         }
-        //Updating labels
-        updateUI()
     }
 
     //TODO: Refactor
@@ -1707,25 +1707,25 @@ class ALongHourAndAHalf {
      * Checks the wetting conditions, and if they are met, wetting.
      */
     private fun testWet() {
-        //If bladder is filled more than 130 points in the normal mode
+        //If fullness is filled more than 130 points in the normal mode
         //and 100 points in the hardcore mode, forcing wetting
-        if ((character.bladder >= character.maxBladder) and !hardcore) {
+        if ((character.fullness >= character.maxBladder) and !hardcore) {
             character.sphincterSpasm()
         } else
-        //If bladder is filled more than 100 points in the normal mode and 50 points in the hardcore mode,
+        //If fullness is filled more than 100 points in the normal mode and 50 points in the hardcore mode,
         //character has a chance to wet
         {
             if (
-            (character.bladder > character.maxBladder - 30)
+            (character.fullness > character.maxBladder - 30)
                     && !hardcore
                     || (
-                    (character.bladder > character.maxBladder - 20) && hardcore
+                    (character.fullness > character.maxBladder - 20) && hardcore
                     )
                     ) {
                 val wetChance = if (hardcore)
-                    5 * (character.bladder - 80)
+                    5 * (character.fullness - 80)
                 else
-                    3 * (character.bladder - 100) + character.embarrassment
+                    3 * (character.fullness - 100) + character.embarrassment
 
                 if (generator.nextInt(100) < wetChance) {
                     character.sphincterSpasm()
@@ -1735,76 +1735,13 @@ class ALongHourAndAHalf {
     }
 
     /**
-     * Empties the bladder.
-     */
-    private fun emptyBladder() {
-        character.bladder = 0.0
-        ui.lblBladder.text = "Bladder: " + character.bladder + "%"
-        updateUI()
-    }
-
-    /**
-     * Offsets bladder fullness by a specified amount.
-     *
-     * @param amount the amount to offset bladder fullness
-     */
-    private fun offsetBladder(amount: Double) {
-        character.bladder += amount/* * incon*///Incontinence does another job after 1.1
-        if (character.bladder > 100 && !hardcore || character.bladder > 80 && hardcore) {
-            ui.lblBladder.foreground = Color.RED
-        } else {
-            ui.lblBladder.foreground = Color.BLACK
-        }
-        updateUI()
-    }
-
-    /**
-     * Empties the belly.
-     */
-    private fun emptyBelly() {
-        offsetBelly(-character.belly)
-    }
-
-    private fun offsetBelly(amount: Double) {
-        character.belly += amount
-        if (character.belly < 0) {
-            character.belly = 0.0
-        }
-        updateUI()
-    }
-
-    private fun offsetEmbarrassment(amount: Int) {
-        character.embarrassment += amount
-        if (character.embarrassment < 0) {
-            character.embarrassment = 0
-        }
-        updateUI()
-    }
-
-    private fun offsetTime(amount: Int) {
-        time += amount
-        if (drain and (time % 15 == 0)) {
-            emptyBladder()
-        }
-        //Clothes drying over time
-        if (character.dryness < character.maximalDryness) {
-            character.dryness += character.lower.dryingOverTime + character.undies.dryingOverTime * (amount / 3)
-        }
-
-        if (character.dryness > character.maximalDryness) {
-            character.dryness = character.maximalDryness
-        }
-        updateUI()
-    }
-
-    /**
      * Decreases the sphincter power.
      */
-    private fun decaySphPower() {
-        character.sphincterPower -= (character.bladder / 30).toInt()
+    private fun decaySphPower() {   //TODO: Move to Bladder
+        character.sphincterPower -= (character.fullness / 30).toInt()
         if (character.sphincterPower < 0) {
             character.dryness -= 5f //Decreasing dryness
-            character.bladder -= 2.5 //Decreasing bladder level
+            character.fullness -= 2.5 //Decreasing fullness level
             character.sphincterPower = 0
             if (character.dryness > MINIMAL_DRYNESS) {
                 //Naked
@@ -1859,20 +1796,7 @@ class ALongHourAndAHalf {
                 }
             }
         }
-        updateUI()
-    }
 
-    /**
-     * Replenishes the sphincter power.
-     *
-     * @param amount the sphincter recharge amount
-     */
-    private fun rechargeSphPower(amount: Int) {
-        character.sphincterPower += amount
-        if (character.sphincterPower > character.maxSphincterPower) {
-            character.sphincterPower = character.maxSphincterPower
-        }
-        updateUI()
     }
 
     private fun setLinesAsDialogue(vararg lines: Int) {
@@ -1882,9 +1806,9 @@ class ALongHourAndAHalf {
     }
 
     /**
-     * Sets the in-game text.
+     * Sets the in-core text.
      *
-     * @param lines the in-game text to set
+     * @param lines the in-core text to set
      */
     private fun setText(vararg lines: String) {
         if (lines.size > MAX_LINES) {
@@ -1910,25 +1834,6 @@ class ALongHourAndAHalf {
         toSend += "</center></html>"
         ui.textLabel.text = toSend
         this.dialogueLines = BooleanArray(MAX_LINES)
-    }
-
-    private fun updateUI() {
-        ui.lblName.text = character.name
-        ui.lblBladder.text = "Bladder: " + character.bladder + "%"
-        ui.lblEmbarrassment.text = "Embarrassment: " + character.embarrassment
-        ui.lblBelly.text = "Belly: " + Math.round(character.belly) + "%"
-        ui.lblIncontinence.text = "Incontinence: " + character.incontinence + "x"
-        ui.lblMinutes.text = "Minutes: $time of 90"
-        ui.lblSphPower.text = "Pee holding ability: " + character.sphincterPower + "%"
-        ui.lblDryness.text = "Clothes dryness: " + Math.round(character.dryness)
-        ui.lblUndies.text = "Undies: " + character.undies.color + " " + character.undies.name.toLowerCase()
-        ui.lblLower.text = "Lower: " + character.lower.color + " " + character.lower.name.toLowerCase()
-        ui.bladderBar.value = character.bladder.toInt()
-        ui.sphincterBar.value = character.sphincterPower
-        ui.drynessBar.value = character.dryness.toInt()
-        ui.timeBar.value = time
-        ui.lblThirst.text = "Thirst: " + character.thirst + "%"
-        ui.thirstBar.value = character.thirst
     }
 
     private fun hideActionUI(): Int {
@@ -2022,8 +1927,13 @@ class ALongHourAndAHalf {
         //Maximal lines of a text
         private val MAX_LINES = 9
 
+        val gameBeginningTime = Time(8, 52)
+        val classBeginningTime = Time(9, 0)
+        val classDuration = Time(1, 30)
+        private val classEndingTime = classBeginningTime + classDuration
+
         /**
-         * The dryness game over minimal threshold.
+         * The dryness core over minimal threshold.
          */
         val MINIMAL_DRYNESS = 0
 
@@ -2033,9 +1943,9 @@ class ALongHourAndAHalf {
         private var gameStartSave: Save? = null
 
         /**
-         * Resets the game and values, optionally letting player to select new parameters.
+         * Resets the core and values, optionally letting player to select new parameters.
          *
-         * @param newValues whether to suggest user to select new game parameters
+         * @param newValues whether to suggest user to select new core parameters
          */
         fun reset(newValues: Boolean) {
             if (newValues) {
