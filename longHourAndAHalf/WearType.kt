@@ -1,5 +1,11 @@
 package longHourAndAHalf
 
+@Suppress("KDocMissingDocumentation")
 enum class WearType {
-    UNDERWEAR, OUTERWEAR, BOTH_SUITABLE
+    UNDERWEAR, OUTERWEAR,
+
+    /**
+     * Can be considered as both underwear or outerwear.
+     */
+    BOTH_SUITABLE
 }

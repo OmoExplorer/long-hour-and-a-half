@@ -9,7 +9,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
 
-@SuppressWarnings("ResultOfObjectAllocationIgnored")
+@SuppressWarnings({"ResultOfObjectAllocationIgnored", "LocalVariableOfConcreteClass", "FinalClass"})
 public final class MainMenuFrame {
     private JButton newGameButton;
     private JButton loadGameButton;
@@ -32,7 +32,8 @@ public final class MainMenuFrame {
             FileInputStream fileInputStream = new FileInputStream(saveFile);
             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
 
-            Save save = (Save) objectInputStream.readObject();
+            @SuppressWarnings({"CastToConcreteClass", "LocalVariableOfConcreteClass"}) Save save =
+                    (Save) objectInputStream.readObject();
 
             new Core(save);
         } catch (Exception ignored) {

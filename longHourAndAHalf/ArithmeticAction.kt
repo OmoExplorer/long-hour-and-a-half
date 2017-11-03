@@ -4,7 +4,7 @@ package longHourAndAHalf
  * Describes the basic arithmetic actions.
  */
 @Suppress("KDocMissingDocumentation")
-enum class ArithmeticAction(val sign: String) {
+enum class ArithmeticAction(private val sign: String) {
     ADD("+"),
     TAKE("-"),
     MULTIPLY("*"),

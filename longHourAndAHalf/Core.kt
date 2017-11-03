@@ -215,8 +215,10 @@ class Core {
     constructor(character: Character, hardcore: Boolean) {
         this.hardcore = hardcore
         this.character = character
-        this.character.finishSetup(this)
+        this.character.core = this
+        this.character.bladder.finishSetup(this)
         world = World(this)
+        world.core = this
         cheatData = CheatData()
         schoolDay = SchoolDay()
         plot = Plot()
@@ -256,17 +258,17 @@ class Core {
         ui.finishSetup()
 
         //Scoring fullness at start
-        scorer.countOut("Bladder at start - ${this.character.fullness}%", this.character.fullness,
+        scorer.countOut("Bladder at start - ${this.character.bladder.fullness}%", this.character.bladder.fullness,
                 ArithmeticAction.ADD)
 
         //Scoring incontinence
         scorer.countOut(
-                "Incontinence - ${this.character.incontinence}x", this.character.incontinence,
+                "Incontinence - ${this.character.bladder.incontinence}x", this.character.bladder.incontinence,
                 ArithmeticAction.MULTIPLY, true
         )
 
         if (this.hardcore) {
-            character.maxBladder = 100
+            character.bladder.maxBladder = 100
             ui.hardcoreModeToggled(true)
             scorer.countOut("Hardcore", 2, ArithmeticAction.MULTIPLY)
         }
@@ -285,6 +287,7 @@ class Core {
         hardcore = save.hardcore
         character = save.character
         character.core = this
+        character.bladder.finishSetup(this)
         world = save.world
         world.core = this
         plot = save.plot
@@ -462,7 +465,7 @@ class Core {
                 world.time += 3
                 plot.nextStage = ASK_ACTION
                 scorer.countOut(
-                        "Embarrassment at start - ${character.incontinence} pts",
+                        "Embarrassment at start - ${character.bladder.incontinence} pts",
                         character.embarrassment,
                         ArithmeticAction.ADD
                 )
@@ -478,30 +481,30 @@ class Core {
                 }
 
                 //Bladder: 0-20
-                if (character.fullness <= 20) {
+                if (character.bladder.fullness <= 20) {
                     ui.setText("Feeling bored about the day, and not really caring about the class too much,",
                             "you look to the clock, watching the minutes tick by.")
                 }
                 //Bladder: 20-40
-                if (character.fullness > 20 && character.fullness <= 40) {
+                if (character.bladder.fullness > 20 && character.bladder.fullness <= 40) {
                     ui.setText("Having to pee a little bit,",
                             "you look to the clock, " +
                                     "watching the minutes tick by and wishing the lesson to get over faster.")
                 }
                 //Bladder: 40-60
-                if (character.fullness > 40 && character.fullness <= 60) {
+                if (character.bladder.fullness > 40 && character.bladder.fullness <= 60) {
                     ui.setText("Clearly having to pee,",
                             "you impatiently wait for the lesson end.")
                 }
                 //Bladder: 60-80
-                if (character.fullness > 60 && character.fullness <= 80) {
+                if (character.bladder.fullness > 60 && character.bladder.fullness <= 80) {
                     ui.setLinesAsDialogue(2)
                     ui.setText("You feel the rather strong pressure in your fullness, " +
                             "and you're starting to get even more desperate.",
                             "Maybe I should ask teacher to go to the restroom? It hurts a bit...")
                 }
                 //Bladder: 80-100
-                if (character.fullness > 80 && character.fullness <= 100) {
+                if (character.bladder.fullness > 80 && character.bladder.fullness <= 100) {
                     ui.setLinesAsDialogue(1, 4)
                     ui.setText("Keeping all that urine inside will become impossible very soon.",
                             "You feel the terrible pain and pressure in your fullness, " +
@@ -510,7 +513,7 @@ class Core {
                             "Ouch, it hurts a lot... I must do something about it now, or else...")
                 }
                 //Bladder: 100-130
-                if (character.fullness > 100 && character.fullness <= 130) {
+                if (character.bladder.fullness > 100 && character.bladder.fullness <= 130) {
                     ui.setLinesAsDialogue(1, 3)
                     if (character.gender == Gender.FEMALE) {
                         ui.setText("This is really bad...",
@@ -552,7 +555,7 @@ class Core {
 
                 plot.actionList.add("Rub thighs")
 
-                if (character.fullness >= 100) {
+                if (character.bladder.fullness >= 100) {
                     plot.actionList.add("Give up and pee yourself")
                 } else {
                     plot.actionList.add("[Unavailable]")
@@ -606,7 +609,7 @@ class Core {
                                 "so you take your hand and hold yourself down there.",
                                 "It feels a little better for now.")
 
-                        character.sphincterPower += 20
+                        character.bladder.sphincterPower += 20
                         world.time += 3
 
                         //Chance to be caught by classmates in hardcore mode
@@ -634,7 +637,7 @@ class Core {
                                 "can't bring yourself to risk getting caught with your hand between",
                                 "your legs. You rub your thighs hard but it doesn't really help.")
 
-                        character.sphincterPower += 2
+                        character.bladder.sphincterPower += 2
                         world.time += 3
 
                         //Chance to be caught by classmates in hardcore mode
@@ -744,7 +747,7 @@ class Core {
                             //scoreText = scoreText.concat("\nRestroom usage during the lesson: -80% of points");
                             scorer.countOut("Restroom usage during the lesson", 80,
                                     ArithmeticAction.TAKE_PERCENT)
-                            character.fullness = 0.0
+                            character.bladder.fullness = 0.0
                             plot.nextStage = ASK_ACTION
                             //Fail
                         } else {
@@ -789,7 +792,7 @@ class Core {
                         //score *= 0.22;
                         //scoreText = scoreText.concat("\nRestroom usage during the lesson: -70% of points");
                         scorer.countOut("Restroom usage during the lesson", 70, ArithmeticAction.TAKE_PERCENT)
-                        character.fullness = 0.0
+                        character.bladder.fullness = 0.0
                         plot.nextStage = ASK_ACTION
                     } else {
                         ui.setText("You ask the teacher again if you can go out to the restroom.",
@@ -832,7 +835,7 @@ class Core {
                         //score *= 0.23;
                         //scoreText = scoreText.concat("\nRestroom usage during the lesson: -60% of points");
                         scorer.countOut("Restroom usage during the lesson", 60, ArithmeticAction.TAKE_PERCENT)
-                        character.fullness = 0.0
+                        character.bladder.fullness = 0.0
                         plot.nextStage = ASK_ACTION
                     } else {
                         ui.setText("You ask the teacher once more if you can go out to the restroom.",
@@ -876,7 +879,7 @@ class Core {
                             //score *= 0.3;
                             //scoreText = scoreText.concat("\nRestroom usage during the lesson: -50% of points");
                             scorer.countOut("Restroom usage during the lesson", 50, ArithmeticAction.TAKE_PERCENT)
-                            character.fullness = 0.0
+                            character.bladder.fullness = 0.0
                             plot.nextStage = ASK_ACTION
                         } else {
                             if (random.nextBoolean()) {
@@ -888,8 +891,8 @@ class Core {
                                 //scoreText = scoreText.concat("\nStayed on corner " + (90 - min) + " minutes: +"
                                 //+ 1.3 * (90 - min / 3) + " score");
                                 scorer.countOut(
-                                        "Stayed on corner ${(SchoolDay.classEndingTime - world.time).rawMinutes} minutes",
-                                        1.3 * ((SchoolDay.classEndingTime - world.time).rawMinutes / 3), ArithmeticAction.ADD
+                                        "Stayed on corner ${(Lesson.classEndingTime - world.time).rawMinutes} minutes",
+                                        1.3 * ((Lesson.classEndingTime - world.time).rawMinutes / 3), ArithmeticAction.ADD
                                 )
                                 character.embarrassment += 5
                             } else {
@@ -946,7 +949,7 @@ class Core {
                         ui.setText("A voice comes over the loudspeaker:",
                                 "All classes are now dismissed for no reason at all! Bye!",
                                 "Looks like your luck changed for the better.")
-                        world.time = SchoolDay.classEndingTime
+                        world.time = Lesson.classEndingTime
                         plot.nextStage = CLASS_OVER
                     }
 
@@ -975,10 +978,10 @@ class Core {
                     7 -> {
                         ui.setText("A friend in the desk next to you hands you a familiar",
                                 "looking pill, and you take it.")
-                        character.incontinence = JOptionPane.showInputDialog("How incontinent are you now?")
+                        character.bladder.incontinence = JOptionPane.showInputDialog("How incontinent are you now?")
                                 .toDouble()
-                        character.maxSphincterPower = (100 / character.incontinence).toInt()
-                        character.sphincterPower = character.maxSphincterPower
+                        character.bladder.maxSphincterPower = (100 / character.bladder.incontinence).toInt()
+                        character.bladder.sphincterPower = character.bladder.maxSphincterPower
                         plot.nextStage = ASK_ACTION
                     }
 
@@ -991,7 +994,7 @@ class Core {
 
                     9 -> {
                         ui.setText("Suddenly you felt something going on in your fullness.")
-                        character.incontinence = JOptionPane.showInputDialog("How your fullness is full now?")
+                        character.bladder.incontinence = JOptionPane.showInputDialog("How your fullness is full now?")
                                 .toDouble()
                         plot.nextStage = ASK_ACTION
                     }
@@ -999,7 +1002,7 @@ class Core {
             }
 
             USE_BOTTLE -> {
-                character.fullness = 0.0
+                character.bladder.fullness = 0.0
                 ui.setLinesAsDialogue(3)
                 ui.setText("Luckily for you, you happen to have brought an empty bottle to pee in.",
                         "As quietly as you can, you put it in position and let go into it.",
@@ -1070,7 +1073,7 @@ class Core {
             }
 
             AFTER_CLASS -> {
-                if (world.time >= SchoolDay.classEndingTime) {
+                if (world.time >= Lesson.classEndingTime) {
                     schoolDay.lesson.stay = false
                     plot.nextStage = CLASS_OVER
                     return
@@ -1120,7 +1123,7 @@ class Core {
             }
 
             WET -> {
-                character.fullness = 0.0
+                character.bladder.fullness = 0.0
                 character.embarrassment = 100
                 if (!character.lower.isMissing) {
                     if (!character.undies.isMissing) {
@@ -1437,7 +1440,7 @@ class Core {
                         }
                     }
                     scorer.countOut("Persuaded ${schoolDay.surpriseBoy.name} to pee", 40, ArithmeticAction.ADD)
-                    character.fullness = 0.0
+                    character.bladder.fullness = 0.0
                     plot.nextStage = END_GAME
                 } else {
                     ui.setText("You ask ${schoolDay.surpriseBoy.name} if you can pee.",
@@ -1474,7 +1477,7 @@ class Core {
                         }
                     }
                     scorer.countOut("Persuaded ${schoolDay.surpriseBoy.name} to pee", 60, ArithmeticAction.ADD)
-                    character.fullness = 0.0
+                    character.bladder.fullness = 0.0
                     plot.nextStage = END_GAME
                 } else {
                     ui.setText("You ask ${schoolDay.surpriseBoy.name} if you can pee again.",
@@ -1512,7 +1515,7 @@ class Core {
                     }
 
                     scorer.countOut("Persuaded ${schoolDay.surpriseBoy.name} to pee", 80, ArithmeticAction.ADD)
-                    character.fullness = 0.0
+                    character.bladder.fullness = 0.0
                     plot.nextStage = END_GAME
                 } else {
                     ui.setText("You ask ${schoolDay.surpriseBoy.name} if you can pee again desperately.",
@@ -1528,7 +1531,7 @@ class Core {
                 ui.setText("Alright, as you say.,",
                         "you say to ${schoolDay.surpriseBoy.name} with a defeated sigh.",
                         "Whatever, I really can't hold it anymore anyways...")
-                character.fullness = 0.0
+                character.bladder.fullness = 0.0
                 plot.nextStage = SURPRISE_WET_VOLUNTARY2
             }
 
@@ -1559,7 +1562,7 @@ class Core {
                                 "You feel the pee stream become much stronger.")
                     }
                 }
-                character.fullness = 0.0
+                character.bladder.fullness = 0.0
                 plot.nextStage = END_GAME
             }
 
@@ -1598,7 +1601,7 @@ class Core {
                                 "You feel the pee stream become much stronger.")
                     }
                 }
-                character.fullness = 0.0
+                character.bladder.fullness = 0.0
                 plot.nextStage = END_GAME
             }
 

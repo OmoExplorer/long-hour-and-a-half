@@ -23,9 +23,9 @@ class StandardGameUI(override val core: Core) : JFrame("A Long Hour and a Half")
 
     override fun timeChanged(time: Time) {
         lblMinutes.text = "Minutes: ${Math.max(0,
-                (core.world.time - SchoolDay.classBeginningTime).rawMinutes
-        )} of ${SchoolDay.classDuration.rawMinutes}"
-        timeBar.value = (time - SchoolDay.classBeginningTime).rawMinutes
+                (core.world.time - Lesson.classBeginningTime).rawMinutes
+        )} of ${Lesson.classDuration.rawMinutes}"
+        timeBar.value = (time - Lesson.classBeginningTime).rawMinutes
     }
 
     override fun characterNameChanged(name: String) {
@@ -86,14 +86,14 @@ class StandardGameUI(override val core: Core) : JFrame("A Long Hour and a Half")
     val btnNext: JButton
 
     val lblName = JLabel(core.character.name)
-    val lblBladder = JLabel("Bladder: " + core.character.fullness + "%")
+    val lblBladder = JLabel("Bladder: " + core.character.bladder.fullness + "%")
     val bladderBar = JProgressBar()
     val lblBelly = JLabel("Belly: " + core.character.belly + "%")
     val lblEmbarrassment = JLabel("Embarrassment: " + core.character.embarrassment)
-    val lblIncontinence = JLabel("Incontinence: " + core.character.incontinence + "x")
-    val lblSphPower = JLabel("Pee holding ability: " + core.character.sphincterPower + "%")
+    val lblIncontinence = JLabel("Incontinence: " + core.character.bladder.incontinence + "x")
+    val lblSphPower = JLabel("Pee holding ability: " + core.character.bladder.sphincterPower + "%")
     val sphincterBar = JProgressBar()
-    val lblMinutes = JLabel("Minutes: ${(core.world.time - SchoolDay.classBeginningTime).rawMinutes} of 90")
+    val lblMinutes = JLabel("Minutes: ${(core.world.time - Lesson.classBeginningTime).rawMinutes} of 90")
     val timeBar = JProgressBar()
     val lblThirst = JLabel("Thirst: " + core.character.thirst + "%")
     val thirstBar = JProgressBar()
@@ -312,7 +312,7 @@ class StandardGameUI(override val core: Core) : JFrame("A Long Hour and a Half")
 
         bladderBar.setBounds(16, 212, 455, 25)
         bladderBar.maximum = 130
-        bladderBar.value = core.character.fullness.toInt()
+        bladderBar.value = core.character.bladder.fullness.toInt()
         bladderBar.toolTipText = "<html>Normal core:" +
                 "<br>100% = need to hold, regular leaks" +
                 "<br>130% = peeing(core over)" +
@@ -323,8 +323,8 @@ class StandardGameUI(override val core: Core) : JFrame("A Long Hour and a Half")
         contentPane.add(bladderBar)
 
         sphincterBar.setBounds(16, 362, 455, 25)
-        sphincterBar.maximum = core.character.maxSphincterPower
-        sphincterBar.value = core.character.sphincterPower
+        sphincterBar.maximum = core.character.bladder.maxSphincterPower
+        sphincterBar.value = core.character.bladder.sphincterPower
         sphincterBar.isVisible = false
         sphincterBar.toolTipText = "<html>Ability to hold pee." +
                 "<br>Drains faster on higher bladder fullness." +
@@ -341,7 +341,7 @@ class StandardGameUI(override val core: Core) : JFrame("A Long Hour and a Half")
 
         timeBar.setBounds(16, 332, 455, 25)
         timeBar.maximum = 90
-        timeBar.value = (core.world.time - SchoolDay.classBeginningTime).rawMinutes
+        timeBar.value = (core.world.time - Lesson.classBeginningTime).rawMinutes
         timeBar.isVisible = false
         contentPane.add(timeBar)
 
@@ -395,5 +395,33 @@ class StandardGameUI(override val core: Core) : JFrame("A Long Hour and a Half")
     override fun bladderFullnessChanged(fullness: Double) {
         lblBladder.text = "Bladder: $fullness%"
         bladderBar.value = fullness.toInt()
+    }
+
+    override fun forcedTextChange(vararg text: String) {
+        setText(*text)
+    }
+
+    override fun warnAboutLeaking(vararg warnText: String) {
+        with(core.character) {
+            //Naked
+            if (core.character.lower.isMissing && undies.isMissing) {
+                setText("You feel the leak running down your thighs...",
+                        "You're about to pee! You must stop it!")
+            } else
+            //Outerwear
+            {
+                if (!lower.isMissing) {
+                    setText("You see the wet spot expand on your ${lower.insert}!",
+                            "You're about to pee! You must stop it!")
+                } else
+                //Underwear
+                {
+                    if (!undies.isMissing) {
+                        setText("You see the wet spot expand on your ${undies.insert}!",
+                                "You're about to pee! You must stop it!")
+                    }
+                }
+            }
+        }
     }
 }

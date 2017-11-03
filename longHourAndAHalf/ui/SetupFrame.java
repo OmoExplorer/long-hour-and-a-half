@@ -11,7 +11,7 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import java.util.Random;
 
-@SuppressWarnings("ClassWithTooManyFields")
+@SuppressWarnings({"CastToConcreteClass", "AnonymousInnerClassWithTooManyMethods"})
 public class SetupFrame {
     private static final int RANDOM_FULLNESS_BOUND = 50;
 
@@ -27,6 +27,8 @@ public class SetupFrame {
 
     SetupFrame() {
         //TODO
+        //noinspection OverlyComplexAnonymousInnerClass
+        //noinspection ClassWithTooManyFields
         underwearTree.setModel(new TreeModel() {
             @Override
             public Object getRoot() {
@@ -79,7 +81,7 @@ public class SetupFrame {
 
             boolean hardDifficulty = hardDifficultyRadioButton.isSelected();
 
-            //noinspection ResultOfObjectAllocationIgnored
+            //noinspection ResultOfObjectAllocationIgnored,CastToConcreteClass,CastToConcreteClass
             new Core(
                     new Character(
                             nameTextField.getText(),

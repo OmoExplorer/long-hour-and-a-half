@@ -21,4 +21,6 @@ interface UIGameEventHandler {
     fun thirstChanged(thirst: Int)
     fun underwearChanged(underwear: Wear)
     fun outerwearChanged(outerwear: Wear)
+    fun forcedTextChange(vararg text: String)
+    fun warnAboutLeaking(vararg warnText: String)
 }
