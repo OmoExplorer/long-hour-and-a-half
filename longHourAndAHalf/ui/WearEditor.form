@@ -205,13 +205,13 @@
     <Component class="javax.swing.JLabel" characterName="insertNameLabel">
       <Properties>
         <Property characterName="text" type="java.lang.String" value="Wear insert characterName"/>
-        <Property characterName="toolTipText" type="java.lang.String" value="Your wear characterName which is inserted in the game text (e. g. &quot;skirt&quot;)"/>
+        <Property characterName="toolTipText" type="java.lang.String" value="Your wear characterName which is inserted in the core text (e. g. &quot;skirt&quot;)"/>
         <Property characterName="characterName" type="java.lang.String" value="insertNameLabel" noResource="true"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" characterName="insertNameField">
       <Properties>
-        <Property characterName="toolTipText" type="java.lang.String" value="Your wear characterName which is inserted in the game text (e. g. &quot;skirt&quot;)"/>
+        <Property characterName="toolTipText" type="java.lang.String" value="Your wear characterName which is inserted in the core text (e. g. &quot;skirt&quot;)"/>
         <Property characterName="characterName" type="java.lang.String" value="insertNameField" noResource="true"/>
       </Properties>
     </Component>

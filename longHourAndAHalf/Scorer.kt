@@ -2,6 +2,7 @@ package longHourAndAHalf
 
 import longHourAndAHalf.ArithmeticAction.*
 import java.awt.Component
+import java.io.Serializable
 import javax.swing.JOptionPane
 
 /**
@@ -10,21 +11,12 @@ import javax.swing.JOptionPane
  * Specific actions (for example, peeing in a restroom during a lesson) reduce score points.
  * Using the cheats will zero the score points.
  */
-class Scorer {
+class Scorer : Serializable {
     private val nominations = mutableListOf<ScoreNomination>()
     private val ordinalNominations: List<ScoreNomination>
         get() = nominations.filterNot { it.final }
     private val finalNominations: List<ScoreNomination>
         get() = nominations.filter { it.final }
-    /*
-    if (cheatsUsed) {
-                    score = 0
-                    scoreText = "\nYou've used the cheats, so you've got no score."
-                }
-                val scoreText2 = "Your score: $score\n$scoreText"
-
-                JOptionPane.showMessageDialog(ui, scoreText2)
-     */
 
     /**
      * Final score.
@@ -61,7 +53,7 @@ class Scorer {
      * @param arithmeticAction an arithmetic action to perform with score.
      * @param final whether to apply the nomination at the end.
      */
-    fun nominate(comment: String, score: Double, arithmeticAction: ArithmeticAction, final: Boolean = false) =
+    fun countOut(comment: String, score: Double, arithmeticAction: ArithmeticAction, final: Boolean = false) =
             nominations.add(ScoreNomination(comment, score, arithmeticAction, final))
 
     /**
@@ -71,7 +63,7 @@ class Scorer {
      * @param arithmeticAction an arithmetic action to perform with score.
      * @param final whether to apply the nomination at the end.
      */
-    fun nominate(comment: String, score: Int, arithmeticAction: ArithmeticAction, final: Boolean = false) =
+    fun countOut(comment: String, score: Int, arithmeticAction: ArithmeticAction, final: Boolean = false) =
             nominations.add(ScoreNomination(comment, score.toDouble(), arithmeticAction, final))
 
     /**

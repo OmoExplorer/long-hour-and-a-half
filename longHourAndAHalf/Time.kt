@@ -1,9 +1,11 @@
 package longHourAndAHalf
 
+import java.io.Serializable
+
 /**
  * @example 12:00
  */
-data class Time(val hours: Int, val minutes: Int) {
+data class Time(val hours: Int, val minutes: Int) : Serializable {
     constructor(rawMinutes: Int) : this(
             (Time(0, 0) + rawMinutes).hours,
             (Time(0, 0) + rawMinutes).minutes

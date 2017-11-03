@@ -1,11 +1,11 @@
 package longHourAndAHalf.ui
 
-import longHourAndAHalf.ALongHourAndAHalf
+import longHourAndAHalf.Core
 import longHourAndAHalf.Time
 import longHourAndAHalf.Wear
 
 interface UIGameEventHandler {
-    val core: ALongHourAndAHalf
+    val core: Core
 
     fun characterNameChanged(name: String)
     fun hideBladderAndTime()

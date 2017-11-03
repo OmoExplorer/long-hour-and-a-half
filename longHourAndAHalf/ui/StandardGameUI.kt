@@ -8,7 +8,7 @@ import java.awt.event.ActionListener
 import javax.swing.*
 import javax.swing.border.EmptyBorder
 
-class StandardGameUI(override val core: ALongHourAndAHalf) : JFrame("A Long Hour and a Half"), UIGameEventHandler {
+class StandardGameUI(override val core: Core) : JFrame("A Long Hour and a Half"), UIGameEventHandler {
     override fun embarrassmentChanged(embarrassment: Int) {
         lblEmbarrassment.text = "Embarrassment: $embarrassment"
     }
@@ -23,9 +23,9 @@ class StandardGameUI(override val core: ALongHourAndAHalf) : JFrame("A Long Hour
 
     override fun timeChanged(time: Time) {
         lblMinutes.text = "Minutes: ${Math.max(0,
-                (core.world.time - ALongHourAndAHalf.classBeginningTime).rawMinutes
-        )} of ${ALongHourAndAHalf.classDuration.rawMinutes}"
-        timeBar.value = (time - ALongHourAndAHalf.classBeginningTime).rawMinutes
+                (core.world.time - SchoolDay.classBeginningTime).rawMinutes
+        )} of ${SchoolDay.classDuration.rawMinutes}"
+        timeBar.value = (time - SchoolDay.classBeginningTime).rawMinutes
     }
 
     override fun characterNameChanged(name: String) {
@@ -56,6 +56,9 @@ class StandardGameUI(override val core: ALongHourAndAHalf) : JFrame("A Long Hour
     }
 
     companion object {
+        /**Maximal lines of a text.*/
+        private val MAX_LINES = 9
+
         private const val ACTION_BUTTONS_HEIGHT = 35
         private const val ACTION_BUTTONS_WIDTH = 89
         private const val ACTION_BUTTONS_TOP_BORDER = 510
@@ -90,7 +93,7 @@ class StandardGameUI(override val core: ALongHourAndAHalf) : JFrame("A Long Hour
     val lblIncontinence = JLabel("Incontinence: " + core.character.incontinence + "x")
     val lblSphPower = JLabel("Pee holding ability: " + core.character.sphincterPower + "%")
     val sphincterBar = JProgressBar()
-    val lblMinutes = JLabel("Minutes: ${(core.world.time - ALongHourAndAHalf.classBeginningTime).rawMinutes} of 90")
+    val lblMinutes = JLabel("Minutes: ${(core.world.time - SchoolDay.classBeginningTime).rawMinutes} of 90")
     val timeBar = JProgressBar()
     val lblThirst = JLabel("Thirst: " + core.character.thirst + "%")
     val thirstBar = JProgressBar()
@@ -106,6 +109,63 @@ class StandardGameUI(override val core: ALongHourAndAHalf) : JFrame("A Long Hour
     private val tahomaFont18 = createTahomaFont(18)
     private val tahomaFont15 = createTahomaFont(15)
     private val tahomaFont12 = createTahomaFont(12)
+
+    /**
+     * An array that contains boolean values that define *dialogue lines*.
+     * Dialogue lines, unlike normal lines, are *italic*.
+     */
+    var dialogueLines = BooleanArray(MAX_LINES)
+
+    /**
+     * Sets the in-core text.
+     *
+     * @param lines the in-core text to set
+     */
+    fun setText(vararg lines: String) {
+        if (lines.size > MAX_LINES) {
+            System.err.println("You can't have more than $MAX_LINES lines at a time!")
+            return
+        }
+        if (lines.isEmpty()) {
+            textLabel.text = ""
+            return
+        }
+
+        var toSend = "<html><center>"
+
+        for (i in lines.indices) {
+            toSend += if (dialogueLines[i]) {
+                "<i>\"" + lines[i] + "\"</i>"
+            } else {
+                lines[i]
+            }
+            toSend += "<br>"
+
+        }
+        toSend += "</center></html>"
+        textLabel.text = toSend
+        dialogueLines = BooleanArray(MAX_LINES)
+    }
+
+    fun setLinesAsDialogue(vararg lines: Int) {
+        for (i in lines) {
+            dialogueLines[i - 1] = true
+        }
+    }
+
+    fun hideActionUI(): Int {
+        val choice = listChoice.selectedIndex
+        core.plot.actionList.clear()
+        lblChoice.isVisible = false
+        listScroller.isVisible = false
+        return choice
+    }
+
+    fun showActionUI(actionGroupName: String) {
+        lblChoice.isVisible = true
+        lblChoice.text = actionGroupName
+        listScroller.isVisible = true
+    }
 
     init {
         isResizable = true
@@ -139,25 +199,25 @@ class StandardGameUI(override val core: ALongHourAndAHalf) : JFrame("A Long Hour
 
         addUtilButton(
                 "Save",
-                { core.save() },
+                { core.writeSaveFile() },
                 Rectangle(284, ACTION_BUTTONS_TOP_BORDER, ACTION_BUTTONS_WIDTH, ACTION_BUTTONS_HEIGHT)
         )
 
         addUtilButton(
                 "Load",
-                { core.load() },
+                { core.openSaveFile() },
                 Rectangle(376, ACTION_BUTTONS_TOP_BORDER, ACTION_BUTTONS_WIDTH, ACTION_BUTTONS_HEIGHT)
         )
 
         addUtilButton(
                 "Reset",
-                { ALongHourAndAHalf.reset(false); dispose() },
+                { core.reset(false); dispose() },
                 Rectangle(10, ACTION_BUTTONS_TOP_BORDER, ACTION_BUTTONS_WIDTH, ACTION_BUTTONS_HEIGHT),
                 "Start the core over with the same parameters."
         )
 
         addUtilButton("New core",
-                { ALongHourAndAHalf.reset(true); dispose() },
+                { core.reset(true); dispose() },
                 Rectangle(102, ACTION_BUTTONS_TOP_BORDER, ACTION_BUTTONS_WIDTH, ACTION_BUTTONS_HEIGHT),
                 "Start the core over with the another parameters."
         )
@@ -186,7 +246,7 @@ class StandardGameUI(override val core: ALongHourAndAHalf) : JFrame("A Long Hour
         lblBelly.font = tahomaFont15
         lblBelly.setBounds(20, 270, 200, 32)
         lblBelly.toolTipText = "<html>The water in your belly." +
-                "<br>Any amount of water speeds the fullness filling up.</html>"
+                "<br>Any amount of water speeds the bladder filling up.</html>"
         contentPane.add(lblBelly)
 
         if (core.hardcore) {
@@ -206,7 +266,7 @@ class StandardGameUI(override val core: ALongHourAndAHalf) : JFrame("A Long Hour
 
         lblIncontinence.font = tahomaFont15
         lblIncontinence.setBounds(20, 300, 200, 32)
-        lblIncontinence.toolTipText = "Makes your fullness weaker"
+        lblIncontinence.toolTipText = "Makes your bladder weaker"
         contentPane.add(lblIncontinence)
 
         lblMinutes.font = tahomaFont15
@@ -218,7 +278,7 @@ class StandardGameUI(override val core: ALongHourAndAHalf) : JFrame("A Long Hour
         lblSphPower.setBounds(20, 360, 200, 32)
         lblSphPower.isVisible = false
         lblSphPower.toolTipText = "<html>Ability to hold pee." +
-                "<br>Drains faster on higher fullness fullness." +
+                "<br>Drains faster on higher bladder fullness." +
                 "<br>Leaking when 0%." +
                 "<br>Refill it by holding crotch and rubbing thighs.</html>"
         contentPane.add(lblSphPower)
@@ -267,13 +327,13 @@ class StandardGameUI(override val core: ALongHourAndAHalf) : JFrame("A Long Hour
         sphincterBar.value = core.character.sphincterPower
         sphincterBar.isVisible = false
         sphincterBar.toolTipText = "<html>Ability to hold pee." +
-                "<br>Drains faster on higher fullness fullness." +
+                "<br>Drains faster on higher bladder fullness." +
                 "<br>Leaking when 0%.<br>Refill it by holding crotch and rubbing thighs.</html>"
         contentPane.add(sphincterBar)
 
         drynessBar.setBounds(16, 392, 455, 25)
         drynessBar.value = core.character.maximalDryness.toInt()
-        drynessBar.minimum = ALongHourAndAHalf.MINIMAL_DRYNESS
+        drynessBar.minimum = Character.MINIMAL_DRYNESS
         drynessBar.maximum = core.character.maximalDryness.toInt()
         drynessBar.isVisible = false
         drynessBar.toolTipText = "<html>Estimating dryness to absorb leaked pee.<br>Refills by itself with the time.</html>"
@@ -281,7 +341,7 @@ class StandardGameUI(override val core: ALongHourAndAHalf) : JFrame("A Long Hour
 
         timeBar.setBounds(16, 332, 455, 25)
         timeBar.maximum = 90
-        timeBar.value = (core.world.time - ALongHourAndAHalf.classBeginningTime).rawMinutes
+        timeBar.value = (core.world.time - SchoolDay.classBeginningTime).rawMinutes
         timeBar.isVisible = false
         contentPane.add(timeBar)
 

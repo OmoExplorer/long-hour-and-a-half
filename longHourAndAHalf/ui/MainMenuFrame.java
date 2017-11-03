@@ -1,6 +1,6 @@
 package longHourAndAHalf.ui;
 
-import longHourAndAHalf.ALongHourAndAHalf;
+import longHourAndAHalf.Core;
 import longHourAndAHalf.Save;
 
 import javax.swing.*;
@@ -34,7 +34,7 @@ public final class MainMenuFrame {
 
             Save save = (Save) objectInputStream.readObject();
 
-            new ALongHourAndAHalf(save);
+            new Core(save);
         } catch (Exception ignored) {
             JOptionPane.showMessageDialog(null,
                     "Can't open the save.",

@@ -2,6 +2,7 @@ package longHourAndAHalf
 
 import longHourAndAHalf.ArithmeticAction.ADD_PERCENT
 import longHourAndAHalf.ArithmeticAction.TAKE_PERCENT
+import java.io.Serializable
 
 /**
  * [Scorer] entry.
@@ -12,7 +13,7 @@ data class ScoreNomination(
         val score: Double,
         val arithmeticAction: ArithmeticAction,
         val final: Boolean = false
-) {
+) : Serializable {
     override fun toString() = "$comment: $arithmeticAction $score\n" + when (arithmeticAction) {
         ADD_PERCENT, TAKE_PERCENT -> "%"
         else -> ""

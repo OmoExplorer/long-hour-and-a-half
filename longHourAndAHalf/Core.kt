@@ -32,7 +32,7 @@
  *
  * 1.4.1  Bug fixes
  *
- * 2.0    Total rewrite
+ * 2.0    Total rewrite. Splitting the game into separate modules for better understandability.
  *
  *
  * A Long Hour and a Half is a narrative game where
@@ -58,7 +58,7 @@
 
 package longHourAndAHalf
 
-import longHourAndAHalf.ALongHourAndAHalf.GameStage.*
+import longHourAndAHalf.GameStage.*
 import longHourAndAHalf.WearType.*
 import longHourAndAHalf.ui.SaveFileChooser
 import longHourAndAHalf.ui.StandardGameUI
@@ -74,23 +74,40 @@ private val random = Random()
 /**
  * @return random item from this array
  */
-fun <T> Array<T>.randomItem() = this[random.nextInt(this.size)]
+fun <T> Array<T>.randomItem(): T {
+    val randomIndex = random.nextInt(this.size)
+    return this[randomIndex]
+}
 
 /**
  * @return random item from this list
  */
-fun <T> List<T>.randomItem() = this[random.nextInt(this.size)]
+fun <T> List<T>.randomItem(): T {
+    val randomIndex = random.nextInt(this.size)
+    return this[randomIndex]
+}
+
+/**
+ * @return `true` with a specified chance, `false` otherwise.
+ * @param probability chance to return `true` in percents.
+ */
+fun chance(probability: Int) = chance(probability.toDouble())
+
+/**
+ * @return `true` with a specified chance, `false` otherwise.
+ * @param probability chance to return `true` in percents.
+ */
+fun chance(probability: Double) = random.nextInt(100) < probability
 
 @Suppress("KDocMissingDocumentation")
 /**
  * Game core which is used for communication between modules.
  */
-class ALongHourAndAHalf {
-
+class Core {
     /**
      * Game character.
      */
-    var character: Character
+    val character: Character
 
     /**
      * Score counter.
@@ -109,7 +126,7 @@ class ALongHourAndAHalf {
     /**
      * Game interface frame.
      */
-    var ui: StandardGameUI
+    val ui: StandardGameUI
 
     /**
      * Virtual core world data.
@@ -117,34 +134,16 @@ class ALongHourAndAHalf {
     val world: World
 
     /**
-     * Times teacher denied character to go out.
+     * Data about a school day. Holds random number (from 1 to 3) of random lessons and classmates data.
      */
-    var timesPeeDenied: Int
+    val schoolDay: SchoolDay
 
     /**
-     * Number of times character got caught holding pee from classmates.
+     * Data about cheats.
      */
-    var timesCaught: Int
+    val cheatData: CheatData
 
-    /**
-     * Amount of embarrassment raising every time character caught holding pee.
-     */
-    var classmatesAwareness: Int
-
-    /**
-     * Whether character has to stay additional 30 minutes after class.
-     */
-    var stay: Boolean
-
-    /**
-     * Whether pee drain cheat enabled: pee mysteriously vanishes every 15 minutes.
-     */
-    var drain: Boolean
-
-    /**
-     * Whether player has used cheats.
-     */
-    var cheatsUsed: Boolean
+    val plot: Plot
 
     /**
      * List of cheats.
@@ -162,39 +161,7 @@ class ALongHourAndAHalf {
             "Set bladder fullness"
     )
 
-    /**
-     * List of all boy names for special hardcore scene.
-     */
-    private val names = listOf("Mark", "Mike", "Jim", "Alex", "Ben", "Bill", "Dan")
-
-    /**
-     * Special hardcore scene boy's name.
-     */
-    val boyName: String
-
-    /**
-     * Actions list.
-     */
-    private val actionList = mutableListOf<String>()
-
-    /**
-     * A stage after the current stage.
-     */
-    var nextStage: GameStage
-
-    /**
-     * An array that contains boolean values that define *dialogue lines*.
-     * Dialogue lines, unlike normal lines, are *italic*.
-     */
-    private var dialogueLines = BooleanArray(MAX_LINES)
-
-    /**
-     * Whether special hardcore stage is active now.
-     */
-    var specialHardcoreStage = false
-
     private fun openCustomWear(type: WearType): Wear? {
-        var openedWear: Wear? = null
 
         fun abort(message: String) {
             JOptionPane.showMessageDialog(null, message, "", JOptionPane.ERROR_MESSAGE)
@@ -209,6 +176,7 @@ class ALongHourAndAHalf {
             BOTH_SUITABLE -> throw IllegalArgumentException("BOTH_SUITABLE wear type isn't supported")
         }
 
+        var openedWear: Wear? = null
         if (fcWear.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
             val file = fcWear.selectedFile
             try {
@@ -232,6 +200,7 @@ class ALongHourAndAHalf {
             "Random" -> Wear.getRandom(type)
             else -> wear
         }
+
         processedWear?.let {
             if (processedWear.name == "No underwear" || processedWear.name == "No outerwear")
                 processedWear.insert = if (character.gender == Gender.FEMALE)
@@ -239,24 +208,19 @@ class ALongHourAndAHalf {
                 else
                     "penis"
         }
+
         return processedWear
     }
 
     constructor(character: Character, hardcore: Boolean) {
-        this.character = character
-        this.character.game = this
         this.hardcore = hardcore
+        this.character = character
+        this.character.finishSetup(this)
         world = World(this)
-
-        nextStage = LEAVE_BED
-        timesPeeDenied = 0
+        cheatData = CheatData()
+        schoolDay = SchoolDay()
+        plot = Plot()
         scorer = Scorer()
-        timesCaught = 0
-        classmatesAwareness = 0
-        stay = false
-        drain = false
-        cheatsUsed = false
-        boyName = names.randomItem()
 
         fun onIncorrectWearSelected(type: WearType): Wear {
             JOptionPane.showMessageDialog(
@@ -292,11 +256,11 @@ class ALongHourAndAHalf {
         ui.finishSetup()
 
         //Scoring fullness at start
-        scorer.nominate("Bladder at start - ${this.character.fullness}%", this.character.fullness,
+        scorer.countOut("Bladder at start - ${this.character.fullness}%", this.character.fullness,
                 ArithmeticAction.ADD)
 
         //Scoring incontinence
-        scorer.nominate(
+        scorer.countOut(
                 "Incontinence - ${this.character.incontinence}x", this.character.incontinence,
                 ArithmeticAction.MULTIPLY, true
         )
@@ -304,7 +268,7 @@ class ALongHourAndAHalf {
         if (this.hardcore) {
             character.maxBladder = 100
             ui.hardcoreModeToggled(true)
-            scorer.nominate("Hardcore", 2, ArithmeticAction.MULTIPLY)
+            scorer.countOut("Hardcore", 2, ArithmeticAction.MULTIPLY)
         }
 
         ui.drynessBar.maximum = this.character.maximalDryness.toInt()
@@ -318,18 +282,15 @@ class ALongHourAndAHalf {
     }
 
     constructor(save: Save) {
-        character = save.character
         hardcore = save.hardcore
+        character = save.character
+        character.core = this
         world = save.world
-        nextStage = save.stage
+        world.core = this
+        plot = save.plot
         scorer = save.scorer
-        timesPeeDenied = save.timesPeeDenied
-        timesCaught = save.timesCaught
-        classmatesAwareness = save.classmatesAwareness
-        stay = save.stay
-        drain = save.drain
-        cheatsUsed = save.cheatsUsed
-        boyName = save.boyName
+        schoolDay = save.schoolDay
+        cheatData = save.cheatData
 
         ui = StandardGameUI(this)
         ui.finishSetup()
@@ -339,6 +300,8 @@ class ALongHourAndAHalf {
 
         ui.showBladderAndTime()
 
+        ui.setText("Loading complete. Click \"Next\" to continue the core.")
+
 //        handleNextClicked()
 
         postConstructor()
@@ -346,10 +309,7 @@ class ALongHourAndAHalf {
 
     private fun postConstructor() {
         //Making fullness smaller in the hardcore mode, adding hardcore label
-        if (hardcore) {
-            character.maxBladder = 100
-            ui.hardcoreModeToggled(true)
-        }
+        if (hardcore) ui.hardcoreModeToggled(true)
 
         gameStartSave = Save(this)   //Saving core for a reset
 
@@ -357,16 +317,15 @@ class ALongHourAndAHalf {
     }
 
     fun handleNextClicked() {
-
-        when (nextStage) {
+        when (plot.nextStage) {
             LEAVE_BED -> {
                 //Making line 1 italic
-                setLinesAsDialogue(1)
+                ui.setLinesAsDialogue(1)
                 if (!character.lower.isMissing) {
                     if (!character.undies.isMissing)
                     //Both lower clothes and undies
                     {
-                        setText("Wh-what? Did I forget to set my alarm?!",
+                        ui.setText("Wh-what? Did I forget to set my alarm?!",
                                 "You cry, tumbling out of bed and feeling an instant jolt from your fullness.",
                                 "You hurriedly slip on some " +
                                         "${character.undies.insert} and ${character.lower.insert},",
@@ -374,7 +333,7 @@ class ALongHourAndAHalf {
                     } else
                     //Lower clothes only
                     {
-                        setText("Wh-what? Did I forget to set my alarm?!",
+                        ui.setText("Wh-what? Did I forget to set my alarm?!",
                                 "You cry, tumbling out of bed and feeling an instant jolt from your fullness.",
                                 "You hurriedly slip on some ${character.lower.insert}, " +
                                         "quick to cover your ${character.undies.insert},",
@@ -384,14 +343,14 @@ class ALongHourAndAHalf {
                     if (!character.undies.isMissing)
                     //Undies only
                     {
-                        setText("Wh-what? Did I forget to set my alarm?!",
+                        ui.setText("Wh-what? Did I forget to set my alarm?!",
                                 "You cry, tumbling out of bed and feeling an instant jolt from your fullness.",
                                 "You hurriedly slip on ${character.undies.insert},",
                                 "not even worrying about what covers your chest and legs.")
                     } else
                     //No clothes at all
                     {
-                        setText("Wh-what? Did I forget to set my alarm?!",
+                        ui.setText("Wh-what? Did I forget to set my alarm?!",
                                 "You cry, tumbling out of bed and feeling an instant jolt from your fullness.",
                                 "You are running downstairs fully naked.")
                     }
@@ -399,11 +358,11 @@ class ALongHourAndAHalf {
                 world.time += 1
 
                 //Setting the next stage to "Leaving home"
-                nextStage = LEAVE_HOME
+                plot.nextStage = LEAVE_HOME
             }
 
             LEAVE_HOME -> {
-                setText("Just looking at the clock again in disbelief adds a redder tint to your cheeks.",
+                ui.setText("Just looking at the clock again in disbelief adds a redder tint to your cheeks.",
                         "",
                         "Paying much less attention to your daily routine, you quickly run down the stairs, " +
                                 "get a small glass of orange juice and chug it.",
@@ -415,7 +374,7 @@ class ALongHourAndAHalf {
                 character.embarrassment += 3
                 character.belly += 10.0
 
-                nextStage = GO_TO_CLASS
+                plot.nextStage = GO_TO_CLASS
             }
 
             GO_TO_CLASS -> {
@@ -425,31 +384,31 @@ class ALongHourAndAHalf {
                 if (!character.lower.isMissing) {
                     //Skirt blowing in the wind
                     if (character.lower.insert == "skirt") {
-                        setText("You rush into class, your ${character.lower.insert} blowing in the wind.",
+                        ui.setText("You rush into class, your ${character.lower.insert} blowing in the wind.",
                                 "",
                                 "Normally, you'd be worried your ${character.undies.insert} would be seen, " +
                                         "but you can't worry about it right now.",
                                 "You make it to your seat without a minute to spare.")
                     } else {
                         //Nothing is blowing in wind
-                        setText("Trying your best to make up lost time, " +
+                        ui.setText("Trying your best to make up lost time, " +
                                 "you rush into class and sit down to your seat without a minute to spare.")
                     }
                 } else {
                     if (!character.undies.isMissing) {
-                        setText("You rush into class; " +
+                        ui.setText("You rush into class; " +
                                 "your classmates are looking at your ${character.undies.insert}.",
                                 "You can't understand how you forgot to even put on any lower clothing,",
                                 "and you know that your ${character.undies.insert} have definitely been seen.",
                                 "You make it to your seat without a minute to spare.")
                     } else {
                         if (character.gender == Gender.FEMALE) {
-                            setText("You rush into class; your classmates are looking at your pussy and boobs.",
+                            ui.setText("You rush into class; your classmates are looking at your pussy and boobs.",
                                     "Guys are going mad and doing nothing except looking at you.",
                                     "You can't understand how you dared to come to school naked.",
                                     "You make it to your seat without a minute to spare.")
                         } else {
-                            setText("You rush into class; your classmates are looking at your penis.",
+                            ui.setText("You rush into class; your classmates are looking at your penis.",
                                     "Girls are really going mad and doing nothing except looking at you.",
                                     "You can't understand how you dared to come to school naked.",
                                     "You make it to your seat without a minute to spare.")
@@ -458,15 +417,15 @@ class ALongHourAndAHalf {
                 }
 
                 character.embarrassment += 2
-                nextStage = WALK_IN
+                plot.nextStage = WALK_IN
             }
 
             WALK_IN -> {
                 //If lower clothes is a skirt
                 if (character.lower.insert == "skirt" || character.lower.insert == "skirt and tights"
                         || character.lower.insert == "skirt and tights") {
-                    setLinesAsDialogue(1, 3)
-                    setText("Next time you run into class, ${character.name},",
+                    ui.setLinesAsDialogue(1, 3)
+                    ui.setText("Next time you run into class, ${character.name},",
                             "your teacher says,",
                             "make sure you're wearing something less... revealing!",
                             "A chuckle passes over the classroom, and you can't help but feel a",
@@ -476,8 +435,8 @@ class ALongHourAndAHalf {
                 //No outerwear
                 {
                     if (character.lower.isMissing) {
-                        setLinesAsDialogue(1)
-                        setText("WHAT!? YOU CAME TO SCHOOL NAKED!?",
+                        ui.setLinesAsDialogue(1)
+                        ui.setText("WHAT!? YOU CAME TO SCHOOL NAKED!?",
                                 "your teacher shouts in disbelief.",
                                 "",
                                 "A chuckle passes over the classroom, " +
@@ -485,8 +444,8 @@ class ALongHourAndAHalf {
                                 "about your rush into class, let alone your nudity")
                         character.embarrassment += 25
                     } else {
-                        setLinesAsDialogue(1, 3)
-                        setText("Sit down, ${character.name}. You're running late.",
+                        ui.setLinesAsDialogue(1, 3)
+                        ui.setText("Sit down, ${character.name}. You're running late.",
                                 "your teacher says,",
                                 "And next time, don't make so much noise entering the classroom!",
                                 "A chuckle passes over the classroom, " +
@@ -494,15 +453,15 @@ class ALongHourAndAHalf {
                                 "about your rush into class.")
                     }
                 }
-                nextStage = SIT_DOWN
+                plot.nextStage = SIT_DOWN
             }
 
             SIT_DOWN -> {
-                setText("Subconsciously rubbing your thighs together, you feel the uncomfortable feeling of",
+                ui.setText("Subconsciously rubbing your thighs together, you feel the uncomfortable feeling of",
                         "your fullness filling as the liquids you drank earlier start to make their way down.")
                 world.time += 3
-                nextStage = ASK_ACTION
-                scorer.nominate(
+                plot.nextStage = ASK_ACTION
+                scorer.countOut(
                         "Embarrassment at start - ${character.incontinence} pts",
                         character.embarrassment,
                         ArithmeticAction.ADD
@@ -511,40 +470,40 @@ class ALongHourAndAHalf {
 
             ASK_ACTION -> {
                 //Called by teacher if unlucky
-                actionList.clear()
-                if (generator.nextInt(20) == 5) {
-                    setText("Suddenly, you hear the teacher call your name.")
-                    nextStage = CALLED_ON
+                plot.actionList.clear()
+                if (random.nextInt(20) == 5) {
+                    ui.setText("Suddenly, you hear the teacher call your name.")
+                    plot.nextStage = CALLED_ON
                     return
                 }
 
                 //Bladder: 0-20
                 if (character.fullness <= 20) {
-                    setText("Feeling bored about the day, and not really caring about the class too much,",
+                    ui.setText("Feeling bored about the day, and not really caring about the class too much,",
                             "you look to the clock, watching the minutes tick by.")
                 }
                 //Bladder: 20-40
                 if (character.fullness > 20 && character.fullness <= 40) {
-                    setText("Having to pee a little bit,",
+                    ui.setText("Having to pee a little bit,",
                             "you look to the clock, " +
                                     "watching the minutes tick by and wishing the lesson to get over faster.")
                 }
                 //Bladder: 40-60
                 if (character.fullness > 40 && character.fullness <= 60) {
-                    setText("Clearly having to pee,",
+                    ui.setText("Clearly having to pee,",
                             "you impatiently wait for the lesson end.")
                 }
                 //Bladder: 60-80
                 if (character.fullness > 60 && character.fullness <= 80) {
-                    setLinesAsDialogue(2)
-                    setText("You feel the rather strong pressure in your fullness, " +
+                    ui.setLinesAsDialogue(2)
+                    ui.setText("You feel the rather strong pressure in your fullness, " +
                             "and you're starting to get even more desperate.",
                             "Maybe I should ask teacher to go to the restroom? It hurts a bit...")
                 }
                 //Bladder: 80-100
                 if (character.fullness > 80 && character.fullness <= 100) {
-                    setLinesAsDialogue(1, 3)
-                    setText("Keeping all that urine inside will become impossible very soon.",
+                    ui.setLinesAsDialogue(1, 4)
+                    ui.setText("Keeping all that urine inside will become impossible very soon.",
                             "You feel the terrible pain and pressure in your fullness, " +
                                     "and you can almost definitely say ",
                             "you haven't needed to pee this badly in your life.",
@@ -552,16 +511,16 @@ class ALongHourAndAHalf {
                 }
                 //Bladder: 100-130
                 if (character.fullness > 100 && character.fullness <= 130) {
-                    setLinesAsDialogue(1, 3)
+                    ui.setLinesAsDialogue(1, 3)
                     if (character.gender == Gender.FEMALE) {
-                        setText("This is really bad...",
+                        ui.setText("This is really bad...",
                                 "You know that you can't keep it any longer and " +
                                         "you may wet yourself in any moment and oh,",
                                 "You can clearly see your fullness as it bulging.",
                                 "Ahhh... I cant hold it anymore!!!",
                                 "Even holding your crotch doesn't seems to help you to keep it in.")
                     } else {
-                        setText("This is really bad...",
+                        ui.setText("This is really bad...",
                                 "You know that you can't keep it any longer and " +
                                         "you may wet yourself in any moment and oh,",
                                 "You can clearly see your fullness as it bulging.",
@@ -570,62 +529,62 @@ class ALongHourAndAHalf {
                     }
                 }
 
-                showActionUI("What now?")
+                ui.showActionUI("What now?")
 
                 //Adding action choices
-                when (timesPeeDenied) {
-                    0 -> actionList.add("Ask the teacher to go pee")
-                    1 -> actionList.add("Ask the teacher to go pee again")
-                    2 -> actionList.add("Try to ask the teacher again")
-                    3 -> actionList.add("Take a chance and ask the teacher (RISKY)")
-                    else -> actionList.add("[Unavailable]")
+                when (schoolDay.lesson.timesPeeDenied) {
+                    0 -> plot.actionList.add("Ask the teacher to go pee")
+                    1 -> plot.actionList.add("Ask the teacher to go pee again")
+                    2 -> plot.actionList.add("Try to ask the teacher again")
+                    3 -> plot.actionList.add("Take a chance and ask the teacher (RISKY)")
+                    else -> plot.actionList.add("[Unavailable]")
                 }
 
                 if (!character.cornered) {
                     if (character.gender == Gender.FEMALE) {
-                        actionList.add("Press on your crotch")
+                        plot.actionList.add("Press on your crotch")
                     } else {
-                        actionList.add("Squeeze your penis")
+                        plot.actionList.add("Squeeze your penis")
                     }
                 } else {
-                    actionList.add("[Unavailable]")
+                    plot.actionList.add("[Unavailable]")
                 }
 
-                actionList.add("Rub thighs")
+                plot.actionList.add("Rub thighs")
 
                 if (character.fullness >= 100) {
-                    actionList.add("Give up and pee yourself")
+                    plot.actionList.add("Give up and pee yourself")
                 } else {
-                    actionList.add("[Unavailable]")
+                    plot.actionList.add("[Unavailable]")
                 }
                 if (hardcore) {
-                    actionList.add("Drink water")
+                    plot.actionList.add("Drink water")
                 } else {
-                    actionList.add("[Unavailable]")
+                    plot.actionList.add("[Unavailable]")
                 }
-                actionList.add("Just wait")
-                actionList.add("Cheat (will reset your score)")
+                plot.actionList.add("Just wait")
+                plot.actionList.add("Cheat (will reset your score)")
 
                 //Loading the choice array into the action selector
-                ui.listChoice.setListData(actionList.toTypedArray())
-                nextStage = CHOSE_ACTION
+                ui.listChoice.setListData(plot.actionList.toTypedArray())
+                plot.nextStage = CHOSE_ACTION
                 world.time += 3
             }
 
             CHOSE_ACTION -> {
-                nextStage = ASK_ACTION
+                plot.nextStage = ASK_ACTION
                 if (ui.listChoice.isSelectionEmpty || ui.listChoice.selectedValue == "[Unavailable]") {
                     handleNextClicked()
                     return
                 }
 
                 //Hiding the action selector and doing action job
-                when (hideActionUI()) {
+                when (ui.hideActionUI()) {
                 //Ask the teacher to go pee
                     0 -> {
-                        nextStage = ASK_TO_PEE
-                        setLinesAsDialogue(2, 3)
-                        setText("You think to yourself:",
+                        plot.nextStage = ASK_TO_PEE
+                        ui.setLinesAsDialogue(2, 3)
+                        ui.setText("You think to yourself:",
                                 "I don't think I can hold it until class ends!",
                                 "I don't have a choice, I have to ask the teacher...")
                     }
@@ -643,7 +602,7 @@ class ALongHourAndAHalf {
                  * Future effectiveness: 4
                  */
                     1 -> {
-                        setText("You don't think anyone will see you doing it,",
+                        ui.setText("You don't think anyone will see you doing it,",
                                 "so you take your hand and hold yourself down there.",
                                 "It feels a little better for now.")
 
@@ -651,7 +610,7 @@ class ALongHourAndAHalf {
                         world.time += 3
 
                         //Chance to be caught by classmates in hardcore mode
-                        nextStage = if ((generator.nextInt(100) <= 15 + classmatesAwareness) and hardcore) {
+                        plot.nextStage = if ((random.nextInt(100) <= 15 + schoolDay.classmatesAwareness) and hardcore) {
                             CAUGHT
                         } else {
                             ASK_ACTION
@@ -671,7 +630,7 @@ class ALongHourAndAHalf {
                      * Future effectiveness: 4
                      */
                     2 -> {
-                        setText("You need to go, and it hurts, but you just",
+                        ui.setText("You need to go, and it hurts, but you just",
                                 "can't bring yourself to risk getting caught with your hand between",
                                 "your legs. You rub your thighs hard but it doesn't really help.")
 
@@ -679,7 +638,7 @@ class ALongHourAndAHalf {
                         world.time += 3
 
                         //Chance to be caught by classmates in hardcore mode
-                        nextStage = if ((generator.nextInt(100) <= 3 + classmatesAwareness) and hardcore) {
+                        plot.nextStage = if ((random.nextInt(100) <= 3 + schoolDay.classmatesAwareness) and hardcore) {
                             CAUGHT
                         } else {
                             ASK_ACTION
@@ -688,17 +647,17 @@ class ALongHourAndAHalf {
 
                 //Give up
                     3 -> {
-                        setText("You're absolutely desperate to pee, and you think you'll",
+                        ui.setText("You're absolutely desperate to pee, and you think you'll",
                                 "end up peeing yourself anyway, so it's probably best to admit",
                                 "defeat and get rid of the painful ache in your fullness.")
-                        nextStage = GIVE_UP
+                        plot.nextStage = GIVE_UP
                     }
 
                 //Drink water
                     4 -> {
-                        setText("Feeling a tad bit thirsty,",
+                        ui.setText("Feeling a tad bit thirsty,",
                                 "You decide to take a small sip of water from your bottle to get rid of it.")
-                        nextStage = DRINK
+                        plot.nextStage = DRINK
                     }
 
                 /*
@@ -720,12 +679,12 @@ class ALongHourAndAHalf {
                             world.time += timeOffset
                         } //Ignoring invalid output
                         catch (e: Exception) {
-                            nextStage = ASK_ACTION
+                            plot.nextStage = ASK_ACTION
                             return
                         }
 
                         //Chance to be caught by classmates in hardcore mode
-                        nextStage = if ((generator.nextInt(100) <= 1 + classmatesAwareness) and hardcore) {
+                        plot.nextStage = if ((random.nextInt(100) <= 1 + schoolDay.classmatesAwareness) and hardcore) {
                             CAUGHT
                         } else {
                             ASK_ACTION
@@ -734,33 +693,33 @@ class ALongHourAndAHalf {
 
                 //Cheat
                     6 -> {
-                        setText("You've got to go so bad!",
+                        ui.setText("You've got to go so bad!",
                                 "There must be something you can do, right?")
 
                         //Zeroing points
-                        cheatsUsed = true
-                        nextStage = ASK_CHEAT
+                        cheatData.cheatsUsed = true
+                        plot.nextStage = ASK_CHEAT
                     }
 
-                    else -> setText("Bugs.")
+                    else -> ui.setText("Bugs.")
                 }
             }
 
             ASK_TO_PEE -> {
-                when (timesPeeDenied) {
+                when (schoolDay.lesson.timesPeeDenied) {
                     0 ->
                         //Success
-                        if ((generator.nextInt(100) <= 40) and !hardcore) {
+                        if ((random.nextInt(100) <= 40) and !hardcore) {
                             if (!character.lower.isMissing) {
                                 if (!character.undies.isMissing) {
-                                    setText("You ask the teacher if you can go out to the restroom.",
+                                    ui.setText("You ask the teacher if you can go out to the restroom.",
                                             "Yes, you may.",
                                             "says the teacher. You run to the restroom. Thank god, one cabin is free!",
                                             "You enter it, pulled down your ${character.lower.insert} " +
                                                     "and ${character.undies.insert},",
                                             "wearily flop down on the toilet and start peeing.")
                                 } else {
-                                    setText("You ask the teacher if you can go out to the restroom.",
+                                    ui.setText("You ask the teacher if you can go out to the restroom.",
                                             "Yes, you may.",
                                             "says the teacher. You run to the restroom. Thank god, one cabin is free!",
                                             "You enter it, pulled down your ${character.lower.insert},",
@@ -768,13 +727,13 @@ class ALongHourAndAHalf {
                                 }
                             } else {
                                 if (!character.undies.isMissing) {
-                                    setText("You ask the teacher if you can go out to the restroom.",
+                                    ui.setText("You ask the teacher if you can go out to the restroom.",
                                             "Yes, you may.",
                                             "says the teacher. You run to the restroom. Thank god, one cabin is free!",
                                             "You enter it, pulled down your ${character.undies.insert},",
                                             "wearily flop down on the toilet and start peeing.")
                                 } else {
-                                    setText("You ask the teacher if you can go out to the restroom.",
+                                    ui.setText("You ask the teacher if you can go out to the restroom.",
                                             "Yes, you may.",
                                             "says the teacher. You run to the restroom. Thank god, one cabin is free!",
                                             "You enter it,",
@@ -783,29 +742,30 @@ class ALongHourAndAHalf {
                             }
                             //score *= 0.2;
                             //scoreText = scoreText.concat("\nRestroom usage during the lesson: -80% of points");
-                            scorer.nominate("Restroom usage during the lesson", 80,
+                            scorer.countOut("Restroom usage during the lesson", 80,
                                     ArithmeticAction.TAKE_PERCENT)
                             character.fullness = 0.0
-                            nextStage = ASK_ACTION
+                            plot.nextStage = ASK_ACTION
                             //Fail
                         } else {
-                            setText("You ask the teacher if you can go out to the restroom.",
+                            ui.setLinesAsDialogue(2)
+                            ui.setText("You ask the teacher if you can go out to the restroom.",
                                     "No, you can't go out, the director prohibited it.",
                                     "says the teacher.")
-                            timesPeeDenied++
+                            schoolDay.lesson.timesPeeDenied++
                         }
 
-                    1 -> if ((generator.nextInt(100) <= 10) and !hardcore) {
+                    1 -> if ((random.nextInt(100) <= 10) and !hardcore) {
                         if (!character.lower.isMissing) {
                             if (!character.undies.isMissing) {
-                                setText("You ask the teacher again if you can go out to the restroom.",
+                                ui.setText("You ask the teacher again if you can go out to the restroom.",
                                         "Yes, you may.",
                                         "says the teacher. You run to the restroom. Thank god, one cabin is free!",
                                         "You enter it, pulled down your ${character.lower.insert} " +
                                                 "and ${character.undies.insert},",
                                         "wearily flop down on the toilet and start peeing.")
                             } else {
-                                setText("You ask the teacher again if you can go out to the restroom.",
+                                ui.setText("You ask the teacher again if you can go out to the restroom.",
                                         "Yes, you may.",
                                         "says the teacher. You run to the restroom. Thank god, one cabin is free!",
                                         "You enter it, pulled down your ${character.lower.insert},",
@@ -813,13 +773,13 @@ class ALongHourAndAHalf {
                             }
                         } else {
                             if (!character.undies.isMissing) {
-                                setText("You ask the teacher again if you can go out to the restroom.",
+                                ui.setText("You ask the teacher again if you can go out to the restroom.",
                                         "Yes, you may.",
                                         "says the teacher. You run to the restroom. Thank god, one cabin is free!",
                                         "You enter it, pulled down your ${character.undies.insert},",
                                         "wearily flop down on the toilet and start peeing.")
                             } else {
-                                setText("You ask the teacher again if you can go out to the restroom.",
+                                ui.setText("You ask the teacher again if you can go out to the restroom.",
                                         "Yes, you may.",
                                         "says the teacher. You run to the restroom. Thank god, one cabin is free!",
                                         "You enter it,",
@@ -828,27 +788,27 @@ class ALongHourAndAHalf {
                         }
                         //score *= 0.22;
                         //scoreText = scoreText.concat("\nRestroom usage during the lesson: -70% of points");
-                        scorer.nominate("Restroom usage during the lesson", 70, ArithmeticAction.TAKE_PERCENT)
+                        scorer.countOut("Restroom usage during the lesson", 70, ArithmeticAction.TAKE_PERCENT)
                         character.fullness = 0.0
-                        nextStage = ASK_ACTION
+                        plot.nextStage = ASK_ACTION
                     } else {
-                        setText("You ask the teacher again if you can go out to the restroom.",
+                        ui.setText("You ask the teacher again if you can go out to the restroom.",
                                 "No, you can't! I already told you that the director prohibited it!",
                                 "says the teacher.")
-                        timesPeeDenied++
+                        schoolDay.lesson.timesPeeDenied++
                     }
 
-                    2 -> if ((generator.nextInt(100) <= 30) and !hardcore) {
+                    2 -> if ((random.nextInt(100) <= 30) and !hardcore) {
                         if (!character.lower.isMissing) {
                             if (!character.undies.isMissing) {
-                                setText("You ask the teacher again if you can go out to the restroom.",
+                                ui.setText("You ask the teacher again if you can go out to the restroom.",
                                         "Yes, you may.",
                                         "says the teacher. You run to the restroom. Thank god, one cabin is free!",
                                         "You enter it, pulled down your " + character.lower.insert + " and " +
                                                 character.undies.insert + ",",
                                         "wearily flop down on the toilet and start peeing.")
                             } else {
-                                setText("You ask the teacher again if you can go out to the restroom.",
+                                ui.setText("You ask the teacher again if you can go out to the restroom.",
                                         "Yes, you may.",
                                         "says the teacher. You run to the restroom. Thank god, one cabin is free!",
                                         "You enter it, pulled down your " + character.lower.insert + ",",
@@ -856,13 +816,13 @@ class ALongHourAndAHalf {
                             }
                         } else {
                             if (!character.undies.isMissing) {
-                                setText("You ask the teacher again if you can go out to the restroom.",
+                                ui.setText("You ask the teacher again if you can go out to the restroom.",
                                         "Yes, you may.",
                                         "says the teacher. You run to the restroom. Thank god, one cabin is free!",
                                         "You enter it, pulled down your " + character.undies.insert + ",",
                                         "wearily flop down on the toilet and start peeing.")
                             } else {
-                                setText("You ask the teacher again if you can go out to the restroom.",
+                                ui.setText("You ask the teacher again if you can go out to the restroom.",
                                         "Yes, you may.",
                                         "says the teacher. You run to the restroom. Thank god, one cabin is free!",
                                         "You enter it,",
@@ -871,28 +831,28 @@ class ALongHourAndAHalf {
                         }
                         //score *= 0.23;
                         //scoreText = scoreText.concat("\nRestroom usage during the lesson: -60% of points");
-                        scorer.nominate("Restroom usage during the lesson", 60, ArithmeticAction.TAKE_PERCENT)
+                        scorer.countOut("Restroom usage during the lesson", 60, ArithmeticAction.TAKE_PERCENT)
                         character.fullness = 0.0
-                        nextStage = ASK_ACTION
+                        plot.nextStage = ASK_ACTION
                     } else {
-                        setText("You ask the teacher once more if you can go out to the restroom.",
+                        ui.setText("You ask the teacher once more if you can go out to the restroom.",
                                 "No, you can't! Stop asking me or there will be consequences!",
                                 "says the teacher.")
-                        timesPeeDenied++
+                        schoolDay.lesson.timesPeeDenied++
                     }
 
                     3 -> {
-                        if ((generator.nextInt(100) <= 7) and !hardcore) {
+                        if ((random.nextInt(100) <= 7) and !hardcore) {
                             if (!character.lower.isMissing) {
                                 if (!character.undies.isMissing) {
-                                    setText("Desperately, you ask the teacher if you can go out to the restroom.",
+                                    ui.setText("Desperately, you ask the teacher if you can go out to the restroom.",
                                             "Yes, you may.",
                                             "says the teacher. You run to the restroom. Thank god, one cabin is free!",
                                             "You enter it, pulled down your " + character.lower.insert + " and " +
                                                     character.undies.insert + ",",
                                             "wearily flop down on the toilet and start peeing.")
                                 } else {
-                                    setText("Desperately, you ask the teacher if you can go out to the restroom.",
+                                    ui.setText("Desperately, you ask the teacher if you can go out to the restroom.",
                                             "Yes, you may.",
                                             "says the teacher. You run to the restroom. Thank god, one cabin is free!",
                                             "You enter it, pulled down your " + character.lower.insert + ",",
@@ -900,13 +860,13 @@ class ALongHourAndAHalf {
                                 }
                             } else {
                                 if (!character.undies.isMissing) {
-                                    setText("Desperately, you ask the teacher if you can go out to the restroom.",
+                                    ui.setText("Desperately, you ask the teacher if you can go out to the restroom.",
                                             "Yes, you may.",
                                             "says the teacher. You run to the restroom. Thank god, one cabin is free!",
                                             "You enter it, pulled down your " + character.undies.insert + ",",
                                             "wearily flop down on the toilet and start peeing.")
                                 } else {
-                                    setText("Desperately, you ask the teacher if you can go out to the restroom.",
+                                    ui.setText("Desperately, you ask the teacher if you can go out to the restroom.",
                                             "Yes, you may.",
                                             "says the teacher. You run to the restroom. Thank god, one cabin is free!",
                                             "You enter it,",
@@ -915,209 +875,209 @@ class ALongHourAndAHalf {
                             }
                             //score *= 0.3;
                             //scoreText = scoreText.concat("\nRestroom usage during the lesson: -50% of points");
-                            scorer.nominate("Restroom usage during the lesson", 50, ArithmeticAction.TAKE_PERCENT)
+                            scorer.countOut("Restroom usage during the lesson", 50, ArithmeticAction.TAKE_PERCENT)
                             character.fullness = 0.0
-                            nextStage = ASK_ACTION
+                            plot.nextStage = ASK_ACTION
                         } else {
-                            if (generator.nextBoolean()) {
-                                setText("Desperately, you ask the teacher if you can go out to the restroom.",
+                            if (random.nextBoolean()) {
+                                ui.setText("Desperately, you ask the teacher if you can go out to the restroom.",
                                         "NO!! NO!! NO!!! YOU CAN'T GO OUT!!! STAY IN THAT CORNER!!!,",
                                         "yells the teacher.")
                                 character.cornered = true
                                 //score += 1.3 * (90 - min / 3);
                                 //scoreText = scoreText.concat("\nStayed on corner " + (90 - min) + " minutes: +"
                                 //+ 1.3 * (90 - min / 3) + " score");
-                                scorer.nominate(
-                                        "Stayed on corner ${(classEndingTime - world.time).rawMinutes} minutes",
-                                        1.3 * ((classEndingTime - world.time).rawMinutes / 3), ArithmeticAction.ADD
+                                scorer.countOut(
+                                        "Stayed on corner ${(SchoolDay.classEndingTime - world.time).rawMinutes} minutes",
+                                        1.3 * ((SchoolDay.classEndingTime - world.time).rawMinutes / 3), ArithmeticAction.ADD
                                 )
                                 character.embarrassment += 5
                             } else {
-                                setText("Desperately, you ask the teacher if you can go out to the restroom.",
+                                ui.setText("Desperately, you ask the teacher if you can go out to the restroom.",
                                         "NO!! NO!! NO!!! YOU CAN'T GO OUT!!! YOU WILL WRITE LINES AFTER THE LESSON!!!,",
                                         "yells the teacher.")
                                 character.embarrassment += 5
-                                stay = true
+                                schoolDay.lesson.stay = true
                                 ui.timeBar.maximum = 120
                                 //scoreText = scoreText.concat("\nWrote lines after the lesson: +60% score");
                                 //score *= 1.6;
-                                scorer.nominate("Wrote lines after the lesson", 60, ArithmeticAction.ADD_PERCENT)
+                                scorer.countOut("Wrote lines after the lesson", 60, ArithmeticAction.ADD_PERCENT)
                             }
                         }
-                        timesPeeDenied++
+                        schoolDay.lesson.timesPeeDenied++
                     }
                 }
-                nextStage = ASK_ACTION
+                plot.nextStage = ASK_ACTION
             }
 
             ASK_CHEAT -> {
                 ui.listChoice.setListData(cheatList.toTypedArray())
-                showActionUI("Select a cheat:")
-                nextStage = CHOSE_CHEAT
+                ui.showActionUI("Select a cheat:")
+                plot.nextStage = CHOSE_CHEAT
             }
 
             CHOSE_CHEAT -> {
                 if (ui.listChoice.isSelectionEmpty) {
-                    nextStage = ASK_CHEAT
+                    plot.nextStage = ASK_CHEAT
                     return
                 }
-                when (hideActionUI()) {
+                when (ui.hideActionUI()) {
                     0 -> {
-                        setText("You walk to the front corner of the classroom.")
+                        ui.setText("You walk to the front corner of the classroom.")
                         character.cornered = true
-                        nextStage = ASK_ACTION
+                        plot.nextStage = ASK_ACTION
                     }
 
                     1 -> {
-                        setText("You decide to stay after class.")
-                        stay = true
+                        ui.setText("You decide to stay after class.")
+                        schoolDay.lesson.stay = true
                         ui.timeBar.maximum = 120
-                        nextStage = ASK_ACTION
+                        plot.nextStage = ASK_ACTION
                     }
 
                     2 -> {
-                        setText("You see something out of the corner of your eye,",
+                        ui.setText("You see something out of the corner of your eye,",
                                 "just within your reach.")
-                        nextStage = USE_BOTTLE
+                        plot.nextStage = USE_BOTTLE
                     }
 
                     3 -> {
-                        setLinesAsDialogue(2)
-                        setText("A voice comes over the loudspeaker:",
+                        ui.setLinesAsDialogue(2)
+                        ui.setText("A voice comes over the loudspeaker:",
                                 "All classes are now dismissed for no reason at all! Bye!",
                                 "Looks like your luck changed for the better.")
-                        world.time = classEndingTime
-                        nextStage = CLASS_OVER
+                        world.time = SchoolDay.classEndingTime
+                        plot.nextStage = CLASS_OVER
                     }
 
                     4 -> {
-                        setText("The teacher feels sorry for you. Try asking to pee.")
-                        timesPeeDenied = 0
-                        stay = false
+                        ui.setText("The teacher feels sorry for you. Try asking to pee.")
+                        schoolDay.lesson.timesPeeDenied = 0
+                        schoolDay.lesson.stay = false
                         ui.timeBar.maximum = 90
                         character.cornered = false
-                        nextStage = ASK_ACTION
+                        plot.nextStage = ASK_ACTION
                     }
 
                     5 -> {
-                        setText("You decide to raise your hand.")
-                        nextStage = CALLED_ON
+                        ui.setText("You decide to raise your hand.")
+                        plot.nextStage = CALLED_ON
                     }
 
                     6 -> {
-                        setText("Suddenly, you feel like you're peeing...",
+                        ui.setText("Suddenly, you feel like you're peeing...",
                                 "but you don't feel any wetness. It's not something you'd",
                                 "want to question, right?")
-                        drain = true
-                        nextStage = ASK_ACTION
+                        cheatData.drain = true
+                        plot.nextStage = ASK_ACTION
                     }
 
                     7 -> {
-                        setText("A friend in the desk next to you hands you a familiar",
+                        ui.setText("A friend in the desk next to you hands you a familiar",
                                 "looking pill, and you take it.")
                         character.incontinence = JOptionPane.showInputDialog("How incontinent are you now?")
                                 .toDouble()
                         character.maxSphincterPower = (100 / character.incontinence).toInt()
                         character.sphincterPower = character.maxSphincterPower
-                        nextStage = ASK_ACTION
+                        plot.nextStage = ASK_ACTION
                     }
 
                     8 -> {
-                        setText("The teacher suddenly looks like they've had enough",
+                        ui.setText("The teacher suddenly looks like they've had enough",
                                 "of people having to pee.")
                         hardcore = !hardcore
-                        nextStage = ASK_ACTION
+                        plot.nextStage = ASK_ACTION
                     }
 
                     9 -> {
-                        setText("Suddenly you felt something going on in your fullness.")
+                        ui.setText("Suddenly you felt something going on in your fullness.")
                         character.incontinence = JOptionPane.showInputDialog("How your fullness is full now?")
                                 .toDouble()
-                        nextStage = ASK_ACTION
+                        plot.nextStage = ASK_ACTION
                     }
                 }
             }
 
             USE_BOTTLE -> {
                 character.fullness = 0.0
-                setLinesAsDialogue(3)
-                setText("Luckily for you, you happen to have brought an empty bottle to pee in.",
+                ui.setLinesAsDialogue(3)
+                ui.setText("Luckily for you, you happen to have brought an empty bottle to pee in.",
                         "As quietly as you can, you put it in position and let go into it.",
                         "Ahhhhh...",
                         "You can't help but show a face of pure relief as your pee trickles down into it.")
-                nextStage = ASK_ACTION
+                plot.nextStage = ASK_ACTION
             }
 
             CALLED_ON -> {
-                setLinesAsDialogue(1)
-                setText(character.name + ", why don't you come up to the board and solve this problem?,",
+                ui.setLinesAsDialogue(1)
+                ui.setText(character.name + ", why don't you come up to the board and solve this problem?,",
                         "says the teacher. Of course, you don't have a clue how to solve it.",
                         "You make your way to the front of the room and act lost, knowing you'll be stuck",
                         "up there for a while as the teacher explains it.",
                         "Well, you can't dare to hold yourself now...")
                 world.time += 5
-                scorer.nominate("Called on the lesson", 5, ArithmeticAction.ADD)
-                nextStage = ASK_ACTION
+                scorer.countOut("Called on the lesson", 5, ArithmeticAction.ADD)
+                plot.nextStage = ASK_ACTION
             }
 
             CLASS_OVER -> {
                 //Special hardcore scene trigger
-                if (generator.nextInt(100) <= 10 && hardcore && character.gender == Gender.FEMALE) {
-                    nextStage = SURPRISE
+                if (random.nextInt(100) <= 10 && hardcore && character.gender == Gender.FEMALE) {
+                    plot.nextStage = SURPRISE
                     return
                 }
-                if (stay) {
-                    nextStage = AFTER_CLASS
+                if (schoolDay.lesson.stay) {
+                    plot.nextStage = AFTER_CLASS
                     return
                 }
 
-                if (generator.nextBoolean()) {
-                    setText("Lesson is finally over, and you're running to the restroom as fast as you can.",
+                if (random.nextBoolean()) {
+                    ui.setText("Lesson is finally over, and you're running to the restroom as fast as you can.",
                             "No, please... All cabins are occupied, and there's a line. You have to wait!")
 
-                    scorer.nominate("Waited for a free cabin in the restroom", 3, ArithmeticAction.ADD)
+                    scorer.countOut("Waited for a free cabin in the restroom", 3, ArithmeticAction.ADD)
                     world.time += 3
                     return
                 } else {
                     if (!character.lower.isMissing) {
                         if (!character.undies.isMissing) {
-                            setText("Lesson is over, and you're running to the restroom as fast as you can.",
+                            ui.setText("Lesson is over, and you're running to the restroom as fast as you can.",
                                     "Thank god, one cabin is free!",
                                     "You enter it, pulled down your " + character.lower.insert + " and " +
                                             character.undies.insert + ",",
                                     "wearily flop down on the toilet and start peeing.")
                         } else {
-                            setText("Lesson is over, and you're running to the restroom as fast as you can.",
+                            ui.setText("Lesson is over, and you're running to the restroom as fast as you can.",
                                     "Thank god, one cabin is free!",
                                     "You enter it, pulled down your " + character.lower.insert + ",",
                                     "wearily flop down on the toilet and start peeing.")
                         }
                     } else {
                         if (!character.undies.isMissing) {
-                            setText("Lesson is over, and you're running to the restroom as fast as you can.",
+                            ui.setText("Lesson is over, and you're running to the restroom as fast as you can.",
                                     "Thank god, one cabin is free!",
                                     "You enter it, pulled down your " + character.undies.insert + ",",
                                     "wearily flop down on the toilet and start peeing.")
                         } else {
-                            setText("Lesson is over, and you're running to the restroom as fast as you can.",
+                            ui.setText("Lesson is over, and you're running to the restroom as fast as you can.",
                                     "Thank god, one cabin is free!",
                                     "You enter it,",
                                     "wearily flop down on the toilet and start peeing.")
                         }
                     }
-                    nextStage = END_GAME
+                    plot.nextStage = END_GAME
                 }
             }
 
             AFTER_CLASS -> {
-                if (world.time >= classEndingTime) {
-                    stay = false
-                    nextStage = CLASS_OVER
+                if (world.time >= SchoolDay.classEndingTime) {
+                    schoolDay.lesson.stay = false
+                    plot.nextStage = CLASS_OVER
                     return
                 }
 
-                setLinesAsDialogue(1, 2, 3, 4)
-                setText("Hey, ${character.name}, you wanted to escape? You must stay after classes!",
+                ui.setLinesAsDialogue(1, 2, 3, 4)
+                ui.setText("Hey, ${character.name}, you wanted to escape? You must stay after classes!",
                         "Please... let me go to the restroom... I can't hold it...",
                         "No, ${character.name}, you can't go to the restroom now! This will be as punishment.",
                         "And don't think you can hold yourself either! I'm watching you...")
@@ -1126,37 +1086,37 @@ class ALongHourAndAHalf {
             }
 
             ACCIDENT -> {
-                hideActionUI()
-                setText("You can't help it.. No matter how much pressure you use, the leaks won't stop.",
+                ui.hideActionUI()
+                ui.setText("You can't help it.. No matter how much pressure you use, the leaks won't stop.",
                         "Despite all this, you try your best, but suddenly you're forced to stop.",
                         "You can't move, or you risk peeing yourself. " +
                                 "Heck, the moment you stood up you thought you " +
                                 "could barely move for risk of peeing everywhere.",
                         "But now.. a few seconds tick by as you try to will yourself to move, " +
                                 "but soon, the inevitable happens anyways.")
-                nextStage = WET
+                plot.nextStage = WET
             }
 
             GIVE_UP -> {
                 character.embarrassment += 80
                 if (!character.lower.isMissing) {
                     if (!character.undies.isMissing) {
-                        setText("You get tired of holding all the urine in your aching fullness,",
+                        ui.setText("You get tired of holding all the urine in your aching fullness,",
                                 "and you decide to give up and pee in your " + character.undies.insert + ".")
                     } else {
-                        setText("You get tired of holding all the urine in your aching fullness,",
+                        ui.setText("You get tired of holding all the urine in your aching fullness,",
                                 "and you decided to pee in your " + character.lower.insert + ".")
                     }
                 } else {
                     if (!character.undies.isMissing) {
-                        setText("You get tired of holding all the urine in your aching fullness,",
+                        ui.setText("You get tired of holding all the urine in your aching fullness,",
                                 "and you decide to give up and pee in your " + character.undies.insert + ".")
                     } else {
-                        setText("You get tired of holding all the urine in your aching fullness,",
+                        ui.setText("You get tired of holding all the urine in your aching fullness,",
                                 "and you decide to give up and pee where you are.")
                     }
                 }
-                nextStage = WET
+                plot.nextStage = WET
             }
 
             WET -> {
@@ -1164,50 +1124,50 @@ class ALongHourAndAHalf {
                 character.embarrassment = 100
                 if (!character.lower.isMissing) {
                     if (!character.undies.isMissing) {
-                        setText("Before you can move an inch, pee quickly soaks through your " +
+                        ui.setText("Before you can move an inch, pee quickly soaks through your " +
                                 character.undies.insert + ",",
                                 "floods your " + character.lower.insert + ", and streaks down your legs.",
                                 "A large puddle quickly forms, and you can't stop tears from falling down your cheeks.")
                     } else {
-                        setText("Before you can move an inch, pee quickly darkens your " + character.lower.insert +
+                        ui.setText("Before you can move an inch, pee quickly darkens your " + character.lower.insert +
                                 " and streaks down your legs.",
                                 "A large puddle quickly forms, and you can't stop tears from falling down your cheeks.")
                     }
                 } else {
                     if (!character.undies.isMissing) {
-                        setText("Before you can move an inch, pee quickly soaks through your " +
+                        ui.setText("Before you can move an inch, pee quickly soaks through your " +
                                 character.undies.insert + ", and streaks down your legs.",
                                 "A large puddle quickly forms, and you can't stop tears from falling down your cheeks.")
                     } else {
                         if (!character.cornered) {
-                            setText("The heavy pee jets are hitting the seat and loudly leaking out from your " +
+                            ui.setText("The heavy pee jets are hitting the seat and loudly leaking out from your " +
                                     character.undies.insert + ".",
                                     "A large puddle quickly forms, " +
                                             "and you can't stop tears from falling down your cheeks.")
                         } else {
-                            setText("The heavy pee jets are hitting the floor and loudly leaking out from your " +
+                            ui.setText("The heavy pee jets are hitting the floor and loudly leaking out from your " +
                                     character.undies.insert + ".",
                                     "A large puddle quickly forms, " +
                                             "and you can't stop tears from falling down your cheeks.")
                         }
                     }
                 }
-                nextStage = POST_WET
+                plot.nextStage = POST_WET
             }
 
             POST_WET -> {
-                setLinesAsDialogue(2)
-                if (!stay) {
+                ui.setLinesAsDialogue(2)
+                if (!schoolDay.lesson.stay) {
                     if (character.lower.isMissing) {
                         if (character.gender == Gender.FEMALE && character.undies.isMissing) {
-                            setText("People around you are laughing loudly.",
+                            ui.setText("People around you are laughing loudly.",
                                     character.name + " peed herself! Ahaha!!!")
                         } else {
                             if (character.gender == Gender.MALE && character.undies.isMissing) {
-                                setText("People around you are laughing loudly.",
+                                ui.setText("People around you are laughing loudly.",
                                         character.name + " peed himself! Ahaha!!!")
                             } else {
-                                setText("People around you are laughing loudly.",
+                                ui.setText("People around you are laughing loudly.",
                                         character.name + " wet h" +
                                                 (if (character.gender == Gender.FEMALE) "er " else "is ") +
                                                 character.undies.insert + "! Ahaha!!")
@@ -1215,29 +1175,29 @@ class ALongHourAndAHalf {
                         }
                     } else {
                         if (character.gender == Gender.FEMALE) {
-                            setText("People around you are laughing loudly.",
+                            ui.setText("People around you are laughing loudly.",
                                     character.name + " peed her " + character.lower.insert + "! Ahaha!!")
                         } else {
-                            setText("People around you are laughing loudly.",
+                            ui.setText("People around you are laughing loudly.",
                                     " peed his " + character.lower.insert + "! Ahaha!!")
                         }
                     }
                 } else {
-                    setText("Teacher is laughing loudly.",
+                    ui.setText("Teacher is laughing loudly.",
                             "Oh, you peed yourself? This is a great punishment.",
                             "I hope you will no longer get in the way of the lesson.")
                 }
-                nextStage = GAME_OVER
+                plot.nextStage = GAME_OVER
             }
 
             GAME_OVER -> {
                 if (character.lower.isMissing) {
                     if (character.undies.isMissing) {
-                        setText("No matter how hard you tried... It doesn't seem to matter, even to think about it...",
+                        ui.setText("No matter how hard you tried... It doesn't seem to matter, even to think about it...",
                                 "No, nobody would be as sadistic as that, especially to themselves...",
                                 "Game over!")
                     } else {
-                        setText("No matter how hard you tried... It doesn't seem to matter, even to think about it...",
+                        ui.setText("No matter how hard you tried... It doesn't seem to matter, even to think about it...",
                                 "Your " + character.undies.insert +
                                         " are clinging to your skin, a sign of your failure...",
                                 "...unless, of course, you meant for this to happen?",
@@ -1246,7 +1206,7 @@ class ALongHourAndAHalf {
                     }
                 } else {
                     if (character.undies.isMissing) {
-                        setText("No matter how hard you tried... It doesn't seem to matter, even to think about it...",
+                        ui.setText("No matter how hard you tried... It doesn't seem to matter, even to think about it...",
                                 "Your " + character.lower.insert +
                                         " is clinging to your skin, a sign of your failure...",
                                 //TODO: Add "is/are" depending on lower clothes type
@@ -1254,7 +1214,7 @@ class ALongHourAndAHalf {
                                 "No, nobody would be as sadistic as that, especially to themselves...",
                                 "Game over!")
                     } else {
-                        setText("No matter how hard you tried... It doesn't seem to matter, even to think about it...",
+                        ui.setText("No matter how hard you tried... It doesn't seem to matter, even to think about it...",
                                 "Your " + character.lower.insert + " and " + character.undies.insert +
                                         " are both clinging to your skin, a sign of your failure...",
                                 "...unless, of course, you meant for this to happen?",
@@ -1271,57 +1231,57 @@ class ALongHourAndAHalf {
             }
 
             CAUGHT -> {
-                when (timesCaught) {
+                when (schoolDay.timesCaught) {
                     0 -> {
-                        setText("It looks like a classmate has spotted that you've got to go badly.",
+                        ui.setText("It looks like a classmate has spotted that you've got to go badly.",
                                 "Damn, he may spread that fact...")
                         character.embarrassment += 3
-                        classmatesAwareness += 5
-                        scorer.nominate("Caught holding pee", 3, ArithmeticAction.ADD)
-                        timesCaught++
+                        schoolDay.classmatesAwareness += 5
+                        scorer.countOut("Caught holding pee", 3, ArithmeticAction.ADD)
+                        schoolDay.timesCaught++
                     }
 
                     1 -> {
-                        setLinesAsDialogue(3)
-                        setText("You'he heard a suspicious whisper behind you.",
+                        ui.setLinesAsDialogue(3)
+                        ui.setText("You'he heard a suspicious whisper behind you.",
                                 "Listening to the whisper, you've found out that they're saying that you need to go.",
                                 "If I hold it until the lesson ends, I will beat them.")
                         character.embarrassment += 8
-                        classmatesAwareness += 5
-                        scorer.nominate("Caught holding pee", 8, ArithmeticAction.ADD)
-                        timesCaught++
+                        schoolDay.classmatesAwareness += 5
+                        scorer.countOut("Caught holding pee", 8, ArithmeticAction.ADD)
+                        schoolDay.timesCaught++
                     }
 
                     2 -> {
                         if (character.gender == Gender.FEMALE) {
-                            setLinesAsDialogue(2)
-                            setText("The most handsome boy in your class, $boyName, is calling you:",
+                            ui.setLinesAsDialogue(2)
+                            ui.setText("The most handsome boy in your class, ${schoolDay.surpriseBoy.name}, is calling you:",
                                     "Hey there, don't wet yourself!",
                                     "Oh no, he knows it...")
                         } else {
-                            setLinesAsDialogue(2, 3)
-                            setText("The most nasty boy in your class, $boyName, is calling you:",
+                            ui.setLinesAsDialogue(2, 3)
+                            ui.setText("The most nasty boy in your class, ${schoolDay.surpriseBoy.name}, is calling you:",
                                     "Hey there, don't wet yourself! Ahahahaa!",
                                     "\"Shut up...\"",
                                     ", you think to yourself.")
                         }
                         character.embarrassment += 12
-                        classmatesAwareness += 5
-                        scorer.nominate("Caught holding pee", 12, ArithmeticAction.ADD)
-                        timesCaught++
+                        schoolDay.classmatesAwareness += 5
+                        scorer.countOut("Caught holding pee", 12, ArithmeticAction.ADD)
+                        schoolDay.timesCaught++
                     }
 
                     else -> {
-                        setText("The chuckles are continuously passing over the classroom.",
+                        ui.setText("The chuckles are continuously passing over the classroom.",
                                 "Everyone is watching you.",
                                 "Oh god... this is so embarrassing...")
                         character.embarrassment += 20
-                        classmatesAwareness += 5
-                        scorer.nominate("Caught holding pee", 20, ArithmeticAction.ADD)
-                        timesCaught++
+                        schoolDay.classmatesAwareness += 5
+                        scorer.countOut("Caught holding pee", 20, ArithmeticAction.ADD)
+                        schoolDay.timesCaught++
                     }
                 }
-                nextStage = ASK_ACTION
+                plot.nextStage = ASK_ACTION
             }
 
         //The special hardcore scene
@@ -1332,84 +1292,80 @@ class ALongHourAndAHalf {
          * Triggering chance: 10%
          */
             SURPRISE -> {
+                plot.specialHardcoreStage = true
 
-                //Resetting timesPeeDenied to use for that boy
-                timesPeeDenied = 0
-
-                specialHardcoreStage = true
-
-                scorer.nominate("Got the \"surprise\" by $boyName", 70, ArithmeticAction.ADD)
-                setText("The lesson is finally over, and you're running to the restroom as fast as you can.",
-                        "But... You see $boyName staying in front of the restroom.",
+                scorer.countOut("Got the \"surprise\" by ${schoolDay.surpriseBoy.name}", 70, ArithmeticAction.ADD)
+                ui.setText("The lesson is finally over, and you're running to the restroom as fast as you can.",
+                        "But... You see ${schoolDay.surpriseBoy.name} staying in front of the restroom.",
                         "Suddenly, he takes you, not letting you to escape.")
                 character.embarrassment += 10
-                nextStage = SURPRISE_2
+                plot.nextStage = SURPRISE_2
             }
 
             SURPRISE_2 -> {
-                setLinesAsDialogue(1)
-                setText("What do you want from me?!",
+                ui.setLinesAsDialogue(1)
+                ui.setText("What do you want from me?!",
                         "He has brought you in the restroom and quickly put you on the windowsill.",
-                        boyName + " has locked the restroom door (seems he has stolen the key), " +
+                        schoolDay.surpriseBoy.name + " has locked the restroom door (seems he has stolen the key), " +
                                 "then he puts his palm on your belly and says:",
                         "I want you to wet yourself.")
                 character.embarrassment += 10
-                nextStage = SURPRISE_DIALOGUE
+                plot.nextStage = SURPRISE_DIALOGUE
             }
 
             SURPRISE_DIALOGUE -> {
-                setLinesAsDialogue(1)
-                setText("No, please, don't do it, no...",
+                ui.setLinesAsDialogue(1)
+                ui.setText("No, please, don't do it, no...",
                         "I want to see you wet...",
                         "He slightly presses your belly again, you shook from the terrible pain",
                         "in your fullness and subconsciously rubbed your crotch. You have to do something!")
                 character.embarrassment += 10
 
-                actionList.add("Hit him")
-                when (timesPeeDenied) {
-                    0 -> actionList.add("Try to persuade him to let you pee")
-                    1 -> actionList.add("Try to persuade him to let you pee again")
-                    2 -> actionList.add("Take a chance and try to persuade him (RISKY)")
+                plot.actionList.add("Hit him")
+                when (schoolDay.lesson.timesPeeDenied) {
+                    0 -> plot.actionList.add("Try to persuade him to let you pee")
+                    1 -> plot.actionList.add("Try to persuade him to let you pee again")
+                    2 -> plot.actionList.add("Take a chance and try to persuade him (RISKY)")
                 }
-                actionList.add("Pee yourself")
+                plot.actionList.add("Pee yourself")
 
-                ui.listChoice.setListData(actionList.toTypedArray())
-                showActionUI("Don't let him to do it!")
-                nextStage = SURPRISE_CHOSE
+                ui.listChoice.setListData(plot.actionList.toTypedArray())
+                ui.showActionUI("Don't let him to do it!")
+                plot.nextStage = SURPRISE_CHOSE
             }
 
             SURPRISE_CHOSE -> {
                 if (ui.listChoice.isSelectionEmpty) {
                     //No idling
-                    setText("You will wet yourself right now,",
-                            boyName + " demands.",
-                            "Then $boyName presses your fullness...")
-                    nextStage = SURPRISE_WET_PRESSURE
+                    ui.setText("You will wet yourself right now,",
+                            schoolDay.surpriseBoy.name + " demands.",
+                            "Then ${schoolDay.surpriseBoy.name} presses your fullness...")
+                    plot.nextStage = SURPRISE_WET_PRESSURE
                 }
 
                 //                actionNum = listChoice.getSelectedIndex();
                 if (ui.listChoice.selectedValue == "[Unavailable]") {
                     //No idling
-                    setText("You will wet yourself right now,",
-                            boyName + " demands.",
-                            "Then $boyName presses your fullness...")
-                    nextStage = SURPRISE_WET_PRESSURE
+                    ui.setText("You will wet yourself right now,",
+                            schoolDay.surpriseBoy.name + " demands.",
+                            "Then ${schoolDay.surpriseBoy.name} presses your fullness...")
+                    plot.nextStage = SURPRISE_WET_PRESSURE
                 }
 
-                when (hideActionUI()) {
-                    0 -> nextStage = HIT
-                    1 -> nextStage = PERSUADE
-                    2 -> nextStage = SURPRISE_WET_VOLUNTARY
+                when (ui.hideActionUI()) {
+                    0 -> plot.nextStage = HIT
+                    1 -> plot.nextStage = PERSUADE
+                    2 -> plot.nextStage = SURPRISE_WET_VOLUNTARY
                 }
             }
 
-            HIT -> if (generator.nextInt(100) <= 20) {
-                setLinesAsDialogue(2)
-                nextStage = GameStage.END_GAME
-                scorer.nominate("Successful hit on $boyName's groin", 40, ArithmeticAction.ADD)
+            HIT -> if (random.nextInt(100) <= 20) {
+                ui.setLinesAsDialogue(2)
+                plot.nextStage = GameStage.END_GAME
+                scorer.countOut("Successful hit on ${schoolDay.surpriseBoy.name}'s groin", 40, ArithmeticAction.ADD)
                 if (!character.lower.isMissing) {
                     if (!character.undies.isMissing) {
-                        setText("You hit $boyName's groin.",
+                        ui.setText("You hit ${schoolDay.surpriseBoy.name}'s groin.",
                                 "Ouch!.. You, little bitch...",
                                 "Then he left the restroom quickly.",
                                 "You got off from the windowsill while holding your crotch,",
@@ -1417,7 +1373,7 @@ class ALongHourAndAHalf {
                                         " and " + character.undies.insert + ",",
                                 "wearily flop down on the toilet and start peeing.")
                     } else {
-                        setText("You hit $boyName's groin.",
+                        ui.setText("You hit ${schoolDay.surpriseBoy.name}'s groin.",
                                 "Ouch!.. You, little bitch...",
                                 "Then he left the restroom quickly.",
                                 "You got off from the windowsill while holding your crotch,",
@@ -1427,7 +1383,7 @@ class ALongHourAndAHalf {
                     }
                 } else {
                     if (!character.undies.isMissing) {
-                        setText("You hit $boyName's groin.",
+                        ui.setText("You hit ${schoolDay.surpriseBoy.name}'s groin.",
                                 "Ouch!.. You, little bitch...",
                                 "Then he left the restroom quickly.",
                                 "You got off from the windowsill while holding your crotch,",
@@ -1435,7 +1391,7 @@ class ALongHourAndAHalf {
                                         character.undies.insert + ",",
                                 "wearily flop down on the toilet and start peeing.")
                     } else {
-                        setText("You hit $boyName's groin.",
+                        ui.setText("You hit ${schoolDay.surpriseBoy.name}'s groin.",
                                 "Ouch!.. You, little bitch...",
                                 "Then he left the restroom quickly.",
                                 "You got off from the windowsill while holding your crotch,",
@@ -1444,173 +1400,173 @@ class ALongHourAndAHalf {
                     }
                 }
             } else {
-                nextStage = GameStage.SURPRISE_WET_PRESSURE
-                setLinesAsDialogue(2, 3)
-                setText("You hit $boyName's hand. Damn, you'd meant to hit his groin...",
+                plot.nextStage = GameStage.SURPRISE_WET_PRESSURE
+                ui.setLinesAsDialogue(2, 3)
+                ui.setText("You hit ${schoolDay.surpriseBoy.name}'s hand. Damn, you'd meant to hit his groin...",
                         "You're braver than I expected;",
                         "now let's check the strength of your fullness!",
-                        boyName + " pressed your fullness violently...")
+                        schoolDay.surpriseBoy.name + " pressed your fullness violently...")
             }
 
-            PERSUADE -> when (timesPeeDenied) {
-                0 -> if (generator.nextInt(100) <= 10) {
-                    setLinesAsDialogue(1)
+            PERSUADE -> when (schoolDay.surpriseBoy.timesPeeDenied) {
+                0 -> if (random.nextInt(100) <= 10) {
+                    ui.setLinesAsDialogue(1)
                     if (!character.lower.isMissing) {
                         if (!character.undies.isMissing) {
-                            setText("Ok, you may, but you'll let me watch you pee.",
-                                    "states $boyName. You enter the cabin,",
+                            ui.setText("Ok, you may, but you'll let me watch you pee.",
+                                    "states ${schoolDay.surpriseBoy.name}. You enter the cabin,",
                                     "pull down your " + character.lower.insert + " and " +
                                             character.undies.insert + ",",
-                                    "stand over the toilet and start peeing under $boyName's watch.")
+                                    "stand over the toilet and start peeing under ${schoolDay.surpriseBoy.name}'s watch.")
                         } else {
-                            setText("Ok, you may, but you'll let me watch you pee.",
-                                    "states $boyName. You enter the cabin,",
+                            ui.setText("Ok, you may, but you'll let me watch you pee.",
+                                    "states ${schoolDay.surpriseBoy.name}. You enter the cabin,",
                                     "pull down your " + character.lower.insert + ",",
-                                    "stand over the toilet and start peeing under $boyName's watch.")
+                                    "stand over the toilet and start peeing under ${schoolDay.surpriseBoy.name}'s watch.")
                         }
                     } else {
                         if (!character.undies.isMissing) {
-                            setText("Ok, you may, but you'll let me watch you pee.",
-                                    "states $boyName. You enter the cabin,",
+                            ui.setText("Ok, you may, but you'll let me watch you pee.",
+                                    "states ${schoolDay.surpriseBoy.name}. You enter the cabin,",
                                     "pull down your " + character.undies.insert + ",",
-                                    "stand over the toilet and start peeing under $boyName's watch.")
+                                    "stand over the toilet and start peeing under ${schoolDay.surpriseBoy.name}'s watch.")
                         } else {
-                            setText("Ok, you may, but you'll let me watch you pee.",
-                                    "states $boyName. You enter the cabin,",
-                                    "stand over the toilet and start peeing under $boyName's watch.")
+                            ui.setText("Ok, you may, but you'll let me watch you pee.",
+                                    "states ${schoolDay.surpriseBoy.name}. You enter the cabin,",
+                                    "stand over the toilet and start peeing under ${schoolDay.surpriseBoy.name}'s watch.")
                         }
                     }
-                    scorer.nominate("Persuaded $boyName to pee", 40, ArithmeticAction.ADD)
+                    scorer.countOut("Persuaded ${schoolDay.surpriseBoy.name} to pee", 40, ArithmeticAction.ADD)
                     character.fullness = 0.0
-                    nextStage = END_GAME
+                    plot.nextStage = END_GAME
                 } else {
-                    setText("You ask $boyName if you can pee.",
+                    ui.setText("You ask ${schoolDay.surpriseBoy.name} if you can pee.",
                             "No, you can't pee in a cabin. I want you to wet yourself.,",
-                            boyName + " says.")
-                    timesPeeDenied++
-                    nextStage = SURPRISE_DIALOGUE
+                            schoolDay.surpriseBoy.name + " says.")
+                    schoolDay.surpriseBoy.timesPeeDenied++
+                    plot.nextStage = SURPRISE_DIALOGUE
                 }
 
-                1 -> if (generator.nextInt(100) <= 5) {
+                1 -> if (random.nextInt(100) <= 5) {
                     if (!character.lower.isMissing) {
                         if (!character.undies.isMissing) {
-                            setText("Ok, you may, but you'll let me watch you pee.",
-                                    "states $boyName. You enter the cabin,",
+                            ui.setText("Ok, you may, but you'll let me watch you pee.",
+                                    "states ${schoolDay.surpriseBoy.name}. You enter the cabin,",
                                     "pull down your " + character.lower.insert + " and " +
                                             character.undies.insert + ",",
-                                    "stand over the toilet and start peeing under $boyName's watch.")
+                                    "stand over the toilet and start peeing under ${schoolDay.surpriseBoy.name}'s watch.")
                         } else {
-                            setText("Ok, you may, but you'll let me watch you pee.",
-                                    "states $boyName. You enter the cabin,",
+                            ui.setText("Ok, you may, but you'll let me watch you pee.",
+                                    "states ${schoolDay.surpriseBoy.name}. You enter the cabin,",
                                     "pull down your " + character.lower.insert + ",",
-                                    "stand over the toilet and start peeing under $boyName's watch.")
+                                    "stand over the toilet and start peeing under ${schoolDay.surpriseBoy.name}'s watch.")
                         }
                     } else {
                         if (!character.undies.isMissing) {
-                            setText("Ok, you may, but you'll let me watch you pee.",
-                                    "states $boyName. You enter the cabin,",
+                            ui.setText("Ok, you may, but you'll let me watch you pee.",
+                                    "states ${schoolDay.surpriseBoy.name}. You enter the cabin,",
                                     "pull down your " + character.undies.insert + ",",
-                                    "stand over the toilet and start peeing under $boyName's watch.")
+                                    "stand over the toilet and start peeing under ${schoolDay.surpriseBoy.name}'s watch.")
                         } else {
-                            setText("Ok, you may, but you'll let me watch you pee.",
-                                    "states $boyName. You enter the cabin,",
-                                    "stand over the toilet and start peeing under $boyName's watch.")
+                            ui.setText("Ok, you may, but you'll let me watch you pee.",
+                                    "states ${schoolDay.surpriseBoy.name}. You enter the cabin,",
+                                    "stand over the toilet and start peeing under ${schoolDay.surpriseBoy.name}'s watch.")
                         }
                     }
-                    scorer.nominate("Persuaded $boyName to pee", 60, ArithmeticAction.ADD)
+                    scorer.countOut("Persuaded ${schoolDay.surpriseBoy.name} to pee", 60, ArithmeticAction.ADD)
                     character.fullness = 0.0
-                    nextStage = END_GAME
+                    plot.nextStage = END_GAME
                 } else {
-                    setText("You ask $boyName if you can pee again.",
+                    ui.setText("You ask ${schoolDay.surpriseBoy.name} if you can pee again.",
                             "No, you can't pee in a cabin. I want you to wet yourself. You're doing it now.",
-                            boyName + " demands.")
-                    timesPeeDenied++
-                    nextStage = SURPRISE_DIALOGUE
+                            schoolDay.surpriseBoy.name + " demands.")
+                    schoolDay.surpriseBoy.timesPeeDenied++
+                    plot.nextStage = SURPRISE_DIALOGUE
                 }
 
-                2 -> if (generator.nextInt(100) <= 2) {
+                2 -> if (random.nextInt(100) <= 2) {
                     if (!character.lower.isMissing) {
                         if (!character.undies.isMissing) {
-                            setText("Ok, you may, but you'll let me watch you pee.",
-                                    "states $boyName. You enter the cabin,",
+                            ui.setText("Ok, you may, but you'll let me watch you pee.",
+                                    "states ${schoolDay.surpriseBoy.name}. You enter the cabin,",
                                     "pull down your " + character.lower.insert + " and " +
                                             character.undies.insert + ",",
-                                    "stand over the toilet and start peeing under $boyName's watch.")
+                                    "stand over the toilet and start peeing under ${schoolDay.surpriseBoy.name}'s watch.")
                         } else {
-                            setText("Ok, you may, but you'll let me watch you pee.",
-                                    "states $boyName. You enter the cabin,",
+                            ui.setText("Ok, you may, but you'll let me watch you pee.",
+                                    "states ${schoolDay.surpriseBoy.name}. You enter the cabin,",
                                     "pull down your " + character.lower.insert + ",",
-                                    "stand over the toilet and start peeing under $boyName's watch.")
+                                    "stand over the toilet and start peeing under ${schoolDay.surpriseBoy.name}'s watch.")
                         }
                     } else {
                         if (!character.undies.isMissing) {
-                            setText("Ok, you may, but you'll let me watch you pee.",
-                                    "states $boyName. You enter the cabin,",
+                            ui.setText("Ok, you may, but you'll let me watch you pee.",
+                                    "states ${schoolDay.surpriseBoy.name}. You enter the cabin,",
                                     "pull down your " + character.undies.insert + ",",
-                                    "stand over the toilet and start peeing under $boyName's watch.")
+                                    "stand over the toilet and start peeing under ${schoolDay.surpriseBoy.name}'s watch.")
                         } else {
-                            setText("Ok, you may, but you'll let me watch you pee.",
-                                    "states $boyName. You enter the cabin,",
-                                    "stand over the toilet and start peeing under $boyName's watch.")
+                            ui.setText("Ok, you may, but you'll let me watch you pee.",
+                                    "states ${schoolDay.surpriseBoy.name}. You enter the cabin,",
+                                    "stand over the toilet and start peeing under ${schoolDay.surpriseBoy.name}'s watch.")
                         }
                     }
 
-                    scorer.nominate("Persuaded $boyName to pee", 80, ArithmeticAction.ADD)
+                    scorer.countOut("Persuaded ${schoolDay.surpriseBoy.name} to pee", 80, ArithmeticAction.ADD)
                     character.fullness = 0.0
-                    nextStage = END_GAME
+                    plot.nextStage = END_GAME
                 } else {
-                    setText("You ask $boyName if you can pee again desperately.",
+                    ui.setText("You ask ${schoolDay.surpriseBoy.name} if you can pee again desperately.",
                             "No, you can't pee in a cabin. You will wet yourself right now,",
-                            boyName + " demands.",
-                            "Then $boyName pressed your fullness...")
-                    nextStage = SURPRISE_WET_PRESSURE
+                            schoolDay.surpriseBoy.name + " demands.",
+                            "Then ${schoolDay.surpriseBoy.name} pressed your fullness...")
+                    plot.nextStage = SURPRISE_WET_PRESSURE
                 }
             }
 
             SURPRISE_WET_VOLUNTARY -> {
-                setLinesAsDialogue(1, 3)
-                setText("Alright, as you say.,",
-                        "you say to $boyName with a defeated sigh.",
+                ui.setLinesAsDialogue(1, 3)
+                ui.setText("Alright, as you say.,",
+                        "you say to ${schoolDay.surpriseBoy.name} with a defeated sigh.",
                         "Whatever, I really can't hold it anymore anyways...")
                 character.fullness = 0.0
-                nextStage = SURPRISE_WET_VOLUNTARY2
+                plot.nextStage = SURPRISE_WET_VOLUNTARY2
             }
 
             SURPRISE_WET_VOLUNTARY2 -> {
                 if (!character.undies.isMissing) {
                     if (!character.lower.isMissing) {
-                        setText("You feel the warm pee stream",
+                        ui.setText("You feel the warm pee stream",
                                 "filling your " + character.undies.insert + " and darkening your " +
                                         character.lower.insert + ".",
                                 "You close your eyes and ease your sphincter off.",
                                 "You feel the pee stream become much stronger.")
                     } else {
-                        setText("You feel the warm pee stream",
+                        ui.setText("You feel the warm pee stream",
                                 "filling your " + character.undies.insert + ".",
                                 "You close your eyes and ease your sphincter off.",
                                 "You feel the pee stream become much stronger.")
                     }
                 } else {
                     if (!character.lower.isMissing) {
-                        setText("You feel the warm pee stream",
+                        ui.setText("You feel the warm pee stream",
                                 "filling your " + character.lower.insert + ".",
                                 "You close your eyes and ease your sphincter off.",
                                 "You feel the pee stream become much stronger.")
                     } else {
-                        setText("You feel the warm pee stream",
+                        ui.setText("You feel the warm pee stream",
                                 "running down your legs.",
                                 "You close your eyes and ease your sphincter off.",
                                 "You feel the pee stream become much stronger.")
                     }
                 }
                 character.fullness = 0.0
-                nextStage = END_GAME
+                plot.nextStage = END_GAME
             }
 
             SURPRISE_WET_PRESSURE -> {
                 if (!character.undies.isMissing) {
                     if (!character.lower.isMissing) {
-                        setText("Ouch... The sudden pain flash passes through your fullness...",
+                        ui.setText("Ouch... The sudden pain flash passes through your fullness...",
                                 "You try to hold the pee back, but you just can't.",
                                 "You feel the warm pee stream",
                                 "filling your " + character.undies.insert + " and darkening your " +
@@ -1618,7 +1574,7 @@ class ALongHourAndAHalf {
                                 "You close your eyes and ease your sphincter off.",
                                 "You feel the pee stream become much stronger.")
                     } else {
-                        setText("Ouch... The sudden pain flash passes through your fullness...",
+                        ui.setText("Ouch... The sudden pain flash passes through your fullness...",
                                 "You try to hold the pee back, but you just can't.",
                                 "You feel the warm pee stream",
                                 "filling your " + character.undies.insert + ".",
@@ -1627,14 +1583,14 @@ class ALongHourAndAHalf {
                     }
                 } else {
                     if (!character.lower.isMissing) {
-                        setText("Ouch... The sudden pain flash passes through your fullness...",
+                        ui.setText("Ouch... The sudden pain flash passes through your fullness...",
                                 "You try to hold the pee back, but you just can't.",
                                 "You feel the warm pee stream",
                                 "filling your " + character.lower.insert + ".",
                                 "You close your eyes and ease your sphincter off.",
                                 "You feel the pee stream become much stronger.")
                     } else {
-                        setText("Ouch... The sudden pain flash passes through your fullness...",
+                        ui.setText("Ouch... The sudden pain flash passes through your fullness...",
                                 "You try to hold the pee back, but you just can't.",
                                 "You feel the warm pee stream",
                                 "running down your legs.",
@@ -1643,316 +1599,79 @@ class ALongHourAndAHalf {
                     }
                 }
                 character.fullness = 0.0
-                nextStage = END_GAME
+                plot.nextStage = END_GAME
             }
 
             DRINK -> {
-                setText("You take your bottle with water,",
+                ui.setText("You take your bottle with water,",
                         "open it and take a small sip of water.")
                 character.belly += character.thirst.toDouble()
                 character.thirst = 0
-                nextStage = ASK_ACTION
+                plot.nextStage = ASK_ACTION
             }
 
-            else -> setText("Error parsing button. Next text is unavailable, text #" + nextStage)
+            else -> ui.setText("Error parsing button. Next text is unavailable, text #" + plot.nextStage)
         }//Don't go further if player selected no or unavailable action
         //                }while(listChoice.isSelectionEmpty()||listChoice.getSelectedValue().equals("[Unavailable]"));
         //                } while (listChoice.isSelectionEmpty());
         //case template
         //      case 4:
-        //   setText("");
-        //   nextStage = ;
+        //   ui.setText("");
+        //   plot.nextStage = ;
         //   break;
     }
 
-    /**
-     * Increments the time by specified amount of minutes and all time-related parameters.
-     *
-     * @param time amount of time increase.
-     */
-    fun passTime(time: Int = 3) {
-        world.time += time
-        character.fullness += time * 1.5
-        character.belly -= -time * 1.5
+    fun writeSaveFile() {
+        val fcGame = SaveFileChooser(File(character.name))
 
-        if (world.time >= classEndingTime) {
-            setText("You hear the bell finally ring.")
-            nextStage = CLASS_OVER
-        }
+        if (fcGame.showSaveDialog(ui) != JFileChooser.APPROVE_OPTION) return
 
-        testWet()
+        val file = File(fcGame.selectedFile.absolutePath + ".lhhsav")
+        try {
+            val save = Save(this)
+            val fileOutputStream = FileOutputStream(file)
+            val objectOutputStream = ObjectOutputStream(fileOutputStream)
 
-        //Decrementing sphincter power for every 3 minutes
-        for (i in 0 until time) {
-            decaySphPower()
-            if (character.belly != 0.0) {
-                if (character.belly > 3) {
-                    character.fullness += 2.0
-                } else {
-                    character.fullness += character.belly
-                    character.belly = 0.0
-                }
-            }
-        }
-        if (hardcore) {
-            character.thirst += 2
-            if (character.thirst > Character.MAXIMAL_THIRST) {
-                nextStage = DRINK
-            }
+            objectOutputStream.writeObject(save)
+        } catch (e: IOException) {
+            e.printStackTrace()
+            JOptionPane.showMessageDialog(ui, "File error.", "Error", JOptionPane.ERROR_MESSAGE)
         }
     }
 
-    //TODO: Refactor
-    /**
-     * Checks the wetting conditions, and if they are met, wetting.
-     */
-    private fun testWet() {
-        //If fullness is filled more than 130 points in the normal mode
-        //and 100 points in the hardcore mode, forcing wetting
-        if ((character.fullness >= character.maxBladder) and !hardcore) {
-            character.sphincterSpasm()
-        } else
-        //If fullness is filled more than 100 points in the normal mode and 50 points in the hardcore mode,
-        //character has a chance to wet
-        {
-            if (
-            (character.fullness > character.maxBladder - 30)
-                    && !hardcore
-                    || (
-                    (character.fullness > character.maxBladder - 20) && hardcore
-                    )
-                    ) {
-                val wetChance = if (hardcore)
-                    5 * (character.fullness - 80)
-                else
-                    3 * (character.fullness - 100) + character.embarrassment
-
-                if (generator.nextInt(100) < wetChance) {
-                    character.sphincterSpasm()
-                }
-            }
-        }
-    }
-
-    /**
-     * Decreases the sphincter power.
-     */
-    private fun decaySphPower() {   //TODO: Move to Bladder
-        character.sphincterPower -= (character.fullness / 30).toInt()
-        if (character.sphincterPower < 0) {
-            character.dryness -= 5f //Decreasing dryness
-            character.fullness -= 2.5 //Decreasing fullness level
-            character.sphincterPower = 0
-            if (character.dryness > MINIMAL_DRYNESS) {
-                //Naked
-                if (character.lower.isMissing && character.undies.isMissing) {
-                    setText("You feel the leak running down your thighs...",
-                            "You're about to pee! You must stop it!")
-                } else
-                //Outerwear
-                {
-                    if (!character.lower.isMissing) {
-                        setText("You see the wet spot expand on your " + character.lower.insert + "!",
-                                "You're about to pee! You must stop it!")
-                    } else
-                    //Underwear
-                    {
-                        if (!character.undies.isMissing) {
-                            setText("You see the wet spot expand on your " + character.undies.insert + "!",
-                                    "You're about to pee! You must stop it!")
-                        }
-                    }
-                }
-            }
-
-            if (character.dryness < MINIMAL_DRYNESS) {
-                if (character.lower.isMissing && character.undies.isMissing) {
-                    if (character.cornered) {
-                        setText("You see a puddle forming on the floor beneath you, you're peeing!",
-                                "It's too much...")
-                        nextStage = ACCIDENT
-                        handleNextClicked()
-                    } else {
-                        setText("Feeling the pee hit the chair and soon fall over the sides,",
-                                "you see a puddle forming under your chair, you're peeing!",
-                                "It's too much...")
-                        nextStage = ACCIDENT
-                        handleNextClicked()
-                    }
-                } else {
-                    if (!character.lower.isMissing) {
-                        setText("You see the wet spot expanding on your " + character.lower.insert + "!",
-                                "It's too much...")
-                        nextStage = ACCIDENT
-                        handleNextClicked()
-                    } else {
-                        if (!character.undies.isMissing) {
-                            setText("You see the wet spot expanding on your " + character.undies.insert + "!",
-                                    "It's too much...")
-                            nextStage = ACCIDENT
-                            handleNextClicked()
-                        }
-                    }
-                }
-            }
-        }
-
-    }
-
-    private fun setLinesAsDialogue(vararg lines: Int) {
-        for (i in lines) {
-            dialogueLines[i - 1] = true
-        }
-    }
-
-    /**
-     * Sets the in-core text.
-     *
-     * @param lines the in-core text to set
-     */
-    private fun setText(vararg lines: String) {
-        if (lines.size > MAX_LINES) {
-            System.err.println("You can't have more than $MAX_LINES lines at a time!")
-            return
-        }
-        if (lines.isEmpty()) {
-            ui.textLabel.text = ""
-            return
-        }
-
-        var toSend = "<html><center>"
-
-        for (i in lines.indices) {
-            toSend += if (dialogueLines[i]) {
-                "<i>\"" + lines[i] + "\"</i>"
-            } else {
-                lines[i]
-            }
-            toSend += "<br>"
-
-        }
-        toSend += "</center></html>"
-        ui.textLabel.text = toSend
-        this.dialogueLines = BooleanArray(MAX_LINES)
-    }
-
-    private fun hideActionUI(): Int {
-        val choice = ui.listChoice.selectedIndex
-        actionList.clear()
-        ui.lblChoice.isVisible = false
-        ui.listScroller.isVisible = false
-        return choice
-    }
-
-    private fun showActionUI(actionGroupName: String) {
-        ui.lblChoice.isVisible = true
-        ui.lblChoice.text = actionGroupName
-        ui.listScroller.isVisible = true
-    }
-
-    internal fun save() {
+    fun openSaveFile() {
         val fcGame = SaveFileChooser()
-        fcGame.selectedFile = File(character.name)
-        if (fcGame.showSaveDialog(ui) == JFileChooser.APPROVE_OPTION) {
-            val file = File(fcGame.selectedFile.absolutePath + ".lhhsav")
-            //            PrintStream writer;
-            val fileOutputStream: FileOutputStream
-            val objectOutputStream: ObjectOutputStream
-            try {
-                val save = Save(this)
-                //                writer = new PrintStream(file);
-                fileOutputStream = FileOutputStream(file)
-                objectOutputStream = ObjectOutputStream(fileOutputStream)
-                objectOutputStream.writeObject(save)
-            } catch (e: IOException) {
-                e.printStackTrace()
-                JOptionPane.showMessageDialog(ui, "File error.", "Error", JOptionPane.ERROR_MESSAGE)
-            }
+
+        if (fcGame.showOpenDialog(ui) != JFileChooser.APPROVE_OPTION) return
+
+        val file = fcGame.selectedFile!!
+        try {
+            val fin = FileInputStream(file)
+            val ois = ObjectInputStream(fin)
+            val save = ois.readObject() as Save
+            Core(save)
+            ui.dispose()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            JOptionPane.showMessageDialog(ui, "File error.", "Error", JOptionPane.ERROR_MESSAGE)
         }
     }
 
-    internal fun load() {
-        val fcGame = SaveFileChooser()
-        if (fcGame.showOpenDialog(ui) == JFileChooser.APPROVE_OPTION) {
-            val file = fcGame.selectedFile
-            try {
-                val fin = FileInputStream(file)
-                val ois = ObjectInputStream(fin)
-                val save = ois.readObject() as Save
-                ALongHourAndAHalf(save)
-                ui.dispose()
-            } catch (e: Exception) {
-                e.printStackTrace()
-                JOptionPane.showMessageDialog(ui, "File error.", "Error", JOptionPane.ERROR_MESSAGE)
-            }
-        }
-    }
-
-    enum class GameStage {
-        LEAVE_BED,
-        LEAVE_HOME,
-        GO_TO_CLASS,
-        WALK_IN,
-        SIT_DOWN,
-        ASK_ACTION,
-        CHOSE_ACTION,
-        ASK_TO_PEE,
-        CALLED_ON,
-        CAUGHT,
-        USE_BOTTLE,
-        ASK_CHEAT,
-        CHOSE_CHEAT,
-        CLASS_OVER,
-        AFTER_CLASS,
-        ACCIDENT,
-        GIVE_UP,
-        WET,
-        POST_WET,
-        GAME_OVER,
-        END_GAME,
-        SURPRISE,
-        SURPRISE_2,
-        SURPRISE_ACCIDENT,
-        SURPRISE_DIALOGUE,
-        SURPRISE_CHOSE,
-        HIT,
-        PERSUADE,
-        SURPRISE_WET_VOLUNTARY,
-        SURPRISE_WET_VOLUNTARY2,
-        SURPRISE_WET_PRESSURE,
-        DRINK
+    /**
+     * Resets the core and values, optionally letting player to select new parameters.
+     *
+     * @param newValues whether to suggest user to select new core parameters.
+     */
+    fun reset(newValues: Boolean) {
+        if (newValues)
+            setupFramePre().isVisible = true
+        else
+        //Creating new core
+            Core(gameStartSave)
     }
 
     companion object {
-        //Maximal lines of a text
-        private val MAX_LINES = 9
-
-        val gameBeginningTime = Time(8, 52)
-        val classBeginningTime = Time(9, 0)
-        val classDuration = Time(1, 30)
-        private val classEndingTime = classBeginningTime + classDuration
-
-        /**
-         * The dryness core over minimal threshold.
-         */
-        val MINIMAL_DRYNESS = 0
-
-        //Random stuff generator
-        var generator = Random()
-
-        private var gameStartSave: Save? = null
-
-        /**
-         * Resets the core and values, optionally letting player to select new parameters.
-         *
-         * @param newValues whether to suggest user to select new core parameters
-         */
-        fun reset(newValues: Boolean) {
-            if (newValues) {
-                setupFramePre().isVisible = true
-            } else {
-                ALongHourAndAHalf(gameStartSave!!)
-            }
-        }
+        private val random = Random()
+        private lateinit var gameStartSave: Save
     }
 }

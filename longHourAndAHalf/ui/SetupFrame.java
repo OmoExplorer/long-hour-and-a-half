@@ -1,7 +1,7 @@
 package longHourAndAHalf.ui;
 
-import longHourAndAHalf.ALongHourAndAHalf;
 import longHourAndAHalf.Character;
+import longHourAndAHalf.Core;
 import longHourAndAHalf.Gender;
 import longHourAndAHalf.Wear;
 
@@ -80,7 +80,7 @@ public class SetupFrame {
             boolean hardDifficulty = hardDifficultyRadioButton.isSelected();
 
             //noinspection ResultOfObjectAllocationIgnored
-            new ALongHourAndAHalf(
+            new Core(
                     new Character(
                             nameTextField.getText(),
                             gender,

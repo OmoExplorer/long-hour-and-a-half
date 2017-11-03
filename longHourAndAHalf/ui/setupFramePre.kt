@@ -19,7 +19,6 @@ import javax.swing.tree.DefaultTreeModel
  * @author NetBeans Frame Generator, JavaBird
  */
 class setupFramePre : JFrame() {
-    internal var game: Save? = null
     private var undiesColor = WearColor.RANDOM
     private var lowerColor = WearColor.RANDOM
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -1050,7 +1049,7 @@ class setupFramePre : JFrame() {
 
         println(lowerColor)
 
-        ALongHourAndAHalf(
+        Core(
                 Character(
                         nameField!!.text,
                         gnd,
@@ -1507,7 +1506,7 @@ class setupFramePre : JFrame() {
                 val fin = FileInputStream(file)
                 val ois = ObjectInputStream(fin)
                 val save = ois.readObject() as Save
-                ALongHourAndAHalf(save)
+                Core(save)
                 dispose()
             } catch (e: Exception) {
                 JOptionPane.showMessageDialog(this, "File error.", "Error", JOptionPane.ERROR_MESSAGE)
