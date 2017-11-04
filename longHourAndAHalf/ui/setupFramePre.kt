@@ -214,7 +214,7 @@ class setupFramePre : JFrame() {
 
         start!!.font = Font("sansserif", 1, 12) // NOI18N
         start!!.text = "Start"
-        start!!.toolTipText = "Start new core"
+        start!!.toolTipText = "Start new game"
         start!!.name = "start" // NOI18N
         start!!.addActionListener { startActionPerformed() }
 
@@ -819,12 +819,12 @@ class setupFramePre : JFrame() {
         )
 
         wearEditorButton!!.text = "Wear editor"
-        wearEditorButton!!.toolTipText = "Create your own wear and use it in core."
+        wearEditorButton!!.toolTipText = "Create your own wear and use it in game."
         wearEditorButton!!.name = "wearEditorButton" // NOI18N
         wearEditorButton!!.addActionListener { wearEditorButtonActionPerformed() }
 
-        loadGame!!.text = "Load core..."
-        loadGame!!.toolTipText = "Load a paused core"
+        loadGame!!.text = "Load game..."
+        loadGame!!.toolTipText = "Load a paused game"
         loadGame!!.name = "loadGame" // NOI18N
         loadGame!!.addActionListener { loadGameActionPerformed() }
 

@@ -11,7 +11,7 @@ abstract class AbstractWear(var name: String) : Serializable {
 }
 
 /**
- * Wear stubs that aren't intended to be used in core.
+ * Wear stubs that aren't intended to be used in game.
  */
 class MaintenanceWear(name: String, val instead: () -> Wear) : AbstractWear(name)
 
@@ -20,7 +20,7 @@ class MaintenanceWear(name: String, val instead: () -> Wear) : AbstractWear(name
  *
  * @author JavaBird
  *
- * @property insert Name used in a core text (for example "panties")
+ * @property insert Name used in a game text (for example "panties")
  * @property pressure Pressure of this wear.
  * 1 point of a pressure takes 1 point from a maximal fullness capacity.
  * @property absorption Absorption of this wear.

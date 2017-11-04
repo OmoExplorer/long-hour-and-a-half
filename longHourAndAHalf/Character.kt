@@ -13,8 +13,8 @@ import java.util.*
 class Character(
         name: String,
         var gender: Gender,
-        fullness: Double = Random().nextInt(50).toDouble(),
-        incontinence: Double,
+        private val fullness: Double = Random().nextInt(50).toDouble(),
+        private val incontinence: Double,
         undies: Wear,
         lower: Wear
 ) : Serializable {
@@ -22,6 +22,11 @@ class Character(
      * Game instance to operate with.
      */
     @Transient lateinit var core: Core
+
+    fun finishSetup(core: Core) {
+        this.core = core
+        bladder = Bladder(fullness, incontinence, core)
+    }
 
     /**
      * Character's name.
@@ -35,7 +40,7 @@ class Character(
     /**
      * Character's bladder.
      */
-    val bladder = Bladder(fullness, incontinence, core)
+    lateinit var bladder: Bladder
 
     /**
      * Character's underwear.

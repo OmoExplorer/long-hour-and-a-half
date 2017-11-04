@@ -133,10 +133,10 @@ class WearEditor : javax.swing.JFrame() {
         this.openButton!!.addActionListener { evt -> this@WearEditor.openButtonActionPerformed(evt) }
 
         this.insertNameLabel!!.text = "Wear insert name"
-        this.insertNameLabel!!.toolTipText = "Your wear name which is inserted in the core text (e. g. \"skirt\")"
+        this.insertNameLabel!!.toolTipText = "Your wear name which is inserted in the game text (e. g. \"skirt\")"
         this.insertNameLabel!!.name = "insertNameLabel" // NOI18N
 
-        this.insertNameField!!.toolTipText = "Your wear name which is inserted in the core text (e. g. \"skirt\")"
+        this.insertNameField!!.toolTipText = "Your wear name which is inserted in the game text (e. g. \"skirt\")"
         this.insertNameField!!.name = "insertNameField" // NOI18N
 
         val layout = GroupLayout(this.contentPane)

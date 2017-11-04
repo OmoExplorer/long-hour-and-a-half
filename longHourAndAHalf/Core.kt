@@ -129,7 +129,7 @@ class Core {
     val ui: StandardGameUI
 
     /**
-     * Virtual core world data.
+     * Virtual game world data.
      */
     val world: World
 
@@ -162,7 +162,6 @@ class Core {
     )
 
     private fun openCustomWear(type: WearType): Wear? {
-
         fun abort(message: String) {
             JOptionPane.showMessageDialog(null, message, "", JOptionPane.ERROR_MESSAGE)
             ui.dispose()
@@ -215,12 +214,12 @@ class Core {
     constructor(character: Character, hardcore: Boolean) {
         this.hardcore = hardcore
         this.character = character
-        this.character.core = this
+        this.character.finishSetup(this)
         this.character.bladder.finishSetup(this)
         world = World(this)
         world.core = this
         cheatData = CheatData()
-        schoolDay = SchoolDay()
+        schoolDay = SchoolDay(this)
         plot = Plot()
         scorer = Scorer()
 
@@ -286,7 +285,7 @@ class Core {
     constructor(save: Save) {
         hardcore = save.hardcore
         character = save.character
-        character.core = this
+        character.finishSetup(this)
         character.bladder.finishSetup(this)
         world = save.world
         world.core = this
@@ -303,7 +302,7 @@ class Core {
 
         ui.showBladderAndTime()
 
-        ui.setText("Loading complete. Click \"Next\" to continue the core.")
+        ui.setText("Loading complete. Click \"Next\" to continue the game.")
 
 //        handleNextClicked()
 
@@ -314,7 +313,7 @@ class Core {
         //Making fullness smaller in the hardcore mode, adding hardcore label
         if (hardcore) ui.hardcoreModeToggled(true)
 
-        gameStartSave = Save(this)   //Saving core for a reset
+        gameStartSave = Save(this)   //Saving game for a reset
 
         ui.isVisible = true     //Displaying the frame
     }
@@ -1661,9 +1660,9 @@ class Core {
     }
 
     /**
-     * Resets the core and values, optionally letting player to select new parameters.
+     * Resets the game and values, optionally letting player to select new parameters.
      *
-     * @param newValues whether to suggest user to select new core parameters.
+     * @param newValues whether to suggest user to select new game parameters.
      */
     fun reset(newValues: Boolean) {
         if (newValues)

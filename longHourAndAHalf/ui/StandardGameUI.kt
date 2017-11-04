@@ -117,9 +117,9 @@ class StandardGameUI(override val core: Core) : JFrame("A Long Hour and a Half")
     var dialogueLines = BooleanArray(MAX_LINES)
 
     /**
-     * Sets the in-core text.
+     * Sets the in-game text.
      *
-     * @param lines the in-core text to set
+     * @param lines the in-game text to set
      */
     fun setText(vararg lines: String) {
         if (lines.size > MAX_LINES) {
@@ -216,10 +216,10 @@ class StandardGameUI(override val core: Core) : JFrame("A Long Hour and a Half")
                 "Start the core over with the same parameters."
         )
 
-        addUtilButton("New core",
+        addUtilButton("New game",
                 { core.reset(true); dispose() },
                 Rectangle(102, ACTION_BUTTONS_TOP_BORDER, ACTION_BUTTONS_WIDTH, ACTION_BUTTONS_HEIGHT),
-                "Start the core over with the another parameters."
+                "Start the game over with the another parameters."
         )
 
         lblName.font = tahomaFont18
@@ -228,14 +228,14 @@ class StandardGameUI(override val core: Core) : JFrame("A Long Hour and a Half")
 
         lblBladder.font = tahomaFont15
         lblBladder.setBounds(20, 210, 200, 32)
-        lblBladder.toolTipText = "<html>Normal core:" +
+        lblBladder.toolTipText = "<html>Normal game:" +
                 "<br>100% = need to hold, regular leaks" +
-                "<br>130% = peeing(core over)" +
+                "<br>130% = peeing(game over)" +
                 "<br>" +
                 "<br>" +
                 "Hardcore:" +
                 "<br>80% = need to hold, regular leaks" +
-                "<br>100% = peeing(core over)</html>"
+                "<br>100% = peeing(game over)</html>"
         contentPane.add(lblBladder)
 
         lblEmbarrassment.font = tahomaFont15
@@ -313,13 +313,13 @@ class StandardGameUI(override val core: Core) : JFrame("A Long Hour and a Half")
         bladderBar.setBounds(16, 212, 455, 25)
         bladderBar.maximum = 130
         bladderBar.value = core.character.bladder.fullness.toInt()
-        bladderBar.toolTipText = "<html>Normal core:" +
+        bladderBar.toolTipText = "<html>Normal game:" +
                 "<br>100% = need to hold, regular leaks" +
-                "<br>130% = peeing(core over)" +
+                "<br>130% = peeing(game over)" +
                 "<br>" +
                 "<br>Hardcore:" +
                 "<br>80% = need to hold, regular leaks" +
-                "<br>100% = peeing(core over)</html>"
+                "<br>100% = peeing(game over)</html>"
         contentPane.add(bladderBar)
 
         sphincterBar.setBounds(16, 362, 455, 25)

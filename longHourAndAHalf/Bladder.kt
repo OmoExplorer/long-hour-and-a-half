@@ -116,7 +116,7 @@ class Bladder(
 
     /**
      * Sets sphincter power to 0 and checks if wear is too wet.
-     * Directs the core to accident ending if so.
+     * Directs the game to accident ending if so.
      */
     fun sphincterSpasm() {
         sphincterPower = 0
