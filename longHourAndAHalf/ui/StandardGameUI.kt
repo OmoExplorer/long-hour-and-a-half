@@ -1,6 +1,8 @@
 package longHourAndAHalf.ui
 
 import longHourAndAHalf.*
+import longHourAndAHalf.Action
+import longHourAndAHalf.WearCombinationType.*
 import java.awt.Color
 import java.awt.Font
 import java.awt.Rectangle
@@ -9,6 +11,18 @@ import javax.swing.*
 import javax.swing.border.EmptyBorder
 
 class StandardGameUI(override val core: Core) : JFrame("A Long Hour and a Half"), UIGameEventHandler {
+    override var actionMustBeSelected = false
+
+    override fun actionsChanged(actionGroupName: String, actions: List<Action>) {
+        listChoice.setListData(actions.toTypedArray())
+        listChoice.selectedIndex = 0
+        showActionUI(actionGroupName)
+    }
+
+    override fun gameFinished() {
+        btnNext.isVisible = false
+    }
+
     override fun embarrassmentChanged(embarrassment: Int) {
         lblEmbarrassment.text = "Embarrassment: $embarrassment"
     }
@@ -121,44 +135,25 @@ class StandardGameUI(override val core: Core) : JFrame("A Long Hour and a Half")
      *
      * @param lines the in-game text to set
      */
-    fun setText(vararg lines: String) {
-        if (lines.size > MAX_LINES) {
-            System.err.println("You can't have more than $MAX_LINES lines at a time!")
-            return
-        }
-        if (lines.isEmpty()) {
-            textLabel.text = ""
-            return
-        }
-
+    private fun setText(text: Text) {
         var toSend = "<html><center>"
 
-        for (i in lines.indices) {
-            toSend += if (dialogueLines[i]) {
-                "<i>\"" + lines[i] + "\"</i>"
-            } else {
-                lines[i]
-            }
-            toSend += "<br>"
+        text.lines.forEach {
+            toSend += if (it.italic)
+                "<i>\"${it.text}\"</i>"
+            else
+                it.text
 
+            toSend += "<br>"
         }
+
         toSend += "</center></html>"
         textLabel.text = toSend
-        dialogueLines = BooleanArray(MAX_LINES)
     }
 
-    fun setLinesAsDialogue(vararg lines: Int) {
-        for (i in lines) {
-            dialogueLines[i - 1] = true
-        }
-    }
-
-    fun hideActionUI(): Int {
-        val choice = listChoice.selectedIndex
-        core.plot.actionList.clear()
+    override fun hideActionUI() {
         lblChoice.isVisible = false
         listScroller.isVisible = false
-        return choice
     }
 
     fun showActionUI(actionGroupName: String) {
@@ -187,7 +182,19 @@ class StandardGameUI(override val core: Core) : JFrame("A Long Hour and a Half")
 
         btnNext = addUtilButton(
                 "Next",
-                { core.handleNextClicked() },
+                {
+                    /*core.handleNextClicked()*/
+                    if (actionMustBeSelected) {
+                        val action = listChoice.selectedValue as Action
+
+                        when (action) {
+                            is CallbackAction -> action.callback()
+                            is PlotRotateAction -> core.plot.nextStageID = action.nextStageID
+                        }
+                    }
+
+                    core.handleNextClicked()
+                },
                 Rectangle(470, ACTION_BUTTONS_TOP_BORDER, 285, 35)
         )
 
@@ -254,9 +261,7 @@ class StandardGameUI(override val core: Core) : JFrame("A Long Hour and a Half")
             lblThirst.setBounds(20, 480, 200, 32)
             lblThirst.toolTipText = "Character will automatically drink water at 30% of thirst."
             contentPane.add(lblThirst)
-        }
 
-        if (core.hardcore) {
             thirstBar.setBounds(16, 482, 455, 25)
             thirstBar.maximum = Character.MAXIMAL_THIRST.toInt()
             thirstBar.value = core.character.thirst.toInt()
@@ -346,10 +351,18 @@ class StandardGameUI(override val core: Core) : JFrame("A Long Hour and a Half")
         contentPane.add(timeBar)
 
         //Coloring the name label according to the gender
-        if (core.character.gender == Gender.FEMALE) {
-            lblName.foreground = Color.MAGENTA
-        } else {
-            lblName.foreground = Color.CYAN
+        when (core.character.gender) {
+            Gender.FEMALE -> {
+                lblName.foreground = Color.MAGENTA
+                if (core.character.name.isEmpty())
+                    core.character.name = "Mrs. Nobody"
+            }
+
+            Gender.MALE -> {
+                lblName.foreground = Color.CYAN
+                if (core.character.name.isEmpty())
+                    core.character.name = "Mr. Nobody"
+            }
         }
 
         //Assigning the blank name if player didn't selected it
@@ -397,31 +410,26 @@ class StandardGameUI(override val core: Core) : JFrame("A Long Hour and a Half")
         bladderBar.value = fullness.toInt()
     }
 
-    override fun forcedTextChange(vararg text: String) {
-        setText(*text)
+    override fun forcedTextChange(text: Text) {
+        setText(text)
     }
 
     override fun warnAboutLeaking(vararg warnText: String) {
         with(core.character) {
-            //Naked
-            if (core.character.lower.isMissing && undies.isMissing) {
-                setText("You feel the leak running down your thighs...",
-                        "You're about to pee! You must stop it!")
-            } else
-            //Outerwear
-            {
-                if (!lower.isMissing) {
-                    setText("You see the wet spot expand on your ${lower.insert}!",
-                            "You're about to pee! You must stop it!")
-                } else
-                //Underwear
-                {
-                    if (!undies.isMissing) {
-                        setText("You see the wet spot expand on your ${undies.insert}!",
+            forcedTextChange(
+                    when (core.character.wearCombinationType) {
+                        FULLY_CLOTHED, OUTERWEAR_ONLY -> Text(
+                                "You see the wet spot expand on your ${lower.insert}!",
+                                "You're about to pee! You must stop it!"
+                        )
+
+                        UNDERWEAR_ONLY -> Text("You see the wet spot expand on your ${undies.insert}!",
+                                "You're about to pee! You must stop it!")
+
+                        NAKED -> Text("You feel the leak running down your thighs...",
                                 "You're about to pee! You must stop it!")
                     }
-                }
-            }
+            )
         }
     }
 }

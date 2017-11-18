@@ -285,7 +285,7 @@ class setupFramePre : JFrame() {
         treeNode3 = DefaultMutableTreeNode(Wear.getByName("Super-absorbing diaper"))
         treeNode2.add(treeNode3)
         treeNode1.add(treeNode2)
-        treeNode2 = DefaultMutableTreeNode("No underwear")
+        treeNode2 = DefaultMutableTreeNode(Wear.getByName("No underwear"))
         treeNode1.add(treeNode2)
         treeNode2 = DefaultMutableTreeNode("Custom")
         treeNode1.add(treeNode2)
@@ -297,7 +297,7 @@ class setupFramePre : JFrame() {
         jScrollPane2!!.name = "jScrollPane2" // NOI18N
 
         treeNode1 = DefaultMutableTreeNode("root")
-        treeNode2 = DefaultMutableTreeNode("Random outerwear")
+        treeNode2 = DefaultMutableTreeNode(Wear.getByName("Random outerwear"))
         treeNode1.add(treeNode2)
         treeNode2 = DefaultMutableTreeNode("Female")
         treeNode3 = DefaultMutableTreeNode("Jeans")
@@ -1010,21 +1010,12 @@ class setupFramePre : JFrame() {
         fun getSelectedWear(node: Any?, type: WearType) = if (node == null)
             Wear.getRandom(type)
         else
-            (node as DefaultMutableTreeNode).userObject as AbstractWear
+            f(node as DefaultMutableTreeNode).userObject as AbstractWear
 
         var underwearToAssign = getSelectedWear(underwearTree!!.lastSelectedPathComponent,
                 WearType.UNDERWEAR)
         var outerwearToAssign = getSelectedWear(outerwearTree!!.lastSelectedPathComponent,
                 WearType.OUTERWEAR)
-
-        //TODO: Random and custom wear resolution
-
-        fun Wear.setConcreteColorByInconcreteColor(color: WearColor) {
-            var colorToAssign = color
-            while (colorToAssign == WearColor.RANDOM)
-                colorToAssign = WearColor.values().randomItem()
-            this.color = colorToAssign
-        }
 
         if (underwearToAssign is MaintenanceWear)
             underwearToAssign = underwearToAssign.instead()
@@ -1033,6 +1024,13 @@ class setupFramePre : JFrame() {
 
         assert(underwearToAssign is Wear)
         assert(outerwearToAssign is Wear)
+
+        fun Wear.setConcreteColorByInconcreteColor(color: WearColor) {
+            var colorToAssign = color
+            while (colorToAssign == WearColor.RANDOM)
+                colorToAssign = WearColor.values().randomItem()
+            this.color = colorToAssign
+        }
 
         (underwearToAssign as Wear).setConcreteColorByInconcreteColor(undiesColor)
         (outerwearToAssign as Wear).setConcreteColorByInconcreteColor(lowerColor)

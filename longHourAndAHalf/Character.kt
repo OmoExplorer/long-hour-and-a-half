@@ -99,7 +99,7 @@ class Character(
     }
 
     /**
-     * Makes the wetting chance higher after reaching 100% of the fullness fullness.
+     * Makes the wetting chance higher after reaching 100% of the bladder fullness.
      */
     var embarrassment = 0
         set(value) {

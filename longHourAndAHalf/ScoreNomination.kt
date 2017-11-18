@@ -14,6 +14,13 @@ data class ScoreNomination(
         val arithmeticAction: ArithmeticAction,
         val final: Boolean = false
 ) : Serializable {
+    constructor(
+            comment: String = "",
+            score: Int,
+            arithmeticAction: ArithmeticAction,
+            final: Boolean = false
+    ) : this(comment, score.toDouble(), arithmeticAction, final)
+
     override fun toString() = "$comment: $arithmeticAction $score\n" + when (arithmeticAction) {
         ADD_PERCENT, TAKE_PERCENT -> "%"
         else -> ""

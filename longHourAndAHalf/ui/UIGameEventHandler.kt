@@ -1,11 +1,10 @@
 package longHourAndAHalf.ui
 
-import longHourAndAHalf.Core
-import longHourAndAHalf.Time
-import longHourAndAHalf.Wear
+import longHourAndAHalf.*
 
 interface UIGameEventHandler {
     val core: Core
+    var actionMustBeSelected: Boolean
 
     fun characterNameChanged(name: String)
     fun hideBladderAndTime()
@@ -21,6 +20,9 @@ interface UIGameEventHandler {
     fun thirstChanged(thirst: Int)
     fun underwearChanged(underwear: Wear)
     fun outerwearChanged(outerwear: Wear)
-    fun forcedTextChange(vararg text: String)
+    fun forcedTextChange(text: Text)
     fun warnAboutLeaking(vararg warnText: String)
+    fun gameFinished()
+    fun actionsChanged(actionGroupName: String, actions: List<Action>)
+    fun hideActionUI()
 }

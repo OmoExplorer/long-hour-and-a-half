@@ -48,6 +48,7 @@ class Scorer : Serializable {
 
     /**
      * Adds a nomination.
+     *
      * @param comment a nomination comment.
      * @param score a nomination score/multiplier/divider.
      * @param arithmeticAction an arithmetic action to perform with score.
@@ -58,6 +59,7 @@ class Scorer : Serializable {
 
     /**
      * Adds a nomination.
+     *
      * @param comment a nomination comment.
      * @param score a nomination score/multiplier/divider.
      * @param arithmeticAction an arithmetic action to perform with score.
@@ -65,6 +67,13 @@ class Scorer : Serializable {
      */
     fun countOut(comment: String, score: Int, arithmeticAction: ArithmeticAction, final: Boolean = false) =
             nominations.add(ScoreNomination(comment, score.toDouble(), arithmeticAction, final))
+
+    /**
+     * Adds a nomination.
+     *
+     * @param scoreNomination a nomination to add.
+     */
+    fun countOut(scoreNomination: ScoreNomination) = nominations.add(scoreNomination)
 
     /**
      * Text stating all score nominations.

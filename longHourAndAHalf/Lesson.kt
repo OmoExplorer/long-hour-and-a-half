@@ -22,8 +22,8 @@ class Lesson(@Transient var core: Core) : Serializable {
     fun shouldFinish() = core.world.time >= classEndingTime
 
     fun finish() {
-        core.ui.forcedTextChange("You hear the bell finally ring.")
-        core.plot.nextStage = GameStage.CLASS_OVER
+        core.ui.forcedTextChange(Text("You hear the bell finally ring."))
+        core.plot.nextStageID = PlotStageID.CLASS_OVER
     }
 
     //TODO: Companion object will be removed

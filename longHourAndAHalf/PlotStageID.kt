@@ -1,6 +1,8 @@
 package longHourAndAHalf
 
-enum class GameStage {
+enum class PlotStageID {
+    STARTUP,
+    WAKE_UP,
     LEAVE_BED,
     LEAVE_HOME,
     GO_TO_CLASS,
@@ -9,6 +11,10 @@ enum class GameStage {
     ASK_ACTION,
     CHOSE_ACTION,
     ASK_TO_PEE,
+    ASK_TO_PEE_ANSWER,
+    PEE_ON_LESSON,
+    PEE_AFTER_LESSON,
+    PEE_AFTER_LESSON_LINE,
     CALLED_ON,
     CAUGHT,
     USE_BOTTLE,
@@ -26,9 +32,12 @@ enum class GameStage {
     SURPRISE_2,
     SURPRISE_ACCIDENT,
     SURPRISE_DIALOGUE,
+    SURPRISE_IDLE,
     SURPRISE_CHOSE,
     HIT,
+    HIT_FAILED,
     PERSUADE,
+    PERSUADE_FAILED,
     SURPRISE_WET_VOLUNTARY,
     SURPRISE_WET_VOLUNTARY2,
     SURPRISE_WET_PRESSURE,

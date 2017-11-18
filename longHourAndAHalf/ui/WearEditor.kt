@@ -101,11 +101,11 @@ class WearEditor : javax.swing.JFrame() {
         this.typeComboBox!!.name = "typeComboBox" // NOI18N
 
         this.pressureLabel!!.text = "Pressure"
-        this.pressureLabel!!.toolTipText = "<html>\nDecreases the maximal fullness capacity.<br>\n<b>1 point = -1% of max. fullness capacity.</b>\n</html>"
+        this.pressureLabel!!.toolTipText = "<html>\nDecreases the maximal bladder capacity.<br>\n<b>1 point = -1% of max. bladder capacity.</b>\n</html>"
         this.pressureLabel!!.name = "pressureLabel" // NOI18N
 
         this.pressureSpinner!!.model = SpinnerNumberModel(java.lang.Float.valueOf(0.0f), java.lang.Float.valueOf(0.0f), java.lang.Float.valueOf(300.0f), java.lang.Float.valueOf(1.0f))
-        this.pressureSpinner!!.toolTipText = "<html> Decreases the maximal fullness capacity.<br> <b>1 point = -1% of max. fullness capacity.</b> </html>"
+        this.pressureSpinner!!.toolTipText = "<html> Decreases the maximal bladder capacity.<br> <b>1 point = -1% of max. bladder capacity.</b> </html>"
         this.pressureSpinner!!.name = "pressureSpinner" // NOI18N
 
         this.absorptionLabel!!.text = "Absorption"

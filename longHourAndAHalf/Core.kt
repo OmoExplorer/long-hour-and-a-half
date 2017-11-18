@@ -58,7 +58,6 @@
 
 package longHourAndAHalf
 
-import longHourAndAHalf.GameStage.*
 import longHourAndAHalf.WearType.*
 import longHourAndAHalf.ui.SaveFileChooser
 import longHourAndAHalf.ui.StandardGameUI
@@ -98,6 +97,15 @@ fun chance(probability: Int) = chance(probability.toDouble())
  * @param probability chance to return `true` in percents.
  */
 fun chance(probability: Double) = random.nextInt(100) < probability
+
+/**
+ * Simple utility function which clamps the given value to be strictly
+ * between the min and max values.
+ */
+fun clamp(min: Double, value: Double, max: Double): Double {
+    if (value < min) return min
+    return if (value > max) max else value
+}
 
 @Suppress("KDocMissingDocumentation")
 /**
@@ -142,6 +150,8 @@ class Core {
      * Data about cheats.
      */
     val cheatData: CheatData
+
+    val flags: PlotFlags
 
     val plot: Plot
 
@@ -220,7 +230,7 @@ class Core {
         world.core = this
         cheatData = CheatData()
         schoolDay = SchoolDay(this)
-        plot = Plot()
+        flags = PlotFlags()
         scorer = Scorer()
 
         fun onIncorrectWearSelected(type: WearType): Wear {
@@ -247,6 +257,8 @@ class Core {
         }
 
         ui = StandardGameUI(this)
+
+        plot = Plot(this)
 
         this.character.undies = setupWear(character.undies, UNDERWEAR) ?: onIncorrectWearSelected(UNDERWEAR)
         this.character.lower = setupWear(character.lower, OUTERWEAR) ?: onIncorrectWearSelected(OUTERWEAR)
@@ -289,6 +301,7 @@ class Core {
         character.bladder.finishSetup(this)
         world = save.world
         world.core = this
+        flags = save.flags
         plot = save.plot
         scorer = save.scorer
         schoolDay = save.schoolDay
@@ -302,7 +315,7 @@ class Core {
 
         ui.showBladderAndTime()
 
-        ui.setText("Loading complete. Click \"Next\" to continue the game.")
+        ui.forcedTextChange(Text("Loading complete. Click \"Next\" to continue the game."))
 
 //        handleNextClicked()
 
@@ -318,8 +331,8 @@ class Core {
         ui.isVisible = true     //Displaying the frame
     }
 
-    fun handleNextClicked() {
-        when (plot.nextStage) {
+    fun handleNextClicked() {/*
+        when (plot.nextStageID) {
             LEAVE_BED -> {
                 //Making line 1 italic
                 ui.setLinesAsDialogue(1)
@@ -360,7 +373,7 @@ class Core {
                 world.time += 1
 
                 //Setting the next stage to "Leaving home"
-                plot.nextStage = LEAVE_HOME
+                plot.nextStageID = LEAVE_HOME
             }
 
             LEAVE_HOME -> {
@@ -376,7 +389,7 @@ class Core {
                 character.embarrassment += 3
                 character.belly += 10.0
 
-                plot.nextStage = GO_TO_CLASS
+                plot.nextStageID = GO_TO_CLASS
             }
 
             GO_TO_CLASS -> {
@@ -419,7 +432,7 @@ class Core {
                 }
 
                 character.embarrassment += 2
-                plot.nextStage = WALK_IN
+                plot.nextStageID = WALK_IN
             }
 
             WALK_IN -> {
@@ -455,14 +468,14 @@ class Core {
                                 "about your rush into class.")
                     }
                 }
-                plot.nextStage = SIT_DOWN
+                plot.nextStageID = SIT_DOWN
             }
 
             SIT_DOWN -> {
                 ui.setText("Subconsciously rubbing your thighs together, you feel the uncomfortable feeling of",
                         "your fullness filling as the liquids you drank earlier start to make their way down.")
                 world.time += 3
-                plot.nextStage = ASK_ACTION
+                plot.nextStageID = ASK_ACTION
                 scorer.countOut(
                         "Embarrassment at start - ${character.bladder.incontinence} pts",
                         character.embarrassment,
@@ -475,7 +488,7 @@ class Core {
                 plot.actionList.clear()
                 if (random.nextInt(20) == 5) {
                     ui.setText("Suddenly, you hear the teacher call your name.")
-                    plot.nextStage = CALLED_ON
+                    plot.nextStageID = CALLED_ON
                     return
                 }
 
@@ -569,12 +582,12 @@ class Core {
 
                 //Loading the choice array into the action selector
                 ui.listChoice.setListData(plot.actionList.toTypedArray())
-                plot.nextStage = CHOSE_ACTION
+                plot.nextStageID = CHOSE_ACTION
                 world.time += 3
             }
 
             CHOSE_ACTION -> {
-                plot.nextStage = ASK_ACTION
+                plot.nextStageID = ASK_ACTION
                 if (ui.listChoice.isSelectionEmpty || ui.listChoice.selectedValue == "[Unavailable]") {
                     handleNextClicked()
                     return
@@ -584,7 +597,7 @@ class Core {
                 when (ui.hideActionUI()) {
                 //Ask the teacher to go pee
                     0 -> {
-                        plot.nextStage = ASK_TO_PEE
+                        plot.nextStageID = ASK_TO_PEE
                         ui.setLinesAsDialogue(2, 3)
                         ui.setText("You think to yourself:",
                                 "I don't think I can hold it until class ends!",
@@ -612,7 +625,7 @@ class Core {
                         world.time += 3
 
                         //Chance to be caught by classmates in hardcore mode
-                        plot.nextStage = if ((random.nextInt(100) <= 15 + schoolDay.classmatesAwareness) and hardcore) {
+                        plot.nextStageID = if ((random.nextInt(100) <= 15 + schoolDay.classmatesAwareness) and hardcore) {
                             CAUGHT
                         } else {
                             ASK_ACTION
@@ -640,7 +653,7 @@ class Core {
                         world.time += 3
 
                         //Chance to be caught by classmates in hardcore mode
-                        plot.nextStage = if ((random.nextInt(100) <= 3 + schoolDay.classmatesAwareness) and hardcore) {
+                        plot.nextStageID = if ((random.nextInt(100) <= 3 + schoolDay.classmatesAwareness) and hardcore) {
                             CAUGHT
                         } else {
                             ASK_ACTION
@@ -652,14 +665,14 @@ class Core {
                         ui.setText("You're absolutely desperate to pee, and you think you'll",
                                 "end up peeing yourself anyway, so it's probably best to admit",
                                 "defeat and get rid of the painful ache in your fullness.")
-                        plot.nextStage = GIVE_UP
+                        plot.nextStageID = GIVE_UP
                     }
 
                 //Drink water
                     4 -> {
                         ui.setText("Feeling a tad bit thirsty,",
                                 "You decide to take a small sip of water from your bottle to get rid of it.")
-                        plot.nextStage = DRINK
+                        plot.nextStageID = DRINK
                     }
 
                 /*
@@ -681,12 +694,12 @@ class Core {
                             world.time += timeOffset
                         } //Ignoring invalid output
                         catch (e: Exception) {
-                            plot.nextStage = ASK_ACTION
+                            plot.nextStageID = ASK_ACTION
                             return
                         }
 
                         //Chance to be caught by classmates in hardcore mode
-                        plot.nextStage = if ((random.nextInt(100) <= 1 + schoolDay.classmatesAwareness) and hardcore) {
+                        plot.nextStageID = if ((random.nextInt(100) <= 1 + schoolDay.classmatesAwareness) and hardcore) {
                             CAUGHT
                         } else {
                             ASK_ACTION
@@ -700,7 +713,7 @@ class Core {
 
                         //Zeroing points
                         cheatData.cheatsUsed = true
-                        plot.nextStage = ASK_CHEAT
+                        plot.nextStageID = ASK_CHEAT
                     }
 
                     else -> ui.setText("Bugs.")
@@ -747,7 +760,7 @@ class Core {
                             scorer.countOut("Restroom usage during the lesson", 80,
                                     ArithmeticAction.TAKE_PERCENT)
                             character.bladder.fullness = 0.0
-                            plot.nextStage = ASK_ACTION
+                            plot.nextStageID = ASK_ACTION
                             //Fail
                         } else {
                             ui.setLinesAsDialogue(2)
@@ -792,7 +805,7 @@ class Core {
                         //scoreText = scoreText.concat("\nRestroom usage during the lesson: -70% of points");
                         scorer.countOut("Restroom usage during the lesson", 70, ArithmeticAction.TAKE_PERCENT)
                         character.bladder.fullness = 0.0
-                        plot.nextStage = ASK_ACTION
+                        plot.nextStageID = ASK_ACTION
                     } else {
                         ui.setText("You ask the teacher again if you can go out to the restroom.",
                                 "No, you can't! I already told you that the director prohibited it!",
@@ -835,7 +848,7 @@ class Core {
                         //scoreText = scoreText.concat("\nRestroom usage during the lesson: -60% of points");
                         scorer.countOut("Restroom usage during the lesson", 60, ArithmeticAction.TAKE_PERCENT)
                         character.bladder.fullness = 0.0
-                        plot.nextStage = ASK_ACTION
+                        plot.nextStageID = ASK_ACTION
                     } else {
                         ui.setText("You ask the teacher once more if you can go out to the restroom.",
                                 "No, you can't! Stop asking me or there will be consequences!",
@@ -879,7 +892,7 @@ class Core {
                             //scoreText = scoreText.concat("\nRestroom usage during the lesson: -50% of points");
                             scorer.countOut("Restroom usage during the lesson", 50, ArithmeticAction.TAKE_PERCENT)
                             character.bladder.fullness = 0.0
-                            plot.nextStage = ASK_ACTION
+                            plot.nextStageID = ASK_ACTION
                         } else {
                             if (random.nextBoolean()) {
                                 ui.setText("Desperately, you ask the teacher if you can go out to the restroom.",
@@ -909,38 +922,38 @@ class Core {
                         schoolDay.lesson.timesPeeDenied++
                     }
                 }
-                plot.nextStage = ASK_ACTION
+                plot.nextStageID = ASK_ACTION
             }
 
             ASK_CHEAT -> {
                 ui.listChoice.setListData(cheatList.toTypedArray())
                 ui.showActionUI("Select a cheat:")
-                plot.nextStage = CHOSE_CHEAT
+                plot.nextStageID = CHOSE_CHEAT
             }
 
             CHOSE_CHEAT -> {
                 if (ui.listChoice.isSelectionEmpty) {
-                    plot.nextStage = ASK_CHEAT
+                    plot.nextStageID = ASK_CHEAT
                     return
                 }
                 when (ui.hideActionUI()) {
                     0 -> {
                         ui.setText("You walk to the front corner of the classroom.")
                         character.cornered = true
-                        plot.nextStage = ASK_ACTION
+                        plot.nextStageID = ASK_ACTION
                     }
 
                     1 -> {
                         ui.setText("You decide to stay after class.")
                         schoolDay.lesson.stay = true
                         ui.timeBar.maximum = 120
-                        plot.nextStage = ASK_ACTION
+                        plot.nextStageID = ASK_ACTION
                     }
 
                     2 -> {
                         ui.setText("You see something out of the corner of your eye,",
                                 "just within your reach.")
-                        plot.nextStage = USE_BOTTLE
+                        plot.nextStageID = USE_BOTTLE
                     }
 
                     3 -> {
@@ -949,7 +962,7 @@ class Core {
                                 "All classes are now dismissed for no reason at all! Bye!",
                                 "Looks like your luck changed for the better.")
                         world.time = Lesson.classEndingTime
-                        plot.nextStage = CLASS_OVER
+                        plot.nextStageID = CLASS_OVER
                     }
 
                     4 -> {
@@ -958,12 +971,12 @@ class Core {
                         schoolDay.lesson.stay = false
                         ui.timeBar.maximum = 90
                         character.cornered = false
-                        plot.nextStage = ASK_ACTION
+                        plot.nextStageID = ASK_ACTION
                     }
 
                     5 -> {
                         ui.setText("You decide to raise your hand.")
-                        plot.nextStage = CALLED_ON
+                        plot.nextStageID = CALLED_ON
                     }
 
                     6 -> {
@@ -971,7 +984,7 @@ class Core {
                                 "but you don't feel any wetness. It's not something you'd",
                                 "want to question, right?")
                         cheatData.drain = true
-                        plot.nextStage = ASK_ACTION
+                        plot.nextStageID = ASK_ACTION
                     }
 
                     7 -> {
@@ -981,21 +994,21 @@ class Core {
                                 .toDouble()
                         character.bladder.maxSphincterPower = (100 / character.bladder.incontinence).toInt()
                         character.bladder.sphincterPower = character.bladder.maxSphincterPower
-                        plot.nextStage = ASK_ACTION
+                        plot.nextStageID = ASK_ACTION
                     }
 
                     8 -> {
                         ui.setText("The teacher suddenly looks like they've had enough",
                                 "of people having to pee.")
                         hardcore = !hardcore
-                        plot.nextStage = ASK_ACTION
+                        plot.nextStageID = ASK_ACTION
                     }
 
                     9 -> {
                         ui.setText("Suddenly you felt something going on in your fullness.")
                         character.bladder.incontinence = JOptionPane.showInputDialog("How your fullness is full now?")
                                 .toDouble()
-                        plot.nextStage = ASK_ACTION
+                        plot.nextStageID = ASK_ACTION
                     }
                 }
             }
@@ -1007,7 +1020,7 @@ class Core {
                         "As quietly as you can, you put it in position and let go into it.",
                         "Ahhhhh...",
                         "You can't help but show a face of pure relief as your pee trickles down into it.")
-                plot.nextStage = ASK_ACTION
+                plot.nextStageID = ASK_ACTION
             }
 
             CALLED_ON -> {
@@ -1019,17 +1032,17 @@ class Core {
                         "Well, you can't dare to hold yourself now...")
                 world.time += 5
                 scorer.countOut("Called on the lesson", 5, ArithmeticAction.ADD)
-                plot.nextStage = ASK_ACTION
+                plot.nextStageID = ASK_ACTION
             }
 
             CLASS_OVER -> {
                 //Special hardcore scene trigger
                 if (random.nextInt(100) <= 10 && hardcore && character.gender == Gender.FEMALE) {
-                    plot.nextStage = SURPRISE
+                    plot.nextStageID = SURPRISE
                     return
                 }
                 if (schoolDay.lesson.stay) {
-                    plot.nextStage = AFTER_CLASS
+                    plot.nextStageID = AFTER_CLASS
                     return
                 }
 
@@ -1067,14 +1080,14 @@ class Core {
                                     "wearily flop down on the toilet and start peeing.")
                         }
                     }
-                    plot.nextStage = END_GAME
+                    plot.nextStageID = END_GAME
                 }
             }
 
             AFTER_CLASS -> {
                 if (world.time >= Lesson.classEndingTime) {
                     schoolDay.lesson.stay = false
-                    plot.nextStage = CLASS_OVER
+                    plot.nextStageID = CLASS_OVER
                     return
                 }
 
@@ -1096,7 +1109,7 @@ class Core {
                                 "could barely move for risk of peeing everywhere.",
                         "But now.. a few seconds tick by as you try to will yourself to move, " +
                                 "but soon, the inevitable happens anyways.")
-                plot.nextStage = WET
+                plot.nextStageID = WET
             }
 
             GIVE_UP -> {
@@ -1118,7 +1131,7 @@ class Core {
                                 "and you decide to give up and pee where you are.")
                     }
                 }
-                plot.nextStage = WET
+                plot.nextStageID = WET
             }
 
             WET -> {
@@ -1154,7 +1167,7 @@ class Core {
                         }
                     }
                 }
-                plot.nextStage = POST_WET
+                plot.nextStageID = POST_WET
             }
 
             POST_WET -> {
@@ -1189,7 +1202,7 @@ class Core {
                             "Oh, you peed yourself? This is a great punishment.",
                             "I hope you will no longer get in the way of the lesson.")
                 }
-                plot.nextStage = GAME_OVER
+                plot.nextStageID = GAME_OVER
             }
 
             GAME_OVER -> {
@@ -1283,7 +1296,7 @@ class Core {
                         schoolDay.timesCaught++
                     }
                 }
-                plot.nextStage = ASK_ACTION
+                plot.nextStageID = ASK_ACTION
             }
 
         //The special hardcore scene
@@ -1301,7 +1314,7 @@ class Core {
                         "But... You see ${schoolDay.surpriseBoy.name} staying in front of the restroom.",
                         "Suddenly, he takes you, not letting you to escape.")
                 character.embarrassment += 10
-                plot.nextStage = SURPRISE_2
+                plot.nextStageID = SURPRISE_2
             }
 
             SURPRISE_2 -> {
@@ -1312,7 +1325,7 @@ class Core {
                                 "then he puts his palm on your belly and says:",
                         "I want you to wet yourself.")
                 character.embarrassment += 10
-                plot.nextStage = SURPRISE_DIALOGUE
+                plot.nextStageID = SURPRISE_DIALOGUE
             }
 
             SURPRISE_DIALOGUE -> {
@@ -1333,7 +1346,7 @@ class Core {
 
                 ui.listChoice.setListData(plot.actionList.toTypedArray())
                 ui.showActionUI("Don't let him to do it!")
-                plot.nextStage = SURPRISE_CHOSE
+                plot.nextStageID = SURPRISE_CHOSE
             }
 
             SURPRISE_CHOSE -> {
@@ -1342,7 +1355,7 @@ class Core {
                     ui.setText("You will wet yourself right now,",
                             schoolDay.surpriseBoy.name + " demands.",
                             "Then ${schoolDay.surpriseBoy.name} presses your fullness...")
-                    plot.nextStage = SURPRISE_WET_PRESSURE
+                    plot.nextStageID = SURPRISE_WET_PRESSURE
                 }
 
                 //                actionNum = listChoice.getSelectedIndex();
@@ -1351,19 +1364,19 @@ class Core {
                     ui.setText("You will wet yourself right now,",
                             schoolDay.surpriseBoy.name + " demands.",
                             "Then ${schoolDay.surpriseBoy.name} presses your fullness...")
-                    plot.nextStage = SURPRISE_WET_PRESSURE
+                    plot.nextStageID = SURPRISE_WET_PRESSURE
                 }
 
                 when (ui.hideActionUI()) {
-                    0 -> plot.nextStage = HIT
-                    1 -> plot.nextStage = PERSUADE
-                    2 -> plot.nextStage = SURPRISE_WET_VOLUNTARY
+                    0 -> plot.nextStageID = HIT
+                    1 -> plot.nextStageID = PERSUADE
+                    2 -> plot.nextStageID = SURPRISE_WET_VOLUNTARY
                 }
             }
 
             HIT -> if (random.nextInt(100) <= 20) {
                 ui.setLinesAsDialogue(2)
-                plot.nextStage = GameStage.END_GAME
+                plot.nextStageID = PlotStageID.END_GAME
                 scorer.countOut("Successful hit on ${schoolDay.surpriseBoy.name}'s groin", 40, ArithmeticAction.ADD)
                 if (!character.lower.isMissing) {
                     if (!character.undies.isMissing) {
@@ -1402,7 +1415,7 @@ class Core {
                     }
                 }
             } else {
-                plot.nextStage = GameStage.SURPRISE_WET_PRESSURE
+                plot.nextStageID = PlotStageID.SURPRISE_WET_PRESSURE
                 ui.setLinesAsDialogue(2, 3)
                 ui.setText("You hit ${schoolDay.surpriseBoy.name}'s hand. Damn, you'd meant to hit his groin...",
                         "You're braver than I expected;",
@@ -1440,13 +1453,13 @@ class Core {
                     }
                     scorer.countOut("Persuaded ${schoolDay.surpriseBoy.name} to pee", 40, ArithmeticAction.ADD)
                     character.bladder.fullness = 0.0
-                    plot.nextStage = END_GAME
+                    plot.nextStageID = END_GAME
                 } else {
                     ui.setText("You ask ${schoolDay.surpriseBoy.name} if you can pee.",
                             "No, you can't pee in a cabin. I want you to wet yourself.,",
                             schoolDay.surpriseBoy.name + " says.")
                     schoolDay.surpriseBoy.timesPeeDenied++
-                    plot.nextStage = SURPRISE_DIALOGUE
+                    plot.nextStageID = SURPRISE_DIALOGUE
                 }
 
                 1 -> if (random.nextInt(100) <= 5) {
@@ -1477,13 +1490,13 @@ class Core {
                     }
                     scorer.countOut("Persuaded ${schoolDay.surpriseBoy.name} to pee", 60, ArithmeticAction.ADD)
                     character.bladder.fullness = 0.0
-                    plot.nextStage = END_GAME
+                    plot.nextStageID = END_GAME
                 } else {
                     ui.setText("You ask ${schoolDay.surpriseBoy.name} if you can pee again.",
                             "No, you can't pee in a cabin. I want you to wet yourself. You're doing it now.",
                             schoolDay.surpriseBoy.name + " demands.")
                     schoolDay.surpriseBoy.timesPeeDenied++
-                    plot.nextStage = SURPRISE_DIALOGUE
+                    plot.nextStageID = SURPRISE_DIALOGUE
                 }
 
                 2 -> if (random.nextInt(100) <= 2) {
@@ -1515,13 +1528,13 @@ class Core {
 
                     scorer.countOut("Persuaded ${schoolDay.surpriseBoy.name} to pee", 80, ArithmeticAction.ADD)
                     character.bladder.fullness = 0.0
-                    plot.nextStage = END_GAME
+                    plot.nextStageID = END_GAME
                 } else {
                     ui.setText("You ask ${schoolDay.surpriseBoy.name} if you can pee again desperately.",
                             "No, you can't pee in a cabin. You will wet yourself right now,",
                             schoolDay.surpriseBoy.name + " demands.",
                             "Then ${schoolDay.surpriseBoy.name} pressed your fullness...")
-                    plot.nextStage = SURPRISE_WET_PRESSURE
+                    plot.nextStageID = SURPRISE_WET_PRESSURE
                 }
             }
 
@@ -1531,7 +1544,7 @@ class Core {
                         "you say to ${schoolDay.surpriseBoy.name} with a defeated sigh.",
                         "Whatever, I really can't hold it anymore anyways...")
                 character.bladder.fullness = 0.0
-                plot.nextStage = SURPRISE_WET_VOLUNTARY2
+                plot.nextStageID = SURPRISE_WET_VOLUNTARY2
             }
 
             SURPRISE_WET_VOLUNTARY2 -> {
@@ -1562,7 +1575,7 @@ class Core {
                     }
                 }
                 character.bladder.fullness = 0.0
-                plot.nextStage = END_GAME
+                plot.nextStageID = END_GAME
             }
 
             SURPRISE_WET_PRESSURE -> {
@@ -1601,7 +1614,7 @@ class Core {
                     }
                 }
                 character.bladder.fullness = 0.0
-                plot.nextStage = END_GAME
+                plot.nextStageID = END_GAME
             }
 
             DRINK -> {
@@ -1609,18 +1622,12 @@ class Core {
                         "open it and take a small sip of water.")
                 character.belly += character.thirst.toDouble()
                 character.thirst = 0
-                plot.nextStage = ASK_ACTION
+                plot.nextStageID = ASK_ACTION
             }
 
-            else -> ui.setText("Error parsing button. Next text is unavailable, text #" + plot.nextStage)
-        }//Don't go further if player selected no or unavailable action
-        //                }while(listChoice.isSelectionEmpty()||listChoice.getSelectedValue().equals("[Unavailable]"));
-        //                } while (listChoice.isSelectionEmpty());
-        //case template
-        //      case 4:
-        //   ui.setText("");
-        //   plot.nextStage = ;
-        //   break;
+            else -> ui.setText("Error parsing button. Next text is unavailable, text #" + plot.nextStageID)
+        */
+        plot.advanceToNextStage()
     }
 
     fun writeSaveFile() {
@@ -1675,5 +1682,10 @@ class Core {
     companion object {
         private val random = Random()
         private lateinit var gameStartSave: Save
+
+        /**
+         * Default turn duration in in-game minutes.
+         */
+        const val TURN_DURATION = 3
     }
 }

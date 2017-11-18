@@ -41,7 +41,7 @@ class World(@Transient var core: Core) : Serializable {
             if (core.hardcore) {
                 thirst += 2
                 if (thirst > Character.MAXIMAL_THIRST) {
-                    core.plot.nextStage = GameStage.DRINK
+                    core.plot.nextStageID = PlotStageID.DRINK
                 }
             }
         }

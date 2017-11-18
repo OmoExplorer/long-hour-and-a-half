@@ -22,7 +22,7 @@ class MaintenanceWear(name: String, val instead: () -> Wear) : AbstractWear(name
  *
  * @property insert Name used in a game text (for example "panties")
  * @property pressure Pressure of this wear.
- * 1 point of a pressure takes 1 point from a maximal fullness capacity.
+ * 1 point of a pressure takes 1 point from a maximal bladder capacity.
  * @property absorption Absorption of this wear.
  * 1 point of an absorption can store 1 point of a leaked pee.
  * @property dryingOverTime Drying over time.
@@ -40,8 +40,7 @@ open class Wear(
     /**
      * Whether this wear equals "No under/outerwear".
      */
-    var isMissing: Boolean = false
-        private set
+    val isMissing: Boolean = name == "No outerwear" || name == "No underwear"
 
     /**
      * The wear assigned color.
