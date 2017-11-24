@@ -18,14 +18,9 @@ class Character(
         undies: Wear,
         lower: Wear
 ) : Serializable {
-    /**
-     * Game instance to operate with.
-     */
-    @Transient lateinit var core: Core
 
-    fun finishSetup(core: Core) {
-        this.core = core
-        bladder = Bladder(fullness, incontinence, core)
+    fun finishSetup() {
+        bladder = Bladder(fullness, incontinence)
     }
 
     /**
@@ -34,7 +29,7 @@ class Character(
     var name = name
         set(value) {
             field = value
-            core.ui.characterNameChanged(name)
+            CoreHolder.core.ui.characterNameChanged(name)
         }
 
     /**
@@ -89,13 +84,13 @@ class Character(
     var belly = 0.0
         set(value) {
             field = Math.max(value, 0.0)
-            core.ui.bellyWaterLevelChanged(belly)
+            CoreHolder.core.ui.bellyWaterLevelChanged(belly)
         }
 
     private fun updateDryness() {
         maximalDryness = calculateMaximalDryness()
         dryness = maximalDryness
-        core.ui.drynessBar.value = dryness.toInt()
+        CoreHolder.core.ui.drynessBar.value = dryness.toInt()
     }
 
     /**
@@ -104,7 +99,7 @@ class Character(
     var embarrassment = 0
         set(value) {
             field = Math.max(value, 0)
-            core.ui.embarrassmentChanged(embarrassment)
+            CoreHolder.core.ui.embarrassmentChanged(embarrassment)
         }
 
     /**
@@ -113,9 +108,9 @@ class Character(
      */
     var thirst = 0
         set(value) {
-            if (!core.hardcore) return
+            if (!CoreHolder.core.hardcore) return
             field = value
-            core.ui.thirstChanged(thirst)
+            CoreHolder.core.ui.thirstChanged(thirst)
         }
 
     private fun calculateMaximalDryness() = lower.absorption + undies.absorption
@@ -131,7 +126,7 @@ class Character(
     var dryness = maximalDryness
         set(value) {
             field = Math.min(value, maximalDryness)
-            core.ui.wearDrynessChanged(dryness)
+            CoreHolder.core.ui.wearDrynessChanged(dryness)
         }
 
     /**

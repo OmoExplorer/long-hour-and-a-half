@@ -75,10 +75,20 @@ class PlotMap(@Suppress("KDocMissingDocumentation") @Transient var core: Core) {
         core.plot.nextStageID = PlotStageID.ASK_CHEAT
     }
 
-    private val map = mapOf(
-            PlotStageID.STARTUP to PlotStage(nextStageID = PlotStageID.WAKE_UP, duration = 0),
+    private fun plotStageLambda(
+            text: Text = Text.empty,
+            operations: () -> Unit = {},
+            nextStageID: PlotStageID,
+            actionGroupName: String = "",
+            actions: List<Action> = listOf(),
+            duration: Int = Core.TURN_DURATION,
+            scoreNomination: ScoreNomination? = null
+    ) = { PlotStage(text, operations, nextStageID, actionGroupName, actions, duration, scoreNomination) }
 
-            PlotStageID.WAKE_UP to PlotStage(
+    private val map = mapOf(
+            PlotStageID.STARTUP to plotStageLambda(nextStageID = PlotStageID.WAKE_UP, duration = 0),
+
+            PlotStageID.WAKE_UP to plotStageLambda(
                     Text(
                             "You wake up, yawning gently and rubbing away the resulting tears.",
                             "Mmmm, so tired...",
@@ -89,7 +99,7 @@ class PlotMap(@Suppress("KDocMissingDocumentation") @Transient var core: Core) {
                     nextStageID = PlotStageID.LEAVE_BED
             ),
 
-            PlotStageID.LEAVE_BED to PlotStage(
+            PlotStageID.LEAVE_BED to plotStageLambda(
                     Text(
                             listOf(
                                     "Wh-what? Did I forget to set my alarm?!",
@@ -116,7 +126,7 @@ class PlotMap(@Suppress("KDocMissingDocumentation") @Transient var core: Core) {
                     duration = 1
             ),
 
-            PlotStageID.LEAVE_HOME to PlotStage(
+            PlotStageID.LEAVE_HOME to plotStageLambda(
                     Text(
                             "Just looking at the clock again in disbelief adds a redder tint to your cheeks.",
                             "",
@@ -134,7 +144,7 @@ class PlotMap(@Suppress("KDocMissingDocumentation") @Transient var core: Core) {
                     duration = 1
             ),
 
-            PlotStageID.GO_TO_CLASS to PlotStage(
+            PlotStageID.GO_TO_CLASS to plotStageLambda(
                     Text(
                             when (core.character.wearCombinationType) {
                                 FULLY_CLOTHED,
@@ -190,7 +200,7 @@ class PlotMap(@Suppress("KDocMissingDocumentation") @Transient var core: Core) {
                     PlotStageID.WALK_IN
             ),
 
-            PlotStageID.WALK_IN to PlotStage(
+            PlotStageID.WALK_IN to plotStageLambda(
                     Text(
                             when (core.character.wearCombinationType) {
                                 FULLY_CLOTHED,
@@ -236,7 +246,7 @@ class PlotMap(@Suppress("KDocMissingDocumentation") @Transient var core: Core) {
                     PlotStageID.SIT_DOWN
             ),
 
-            PlotStageID.SIT_DOWN to PlotStage(
+            PlotStageID.SIT_DOWN to plotStageLambda(
                     Text(
                             "Subconsciously rubbing your thighs together, you feel the uncomfortable feeling of",
                             "your bladder filling as the liquids you drank earlier start to make their way down."
@@ -249,13 +259,13 @@ class PlotMap(@Suppress("KDocMissingDocumentation") @Transient var core: Core) {
                     )
             ),
 
-            PlotStageID.ASK_ACTION to PlotStage(
+            PlotStageID.ASK_ACTION to plotStageLambda(
                     core.character.bladder.getThoughts(),
                     actions = listOf(wait, askTeacherToPee, holdCrotch, rubThighs, giveUp, drink, cheat).filterNotNull(),
                     nextStageID = PlotStageID.ASK_ACTION
             ),
 
-            PlotStageID.ASK_TO_PEE to PlotStage(
+            PlotStageID.ASK_TO_PEE to plotStageLambda(
                     Text(
                             when (core.schoolDay.lesson.timesPeeDenied) {
                                 0 -> "You ask the teacher if you can go out to the restroom."
@@ -286,7 +296,7 @@ class PlotMap(@Suppress("KDocMissingDocumentation") @Transient var core: Core) {
                     PlotStageID.ASK_TO_PEE_ANSWER, duration = 0
             ),
 
-            PlotStageID.ASK_TO_PEE_ANSWER to PlotStage(
+            PlotStageID.ASK_TO_PEE_ANSWER to plotStageLambda(
                     run {
                         if (core.flags.peeingAllowed) {
                             Text(TextLine("Yes, you may.", true), TextLine("says the teacher."))
@@ -331,7 +341,7 @@ class PlotMap(@Suppress("KDocMissingDocumentation") @Transient var core: Core) {
                         PlotStageID.ASK_ACTION
             ),
 
-            PlotStageID.PEE_ON_LESSON to PlotStage(
+            PlotStageID.PEE_ON_LESSON to plotStageLambda(
                     when (core.character.wearCombinationType) {
                         FULLY_CLOTHED -> Text("You reach the restroom,",
                                 "enter it, pull down your ${core.character.lower.insert} " +
@@ -349,7 +359,7 @@ class PlotMap(@Suppress("KDocMissingDocumentation") @Transient var core: Core) {
                     { core.character.bladder.fullness = 0.0 }, PlotStageID.ASK_ACTION
             ),
 
-            PlotStageID.ASK_CHEAT to PlotStage(
+            PlotStageID.ASK_CHEAT to plotStageLambda(
                     nextStageID = PlotStageID.ASK_ACTION,
                     actionGroupName = "Select a cheat",
                     actions = listOf(
@@ -431,7 +441,7 @@ class PlotMap(@Suppress("KDocMissingDocumentation") @Transient var core: Core) {
                     )
             ),
 
-            PlotStageID.CALLED_ON to PlotStage(
+            PlotStageID.CALLED_ON to plotStageLambda(
                     Text(
                             TextLine("${core.character.name}, " +
                                     "why don't you come up to the board and solve this problem?,"),
@@ -446,7 +456,7 @@ class PlotMap(@Suppress("KDocMissingDocumentation") @Transient var core: Core) {
                     scoreNomination = ScoreNomination("Called on the lesson", 5, ArithmeticAction.ADD)
             ),
 
-            PlotStageID.CLASS_OVER to PlotStage(
+            PlotStageID.CLASS_OVER to plotStageLambda(
                     Text("Lesson is finally over, and you're running to the restroom as fast as you can."),
                     {
                         core.flags.line = Random().nextBoolean()
@@ -461,7 +471,7 @@ class PlotMap(@Suppress("KDocMissingDocumentation") @Transient var core: Core) {
                     }, duration = 1
             ),
 
-            PlotStageID.PEE_AFTER_LESSON to PlotStage(
+            PlotStageID.PEE_AFTER_LESSON to plotStageLambda(
                     Text("Thank god, one cabin is free!",
                             when (core.character.wearCombinationType) {
                                 FULLY_CLOTHED -> "You enter it, pull down your ${core.character.lower.insert} " +
@@ -474,14 +484,14 @@ class PlotMap(@Suppress("KDocMissingDocumentation") @Transient var core: Core) {
                     { core.character.bladder.fullness = 0.0 }, PlotStageID.END_GAME
             ),
 
-            PlotStageID.PEE_AFTER_LESSON_LINE to PlotStage(
+            PlotStageID.PEE_AFTER_LESSON_LINE to plotStageLambda(
                     Text("Oh no... ",
                             "All cabins are occupied, and there's a line. You have to wait!"),
                     nextStageID = if (chance(50)) PlotStageID.PEE_AFTER_LESSON_LINE
                     else PlotStageID.PEE_AFTER_LESSON
             ),
 
-            PlotStageID.AFTER_CLASS to PlotStage(
+            PlotStageID.AFTER_CLASS to plotStageLambda(
                     Text(
                             TextLine("Hey, ${core.character.name}, you wanted to escape? " +
                                     "You must stay after classes!", true),
@@ -494,7 +504,7 @@ class PlotMap(@Suppress("KDocMissingDocumentation") @Transient var core: Core) {
                         PlotStageID.AFTER_CLASS else PlotStageID.CLASS_OVER
             ),
 
-            PlotStageID.ACCIDENT to PlotStage(
+            PlotStageID.ACCIDENT to plotStageLambda(
                     Text("You can't help it.. No matter how much pressure you use, the leaks won't stop.",
                             "Despite all this, you try your best, but suddenly you're forced to stop.",
                             "You can't move, or you risk peeing yourself.",
@@ -505,7 +515,7 @@ class PlotMap(@Suppress("KDocMissingDocumentation") @Transient var core: Core) {
                     nextStageID = PlotStageID.WET
             ),
 
-            PlotStageID.GIVE_UP to PlotStage(
+            PlotStageID.GIVE_UP to plotStageLambda(
                     Text("You get tired of holding all the urine in your aching bladder,",
                             when (core.character.wearCombinationType) {
                                 FULLY_CLOTHED, UNDERWEAR_ONLY ->
@@ -520,7 +530,7 @@ class PlotMap(@Suppress("KDocMissingDocumentation") @Transient var core: Core) {
                     }, PlotStageID.WET
             ),
 
-            PlotStageID.WET to PlotStage(
+            PlotStageID.WET to plotStageLambda(
                     Text(
                             when (core.character.wearCombinationType) {
                                 FULLY_CLOTHED -> listOf("Before you can move an inch, pee quickly soaks through your " +
@@ -551,7 +561,7 @@ class PlotMap(@Suppress("KDocMissingDocumentation") @Transient var core: Core) {
                     nextStageID = PlotStageID.POST_WET
             ),
 
-            PlotStageID.POST_WET to PlotStage(
+            PlotStageID.POST_WET to plotStageLambda(
                     if (core.schoolDay.lesson.stay)
                         Text(
                                 TextLine("Teacher is laughing loudly."),
@@ -568,7 +578,7 @@ class PlotMap(@Suppress("KDocMissingDocumentation") @Transient var core: Core) {
                     nextStageID = PlotStageID.GAME_OVER
             ),
 
-            PlotStageID.GAME_OVER to PlotStage(
+            PlotStageID.GAME_OVER to plotStageLambda(
                     Text(
                             listOf(
                                     "No matter how hard you tried... " +
@@ -584,18 +594,18 @@ class PlotMap(@Suppress("KDocMissingDocumentation") @Transient var core: Core) {
                                         NAKED -> "Your legs are covered in your pee, a sign of your failure..."
                                     }
                             )
-                    ), core.ui::gameFinished, null, duration = 0
+                    ), core.ui::gameFinished, PlotStageID.GAME_OVER, duration = 0
             ),
 
-            PlotStageID.END_GAME to PlotStage(
+            PlotStageID.END_GAME to plotStageLambda(
                     operations =
                     {
                         core.scorer.showScoreDialog()
                         core.ui.gameFinished()
-                    }, nextStageID = null, duration = 0
+                    }, nextStageID = PlotStageID.END_GAME, duration = 0
             ),
 
-            PlotStageID.CAUGHT to PlotStage(
+            PlotStageID.CAUGHT to plotStageLambda(
                     when (core.schoolDay.timesCaught) {
                         0 -> Text("It looks like a classmate has spotted that you've got to go badly.",
                                 "Damn, he may spread that fact...")
@@ -645,7 +655,7 @@ class PlotMap(@Suppress("KDocMissingDocumentation") @Transient var core: Core) {
                     }, ArithmeticAction.ADD)
             ),
 
-            PlotStageID.SURPRISE to PlotStage(
+            PlotStageID.SURPRISE to plotStageLambda(
                     Text("What... You see ${core.schoolDay.surpriseBoy.name} staying in front of the restroom.",
                             "Suddenly, he takes you, not letting you to escape."),
                     {
@@ -657,7 +667,7 @@ class PlotMap(@Suppress("KDocMissingDocumentation") @Transient var core: Core) {
                     ArithmeticAction.ADD)
             ),
 
-            PlotStageID.SURPRISE_2 to PlotStage(
+            PlotStageID.SURPRISE_2 to plotStageLambda(
                     Text(
                             TextLine("What do you want from me?!", true),
                             TextLine("He has brought you in the restroom and quickly put you on the windowsill."),
@@ -668,7 +678,7 @@ class PlotMap(@Suppress("KDocMissingDocumentation") @Transient var core: Core) {
                     { core.character.embarrassment += 10 }, PlotStageID.SURPRISE_DIALOGUE
             ),
 
-            PlotStageID.SURPRISE_DIALOGUE to PlotStage(
+            PlotStageID.SURPRISE_DIALOGUE to plotStageLambda(
                     Text(
                             TextLine("No, please, don't do it, no...", true),
                             TextLine("I want to see you wet...", true),
@@ -704,7 +714,7 @@ class PlotMap(@Suppress("KDocMissingDocumentation") @Transient var core: Core) {
                     ), 1
             ),
 
-            PlotStageID.SURPRISE_IDLE to PlotStage(
+            PlotStageID.SURPRISE_IDLE to plotStageLambda(
                     Text(
                             TextLine("You will wet yourself right now,", true),
                             TextLine(core.schoolDay.surpriseBoy.name + " demands."),
@@ -712,7 +722,7 @@ class PlotMap(@Suppress("KDocMissingDocumentation") @Transient var core: Core) {
                     ), nextStageID = PlotStageID.SURPRISE_WET_PRESSURE
             ),
 
-            PlotStageID.HIT to PlotStage(
+            PlotStageID.HIT to plotStageLambda(
                     Text(
                             TextLine("You hit ${core.schoolDay.surpriseBoy.name}'s groin."),
                             TextLine("Ouch!.. You, little bitch...", true),
@@ -732,7 +742,7 @@ class PlotMap(@Suppress("KDocMissingDocumentation") @Transient var core: Core) {
                     ), nextStageID = PlotStageID.END_GAME
             ),
 
-            PlotStageID.HIT_FAILED to PlotStage(
+            PlotStageID.HIT_FAILED to plotStageLambda(
                     Text(
                             TextLine("You hit ${core.schoolDay.surpriseBoy.name}'s hand. " +
                                     "Damn, you'd meant to hit his groin..."),
@@ -742,7 +752,7 @@ class PlotMap(@Suppress("KDocMissingDocumentation") @Transient var core: Core) {
                     ), nextStageID = PlotStageID.SURPRISE_WET_PRESSURE
             ),
 
-            PlotStageID.PERSUADE to PlotStage(
+            PlotStageID.PERSUADE to plotStageLambda(
                     Text(
                             setOf(
                                     TextLine("Ok, you may, but you'll let me watch you pee.", true),
@@ -773,7 +783,7 @@ class PlotMap(@Suppress("KDocMissingDocumentation") @Transient var core: Core) {
                     )
             ),
 
-            PlotStageID.PERSUADE_FAILED to PlotStage(
+            PlotStageID.PERSUADE_FAILED to plotStageLambda(
                     when (core.schoolDay.surpriseBoy.timesPeeDenied) {
                         0 -> Text(
                                 TextLine("No, you can't pee in a cabin. I want you to wet yourself.,"),
@@ -800,7 +810,7 @@ class PlotMap(@Suppress("KDocMissingDocumentation") @Transient var core: Core) {
                         PlotStageID.SURPRISE_WET_PRESSURE
             ),
 
-            PlotStageID.SURPRISE_WET_VOLUNTARY to PlotStage(
+            PlotStageID.SURPRISE_WET_VOLUNTARY to plotStageLambda(
                     Text(
                             TextLine("Alright, as you say.,", true),
                             TextLine("you say to ${core.schoolDay.surpriseBoy.name} with a defeated sigh."),
@@ -808,7 +818,7 @@ class PlotMap(@Suppress("KDocMissingDocumentation") @Transient var core: Core) {
                     ), nextStageID = PlotStageID.SURPRISE_WET_VOLUNTARY2
             ),
 
-            PlotStageID.SURPRISE_WET_VOLUNTARY2 to PlotStage(
+            PlotStageID.SURPRISE_WET_VOLUNTARY2 to plotStageLambda(
                     Text("You feel the warm pee stream",
                             when (core.character.wearCombinationType) {
                                 FULLY_CLOTHED -> "filling your ${core.character.undies.insert} " +
@@ -822,7 +832,7 @@ class PlotMap(@Suppress("KDocMissingDocumentation") @Transient var core: Core) {
                     { core.character.bladder.fullness = 0.0 }, PlotStageID.END_GAME
             ),
 
-            PlotStageID.SURPRISE_WET_PRESSURE to PlotStage(
+            PlotStageID.SURPRISE_WET_PRESSURE to plotStageLambda(
                     Text("Ouch... The sudden pain flash passes through your bladder...",
                             "You try to hold the pee back, but you just can't.",
                             "You feel the warm pee stream",
@@ -838,7 +848,7 @@ class PlotMap(@Suppress("KDocMissingDocumentation") @Transient var core: Core) {
                     { core.character.bladder.fullness = 0.0 }, PlotStageID.END_GAME
             ),
 
-            PlotStageID.DRINK to PlotStage(
+            PlotStageID.DRINK to plotStageLambda(
                     Text("You take your bottle with water,", "open it and take a small sip."),
                     {
                         core.character.belly += core.character.thirst.toDouble()

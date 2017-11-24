@@ -6,7 +6,7 @@ package longHourAndAHalf
 data class PlotStage(
         val text: Text = Text.empty,
         val operations: () -> Unit = {},
-        val nextStageID: PlotStageID?,
+        val nextStageID: PlotStageID,
         val actionGroupName: String = "",
         val actions: List<Action> = listOf(),
         val duration: Int = Core.TURN_DURATION,

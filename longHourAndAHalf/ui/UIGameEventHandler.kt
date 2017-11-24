@@ -1,9 +1,11 @@
 package longHourAndAHalf.ui
 
-import longHourAndAHalf.*
+import longHourAndAHalf.Action
+import longHourAndAHalf.Text
+import longHourAndAHalf.Time
+import longHourAndAHalf.Wear
 
 interface UIGameEventHandler {
-    val core: Core
     var actionMustBeSelected: Boolean
 
     fun characterNameChanged(name: String)

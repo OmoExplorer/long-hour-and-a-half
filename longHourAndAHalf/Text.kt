@@ -3,7 +3,7 @@ package longHourAndAHalf
 /**
  * Multi-line text with italic text support.
  */
-class Text {
+open class Text {
     constructor(vararg lines: String) {
         val textLineList = mutableListOf<TextLine>()
 

@@ -8,8 +8,7 @@ import java.util.*
  */
 class Bladder(
         fullness: Double = Random().nextInt(50).toDouble(),
-        incontinence: Double,
-        @Transient var core: Core
+        incontinence: Double
 ) : Serializable {
     /**
      * Amount of urine held in this bladder in percents.
@@ -17,7 +16,7 @@ class Bladder(
     var fullness = fullness
         set(value) {
             field = clamp(0.0, value, 150.0)
-            with(core) {
+            with(CoreHolder.core) {
                 ui.bladderFullnessChanged(fullness)
                 ui.lblBladder.foreground = if (fullness > 100 && !hardcore || fullness > 80 && hardcore)
                     java.awt.Color.RED
@@ -33,7 +32,7 @@ class Bladder(
     var incontinence = incontinence
         set(value) {
             field = value
-            core.ui.incontinenceMultiplierChanged(incontinence)
+            CoreHolder.core.ui.incontinenceMultiplierChanged(incontinence)
         }
 
     /**
@@ -58,7 +57,7 @@ class Bladder(
     var sphincterPower = maxSphincterPower
         set(value) {
             field = Math.min(value, maxSphincterPower)
-            core.ui.sphincterStrengthChanged(sphincterPower)
+            CoreHolder.core.ui.sphincterStrengthChanged(sphincterPower)
         }
 
     /**
@@ -70,21 +69,21 @@ class Bladder(
 
             if (sphincterPower >= 0) return
 
-            core.character.dryness -= 5 //Decreasing dryness
+            CoreHolder.core.character.dryness -= 5 //Decreasing dryness
             fullness -= 2.5 //Decreasing fullness level
             sphincterPower = 0
 
-            if (core.character.dryness > Character.MINIMAL_DRYNESS)
-                core.ui.warnAboutLeaking()
+            if (CoreHolder.core.character.dryness > Character.MINIMAL_DRYNESS)
+                CoreHolder.core.ui.warnAboutLeaking()
 
-            if (core.character.dryness < Character.MINIMAL_DRYNESS)
+            if (CoreHolder.core.character.dryness < Character.MINIMAL_DRYNESS)
                 leakingTooMuchSoGameOver()
         }
     }
 
     fun makeUrineFromWater(timeOffset: Int) {
         fullness += timeOffset * 1.5
-        with(core.character) {
+        with(CoreHolder.core.character) {
             belly -= timeOffset * 1.5
 
             if (belly == 0.0) return
@@ -99,7 +98,7 @@ class Bladder(
         }
     }
 
-    private fun calculateLeakingChance() = with(core) {
+    private fun calculateLeakingChance() = with(CoreHolder.core) {
         (if (hardcore)
             5
         else
@@ -121,9 +120,9 @@ class Bladder(
     fun sphincterSpasm() {
         sphincterPower = 0
 
-        if (core.character.dryness > Character.MINIMAL_DRYNESS) return
+        if (CoreHolder.core.character.dryness > Character.MINIMAL_DRYNESS) return
 
-        core.plot.nextStageID = if (core.plot.specialHardcoreStage) {
+        CoreHolder.core.plot.nextStageID = if (CoreHolder.core.plot.specialHardcoreStage) {
             PlotStageID.SURPRISE_ACCIDENT
         } else {
             PlotStageID.ACCIDENT
@@ -134,7 +133,7 @@ class Bladder(
      * Empties this bladder each 15 in-game minutes.
      */
     fun applyDrainCheat() {
-        if (!(core.cheatData.drain && (core.world.time.minutes % 15 == 0))) return
+        if (!(CoreHolder.core.cheatData.drain && (CoreHolder.core.world.time.minutes % 15 == 0))) return
         fullness = 0.0
     }
 
@@ -142,48 +141,46 @@ class Bladder(
      * Finishes the character instance setup.
      * Must be called as soon as [game core][Core] becomes available.
      */
-    fun finishSetup(core: Core) {
-        this.core = core
-
+    fun finishSetup() {
         maxBladder = (
-                if (core.hardcore)
+                if (CoreHolder.core.hardcore)
                     130
                 else
                     100
-                ) - (core.character.lower.pressure + core.character.undies.pressure).toInt()
+                ) - (CoreHolder.core.character.lower.pressure + CoreHolder.core.character.undies.pressure).toInt()
 
         criticalBladderFullnessLevel = (
-                if (core.hardcore)
+                if (CoreHolder.core.hardcore)
                     100
                 else
                     50
-                ) - (core.character.lower.pressure + core.character.undies.pressure).toInt()
+                ) - (CoreHolder.core.character.lower.pressure + CoreHolder.core.character.undies.pressure).toInt()
     }
 
     private fun leakingTooMuchSoGameOver() {
-        when (core.character.wearCombinationType) {
-            WearCombinationType.NAKED -> if (core.character.cornered)
-                core.ui.forcedTextChange(Text("You see a puddle forming on the floor beneath you, " +
+        when (CoreHolder.core.character.wearCombinationType) {
+            WearCombinationType.NAKED -> if (CoreHolder.core.character.cornered)
+                CoreHolder.core.ui.forcedTextChange(Text("You see a puddle forming on the floor beneath you, " +
                         "you're peeing!", "It's too much..."))
             else
-                core.ui.forcedTextChange(Text("Feeling the pee hit the chair and soon fall over the sides,",
+                CoreHolder.core.ui.forcedTextChange(Text("Feeling the pee hit the chair and soon fall over the sides,",
                         "you see a puddle forming under your chair, you're peeing!", "It's too much..."))
 
             WearCombinationType.OUTERWEAR_ONLY, WearCombinationType.FULLY_CLOTHED ->
-                core.ui.forcedTextChange(
-                        Text("You see the wet spot expanding on your ${core.character.lower.insert}!",
+                CoreHolder.core.ui.forcedTextChange(
+                        Text("You see the wet spot expanding on your ${CoreHolder.core.character.lower.insert}!",
                                 "It's too much...")
                 )
 
             WearCombinationType.UNDERWEAR_ONLY ->
-                core.ui.forcedTextChange(
-                        Text("You see the wet spot expanding on your ${core.character.undies.insert}!",
+                CoreHolder.core.ui.forcedTextChange(
+                        Text("You see the wet spot expanding on your ${CoreHolder.core.character.undies.insert}!",
                                 "It's too much...")
                 )
         }
 
-        core.plot.nextStageID = PlotStageID.ACCIDENT
-        core.handleNextClicked()
+        CoreHolder.core.plot.nextStageID = PlotStageID.ACCIDENT
+        CoreHolder.core.handleNextClicked()
     }
 
     fun getThoughts() = when (fullness) {
@@ -221,5 +218,9 @@ class Bladder(
                         "Bounds: 0..${Int.MAX_VALUE}\n" +
                         "Value: $fullness"
         )
+    }
+
+    companion object {
+        const val RANDOM_FULLNESS_CAP = 50
     }
 }

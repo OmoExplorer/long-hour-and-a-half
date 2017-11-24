@@ -4,7 +4,7 @@ import java.io.Serializable
 import java.util.*
 
 /**
- * @property name Wear name (for example, "Random").
+ * @property name Wear name (for example, "Skirt").
  */
 abstract class AbstractWear(var name: String) : Serializable {
     override fun toString() = name
@@ -12,14 +12,16 @@ abstract class AbstractWear(var name: String) : Serializable {
 
 /**
  * Wear stubs that aren't intended to be used in game.
+ *
+ * @param name Wear name (for example, "Skirt").
+ * @property instead Lambda that returns [Wear] object which should be used instead.
  */
 class MaintenanceWear(name: String, val instead: () -> Wear) : AbstractWear(name)
 
 /**
  * Underwear or outerwear of a character.
  *
- * @author JavaBird
- *
+ * @param name Wear name (for example, "Skirt").
  * @property insert Name used in a game text (for example "panties")
  * @property pressure Pressure of this wear.
  * 1 point of a pressure takes 1 point from a maximal bladder capacity.

@@ -9,7 +9,6 @@ import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.io.FileInputStream
 import java.io.ObjectInputStream
-import java.util.*
 import javax.swing.*
 import javax.swing.tree.DefaultMutableTreeNode
 import javax.swing.tree.DefaultTreeModel
@@ -216,7 +215,21 @@ class setupFramePre : JFrame() {
         start!!.text = "Start"
         start!!.toolTipText = "Start new game"
         start!!.name = "start" // NOI18N
-        start!!.addActionListener { startActionPerformed() }
+        start!!.addActionListener {
+            Launcher.runGame(
+                    this,
+                    nameField,
+                    femaleRadio,
+                    basSliderRadio,
+                    basSlider,
+                    incontSlider,
+                    hardDiffRadio,
+                    underwearTree,
+                    outerwearTree,
+                    undiesColor,
+                    lowerColor
+            )
+        }
 
         nameLabel!!.font = Font("sansserif", 1, 12) // NOI18N
         nameLabel!!.text = "Name"
@@ -287,7 +300,7 @@ class setupFramePre : JFrame() {
         treeNode1.add(treeNode2)
         treeNode2 = DefaultMutableTreeNode(Wear.getByName("No underwear"))
         treeNode1.add(treeNode2)
-        treeNode2 = DefaultMutableTreeNode("Custom")
+        treeNode2 = DefaultMutableTreeNode(Wear.getByName("Custom"))
         treeNode1.add(treeNode2)
         underwearTree!!.model = DefaultTreeModel(treeNode1)
         underwearTree!!.name = "underwearTree" // NOI18N
@@ -357,7 +370,7 @@ class setupFramePre : JFrame() {
         treeNode1.add(treeNode2)
         treeNode2 = DefaultMutableTreeNode(Wear.getByName("No outerwear"))
         treeNode1.add(treeNode2)
-        treeNode2 = DefaultMutableTreeNode("Custom")
+        treeNode2 = DefaultMutableTreeNode(Wear.getByName("Custom"))
         treeNode1.add(treeNode2)
         outerwearTree!!.model = DefaultTreeModel(treeNode1)
         outerwearTree!!.name = "outerwearTree" // NOI18N
@@ -990,77 +1003,7 @@ class setupFramePre : JFrame() {
         )
 
         pack()
-    }// </editor-fold>//GEN-END:initComponents
-
-    private fun startActionPerformed() {//GEN-FIRST:event_startActionPerformed
-        val rnd = Random()
-
-        val gnd = if (femaleRadio!!.isSelected)
-            Gender.FEMALE
-        else
-            Gender.MALE
-
-        val bas = if (basSliderRadio!!.isSelected)
-            basSlider!!.value
-        else
-            rnd.nextInt(51)
-
-        val diff = hardDiffRadio!!.isSelected
-
-        fun getSelectedWear(node: Any?, type: WearType) = if (node == null)
-            Wear.getRandom(type)
-        else
-            f(node as DefaultMutableTreeNode).userObject as AbstractWear
-
-        var underwearToAssign = getSelectedWear(underwearTree!!.lastSelectedPathComponent,
-                WearType.UNDERWEAR)
-        var outerwearToAssign = getSelectedWear(outerwearTree!!.lastSelectedPathComponent,
-                WearType.OUTERWEAR)
-
-        if (underwearToAssign is MaintenanceWear)
-            underwearToAssign = underwearToAssign.instead()
-        if (outerwearToAssign is MaintenanceWear)
-            outerwearToAssign = outerwearToAssign.instead()
-
-        assert(underwearToAssign is Wear)
-        assert(outerwearToAssign is Wear)
-
-        fun Wear.setConcreteColorByInconcreteColor(color: WearColor) {
-            var colorToAssign = color
-            while (colorToAssign == WearColor.RANDOM)
-                colorToAssign = WearColor.values().randomItem()
-            this.color = colorToAssign
-        }
-
-        (underwearToAssign as Wear).setConcreteColorByInconcreteColor(undiesColor)
-        (outerwearToAssign as Wear).setConcreteColorByInconcreteColor(lowerColor)
-
-        var incont = (incontSlider!!.value / 10).toDouble()
-        if (incont < 1)
-            incont += 0.5
-
-        println(underwearTree?.lastSelectedPathComponent.toString())
-
-        println(outerwearTree?.lastSelectedPathComponent.toString())
-
-        println(undiesColor)
-
-        println(lowerColor)
-
-        Core(
-                Character(
-                        nameField!!.text,
-                        gnd,
-                        bas.toDouble(),
-                        incont.toDouble(),
-                        underwearToAssign,
-                        outerwearToAssign
-                ),
-                diff
-        )
-
-        this.dispose()
-    }//GEN-LAST:event_startActionPerformed
+    }
 
     private fun maleRadioActionPerformed() {//GEN-FIRST:event_maleRadioActionPerformed
         if (nameField!!.text == "Mrs. Nobody")

@@ -59,55 +59,12 @@
 package longHourAndAHalf
 
 import longHourAndAHalf.WearType.*
-import longHourAndAHalf.ui.SaveFileChooser
 import longHourAndAHalf.ui.StandardGameUI
-import longHourAndAHalf.ui.WearFileChooser
 import longHourAndAHalf.ui.setupFramePre
-import java.io.*
-import java.util.*
-import javax.swing.JFileChooser
 import javax.swing.JOptionPane
 
-private val random = Random()
-
-/**
- * @return random item from this array
- */
-fun <T> Array<T>.randomItem(): T {
-    val randomIndex = random.nextInt(this.size)
-    return this[randomIndex]
-}
-
-/**
- * @return random item from this list
- */
-fun <T> List<T>.randomItem(): T {
-    val randomIndex = random.nextInt(this.size)
-    return this[randomIndex]
-}
-
-/**
- * @return `true` with a specified chance, `false` otherwise.
- * @param probability chance to return `true` in percents.
- */
-fun chance(probability: Int) = chance(probability.toDouble())
-
-/**
- * @return `true` with a specified chance, `false` otherwise.
- * @param probability chance to return `true` in percents.
- */
-fun chance(probability: Double) = random.nextInt(100) < probability
-
-/**
- * Simple utility function which clamps the given value to be strictly
- * between the min and max values.
- */
-fun clamp(min: Double, value: Double, max: Double): Double {
-    if (value < min) return min
-    return if (value > max) max else value
-}
-
 @Suppress("KDocMissingDocumentation")
+
 /**
  * Game core which is used for communication between modules.
  */
@@ -155,79 +112,12 @@ class Core {
 
     val plot: Plot
 
-    /**
-     * List of cheats.
-     */
-    private val cheatList = listOf(
-            "Go to the corner",
-            "Stay after class",
-            "Pee in a bottle",
-            "End class right now",
-            "Calm the teacher down",
-            "Raise your hand",
-            "Make your pee disappear regularly",
-            "Set your incontinence level",
-            "Toggle hardcore mode",
-            "Set bladder fullness"
-    )
-
-    private fun openCustomWear(type: WearType): Wear? {
-        fun abort(message: String) {
-            JOptionPane.showMessageDialog(null, message, "", JOptionPane.ERROR_MESSAGE)
-            ui.dispose()
-            setupFramePre.main(arrayOf(""))
-        }
-
-        val fcWear = WearFileChooser()
-        fcWear.dialogTitle = when (type) {
-            UNDERWEAR -> "Open an underwear file"
-            OUTERWEAR -> "Open an outerwear file"
-            BOTH_SUITABLE -> throw IllegalArgumentException("BOTH_SUITABLE wear type isn't supported")
-        }
-
-        var openedWear: Wear? = null
-        if (fcWear.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-            val file = fcWear.selectedFile
-            try {
-                val fin = FileInputStream(file)
-                val ois = ObjectInputStream(fin)
-                openedWear = ois.readObject() as Wear
-                if (openedWear.type == type) {
-                    abort("Wrong wear type.")
-                }
-            } catch (e: Exception) {
-                abort("File error.")
-            }
-        }
-
-        return openedWear
-    }
-
-    private fun setupWear(wear: Wear, type: WearType): Wear? {
-        val processedWear = when (wear.name) {
-            "Custom" -> openCustomWear(type)
-            "Random" -> Wear.getRandom(type)
-            else -> wear
-        }
-
-        processedWear?.let {
-            if (processedWear.name == "No underwear" || processedWear.name == "No outerwear")
-                processedWear.insert = if (character.gender == Gender.FEMALE)
-                    "crotch"
-                else
-                    "penis"
-        }
-
-        return processedWear
-    }
-
     constructor(character: Character, hardcore: Boolean) {
         this.hardcore = hardcore
         this.character = character
-        this.character.finishSetup(this)
-        this.character.bladder.finishSetup(this)
-        world = World(this)
-        world.core = this
+        this.character.finishSetup()
+        this.character.bladder.finishSetup()
+        world = World()
         cheatData = CheatData()
         schoolDay = SchoolDay(this)
         flags = PlotFlags()
@@ -256,12 +146,14 @@ class Core {
             } else WearColor.NONE
         }
 
-        ui = StandardGameUI(this)
+        ui = StandardGameUI()
 
         plot = Plot(this)
 
-        this.character.undies = setupWear(character.undies, UNDERWEAR) ?: onIncorrectWearSelected(UNDERWEAR)
-        this.character.lower = setupWear(character.lower, OUTERWEAR) ?: onIncorrectWearSelected(OUTERWEAR)
+        this.character.undies = MaintenanceWearProcessor.setupWear(character.undies, UNDERWEAR) ?:
+                onIncorrectWearSelected(UNDERWEAR)
+        this.character.lower = MaintenanceWearProcessor.setupWear(character.lower, OUTERWEAR) ?:
+                onIncorrectWearSelected(OUTERWEAR)
 
         this.character.undies.setupColor(this.character.undies.color)
         this.character.lower.setupColor(this.character.lower.color)
@@ -297,17 +189,16 @@ class Core {
     constructor(save: Save) {
         hardcore = save.hardcore
         character = save.character
-        character.finishSetup(this)
-        character.bladder.finishSetup(this)
+        character.finishSetup()
+        character.bladder.finishSetup()
         world = save.world
-        world.core = this
         flags = save.flags
         plot = save.plot
         scorer = save.scorer
         schoolDay = save.schoolDay
         cheatData = save.cheatData
 
-        ui = StandardGameUI(this)
+        ui = StandardGameUI()
         ui.finishSetup()
 
         ui.drynessBar.maximum = this.character.maximalDryness.toInt()
@@ -1630,42 +1521,6 @@ class Core {
         plot.advanceToNextStage()
     }
 
-    fun writeSaveFile() {
-        val fcGame = SaveFileChooser(File(character.name))
-
-        if (fcGame.showSaveDialog(ui) != JFileChooser.APPROVE_OPTION) return
-
-        val file = File(fcGame.selectedFile.absolutePath + ".lhhsav")
-        try {
-            val save = Save(this)
-            val fileOutputStream = FileOutputStream(file)
-            val objectOutputStream = ObjectOutputStream(fileOutputStream)
-
-            objectOutputStream.writeObject(save)
-        } catch (e: IOException) {
-            e.printStackTrace()
-            JOptionPane.showMessageDialog(ui, "File error.", "Error", JOptionPane.ERROR_MESSAGE)
-        }
-    }
-
-    fun openSaveFile() {
-        val fcGame = SaveFileChooser()
-
-        if (fcGame.showOpenDialog(ui) != JFileChooser.APPROVE_OPTION) return
-
-        val file = fcGame.selectedFile!!
-        try {
-            val fin = FileInputStream(file)
-            val ois = ObjectInputStream(fin)
-            val save = ois.readObject() as Save
-            Core(save)
-            ui.dispose()
-        } catch (e: Exception) {
-            e.printStackTrace()
-            JOptionPane.showMessageDialog(ui, "File error.", "Error", JOptionPane.ERROR_MESSAGE)
-        }
-    }
-
     /**
      * Resets the game and values, optionally letting player to select new parameters.
      *
@@ -1680,7 +1535,6 @@ class Core {
     }
 
     companion object {
-        private val random = Random()
         private lateinit var gameStartSave: Save
 
         /**

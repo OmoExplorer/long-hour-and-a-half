@@ -12,6 +12,9 @@ object Wardrobe {
             MaintenanceWear("Random underwear") {
                 Wear.getRandom(WearType.UNDERWEAR)
             },
+            MaintenanceWear("Custom") {
+                MaintenanceWearProcessor.openCustomWear(WearType.UNDERWEAR)!!
+            },
             Wear("No underwear", "", 0.0, 0.0, 1.0),
             Wear("Strings", "panties", 1.0, 2.0, 1.0),
             Wear("Tanga panties", "panties", 1.5, 3.0, 1.0),
