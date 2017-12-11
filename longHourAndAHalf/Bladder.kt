@@ -68,7 +68,7 @@ class Bladder(
         sphincterPower = 0
 
         if (core.character.dryness >= Character.MINIMAL_DRYNESS)
-            ui.warnAboutLeaking()
+            ui.leakOccurred()
         else
             leakingTooMuchSoGameOver()
     }
@@ -153,7 +153,6 @@ class Bladder(
     private fun leakingTooMuchSoGameOver() {
         core.character.fatalLeakOccured = true
         game.ui.hideActionUI()
-        game.ui.actionMustBeSelected = false
         when (core.character.wearCombinationType) {
             WearCombinationType.NAKED -> if (core.character.cornered)
                 ui.forcedTextChange(Text("You see a puddle forming on the floor beneath you, " +

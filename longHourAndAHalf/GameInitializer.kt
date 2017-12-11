@@ -25,14 +25,15 @@ object GameInitializer {
         val ui = GameMetadata.createUI()
         game = Game(core, ui)
 
-        game.core.plot.advanceToNextStage()
-        game.core.scorer.countOutInitialScore()
-        game.ui.showBladderAndTime()
-        game.core.handleNextClicked()
-        if (game.core.hardcore) game.ui.hardcoreModeToggled(true)
-        (game.ui as StandardGameUI).init()  //TODO: Workaround
-        game.ui.underwearChanged(character.undies)
-        game.ui.outerwearChanged(character.lower)
-        game.ui.frame.isVisible = true     //Displaying the frame
+        core.plot.advanceToNextStage()
+        core.scorer.countOutInitialScore()
+//        ui.setup(character.name,)
+        ui.setup()
+        core.handleNextClicked()
+//        if (core.hardcore) ui.hardcoreModeToggled(true)
+        (ui as StandardGameUI).init()  //TODO: Workaround
+        ui.underwearChanged(character.undies)
+        ui.outerwearChanged(character.lower)
+        ui.frame.isVisible = true     //Displaying the frame
     }
 }

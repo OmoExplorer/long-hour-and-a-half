@@ -7,22 +7,17 @@ import java.io.Serializable
 /**
  * Game character.
  *
+ * @property name Character's name.
  * @property gender Character's gender.
  * @property bladder Character's bladder.
  */
 class Character(
-        name: String,
+        val name: String,
         var gender: Gender,
         val bladder: Bladder,
         undies: Wear,
         lower: Wear
 ) : Serializable {
-    /** Character's name. */
-    var name = name
-        set(value) {
-            field = value
-            ui.characterNameChanged(name)
-        }
 
     /** Character's underwear. */
     var undies = undies
@@ -43,15 +38,12 @@ class Character(
         updateWearCombination()
     }
 
-    /** Local error type. Should be never thrown. */
-    class WTFError : Error("This error would never be thrown. If it was, something is very wrong.")
-
     private fun updateWearCombination() = when {
         undies.isMissing && lower.isMissing -> NAKED
         undies.isMissing && !lower.isMissing -> UNDERWEAR_ONLY
         !undies.isMissing && lower.isMissing -> OUTERWEAR_ONLY
         !undies.isMissing && !lower.isMissing -> FULLY_CLOTHED
-        else -> throw WTFError()
+        else -> throw IllegalStateException()
     }
 
     /** Type of character's wear combination. */
@@ -60,7 +52,7 @@ class Character(
     /** Amount of water in character's belly. */
     var belly = 0.0
         set(value) {
-            field = Math.max(value, 0.0)
+            field = value.coerceAtLeast(0.0)
             ui.bellyWaterLevelChanged(belly)
         }
 
@@ -73,7 +65,7 @@ class Character(
     /** Makes the wetting chance higher after reaching 100% of the bladder fullness. */
     var embarrassment = 0
         set(value) {
-            field = Math.max(value, 0)
+            field = value.coerceAtLeast(0)
             ui.embarrassmentChanged(embarrassment)
         }
 
@@ -98,7 +90,7 @@ class Character(
     /** Summary amount of pee that clothes can store. */
     var dryness = maximalDryness
         set(value) {
-            field = Math.min(value, maximalDryness)
+            field = value.coerceAtMost(maximalDryness)
             ui.wearDrynessChanged(dryness)
         }
 
