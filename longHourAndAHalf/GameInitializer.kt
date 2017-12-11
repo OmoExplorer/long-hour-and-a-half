@@ -1,7 +1,5 @@
 package longHourAndAHalf
 
-import longHourAndAHalf.ui.StandardGameUI
-
 /**
  * Creates and sets up the game.
  */
@@ -31,7 +29,6 @@ object GameInitializer {
         ui.setup()
         core.handleNextClicked()
 //        if (core.hardcore) ui.hardcoreModeToggled(true)
-        (ui as StandardGameUI).init()  //TODO: Workaround
         ui.underwearChanged(character.undies)
         ui.outerwearChanged(character.lower)
         ui.frame.isVisible = true     //Displaying the frame

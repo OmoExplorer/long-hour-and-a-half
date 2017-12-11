@@ -7,11 +7,14 @@ import longHourAndAHalf.Wear
 import javax.swing.JFrame
 
 /**
- * Used for updating the user interface. UI class would implement this interface in order to listen to the game events.
+ * Used for updating a user interface. An UI class would implement this interface in order to listen to game events.
  */
 interface UI {
     /** Reference to the UI frame. */
     val frame: JFrame
+
+    /** Whether actions are present and any from them should be selected. */
+    var actionsPresent: Boolean
 
     //Listener functions. Being run by the game.
     /** Called by the engine when the bladder fullness has been changed. */

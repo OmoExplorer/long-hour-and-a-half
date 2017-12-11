@@ -38,9 +38,12 @@ class Plot : Serializable {
         core.world.time += stage.duration
         stage.scoreNomination?.let { core.scorer.countOut(stage.scoreNomination) }
 
-        if (!stage.actions.isEmpty())
+        if (!stage.actions.isEmpty()) {
             ui.actionsChanged(stage.actionGroupName, stage.actions)
-        else
+            ui.actionsPresent = true
+        } else {
             ui.hideActionUI()
+            ui.actionsPresent = false
+        }
     }
 }

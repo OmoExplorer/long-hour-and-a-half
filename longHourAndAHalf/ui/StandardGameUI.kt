@@ -8,6 +8,7 @@ import java.awt.Rectangle
 import javax.swing.*
 import javax.swing.border.EmptyBorder
 import kotlin.math.round
+import kotlin.system.exitProcess
 
 /**
  * Default gameplay user interface.
@@ -15,6 +16,8 @@ import kotlin.math.round
  * @author JavaBird, thiswillnotcast, AnnaMay
  */
 class StandardGameUI : JFrame("A Long Hour and a Half"), UI {
+    override var actionsPresent = false
+
     override fun setup() {
         setLabelTexts()
         addButtons()
@@ -75,7 +78,7 @@ class StandardGameUI : JFrame("A Long Hour and a Half"), UI {
         btnNext = addButton(
                 "Next",
                 {
-                    if (!core.character.fatalLeakOccured) handleSelectedAction()
+                    if (!core.character.fatalLeakOccured && actionsPresent) handleSelectedAction()
                     core.handleNextClicked()
                 },
                 Rectangle(470, ACTION_BUTTONS_TOP_BORDER, 285, 35)
@@ -198,7 +201,7 @@ class StandardGameUI : JFrame("A Long Hour and a Half"), UI {
         const val ACTION_BUTTONS_TOP_BORDER = 510
     }
 
-    private fun JButton.prepare(listener: () -> Unit, bounds: Rectangle, toolTipText: String?) {
+    private inline fun JButton.prepare(crossinline listener: () -> Unit, bounds: Rectangle, toolTipText: String?) {
         addActionListener({ listener() })
         this.bounds = bounds
         this.toolTipText = toolTipText
@@ -303,7 +306,7 @@ class StandardGameUI : JFrame("A Long Hour and a Half"), UI {
 
         addButton(
                 "Quit",
-                { System.exit(0) },
+                { exitProcess(0) },
                 Rectangle(192, ACTION_BUTTONS_TOP_BORDER, ACTION_BUTTONS_WIDTH, ACTION_BUTTONS_HEIGHT)
         )
 
@@ -312,7 +315,8 @@ class StandardGameUI : JFrame("A Long Hour and a Half"), UI {
         contentPane.add(lblName)
 
         lblHardcore.font = tahomaFont18
-        lblHardcore.setBounds(20, 300, 70, 32)
+        lblHardcore.setBounds(220, 170, 100, 32)
+        lblHardcore.isVisible = false
         contentPane.add(lblHardcore)
 
         lblBladder.font = tahomaFont15
