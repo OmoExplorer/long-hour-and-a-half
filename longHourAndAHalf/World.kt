@@ -3,11 +3,15 @@ package longHourAndAHalf
 import java.io.Serializable
 
 /**
- * Stores game world data.
+ * Stores game world data, such as current game [time].
+ *
+ * @see Time
  */
 class World : Serializable {
     /**
      * World's current time.
+     *
+     * When being changed, checks if the lesson should finish; if so, finishes it. Also, runs [timeEffect].
      */
     var time: Time = SchoolDay.gameBeginningTime
         set(value) {
@@ -16,32 +20,41 @@ class World : Serializable {
 
             val offset = time.rawMinutes - oldValue.rawMinutes
 
-            with(CoreHolder.core.schoolDay.lesson) {
-                if (shouldFinish()) {
-                    finish()
-                }
-            }
-            with(CoreHolder.core.character) {
-                bladder.applyDrainCheat()
-                dryClothes(offset)
-            }
-
-            timeEffect(offset)
-            CoreHolder.core.ui.timeChanged(time)
+            if (offset != 0) timeEffect(offset)
+            ui.timeChanged(time)
         }
 
     /**
-     * Runs all time-related events.
+     * Runs all time-related events when the [time] changes, such as:
+     * - Checks if the lesson should finish with [Lesson.shouldFinish], if so, finishes it with [Lesson.finish];
+     * - Applies the drain cheat ([Bladder.applyDrainCheat]);
+     * - Dries character's clothes ([Character.dryClothes]);
+     * - Makes the character leak (checking with [Bladder.shouldLeak], making a leak by [Bladder.leak]);
+     * - Generates urine ([Bladder.makeUrine]);
+     * - Depletes the sphincter power ([Bladder.decaySphincterPower]);
+     * - On hardcore, increasing the [thirst][Character.thirst] level.
+     *
+     * @see Bladder
+     * @see Lesson
      */
     private fun timeEffect(timeOffset: Int) {
-        with(CoreHolder.core.character) {
-            if (bladder.shouldLeak()) bladder.sphincterSpasm()
-            bladder.makeUrineFromWater(timeOffset)
+        with(core.schoolDay.lesson) {
+            if (shouldFinish()) {
+                finish()
+            }
+        }
+
+        with(core.character) {
+            bladder.applyDrainCheat()
+            dryClothes(timeOffset)
+
+            if (!fatalLeakOccured && bladder.shouldLeak()) bladder.leak(timeOffset)
+            bladder.makeUrine(timeOffset)
             bladder.decaySphincterPower(timeOffset)
-            if (CoreHolder.core.hardcore) {
+            if (core.hardcore) {
                 thirst += 2
                 if (thirst > Character.MAXIMAL_THIRST) {
-                    CoreHolder.core.plot.nextStageID = PlotStageID.DRINK
+                    core.plot.nextStageID = PlotStageID.DRINK
                 }
             }
         }

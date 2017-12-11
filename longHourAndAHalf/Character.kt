@@ -2,53 +2,36 @@ package longHourAndAHalf
 
 import longHourAndAHalf.WearCombinationType.*
 import java.io.Serializable
-import java.util.*
 
 @Suppress("IfThenToSafeAccess")
 /**
  * Game character.
  *
  * @property gender Character's gender.
+ * @property bladder Character's bladder.
  */
 class Character(
         name: String,
         var gender: Gender,
-        private val fullness: Double = Random().nextInt(50).toDouble(),
-        private val incontinence: Double,
+        val bladder: Bladder,
         undies: Wear,
         lower: Wear
 ) : Serializable {
-
-    fun finishSetup() {
-        bladder = Bladder(fullness, incontinence)
-    }
-
-    /**
-     * Character's name.
-     */
+    /** Character's name. */
     var name = name
         set(value) {
             field = value
-            CoreHolder.core.ui.characterNameChanged(name)
+            ui.characterNameChanged(name)
         }
 
-    /**
-     * Character's bladder.
-     */
-    lateinit var bladder: Bladder
-
-    /**
-     * Character's underwear.
-     */
+    /** Character's underwear. */
     var undies = undies
         set(value) {
             field = value
             onWearChanged()
         }
 
-    /**
-     * Character's lower body clothing.
-     */
+    /** Character's lower body clothing. */
     var lower = lower
         set(value) {
             field = value
@@ -60,9 +43,7 @@ class Character(
         updateWearCombination()
     }
 
-    /**
-     * Local error type. Should be never thrown.
-     */
+    /** Local error type. Should be never thrown. */
     class WTFError : Error("This error would never be thrown. If it was, something is very wrong.")
 
     private fun updateWearCombination() = when {
@@ -73,33 +54,27 @@ class Character(
         else -> throw WTFError()
     }
 
-    /**
-     * Type of character's wear combination.
-     */
+    /** Type of character's wear combination. */
     var wearCombinationType = updateWearCombination()
 
-    /**
-     * Amount of water in character's belly.
-     */
+    /** Amount of water in character's belly. */
     var belly = 0.0
         set(value) {
             field = Math.max(value, 0.0)
-            CoreHolder.core.ui.bellyWaterLevelChanged(belly)
+            ui.bellyWaterLevelChanged(belly)
         }
 
     private fun updateDryness() {
         maximalDryness = calculateMaximalDryness()
         dryness = maximalDryness
-        CoreHolder.core.ui.drynessBar.value = dryness.toInt()
+        ui.wearDrynessChanged(dryness)
     }
 
-    /**
-     * Makes the wetting chance higher after reaching 100% of the bladder fullness.
-     */
+    /** Makes the wetting chance higher after reaching 100% of the bladder fullness. */
     var embarrassment = 0
         set(value) {
             field = Math.max(value, 0)
-            CoreHolder.core.ui.embarrassmentChanged(embarrassment)
+            ui.embarrassmentChanged(embarrassment)
         }
 
     /**
@@ -108,36 +83,29 @@ class Character(
      */
     var thirst = 0
         set(value) {
-            if (!CoreHolder.core.hardcore) return
+            if (!core.hardcore) return
             field = value
-            CoreHolder.core.ui.thirstChanged(thirst)
+            ui.thirstChanged(thirst)
         }
+
+    var fatalLeakOccured = false
 
     private fun calculateMaximalDryness() = lower.absorption + undies.absorption
 
-    /**
-     * Maximal dryness of both clothes.
-     */
+    /** Maximal dryness of both clothes. */
     var maximalDryness = calculateMaximalDryness()
 
-    /**
-     * Summary amount of pee that clothes can store.
-     */
+    /** Summary amount of pee that clothes can store. */
     var dryness = maximalDryness
         set(value) {
             field = Math.min(value, maximalDryness)
-            CoreHolder.core.ui.wearDrynessChanged(dryness)
+            ui.wearDrynessChanged(dryness)
         }
 
-    /**
-     * Whether or not character currently stands in the corner and unable to
-     * hold crotch.
-     */
+    /** Whether or not character currently stands in the corner and unable to hold crotch. */
     var cornered = false
 
-    /**
-     * Increases [dryness] by a certain value.
-     */
+    /** Increases [dryness] by a certain value. */
     fun dryClothes(timeOffset: Int) {
         dryness += (lower.dryingOverTime + undies.dryingOverTime) * (timeOffset / 3)
     }
@@ -145,15 +113,14 @@ class Character(
     companion object {
         /**
          * Maximal thirst level limit.
-         * When [thirst] is higher than this value, character will automatically drink water.
+         * When [thirst][Character.thirst] is higher than this value, character will automatically drink water.
          */
-        @Suppress("KDocUnresolvedReference")
         const val MAXIMAL_THIRST = 30
 
         /**
          * The dryness minimal threshold.
          * Game ends if [dryness] goes below this value.
          */
-        val MINIMAL_DRYNESS = 0
+        const val MINIMAL_DRYNESS = 0
     }
 }

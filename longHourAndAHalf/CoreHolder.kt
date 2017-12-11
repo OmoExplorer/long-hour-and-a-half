@@ -1,13 +1,20 @@
 package longHourAndAHalf
 
 /**
- * Provides the easy access to [Core] instance.
+ * Reference to [Game.core] of [game].
  */
-object CoreHolder {
-    /**
-     * [Core] instance.
-     *
-     * Being set by [Launcher.launchCore].
-     */
-    lateinit var core: Core
-}
+val core
+    get() = game.core
+
+/**
+ * Reference to [Game.ui] of [game].
+ */
+val ui
+    get() = game.ui
+
+/**
+ * [Game] instance.
+ *
+ * Being set by [GameInitializer.createGame].
+ */
+lateinit var game: Game

@@ -1,15 +1,9 @@
 package longHourAndAHalf.ui;
 
-import longHourAndAHalf.Character;
-import longHourAndAHalf.Core;
-import longHourAndAHalf.Gender;
-import longHourAndAHalf.Wear;
-
 import javax.swing.*;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
-import java.util.Random;
 
 @SuppressWarnings({"CastToConcreteClass", "AnonymousInnerClassWithTooManyMethods"})
 public class SetupFrame {
@@ -70,30 +64,29 @@ public class SetupFrame {
 
             }
         });
-
+//TODO
         //noinspection OverlyLongLambda
-        startButton.addActionListener(e -> {
-            Random random = new Random();
-
-            Gender gender = femaleGenderRadioButton.isSelected() ? Gender.FEMALE : Gender.MALE;
-            double fullness = randomFullnessRadioButton.isSelected() ?
-                    random.nextInt(RANDOM_FULLNESS_BOUND) : fullnessSlider.getValue();
-
-            boolean hardDifficulty = hardDifficultyRadioButton.isSelected();
-
-            //noinspection ResultOfObjectAllocationIgnored,CastToConcreteClass,CastToConcreteClass
-            new Core(
-                    new Character(
-                            nameTextField.getText(),
-                            gender,
-                            fullness,
-                            incontinenceSlider.getValue(),
-                            (Wear) underwearTree.getLastSelectedPathComponent(),
-                            (Wear) outerwearTree.getLastSelectedPathComponent()
-                    ),
-                    hardDifficulty
-            );
-        });
+//        startButton.addActionListener(e -> {
+//            Random random = new Random();
+//
+//            Gender gender = femaleGenderRadioButton.isSelected() ? Gender.FEMALE : Gender.MALE;
+//            double fullness = randomFullnessRadioButton.isSelected() ?
+//                    random.nextInt(RANDOM_FULLNESS_BOUND) : fullnessSlider.getValue();
+//
+//            boolean hardDifficulty = hardDifficultyRadioButton.isSelected();
+//
+//            //noinspection ResultOfObjectAllocationIgnored,CastToConcreteClass,CastToConcreteClass
+//            new Core(
+//                    new Character(
+//                            nameTextField.getText(),
+//                            gender,
+//                            fullness,
+//                            incontinenceSlider.getValue(),
+//                            (Wear) underwearTree.getLastSelectedPathComponent(),
+//                            (Wear) outerwearTree.getLastSelectedPathComponent()
+//                    ),
+//                    hardDifficulty
+//            );
+//        });
     }
-
 }

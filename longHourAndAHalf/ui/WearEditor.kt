@@ -5,21 +5,18 @@
  */
 package longHourAndAHalf.ui
 
+import longHourAndAHalf.SaveFileManager
 import longHourAndAHalf.Wear
 import longHourAndAHalf.WearType.*
-import java.awt.event.ActionEvent
-import java.io.*
 import javax.swing.*
 import javax.swing.GroupLayout.Alignment
 import javax.swing.LayoutStyle.ComponentPlacement
-import javax.swing.filechooser.FileFilter
 
 /**
  * @author JavaBird
  */
 class WearEditor : javax.swing.JFrame() {
-    internal var fc = JFileChooser()
-    internal var wear: Wear? = null
+    internal var fc = WearFileChooser()
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private var absorptionLabel: JLabel? = null
     private var absorptionSpinner: JSpinner? = null
@@ -40,22 +37,6 @@ class WearEditor : javax.swing.JFrame() {
      * Creates new form WearEditor
      */
     init {
-        //        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        this.fc.fileFilter = object : FileFilter() {
-            override fun accept(pathname: File): Boolean {
-                var extension = ""
-                val i = pathname.name.lastIndexOf('.')
-                if (i > 0) {
-                    extension = pathname.name.substring(i + 1)
-                }
-                return extension == "lhhwear"
-            }
-
-            override fun getDescription(): String {
-                return "A Long Hour and a Half Custom wear"
-            }
-        }
-
         this.initComponents()
     }
 
@@ -126,17 +107,17 @@ class WearEditor : javax.swing.JFrame() {
 
         this.saveButton!!.text = "Save..."
         this.saveButton!!.name = "saveButton" // NOI18N
-        this.saveButton!!.addActionListener { evt -> this@WearEditor.saveButtonActionPerformed(evt) }
+        this.saveButton!!.addActionListener { _ -> this@WearEditor.saveButtonActionPerformed() }
 
         this.openButton!!.text = "Open..."
         this.openButton!!.name = "openButton" // NOI18N
-        this.openButton!!.addActionListener { evt -> this@WearEditor.openButtonActionPerformed(evt) }
+        this.openButton!!.addActionListener { _ -> this@WearEditor.openButtonActionPerformed() }
 
         this.insertNameLabel!!.text = "Wear insert name"
-        this.insertNameLabel!!.toolTipText = "Your wear name which is inserted in the game text (e. g. \"skirt\")"
+        this.insertNameLabel!!.toolTipText = "Your wear name which is inserted in the game name (e. g. \"skirt\")"
         this.insertNameLabel!!.name = "insertNameLabel" // NOI18N
 
-        this.insertNameField!!.toolTipText = "Your wear name which is inserted in the game text (e. g. \"skirt\")"
+        this.insertNameField!!.toolTipText = "Your wear name which is inserted in the game name (e. g. \"skirt\")"
         this.insertNameField!!.name = "insertNameField" // NOI18N
 
         val layout = GroupLayout(this.contentPane)
@@ -206,89 +187,80 @@ class WearEditor : javax.swing.JFrame() {
         this.pack()
     }// </editor-fold>//GEN-END:initComponents
 
-    private fun saveButtonActionPerformed(evt: ActionEvent)//GEN-FIRST:event_saveButtonActionPerformed
+    private fun saveButtonActionPerformed()//GEN-FIRST:event_saveButtonActionPerformed
     {//GEN-HEADEREND:event_saveButtonActionPerformed
-        this.fc.selectedFile = File(this.nameField!!.text)
-        if (this.fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
-            val file = File(this.fc.selectedFile.absolutePath + ".lhhwear")
-            val fout: FileOutputStream
-            val oos: ObjectOutputStream
-            try {
-                this.wear = Wear(this.nameField!!.text, this.insertNameField!!.text, this.pressureSpinner!!.value as Double, this.absorptionSpinner!!.value as Double, this.dotSpinner!!.value as Double)
-                when (this.typeComboBox!!.selectedIndex) {
-                    0 -> this.wear!!.type = UNDERWEAR
-                    1 -> this.wear!!.type = OUTERWEAR
-                    2 -> this.wear!!.type = BOTH_SUITABLE
+//        this.fc.selectedFile = File(this.nameField!!.text)
+//        if (this.fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+//            val file = File(this.fc.selectedFile.absolutePath + ".lhhwear")
+//            val fout: FileOutputStream
+//            val oos: ObjectOutputStream
+//            try {
+//                this.wear = Wear(this.nameField!!.text, this.insertNameField!!.text, this.pressureSpinner!!.value as Double, this.absorptionSpinner!!.value as Double, this.dotSpinner!!.value as Double)
+//                when (this.typeComboBox!!.selectedIndex) {
+//                    0 -> this.wear!!.type = UNDERWEAR
+//                    1 -> this.wear!!.type = OUTERWEAR
+//                    2 -> this.wear!!.type = BOTH_SUITABLE
+//                }
+//
+//                //                writer = new PrintStream(file);
+//                fout = FileOutputStream(file)
+//                oos = ObjectOutputStream(fout)
+//                oos.writeObject(this.wear)
+//            } catch (ex: IOException) {
+//                JOptionPane.showMessageDialog(this, "File error.", "Error", JOptionPane.ERROR_MESSAGE)
+//            }
+//
+//        }
+
+        val wear = Wear(
+                nameField!!.text,
+                insertNameField!!.text,
+                (pressureSpinner!!.value as Float).toDouble(),
+                (absorptionSpinner!!.value as Float).toDouble(),
+                (dotSpinner!!.value as Float).toDouble(),
+                when (typeComboBox!!.selectedIndex) {
+                    0 -> UNDERWEAR
+                    1 -> OUTERWEAR
+                    2 -> BOTH_SUITABLE
+                    else -> throw IllegalStateException()
                 }
+        )
 
-                //                writer = new PrintStream(file);
-                fout = FileOutputStream(file)
-                oos = ObjectOutputStream(fout)
-                oos.writeObject(this.wear)
-            } catch (ex: IOException) {
-                JOptionPane.showMessageDialog(this, "File error.", "Error", JOptionPane.ERROR_MESSAGE)
-            }
+        SaveFileManager.writeFile(WearFileChooser(), wear, "lhhwear")
 
-        }
     }//GEN-LAST:event_saveButtonActionPerformed
 
-    private fun openButtonActionPerformed(evt: ActionEvent)//GEN-FIRST:event_openButtonActionPerformed
+    private fun openButtonActionPerformed()//GEN-FIRST:event_openButtonActionPerformed
     {//GEN-HEADEREND:event_openButtonActionPerformed
-        if (this.fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-            val file = this.fc.selectedFile
-            try {
-                val fin = FileInputStream(file)
-                val ois = ObjectInputStream(fin)
-                this.wear = ois.readObject() as Wear
-            } catch (e: IOException) {
-                JOptionPane.showMessageDialog(this, "File error.", "Error", JOptionPane.ERROR_MESSAGE)
-            } catch (e: ClassNotFoundException) {
-                JOptionPane.showMessageDialog(this, "File error.", "Error", JOptionPane.ERROR_MESSAGE)
-            }
+//        if (this.fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+//            val file = this.fc.selectedFile
+//            try {
+//                val fin = FileInputStream(file)
+//                val ois = ObjectInputStream(fin)
+//                this.wear = ois.readObject() as Wear
+//            } catch (e: IOException) {
+//                JOptionPane.showMessageDialog(this, "File error.", "Error", JOptionPane.ERROR_MESSAGE)
+//            } catch (e: ClassNotFoundException) {
+//                JOptionPane.showMessageDialog(this, "File error.", "Error", JOptionPane.ERROR_MESSAGE)
+//            }
+//
+//
+//        }
 
-            this.nameField!!.text = this.wear!!.name
-            this.insertNameField!!.text = this.wear!!.insert
-            this.pressureSpinner!!.value = this.wear!!.pressure
-            this.absorptionSpinner!!.value = this.wear!!.absorption
-            this.dotSpinner!!.value = this.wear!!.dryingOverTime
+        val wear = SaveFileManager.openFile<Wear>(WearFileChooser())
 
-            when (this.wear!!.type) {
-                UNDERWEAR -> this.typeComboBox!!.setSelectedIndex(0)
-                OUTERWEAR -> this.typeComboBox!!.setSelectedIndex(1)
-                BOTH_SUITABLE -> this.typeComboBox!!.setSelectedIndex(2)
+        wear?.let {
+            nameField!!.text = wear.name
+            insertNameField!!.text = wear.insert
+            pressureSpinner!!.value = wear.pressure
+            absorptionSpinner!!.value = wear.absorption
+            dotSpinner!!.value = wear.dryingOverTime
+
+            typeComboBox!!.selectedIndex = when (wear.type) {
+                UNDERWEAR -> 0
+                OUTERWEAR -> 1
+                BOTH_SUITABLE, null -> 2
             }
         }
     }//GEN-LAST:event_openButtonActionPerformed
-
-    companion object {
-
-        private val serialVersionUID = 1L
-
-        @JvmStatic
-        fun main(args: Array<String>) {
-            /* Set the Nimbus look and feel */
-            //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-            /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
-         */
-            try {
-                for (info in javax.swing.UIManager.getInstalledLookAndFeels()) {
-                    if ("Nimbus" == info.name) {
-                        javax.swing.UIManager.setLookAndFeel(info.className)
-                        break
-                    }
-                }
-            } catch (ex: ClassNotFoundException) {
-            } catch (ex: IllegalAccessException) {
-            } catch (ex: javax.swing.UnsupportedLookAndFeelException) {
-            } catch (ex: InstantiationException) {
-            }
-
-            //</editor-fold>
-
-            /* Create and display the form */
-            java.awt.EventQueue.invokeLater { WearEditor().isVisible = true }
-        }
-    }
-    // End of variables declaration//GEN-END:variables
 }

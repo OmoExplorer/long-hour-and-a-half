@@ -4,14 +4,19 @@ import longHourAndAHalf.Action
 import longHourAndAHalf.Text
 import longHourAndAHalf.Time
 import longHourAndAHalf.Wear
+import javax.swing.JFrame
 
-interface UIGameEventHandler {
+/**
+ * Used for updating the user interface. UI class would implement this interface in order to listen to the game events.
+ */
+interface UI {
+    val frame: JFrame
     var actionMustBeSelected: Boolean
 
     fun characterNameChanged(name: String)
     fun hideBladderAndTime()
     fun showBladderAndTime()
-    fun hardcoreModeToggled(on: Boolean)
+    fun hardcoreModeToggled(on: Boolean)    //TODO: Remove
     fun bladderFullnessChanged(fullness: Double)
     fun embarrassmentChanged(embarrassment: Int)
     fun bellyWaterLevelChanged(bellyWaterLevel: Double)

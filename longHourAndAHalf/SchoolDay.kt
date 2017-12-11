@@ -5,11 +5,11 @@ import java.io.Serializable
 /**
  * Data about a school day. Holds random number (from 1 to 3) of random lessons and classmates data.
  */
-class SchoolDay(core: Core) : Serializable {
+class SchoolDay : Serializable {
     /**
      * Day's only lesson. Will be replaced with a list of lessons in 2.0.
      */
-    val lesson = Lesson(core)
+    val lesson = Lesson()
 
     /**
      * State of boy NPC that takes place in different scenes on hardcore difficulty.

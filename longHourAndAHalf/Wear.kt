@@ -22,7 +22,7 @@ class MaintenanceWear(name: String, val instead: () -> Wear) : AbstractWear(name
  * Underwear or outerwear of a character.
  *
  * @param name Wear name (for example, "Skirt").
- * @property insert Name used in a game text (for example "panties")
+ * @property insert Name used in a game name (for example "panties")
  * @property pressure Pressure of this wear.
  * 1 point of a pressure takes 1 point from a maximal bladder capacity.
  * @property absorption Absorption of this wear.
@@ -37,7 +37,8 @@ open class Wear(
         val pressure: Double,
         val absorption: Double,
         val dryingOverTime: Double,
-        var type: WearType? = null
+        var type: WearType? = null,
+        var colorable: Boolean = true
 ) : AbstractWear(name) {
     /**
      * Whether this wear equals "No under/outerwear".
@@ -55,12 +56,12 @@ open class Wear(
          * @return wear with the corresponding name, or `null` if no wear found.
          */
         fun getByName(name: String): AbstractWear? {
+            //Merging underwear an outerwear lists
             val list = Wardrobe.underwear + Wardrobe.outerwear
 
-            list.forEach {
-                if (it.name == name)
-                    return@getByName it
-            }
+            //Looping through the merged list
+            for (it in list)
+                if (it.name == name) return it
 
             return null
         }

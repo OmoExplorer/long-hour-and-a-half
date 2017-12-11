@@ -21,7 +21,7 @@ class Scorer : Serializable {
     /**
      * Final score.
      */
-    val finalScore: Int
+    private val finalScore: Int
         get() {
             fun List<ScoreNomination>.apply(beginningScore: Double): Double {
                 var score = beginningScore
@@ -78,7 +78,7 @@ class Scorer : Serializable {
     /**
      * Text stating all score nominations.
      */
-    val scoreText: String
+    private val scoreText: String
         get() {
             var text = "Score: $finalScore\n"
 
@@ -95,5 +95,16 @@ class Scorer : Serializable {
      */
     fun showScoreDialog(parentComponent: Component? = null) {
         JOptionPane.showMessageDialog(parentComponent, scoreText)
+    }
+
+    fun countOutInitialScore() {
+        countOut("Bladder at start - ${core.character.bladder.fullness}%", core.character.bladder.fullness,
+                ArithmeticAction.ADD)
+
+        //Scoring incontinence
+        countOut("Incontinence - ${core.character.bladder.incontinence}x", core.character.bladder.incontinence,
+                ArithmeticAction.MULTIPLY, true)
+
+        if (core.hardcore) countOut("Hardcore", 2, ArithmeticAction.MULTIPLY)
     }
 }

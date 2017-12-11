@@ -3,9 +3,14 @@ package longHourAndAHalf
 import java.io.Serializable
 
 /**
- * @example 12:00
+ * Time in format "hh:mm".
+ * Used by [World.time].
  */
 data class Time(val hours: Int, val minutes: Int) : Serializable {
+
+    /**
+     * Creates the instance with converting raw minutes to hours and minutes.
+     */
     constructor(rawMinutes: Int) : this(
             (Time(0, 0) + rawMinutes).hours,
             (Time(0, 0) + rawMinutes).minutes
@@ -49,10 +54,13 @@ data class Time(val hours: Int, val minutes: Int) : Serializable {
 
     operator fun compareTo(anotherTime: Time): Int = rawMinutes - anotherTime.rawMinutes
 
+    /**
+     * Returns a string in format "hh:mm".
+     */
     override fun toString() = "$hours:$minutes"
 
     /**
-     * Value with hours converted to minutes.
+     * Minutes and hours converted to minutes.
      */
     val rawMinutes: Int
         get() = minutes + hours * 60

@@ -1,6 +1,5 @@
 package longHourAndAHalf.ui;
 
-import longHourAndAHalf.Core;
 import longHourAndAHalf.Save;
 
 import javax.swing.*;
@@ -35,7 +34,7 @@ public final class MainMenuFrame {
             @SuppressWarnings({"CastToConcreteClass", "LocalVariableOfConcreteClass"}) Save save =
                     (Save) objectInputStream.readObject();
 
-            new Core(save);
+//            new Core(save);
         } catch (Exception ignored) {
             JOptionPane.showMessageDialog(null,
                     "Can't open the save.",

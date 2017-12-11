@@ -6,41 +6,54 @@ import javax.swing.JFileChooser
 import javax.swing.JOptionPane
 
 object SaveFileManager {
-    fun writeSaveFile() {
-        val fcGame = SaveFileChooser(File(CoreHolder.core.character.name))
-        val ui = CoreHolder.core.ui
-        val saveFile = File(fcGame.selectedFile.absolutePath + ".lhhsav")
-
-        if (fcGame.showSaveDialog(ui) != JFileChooser.APPROVE_OPTION) return
+    fun writeFile(fileChooser: JFileChooser, obj: Any, extension: String) {
+        if (fileChooser.showSaveDialog(ui.frame) != JFileChooser.APPROVE_OPTION) return
+        val saveFile = File(fileChooser.selectedFile.absolutePath + ".$extension")
 
         try {
-            val save = Save(CoreHolder.core)
+            val fileOutputStream = FileOutputStream(saveFile)
+            val objectOutputStream = ObjectOutputStream(fileOutputStream)
+
+            objectOutputStream.writeObject(obj)
+        } catch (e: IOException) {
+            e.printStackTrace()
+            JOptionPane.showMessageDialog(ui.frame, "File error.", "Error", JOptionPane.ERROR_MESSAGE)
+        }
+    }
+
+    fun <T> openFile(fileChooser: JFileChooser): T? {
+        if (fileChooser.showOpenDialog(ui.frame) != JFileChooser.APPROVE_OPTION) return null
+        val saveFile = fileChooser.selectedFile!!
+
+        try {
+            val fin = FileInputStream(saveFile)
+            val ois = ObjectInputStream(fin)
+            @Suppress("UNCHECKED_CAST")
+            return ois.readObject() as T
+        } catch (e: Exception) {
+            e.printStackTrace()
+            JOptionPane.showMessageDialog(ui.frame, "File error.", "Error", JOptionPane.ERROR_MESSAGE)
+        }
+
+        return null
+    }
+
+    fun writeSaveFile() {
+        val fcGame = SaveFileChooser(File(core.character.name))
+        val saveFile = File(fcGame.selectedFile.absolutePath + ".lhhsav")
+
+        if (fcGame.showSaveDialog(ui.frame) != JFileChooser.APPROVE_OPTION) return
+
+        try {
+            val save = Save(core)
             val fileOutputStream = FileOutputStream(saveFile)
             val objectOutputStream = ObjectOutputStream(fileOutputStream)
 
             objectOutputStream.writeObject(save)
         } catch (e: IOException) {
             e.printStackTrace()
-            JOptionPane.showMessageDialog(ui, "File error.", "Error", JOptionPane.ERROR_MESSAGE)
+            JOptionPane.showMessageDialog(ui.frame, "File error.", "Error", JOptionPane.ERROR_MESSAGE)
         }
     }
 
-    fun openSaveFile() {
-        val fileChooser = SaveFileChooser()
-        val ui = CoreHolder.core.ui
-        val saveFile = fileChooser.selectedFile!!
-
-        if (fileChooser.showOpenDialog(ui) != JFileChooser.APPROVE_OPTION) return
-
-        try {
-            val fin = FileInputStream(saveFile)
-            val ois = ObjectInputStream(fin)
-            val save = ois.readObject() as Save
-            Core(save)
-            ui.dispose()
-        } catch (e: Exception) {
-            e.printStackTrace()
-            JOptionPane.showMessageDialog(ui, "File error.", "Error", JOptionPane.ERROR_MESSAGE)
-        }
-    }
 }

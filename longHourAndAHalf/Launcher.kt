@@ -2,76 +2,74 @@ package longHourAndAHalf
 
 import longHourAndAHalf.ui.setupFramePre
 import java.util.*
-import javax.swing.JRadioButton
-import javax.swing.JSlider
-import javax.swing.JTextField
-import javax.swing.JTree
 import javax.swing.tree.DefaultMutableTreeNode
 
 /**
  * Creates a new game by creating [Core] and setting it up.
+ *
+ * @property setupFrame Frame to get the game settings from.
  */
-object Launcher {
+class Launcher(private val setupFrame: setupFramePre) {
+    /**
+     * Random number generator.
+     */
     private val random = Random()
 
     /**
      * Runs the game with selected parameters.
      */
-    fun runGame(
-            setupFrame: setupFramePre,
-            nameField: JTextField,
-            femaleRadio: JRadioButton,
-            userSelectedBladderFullnessRadio: JRadioButton,
-            userSelectedBladderFullnessSlider: JSlider,
-            incontinenceSlider: JSlider,
-            hardcoreDifficultyRadio: JRadioButton,
-            underwearTree: JTree,
-            outerwearTree: JTree,
-            underwearColor: WearColor,
-            outerwearColor: WearColor
-    ) {
-        val name = nameField.text!!
+    fun runGame() {
+        val name = retrieveCharacterNameFromSetupUI()
 
-        val gender = getGender(femaleRadio)
+        val gender = retrieveGenderFromSetupUI()
 
-        val bladderFullnessAtStart =
-                getBladderFullness(userSelectedBladderFullnessRadio, userSelectedBladderFullnessSlider)
+        val bladderFullnessAtStart = retrieveBladderFullnessFromSetupUI()
 
-        val hardcore = hardcoreDifficultyRadio.isSelected
+        val hardcore = retrieveIsHardcoreFromSetupUI()
 
-        var underwearToAssign = getWearFromSelectedTreeNode(underwearTree.lastSelectedPathComponent,
-                WearType.UNDERWEAR) ?: return
-        var outerwearToAssign = getWearFromSelectedTreeNode(outerwearTree.lastSelectedPathComponent,
-                WearType.OUTERWEAR) ?: return
+        var underwearToAssign = getWearFromSelectedTreeNode(
+                WearType.UNDERWEAR
+        ) ?: return
 
-        val underwearAndOuterwear = handleMaintenanceWear(underwearToAssign, outerwearToAssign)
-        outerwearToAssign = underwearAndOuterwear.first
-        underwearToAssign = underwearAndOuterwear.second
-
-        handleSpecialWearColors(underwearToAssign, outerwearToAssign, underwearColor, outerwearColor)
+        var outerwearToAssign = getWearFromSelectedTreeNode(
+                WearType.OUTERWEAR
+        ) ?: return
 
         assertIncorrectWear(underwearToAssign, outerwearToAssign)
 
-        val incontinence = getSelectedIncontinence(incontinenceSlider)
+        val incontinence = getSelectedIncontinence()
 
-        launchCore(
+        val parameters = GameParameters(
+                name,
                 gender,
                 bladderFullnessAtStart,
                 incontinence,
                 underwearToAssign,
                 outerwearToAssign,
-                hardcore,
-                nameField
+                setupFrame.undiesColor,
+                setupFrame.lowerColor,
+                hardcore
         )
+
+        GameInitializer.createGame(parameters)
 
         setupFrame.dispose()
     }
 
-    private fun getBladderFullness(
-            userSelectedBladderFullnessRadio: JRadioButton,
-            userSelectedBladderFullnessSlider: JSlider
-    ): Int {
-        return if (userSelectedBladderFullnessRadio.isSelected) {
+    private fun retrieveIsHardcoreFromSetupUI() = setupFrame.hardDiffRadio!!.isSelected
+
+    private fun retrieveCharacterNameFromSetupUI() = setupFrame.nameField!!.text!!
+
+    /**
+     * Retrieves a bladder fullness level from [setupFrame].
+     */
+    private fun retrieveBladderFullnessFromSetupUI(): Int {
+        val userSelectedBladderFullnessRadioButton = setupFrame.basSliderRadio!!
+        val userSelectedBladderFullnessSlider = setupFrame.basSlider!!
+
+        val userSelectsFullness = userSelectedBladderFullnessRadioButton.isSelected
+
+        return if (userSelectsFullness) {
             val userSelectedBladderFullness = userSelectedBladderFullnessSlider.value
             userSelectedBladderFullness
         } else {
@@ -80,79 +78,42 @@ object Launcher {
         }
     }
 
-    private fun getGender(femaleRadio: JRadioButton): Gender {
+    /**
+     * Retrieves the selected gender from [setupFrame].
+     */
+    private fun retrieveGenderFromSetupUI(): Gender {
+        val femaleRadio = setupFrame.femaleRadio!!
+
         return if (femaleRadio.isSelected)
             Gender.FEMALE
         else
             Gender.MALE
     }
 
-    private fun launchCore(
-            gender: Gender,
-            bladderFullnessAtStart: Int,
-            incontinence: Double,
-            underwearToAssign: AbstractWear,
-            outerwearToAssign: AbstractWear,
-            hardcore: Boolean,
-            nameField: JTextField
-    ) {
-        Core(
-                Character(
-                        nameField.text,
-                        gender,
-                        bladderFullnessAtStart.toDouble(),
-                        incontinence,
-                        underwearToAssign as Wear,
-                        outerwearToAssign as Wear
-                ),
-                hardcore
-        )
+    private fun getWearFromSelectedTreeNode(type: WearType): AbstractWear? {
+        val tree = when (type) {
+            WearType.UNDERWEAR -> setupFrame.underwearTree!!
+            WearType.OUTERWEAR -> setupFrame.outerwearTree!!
+            WearType.BOTH_SUITABLE -> throw IllegalArgumentException("BOTH_SUITABLE isn't supported")
+        }
+
+        val node = tree.lastSelectedPathComponent
+
+        return if (node == null)
+            Wear.getRandom(type)
+        else
+            (node as DefaultMutableTreeNode).userObject as? AbstractWear
     }
 
-    private fun getWearFromSelectedTreeNode(node: Any?, type: WearType) = if (node == null)
-        Wear.getRandom(type)
-    else
-        (node as DefaultMutableTreeNode).userObject as? AbstractWear
-
-    private fun Wear.setConcreteColorBySpecialColor(color: WearColor) {
-        var colorToAssign = color
-        while (colorToAssign == WearColor.RANDOM)
-            colorToAssign = WearColor.values().randomItem()
-        this.color = colorToAssign
-    }
-
-    private fun getSelectedIncontinence(incontinenceSlider: JSlider): Double {
-        var incont = (incontinenceSlider.value / 10).toDouble()
-        if (incont < 1)
-            incont += 0.5
-        return incont
-    }
-
-    private fun handleSpecialWearColors(
-            underwearToAssign: AbstractWear,
-            outerwearToAssign: AbstractWear,
-            undiesColor: WearColor,
-            lowerColor: WearColor
-    ) {
-        (underwearToAssign as Wear).setConcreteColorBySpecialColor(undiesColor)
-        (outerwearToAssign as Wear).setConcreteColorBySpecialColor(lowerColor)
+    private fun getSelectedIncontinence(): Double {
+        var incontinence = (setupFrame.incontSlider!!.value / 10).toDouble()
+        if (incontinence < 1)
+            incontinence += 0.5
+        return incontinence
     }
 
     private fun assertIncorrectWear(underwearToAssign: AbstractWear, outerwearToAssign: AbstractWear) {
         assert(underwearToAssign is Wear)
         assert(outerwearToAssign is Wear)
-    }
-
-    private fun handleMaintenanceWear(
-            underwearToAssignParameter: AbstractWear,
-            outerwearToAssignParameter: AbstractWear
-    ): Pair<AbstractWear, AbstractWear> {
-        var underwearToAssign1 = underwearToAssignParameter
-        var outerwearToAssign1 = outerwearToAssignParameter
-        if (underwearToAssign1 is MaintenanceWear)
-            underwearToAssign1 = underwearToAssign1.instead()
-        if (outerwearToAssign1 is MaintenanceWear)
-            outerwearToAssign1 = outerwearToAssign1.instead()
-        return outerwearToAssign1 to underwearToAssign1
     }
 }

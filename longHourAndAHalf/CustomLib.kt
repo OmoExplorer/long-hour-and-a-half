@@ -34,13 +34,3 @@ fun chance(probability: Int) = chance(probability.toDouble())
  * @param probability chance to return `true` in percents.
  */
 fun chance(probability: Double) = random.nextInt(100) < probability
-
-/**
- * Clamps the given value to be strictly between the min and max values.
- *
- * @return the clamped value.
- */
-fun clamp(min: Double, value: Double, max: Double): Double {
-    if (value < min) return min
-    return if (value > max) max else value
-}

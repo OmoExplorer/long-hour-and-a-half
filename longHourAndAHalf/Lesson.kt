@@ -5,7 +5,7 @@ import java.io.Serializable
 /**
  * Contains a lesson data. It's individual for each lesson of a [school day][SchoolDay].
  */
-class Lesson(@Transient var core: Core) : Serializable {
+class Lesson : Serializable {
     /**
      * Times teacher denied character to go out.
      */
@@ -22,7 +22,7 @@ class Lesson(@Transient var core: Core) : Serializable {
     fun shouldFinish() = core.world.time >= classEndingTime
 
     fun finish() {
-        core.ui.forcedTextChange(Text("You hear the bell finally ring."))
+        ui.forcedTextChange(Text("You hear the bell finally ring."))
         core.plot.nextStageID = PlotStageID.CLASS_OVER
     }
 

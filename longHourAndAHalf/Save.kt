@@ -2,6 +2,7 @@ package longHourAndAHalf
 
 import java.io.Serializable
 
+@Deprecated("Core instance serialization should be used instead.")
 class Save(game: Core) : Serializable {
     val character = game.character
     val hardcore = game.hardcore

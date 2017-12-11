@@ -12,7 +12,7 @@ object Wardrobe {
             MaintenanceWear("Random underwear") {
                 Wear.getRandom(WearType.UNDERWEAR)
             },
-            MaintenanceWear("Custom") {
+            MaintenanceWear("Custom underwear") {
                 MaintenanceWearProcessor.openCustomWear(WearType.UNDERWEAR)!!
             },
             Wear("No underwear", "", 0.0, 0.0, 1.0),
@@ -41,7 +41,10 @@ object Wardrobe {
     val outerwear = listOf(
             //        Name      Insert Name     Pressure, Absorption, Drying over time
             MaintenanceWear("Random outerwear") {
-                Wear.getRandom(WearType.UNDERWEAR)
+                Wear.getRandom(WearType.OUTERWEAR)
+            },
+            MaintenanceWear("Custom outerwear") {
+                MaintenanceWearProcessor.openCustomWear(WearType.OUTERWEAR)!!
             },
             Wear("No outerwear", "", 0.0, 0.0, 1.0),
             Wear("Long jeans", "jeans", 7.0, 12.0, 1.2),

@@ -1,37 +1,43 @@
 package longHourAndAHalf.ui
 
-import longHourAndAHalf.*
+import longHourAndAHalf.Game
+import longHourAndAHalf.Launcher
+import longHourAndAHalf.Wear
+import longHourAndAHalf.WearColor
 import java.awt.Color
 import java.awt.Dimension
 import java.awt.EventQueue
 import java.awt.Font
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
-import java.io.FileInputStream
-import java.io.ObjectInputStream
 import javax.swing.*
 import javax.swing.tree.DefaultMutableTreeNode
 import javax.swing.tree.DefaultTreeModel
 
 @Suppress("ClassName")
 /**
+ * Frame for setting up the game. This is the first frame shown to a user.
+ *
+ * Code for this class was emitted by the frame generator, therefore it looks ugly. Don't try to understand it.
+ * This class will be soon replaced by [MainMenuFrame].
+ *
  * @author NetBeans Frame Generator, JavaBird
  */
 class setupFramePre : JFrame() {
-    private var undiesColor = WearColor.RANDOM
-    private var lowerColor = WearColor.RANDOM
+    var undiesColor = WearColor.RANDOM
+    var lowerColor = WearColor.RANDOM
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private var basSlider: JSlider? = null
-    private var basSliderRadio: JRadioButton? = null
+    var basSlider: JSlider? = null
+    var basSliderRadio: JRadioButton? = null
     private var bladAtStartLabel: JLabel? = null
     private var buttonGroup1: ButtonGroup? = null
     private var buttonGroup2: ButtonGroup? = null
     private var buttonGroup3: ButtonGroup? = null
     private var difficultyPanel: JPanel? = null
-    private var femaleRadio: JRadioButton? = null
-    private var hardDiffRadio: JRadioButton? = null
+    var femaleRadio: JRadioButton? = null
+    var hardDiffRadio: JRadioButton? = null
     private var incontLabel: JLabel? = null
-    private var incontSlider: JSlider? = null
+    var incontSlider: JSlider? = null
     private var jScrollPane1: JScrollPane? = null
     private var jScrollPane2: JScrollPane? = null
     private var jScrollPane3: JScrollPane? = null
@@ -49,15 +55,15 @@ class setupFramePre : JFrame() {
     private var lowerColor_red1: JPanel? = null
     private var lowerColor_yellow1: JPanel? = null
     private var maleRadio: JRadioButton? = null
-    private var nameField: JTextField? = null
+    var nameField: JTextField? = null
     private var nameLabel: JLabel? = null
     private var normalDiffRadio: JRadioButton? = null
     private var outerwearLabel: JLabel? = null
-    private var outerwearTree: JTree? = null
+    var outerwearTree: JTree? = null
     private var randomBasSlider: JRadioButton? = null
     private var start: JButton? = null
     private var underwearLabel: JLabel? = null
-    private var underwearTree: JTree? = null
+    var underwearTree: JTree? = null
     private var undiesColor_black: JPanel? = null
     private var undiesColor_blue: JPanel? = null
     private var undiesColor_darkBlue: JPanel? = null
@@ -216,19 +222,7 @@ class setupFramePre : JFrame() {
         start!!.toolTipText = "Start new game"
         start!!.name = "start" // NOI18N
         start!!.addActionListener {
-            Launcher.runGame(
-                    this,
-                    nameField,
-                    femaleRadio,
-                    basSliderRadio,
-                    basSlider,
-                    incontSlider,
-                    hardDiffRadio,
-                    underwearTree,
-                    outerwearTree,
-                    undiesColor,
-                    lowerColor
-            )
+            Launcher(this).runGame()
         }
 
         nameLabel!!.font = Font("sansserif", 1, 12) // NOI18N
@@ -300,7 +294,7 @@ class setupFramePre : JFrame() {
         treeNode1.add(treeNode2)
         treeNode2 = DefaultMutableTreeNode(Wear.getByName("No underwear"))
         treeNode1.add(treeNode2)
-        treeNode2 = DefaultMutableTreeNode(Wear.getByName("Custom"))
+        treeNode2 = DefaultMutableTreeNode(Wear.getByName("Custom underwear"))
         treeNode1.add(treeNode2)
         underwearTree!!.model = DefaultTreeModel(treeNode1)
         underwearTree!!.name = "underwearTree" // NOI18N
@@ -370,7 +364,7 @@ class setupFramePre : JFrame() {
         treeNode1.add(treeNode2)
         treeNode2 = DefaultMutableTreeNode(Wear.getByName("No outerwear"))
         treeNode1.add(treeNode2)
-        treeNode2 = DefaultMutableTreeNode(Wear.getByName("Custom"))
+        treeNode2 = DefaultMutableTreeNode(Wear.getByName("Custom outerwear"))
         treeNode1.add(treeNode2)
         outerwearTree!!.model = DefaultTreeModel(treeNode1)
         outerwearTree!!.name = "outerwearTree" // NOI18N
@@ -1435,25 +1429,10 @@ class setupFramePre : JFrame() {
 
     private fun wearEditorButtonActionPerformed()//GEN-FIRST:event_wearEditorButtonActionPerformed
     {//GEN-HEADEREND:event_wearEditorButtonActionPerformed
-        WearEditor.main(arrayOf(""))
+        WearEditor().isVisible = true
     }//GEN-LAST:event_wearEditorButtonActionPerformed
 
-    private fun loadGameActionPerformed()//GEN-FIRST:event_loadGameActionPerformed
-    {//GEN-HEADEREND:event_loadGameActionPerformed
-        val fcGame = SaveFileChooser()
-        if (fcGame.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-            val file = fcGame.selectedFile
-            try {
-                val fin = FileInputStream(file)
-                val ois = ObjectInputStream(fin)
-                val save = ois.readObject() as Save
-                Core(save)
-                dispose()
-            } catch (e: Exception) {
-                JOptionPane.showMessageDialog(this, "File error.", "Error", JOptionPane.ERROR_MESSAGE)
-            }
-        }
-    }//GEN-LAST:event_loadGameActionPerformed
+    private fun loadGameActionPerformed() = Game.load()
 
     companion object {
         private val serialVersionUID = 1L

@@ -58,169 +58,41 @@
 
 package longHourAndAHalf
 
-import longHourAndAHalf.WearType.*
-import longHourAndAHalf.ui.StandardGameUI
 import longHourAndAHalf.ui.setupFramePre
-import javax.swing.JOptionPane
+import java.io.Serializable
 
 @Suppress("KDocMissingDocumentation")
 
 /**
  * Game core which is used for communication between modules.
+ *
+ * Can be serialized, which features the game saving.
+ *
+ * @see SaveFileManager
+ *
+ * @property character Game character.
+ * @property schoolDay Data about a school day. Holds random number (from 1 to 3) of random lessons and classmates data.
+ * @property scorer Score counter.
+ * @property world Virtual game world data.
+ * @property hardcore Whether hardcore mode is enabled.
+ * Hardcore mode features:
+ * - Teacher never lets you out
+ * - It's harder to hold pee
+ * - You may get caught holding pee
  */
-class Core {
-    /**
-     * Game character.
-     */
-    val character: Character
+class Core(val character: Character, val hardcore: Boolean, private val parameters: GameParameters) : Serializable {
+    val schoolDay = SchoolDay()
 
-    /**
-     * Score counter.
-     */
-    val scorer: Scorer
+    val scorer = Scorer()
 
-    /**
-     * Whether hardcore mode is enabled.
-     * Hardcore mode features:
-     * - Teacher never lets you out
-     * - It's harder to hold pee
-     * - You may get caught holding pee
-     */
-    var hardcore: Boolean
+    val world = World()
 
-    /**
-     * Game interface frame.
-     */
-    val ui: StandardGameUI
+    /** Data about cheats. */
+    val cheatData = CheatData()
 
-    /**
-     * Virtual game world data.
-     */
-    val world: World
+    val flags = PlotFlags()
 
-    /**
-     * Data about a school day. Holds random number (from 1 to 3) of random lessons and classmates data.
-     */
-    val schoolDay: SchoolDay
-
-    /**
-     * Data about cheats.
-     */
-    val cheatData: CheatData
-
-    val flags: PlotFlags
-
-    val plot: Plot
-
-    constructor(character: Character, hardcore: Boolean) {
-        this.hardcore = hardcore
-        this.character = character
-        this.character.finishSetup()
-        this.character.bladder.finishSetup()
-        world = World()
-        cheatData = CheatData()
-        schoolDay = SchoolDay(this)
-        flags = PlotFlags()
-        scorer = Scorer()
-
-        fun onIncorrectWearSelected(type: WearType): Wear {
-            JOptionPane.showMessageDialog(
-                    null,
-                    "Incorrect " + when (type) {
-                        OUTERWEAR -> "outerwear"
-                        UNDERWEAR -> "underwear"
-                        BOTH_SUITABLE -> throw IllegalArgumentException("BOTH_SUITABLE argument isn't supported")
-                    } + " selected. Setting random instead.",
-                    "Incorrect underwear",
-                    JOptionPane.WARNING_MESSAGE
-            )
-            return Wear.getRandom(UNDERWEAR)
-        }
-
-        fun Wear.setupColor(color: WearColor) {
-            this.color = if (!isMissing) {
-                if (color != WearColor.RANDOM)
-                    color
-                else
-                    WearColor.values().randomItem()
-            } else WearColor.NONE
-        }
-
-        ui = StandardGameUI()
-
-        plot = Plot(this)
-
-        this.character.undies = MaintenanceWearProcessor.setupWear(character.undies, UNDERWEAR) ?:
-                onIncorrectWearSelected(UNDERWEAR)
-        this.character.lower = MaintenanceWearProcessor.setupWear(character.lower, OUTERWEAR) ?:
-                onIncorrectWearSelected(OUTERWEAR)
-
-        this.character.undies.setupColor(this.character.undies.color)
-        this.character.lower.setupColor(this.character.lower.color)
-
-        ui.finishSetup()
-
-        //Scoring fullness at start
-        scorer.countOut("Bladder at start - ${this.character.bladder.fullness}%", this.character.bladder.fullness,
-                ArithmeticAction.ADD)
-
-        //Scoring incontinence
-        scorer.countOut(
-                "Incontinence - ${this.character.bladder.incontinence}x", this.character.bladder.incontinence,
-                ArithmeticAction.MULTIPLY, true
-        )
-
-        if (this.hardcore) {
-            character.bladder.maxBladder = 100
-            ui.hardcoreModeToggled(true)
-            scorer.countOut("Hardcore", 2, ArithmeticAction.MULTIPLY)
-        }
-
-        ui.drynessBar.maximum = this.character.maximalDryness.toInt()
-        ui.drynessBar.value = this.character.dryness.toInt()
-
-        ui.showBladderAndTime()
-
-        handleNextClicked()
-
-        postConstructor()
-    }
-
-    constructor(save: Save) {
-        hardcore = save.hardcore
-        character = save.character
-        character.finishSetup()
-        character.bladder.finishSetup()
-        world = save.world
-        flags = save.flags
-        plot = save.plot
-        scorer = save.scorer
-        schoolDay = save.schoolDay
-        cheatData = save.cheatData
-
-        ui = StandardGameUI()
-        ui.finishSetup()
-
-        ui.drynessBar.maximum = this.character.maximalDryness.toInt()
-        ui.drynessBar.value = this.character.dryness.toInt()
-
-        ui.showBladderAndTime()
-
-        ui.forcedTextChange(Text("Loading complete. Click \"Next\" to continue the game."))
-
-//        handleNextClicked()
-
-        postConstructor()
-    }
-
-    private fun postConstructor() {
-        //Making fullness smaller in the hardcore mode, adding hardcore label
-        if (hardcore) ui.hardcoreModeToggled(true)
-
-        gameStartSave = Save(this)   //Saving game for a reset
-
-        ui.isVisible = true     //Displaying the frame
-    }
+    val plot = Plot()
 
     fun handleNextClicked() {/*
         when (plot.nextStageID) {
@@ -1516,7 +1388,7 @@ class Core {
                 plot.nextStageID = ASK_ACTION
             }
 
-            else -> ui.setText("Error parsing button. Next text is unavailable, text #" + plot.nextStageID)
+            else -> ui.setText("Error parsing button. Next name is unavailable, name #" + plot.nextStageID)
         */
         plot.advanceToNextStage()
     }
@@ -1530,13 +1402,10 @@ class Core {
         if (newValues)
             setupFramePre().isVisible = true
         else
-        //Creating new core
-            Core(gameStartSave)
+            GameInitializer.createGame(parameters)
     }
 
     companion object {
-        private lateinit var gameStartSave: Save
-
         /**
          * Default turn duration in in-game minutes.
          */

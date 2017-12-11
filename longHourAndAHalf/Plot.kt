@@ -2,11 +2,11 @@ package longHourAndAHalf
 
 import java.io.Serializable
 
-class Plot(@Transient val core: Core) : Serializable {
+class Plot : Serializable {
     /**
      * The current stage's ID.
      *
-     * @see PlotStageID, PlotMap
+     * @see PlotMap
      */
     var nextStageID = PlotStageID.STARTUP
 
@@ -17,7 +17,7 @@ class Plot(@Transient val core: Core) : Serializable {
      */
     var specialHardcoreStage = false
 
-    private val plotMap = PlotMap(core)
+    private val plotMap = PlotMap()
 
     /**
      * Moves the plot to a next stage.
@@ -25,28 +25,25 @@ class Plot(@Transient val core: Core) : Serializable {
     fun advanceToNextStage() {
         class StageNotFoundException(id: PlotStageID) : Exception("stage with ID ${id.name} couldn't be found")
 
-        val nextStage = plotMap[nextStageID] ?: throw StageNotFoundException(nextStageID)
-        nextStageID = nextStage.nextStageID!!
+        val nextStageLambda = plotMap[nextStageID] ?: throw StageNotFoundException(nextStageID)
+        val nextStage = nextStageLambda()
+        nextStageID = nextStage.nextStageID
 
         unpackStage(nextStage)
     }
 
     private fun unpackStage(stage: PlotStage) {
-        core.ui.forcedTextChange(stage.text)
+        ui.forcedTextChange(stage.text)
         stage.operations()
         core.world.time += stage.duration
         stage.scoreNomination?.let { core.scorer.countOut(stage.scoreNomination) }
 
         if (!stage.actions.isEmpty()) {
-            core.ui.actionsChanged(stage.actionGroupName, stage.actions)
-            core.ui.actionMustBeSelected = true
+            ui.actionsChanged(stage.actionGroupName, stage.actions)
+            ui.actionMustBeSelected = true
         } else {
-            core.ui.hideActionUI()
-            core.ui.actionMustBeSelected = false
+            ui.hideActionUI()
+            ui.actionMustBeSelected = false
         }
-    }
-
-    init {
-        advanceToNextStage()
     }
 }
