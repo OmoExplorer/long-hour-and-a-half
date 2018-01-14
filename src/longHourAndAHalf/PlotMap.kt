@@ -98,17 +98,17 @@ class PlotMap {
                                         "You cry, tumbling out of bed and feeling an instant jolt from your bladder."
                                 ) + when (core.character.wearCombinationType) {
                                     FULLY_CLOTHED -> listOf(
-                                            "You hurriedly slip on some ${core.character.undies.insert} " +
-                                                    "and ${core.character.lower.insert},",
+                                            "You hurriedly slip on some ${core.character.undies.insertName} " +
+                                                    "and ${core.character.lower.insertName},",
                                             "not even worrying about what covers your chest."
                                     )
                                     OUTERWEAR_ONLY -> listOf(
-                                            "You hurriedly slip on some ${core.character.lower.insert}, " +
+                                            "You hurriedly slip on some ${core.character.lower.insertName}, " +
                                                     "quick to cover your crotch,",
                                             "not even worrying about what covers your chest."
                                     )
                                     UNDERWEAR_ONLY -> listOf(
-                                            "You hurriedly slip on ${core.character.undies.insert},",
+                                            "You hurriedly slip on ${core.character.undies.insertName},",
                                             "not even worrying about what covers your chest and legs."
                                     )
                                     NAKED -> listOf("You are running downstairs fully naked.")
@@ -145,12 +145,12 @@ class PlotMap {
                         Text(
                                 when (core.character.wearCombinationType) {
                                     FULLY_CLOTHED,
-                                    OUTERWEAR_ONLY -> if (core.character.lower.insert.contains("skirt"))
+                                    OUTERWEAR_ONLY -> if (core.character.lower.insertName.contains("skirt"))
                                         listOf(
-                                                "You rush into class, your ${core.character.lower.insert}" +
+                                                "You rush into class, your ${core.character.lower.insertName}" +
                                                         " is blowing in the wind.",
                                                 "Normally, you'd be worried your " +
-                                                        "${core.character.undies.insert} would be seen,",
+                                                        "${core.character.undies.insertName} would be seen,",
                                                 "but you can't worry about it right now.",
                                                 "You make it to your seat without a minute to spare."
                                         )
@@ -163,7 +163,7 @@ class PlotMap {
 
                                     UNDERWEAR_ONLY -> listOf(
                                             "You rush into class;",
-                                            "your classmates are looking at your ${core.character.undies.insert}.",
+                                            "your classmates are looking at your ${core.character.undies.insertName}.",
                                             "You can't understand how you forgot to even put on any lower clothing,",
                                             "Under the gazes of the whole class,",
                                             "you make it to your seat without a minute to spare."
@@ -205,9 +205,9 @@ class PlotMap {
                                 when (core.character.wearCombinationType) {
                                     FULLY_CLOTHED,
                                     OUTERWEAR_ONLY ->
-                                        if (core.character.lower.insert == "skirt"
-                                                || core.character.lower.insert == "skirt and tights"
-                                                || core.character.lower.insert == "shorts")
+                                        if (core.character.lower.insertName == "skirt"
+                                                || core.character.lower.insertName == "skirt and tights"
+                                                || core.character.lower.insertName == "shorts")
                                             setOf(
                                                     TextLine("Next time you run into class," +
                                                             " ${core.character.name},", true),
@@ -363,14 +363,14 @@ class PlotMap {
                 PlotStage(
                         when (core.character.wearCombinationType) {
                             FULLY_CLOTHED -> Text("You reach the restroom,",
-                                    "enter it, pull down your ${core.character.lower.insert} " +
-                                            "and ${core.character.undies.insert},",
+                                    "enter it, pull down your ${core.character.lower.insertName} " +
+                                            "and ${core.character.undies.insertName},",
                                     "wearily flop down on the toilet and start peeing.")
                             OUTERWEAR_ONLY -> Text("You reach the restroom,",
-                                    "enter it, pull down your ${core.character.lower.insert},",
+                                    "enter it, pull down your ${core.character.lower.insertName},",
                                     "wearily flop down on the toilet and start peeing.")
                             UNDERWEAR_ONLY -> Text("You reach the restroom,",
-                                    "enter it, pull down your ${core.character.undies.insert},",
+                                    "enter it, pull down your ${core.character.undies.insertName},",
                                     "wearily flop down on the toilet and start peeing.")
                             NAKED -> Text("You reach the restroom,",
                                     "wearily flop down on the toilet and start peeing.")
@@ -502,10 +502,10 @@ class PlotMap {
                 PlotStage(
                         Text("Thank god, one cabin is free!",
                                 when (core.character.wearCombinationType) {
-                                    FULLY_CLOTHED -> "You enter it, pull down your ${core.character.lower.insert} " +
-                                            "and ${core.character.undies.insert},"
-                                    OUTERWEAR_ONLY -> "You enter it, pull down your ${core.character.lower.insert},"
-                                    UNDERWEAR_ONLY -> "You enter it, pull down your ${core.character.undies.insert},"
+                                    FULLY_CLOTHED -> "You enter it, pull down your ${core.character.lower.insertName} " +
+                                            "and ${core.character.undies.insertName},"
+                                    OUTERWEAR_ONLY -> "You enter it, pull down your ${core.character.lower.insertName},"
+                                    UNDERWEAR_ONLY -> "You enter it, pull down your ${core.character.undies.insertName},"
                                     NAKED -> "you enter it,"
                                 }, "wearily flop down on the toilet and start peeing."
                         ),
@@ -555,9 +555,9 @@ class PlotMap {
                         Text("You get tired of holding all the urine in your aching bladder,",
                                 when (core.character.wearCombinationType) {
                                     FULLY_CLOTHED, UNDERWEAR_ONLY ->
-                                        "and you decide to give up and pee in your ${core.character.undies.insert}."
+                                        "and you decide to give up and pee in your ${core.character.undies.insertName}."
                                     OUTERWEAR_ONLY ->
-                                        "and you decide to give up and pee in your ${core.character.lower.insert}."
+                                        "and you decide to give up and pee in your ${core.character.lower.insertName}."
                                     NAKED -> "and you decide to give up and pee where you are."
                                 }
                         ),
@@ -573,27 +573,27 @@ class PlotMap {
                                 when (core.character.wearCombinationType) {
                                     FULLY_CLOTHED -> listOf("Before you can move an inch, " +
                                             "pee quickly soaks through your " +
-                                            core.character.undies.insert + ",",
-                                            "floods your " + core.character.lower.insert + ", " +
+                                            core.character.undies.insertName + ",",
+                                            "floods your " + core.character.lower.insertName + ", " +
                                                     "and streaks down your legs.")
 
                                     OUTERWEAR_ONLY -> listOf("Before you can move an inch, pee quickly darkens your " +
-                                            core.character.lower.insert +
+                                            core.character.lower.insertName +
                                             " and streaks down your legs.")
 
                                     UNDERWEAR_ONLY -> listOf("Before you can move an inch, " +
-                                            "pee quickly soaks through your " + core.character.undies.insert +
+                                            "pee quickly soaks through your " + core.character.undies.insertName +
                                             ", and streaks down your legs.")
 
                                     NAKED -> if (!core.character.cornered) {
                                         listOf("The heavy pee jets are hitting the seat " +
                                                 "and loudly leaking out from your " +
-                                                core.character.undies.insert + ".",
+                                                core.character.undies.insertName + ".",
                                                 "A large puddle quickly forms, " +
                                                         "and you can't stop tears from falling down your cheeks.")
                                     } else {
                                         listOf("The heavy pee jets are hitting the floor " +
-                                                "and loudly leaking out from your ${core.character.undies.insert}.",
+                                                "and loudly leaking out from your ${core.character.undies.insertName}.",
                                                 "A large puddle quickly forms, " +
                                                         "and you can't stop tears from falling down your cheeks.")
                                     }
@@ -629,12 +629,12 @@ class PlotMap {
                                         "No matter how hard you tried... " +
                                                 "It doesn't seem to matter, even to think about it...",
                                         when (core.character.wearCombinationType) {
-                                            FULLY_CLOTHED -> "Your ${core.character.lower.insert} and " +
-                                                    "${core.character.undies.insert} are both clinging to your skin, " +
+                                            FULLY_CLOTHED -> "Your ${core.character.lower.insertName} and " +
+                                                    "${core.character.undies.insertName} are both clinging to your skin, " +
                                                     "a sign of your failure..."
-                                            OUTERWEAR_ONLY -> "Your ${core.character.lower.insert} " +
+                                            OUTERWEAR_ONLY -> "Your ${core.character.lower.insertName} " +
                                                     "clings to your skin, a sign of your failure..."
-                                            UNDERWEAR_ONLY -> "Your ${core.character.undies.insert} " +
+                                            UNDERWEAR_ONLY -> "Your ${core.character.undies.insertName} " +
                                                     "clings to your skin, a sign of your failure..."
                                             NAKED -> "Your legs are covered in your pee, a sign of your failure..."
                                         }
@@ -797,12 +797,12 @@ class PlotMap {
                                 TextLine("You got off from the windowsill while holding your crotch,"),
                                 when (core.character.wearCombinationType) {
                                     FULLY_CLOTHED -> TextLine("opened the cabin door, entered it, " +
-                                            "pulled down your ${core.character.lower.insert} " +
-                                            "and ${core.character.undies.insert},")
+                                            "pulled down your ${core.character.lower.insertName} " +
+                                            "and ${core.character.undies.insertName},")
                                     OUTERWEAR_ONLY -> TextLine("opened the cabin door, entered it, " +
-                                            "pulled down your ${core.character.lower.insert},")
+                                            "pulled down your ${core.character.lower.insertName},")
                                     UNDERWEAR_ONLY -> TextLine("opened the cabin door, entered it, " +
-                                            "pulled down your ${core.character.undies.insert},")
+                                            "pulled down your ${core.character.undies.insertName},")
                                     NAKED -> TextLine("opened the cabin door, entered it,")
                                 },
                                 TextLine("wearily flop down on the toilet and start peeing.")
@@ -830,12 +830,12 @@ class PlotMap {
                                         TextLine("states ${core.schoolDay.surpriseBoy.name}. You enter the cabin,"),
                                         when (core.character.wearCombinationType) {
                                             FULLY_CLOTHED -> TextLine("pull down your " +
-                                                    core.character.lower.insert +
-                                                    " and ${core.character.undies.insert},")
+                                                    core.character.lower.insertName +
+                                                    " and ${core.character.undies.insertName},")
                                             OUTERWEAR_ONLY ->
-                                                TextLine("pull down your ${core.character.lower.insert},")
+                                                TextLine("pull down your ${core.character.lower.insertName},")
                                             UNDERWEAR_ONLY ->
-                                                TextLine("pull down your ${core.character.undies.insert},")
+                                                TextLine("pull down your ${core.character.undies.insertName},")
                                             NAKED -> null
                                         },
                                         TextLine("stand over the toilet and start peeing under " +
@@ -899,10 +899,10 @@ class PlotMap {
                 PlotStage(
                         Text("You feel the warm pee stream",
                                 when (core.character.wearCombinationType) {
-                                    FULLY_CLOTHED -> "filling your ${core.character.undies.insert} " +
-                                            "and darkening your ${core.character.lower.insert}."
-                                    OUTERWEAR_ONLY -> "filling your ${core.character.lower.insert}."
-                                    UNDERWEAR_ONLY -> "filling your ${core.character.undies.insert}."
+                                    FULLY_CLOTHED -> "filling your ${core.character.undies.insertName} " +
+                                            "and darkening your ${core.character.lower.insertName}."
+                                    OUTERWEAR_ONLY -> "filling your ${core.character.lower.insertName}."
+                                    UNDERWEAR_ONLY -> "filling your ${core.character.undies.insertName}."
                                     NAKED -> "running down your legs."
                                 },
                                 "You close your eyes and ease your sphincter off.",
@@ -917,10 +917,10 @@ class PlotMap {
                                 "You try to hold the pee back, but you just can't.",
                                 "You feel the warm pee stream",
                                 when (core.character.wearCombinationType) {
-                                    FULLY_CLOTHED -> "filling your ${core.character.undies.insert} " +
-                                            "and darkening your ${core.character.lower.insert}."
-                                    OUTERWEAR_ONLY -> "filling your ${core.character.lower.insert}."
-                                    UNDERWEAR_ONLY -> "filling your ${core.character.undies.insert}."
+                                    FULLY_CLOTHED -> "filling your ${core.character.undies.insertName} " +
+                                            "and darkening your ${core.character.lower.insertName}."
+                                    OUTERWEAR_ONLY -> "filling your ${core.character.lower.insertName}."
+                                    UNDERWEAR_ONLY -> "filling your ${core.character.undies.insertName}."
                                     NAKED -> "running down your legs."
                                 },
                                 "You close your eyes and ease your sphincter off.",

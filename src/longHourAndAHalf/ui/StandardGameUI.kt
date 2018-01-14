@@ -78,8 +78,8 @@ class StandardGameUI : JFrame("A Long Hour and a Half"), UI {
         btnNext = addButton(
                 "Next",
                 {
-                    if (!core.character.fatalLeakOccured && actionsPresent) handleSelectedAction()
-                    core.handleNextClicked()
+                    if (!core.character.fatalLeakOccurred && actionsPresent) handleSelectedAction()
+                    core.plot.advanceToNextStage()
                 },
                 Rectangle(470, ACTION_BUTTONS_TOP_BORDER, 285, 35)
         )

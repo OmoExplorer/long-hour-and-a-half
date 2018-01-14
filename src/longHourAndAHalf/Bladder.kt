@@ -62,6 +62,7 @@ class Bladder(
         sphincterPower -= (fullness / 30 * time).toInt()
     }
 
+    /** Issues a leak. */
     fun leak(time: Int) {
         core.character.dryness -= 5 * time / 3  //Decreasing dryness
         fullness -= 2.5 * time / 3  //Decreasing fullness level
@@ -82,7 +83,7 @@ class Bladder(
     /** If there is more than 3 water units in character's belly, makes additional 2 urine units. */
     private fun makeAdditionalUrineFromWater(timeOffset: Int) {
         with(core.character) {
-            if (belly == 0.0) return@makeAdditionalUrineFromWater
+            if (belly == 0.0) return
 
             if (belly > timeOffset) {
                 belly -= timeOffset
@@ -125,7 +126,7 @@ class Bladder(
 //        }
 //    }
 
-    /**  Empties this bladder each 15 in-game minutes. */
+    /** Empties this bladder each 15 in-game minutes. */
     fun applyDrainCheat() {
         if (!(core.cheatData.drain && (core.world.time.minutes % 15 == 0))) return
         fullness = 0.0
@@ -151,7 +152,7 @@ class Bladder(
     }
 
     private fun leakingTooMuchSoGameOver() {
-        core.character.fatalLeakOccured = true
+        core.character.fatalLeakOccurred = true
         game.ui.hideActionUI()
         when (core.character.wearCombinationType) {
             WearCombinationType.NAKED -> if (core.character.cornered)
@@ -163,22 +164,22 @@ class Bladder(
 
             WearCombinationType.OUTERWEAR_ONLY, WearCombinationType.FULLY_CLOTHED ->
                 ui.forcedTextChange(
-                        Text("You see the wet spot expanding on your ${core.character.lower.insert}!",
+                        Text("You see the wet spot expanding on your ${core.character.lower.insertName}!",
                                 "It's too much...")
                 )
 
             WearCombinationType.UNDERWEAR_ONLY ->
                 ui.forcedTextChange(
-                        Text("You see the wet spot expanding on your ${core.character.undies.insert}!",
+                        Text("You see the wet spot expanding on your ${core.character.undies.insertName}!",
                                 "It's too much...")
                 )
         }
 
         core.plot.nextStageID = PlotStageID.ACCIDENT
-        core.handleNextClicked()
+        core.plot.advanceToNextStage()
     }
 
-    /** Thoughts of character describing the bladder condition. */
+    /** Thoughts of character which describe the bladder condition. */
     val conditionText
         get() = when (fullness) {
             in 0..20 -> Text(

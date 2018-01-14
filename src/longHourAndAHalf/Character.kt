@@ -3,7 +3,7 @@ package longHourAndAHalf
 import longHourAndAHalf.WearCombinationType.*
 import java.io.Serializable
 
-@Suppress("IfThenToSafeAccess")
+@Suppress("IfThenToSafeAccess", "KDocMissingDocumentation")
 /**
  * Game character.
  *
@@ -15,8 +15,8 @@ class Character(
         val name: String,
         var gender: Gender,
         val bladder: Bladder,
-        undies: Wear,
-        lower: Wear
+        undies: Underwear,
+        lower: Outerwear
 ) : Serializable {
 
     /** Character's underwear. */
@@ -80,7 +80,7 @@ class Character(
             ui.thirstChanged(thirst)
         }
 
-    var fatalLeakOccured = false
+    var fatalLeakOccurred = false
 
     private fun calculateMaximalDryness() = lower.absorption + undies.absorption
 
@@ -100,6 +100,10 @@ class Character(
     /** Increases [dryness] by a certain value. */
     fun dryClothes(timeOffset: Int) {
         dryness += (lower.dryingOverTime + undies.dryingOverTime) * (timeOffset / 3)
+    }
+
+    fun forceToDrink() {
+        core.plot.nextStageID = PlotStageID.DRINK
     }
 
     companion object {

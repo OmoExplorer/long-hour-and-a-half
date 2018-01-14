@@ -71,8 +71,6 @@ import java.io.Serializable
  * @see SaveFileManager
  *
  * @property character Game character.
- * @property schoolDay Data about a school day. Holds random number (from 1 to 3) of random lessons and classmates data.
- * @property scorer Score counter.
  * @property world Virtual game world data.
  * @property hardcore Whether hardcore mode is enabled.
  * Hardcore mode features:
@@ -81,10 +79,13 @@ import java.io.Serializable
  * - You may get caught holding pee
  */
 class Core(val character: Character, val hardcore: Boolean, private val parameters: GameParameters) : Serializable {
+    /** Data about a school day. Holds random number (from 1 to 3) of random lessons and classmates data. */
     val schoolDay = SchoolDay()
 
+    /** Score counter. */
     val scorer = Scorer()
 
+    /** Game character. */
     val world = World()
 
     /** Data about cheats. */
@@ -92,9 +93,10 @@ class Core(val character: Character, val hardcore: Boolean, private val paramete
 
     val flags = PlotFlags()
 
+    /** Game plot. */
     val plot = Plot()
 
-    fun handleNextClicked() {/*
+    /*fun plot.advanceToNextStage() {
         when (plot.nextStageID) {
             LEAVE_BED -> {
                 //Making line 1 italic
@@ -352,7 +354,7 @@ class Core(val character: Character, val hardcore: Boolean, private val paramete
             CHOSE_ACTION -> {
                 plot.nextStageID = ASK_ACTION
                 if (ui.listChoice.isSelectionEmpty || ui.listChoice.selectedValue == "[Unavailable]") {
-                    handleNextClicked()
+                    plot.advanceToNextStage()
                     return
                 }
 
@@ -1389,9 +1391,8 @@ class Core(val character: Character, val hardcore: Boolean, private val paramete
             }
 
             else -> ui.setText("Error parsing button. Next name is unavailable, name #" + plot.nextStageID)
-        */
         plot.advanceToNextStage()
-    }
+    }*/
 
     /**
      * Resets the game and values, optionally letting player to select new parameters.
@@ -1406,9 +1407,7 @@ class Core(val character: Character, val hardcore: Boolean, private val paramete
     }
 
     companion object {
-        /**
-         * Default turn duration in in-game minutes.
-         */
+        /** Default turn duration in in-game minutes. */
         const val TURN_DURATION = 3
     }
 }

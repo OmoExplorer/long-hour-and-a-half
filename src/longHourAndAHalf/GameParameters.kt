@@ -9,8 +9,8 @@ data class GameParameters(
         val gender: Gender,
         val bladderFullnessAtStart: Int,
         val incontinence: Double,
-        val underwearToAssign: AbstractWear,
-        val outerwearToAssign: AbstractWear,
+        val underwearModelToAssign: AbstractWearModel,
+        val outerwearModelToAssign: AbstractWearModel,
         val underwearColor: WearColor,
         val outerwearColor: WearColor,
         val hardcore: Boolean

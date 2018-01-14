@@ -4,14 +4,13 @@ import java.io.Serializable
 
 /**
  * Stores game world data, such as current game [time].
- *
+ * @author JavaBird
  * @see Time
  */
 class World : Serializable {
     /**
-     * World's current time.
-     *
-     * When being changed, checks if the lesson should finish; if so, finishes it. Also, runs [timeEffect].
+     * World's current time. When being changed, checks if the lesson should finish; if so, finishes it.
+     * Also, runs [timeEffect].
      */
     var time: Time = SchoolDay.gameBeginningTime
         set(value) {
@@ -19,7 +18,6 @@ class World : Serializable {
             field = value
 
             val offset = time.rawMinutes - oldValue.rawMinutes
-
             if (offset != 0) timeEffect(offset)
             ui.timeChanged(time)
         }
@@ -39,24 +37,26 @@ class World : Serializable {
      */
     private fun timeEffect(timeOffset: Int) {
         with(core.schoolDay.lesson) {
-            if (shouldFinish()) {
-                finish()
-            }
+            if (shouldFinish()) finish()
         }
 
         with(core.character) {
             bladder.applyDrainCheat()
             dryClothes(timeOffset)
 
-            if (!fatalLeakOccured && bladder.shouldLeak()) bladder.leak(timeOffset)
+            if (!fatalLeakOccurred && bladder.shouldLeak()) bladder.leak(timeOffset)
             bladder.makeUrine(timeOffset)
             bladder.decaySphincterPower(timeOffset)
+
             if (core.hardcore) {
-                thirst += 2
-                if (thirst > Character.MAXIMAL_THIRST) {
-                    core.plot.nextStageID = PlotStageID.DRINK
-                }
+                hardcoreTimeEffect()
             }
         }
+    }
+
+    private fun Character.hardcoreTimeEffect() {
+        thirst += 2
+        if (thirst > Character.MAXIMAL_THIRST)
+            forceToDrink()
     }
 }

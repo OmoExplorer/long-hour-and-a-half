@@ -6,9 +6,7 @@ import longHourAndAHalf.Time
 import longHourAndAHalf.Wear
 import javax.swing.JFrame
 
-/**
- * Used for updating a user interface. An UI class would implement this interface in order to listen to game events.
- */
+/** Used for updating a user interface. An UI class would implement this interface in order to listen to game events. */
 interface UI {
     /** Reference to the UI frame. */
     val frame: JFrame
@@ -65,9 +63,6 @@ interface UI {
     /** Called by the engine when the setup has finished. */
     fun setup()
 
-    /**
-     * Called by the engine when the slide has been changed.
-     * Use this function for custom callbacks.
-     */
+    /** Called by the engine when the slide has been changed. Use this function for custom callbacks. */
     fun slideChanged() {}
 }

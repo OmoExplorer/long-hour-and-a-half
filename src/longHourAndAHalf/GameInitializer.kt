@@ -1,22 +1,19 @@
 package longHourAndAHalf
 
-/**
- * Creates and sets up the game.
- */
+import java.util.*
+
+/** Creates and sets up the game. */
 object GameInitializer {
-    /**
-     * Start the game creation process. Called in [Launcher.runGame].
-     *
-     * @param parameters the game parameters.
-     */
+
+    /** Start the game creation process with the given [parameters]. Called in [Launcher.runGame]. */
     fun createGame(parameters: GameParameters) {
         val bladder = Bladder(parameters.bladderFullnessAtStart.toDouble(), parameters.incontinence)
         val character = Character(
                 parameters.name,
                 parameters.gender,
                 bladder,
-                MaintenanceWearProcessor.processWear(parameters.underwearToAssign, parameters.underwearColor),
-                MaintenanceWearProcessor.processWear(parameters.outerwearToAssign, parameters.outerwearColor)
+                setupWear(parameters.underwearModelToAssign, parameters.underwearColor) as Underwear,
+                setupWear(parameters.outerwearModelToAssign, parameters.outerwearColor) as Outerwear
         )
 
         val core = Core(character, parameters.hardcore, parameters)
@@ -27,10 +24,12 @@ object GameInitializer {
         core.scorer.countOutInitialScore()
 //        ui.setup(character.name,)
         ui.setup()
-        core.handleNextClicked()
 //        if (core.hardcore) ui.hardcoreModeToggled(true)
         ui.underwearChanged(character.undies)
         ui.outerwearChanged(character.lower)
         ui.frame.isVisible = true     //Displaying the frame
     }
+
+    /** Returns the random bladder fullness. */
+    fun generateRandomBladderFullness() = Random().nextInt(Bladder.RANDOM_FULLNESS_CAP)
 }

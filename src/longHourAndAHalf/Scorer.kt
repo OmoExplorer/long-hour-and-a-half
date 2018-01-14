@@ -18,9 +18,7 @@ class Scorer : Serializable {
     private val finalNominations: List<ScoreNomination>
         get() = nominations.filter { it.final }
 
-    /**
-     * Final score.
-     */
+    /** Final score. */
     private val finalScore: Int
         get() {
             fun List<ScoreNomination>.apply(beginningScore: Double): Double {
@@ -54,7 +52,7 @@ class Scorer : Serializable {
      * @param arithmeticAction an arithmetic action to perform with score.
      * @param final whether to apply the nomination at the end.
      */
-    fun countOut(comment: String, score: Double, arithmeticAction: ArithmeticAction, final: Boolean = false) =
+    private fun countOut(comment: String, score: Double, arithmeticAction: ArithmeticAction, final: Boolean = false) =
             nominations.add(ScoreNomination(comment, score, arithmeticAction, final))
 
     /**
@@ -65,7 +63,7 @@ class Scorer : Serializable {
      * @param arithmeticAction an arithmetic action to perform with score.
      * @param final whether to apply the nomination at the end.
      */
-    fun countOut(comment: String, score: Int, arithmeticAction: ArithmeticAction, final: Boolean = false) =
+    private fun countOut(comment: String, score: Int, arithmeticAction: ArithmeticAction, final: Boolean = false) =
             nominations.add(ScoreNomination(comment, score.toDouble(), arithmeticAction, final))
 
     /**
@@ -97,6 +95,7 @@ class Scorer : Serializable {
         JOptionPane.showMessageDialog(parentComponent, scoreText)
     }
 
+    /** Counts out score in the game beginning. */
     fun countOutInitialScore() {
         countOut("Bladder at start - ${core.character.bladder.fullness}%", core.character.bladder.fullness,
                 ArithmeticAction.ADD)

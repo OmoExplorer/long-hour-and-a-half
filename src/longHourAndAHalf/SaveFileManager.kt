@@ -1,6 +1,5 @@
 package longHourAndAHalf
 
-import longHourAndAHalf.ui.SaveFileChooser
 import java.io.*
 import javax.swing.JFileChooser
 import javax.swing.JOptionPane
@@ -37,23 +36,4 @@ object SaveFileManager {
 
         return null
     }
-
-    fun writeSaveFile() {
-        val fcGame = SaveFileChooser(File(core.character.name))
-        val saveFile = File(fcGame.selectedFile.absolutePath + ".lhhsav")
-
-        if (fcGame.showSaveDialog(ui.frame) != JFileChooser.APPROVE_OPTION) return
-
-        try {
-            val save = Save(core)
-            val fileOutputStream = FileOutputStream(saveFile)
-            val objectOutputStream = ObjectOutputStream(fileOutputStream)
-
-            objectOutputStream.writeObject(save)
-        } catch (e: IOException) {
-            e.printStackTrace()
-            JOptionPane.showMessageDialog(ui.frame, "File error.", "Error", JOptionPane.ERROR_MESSAGE)
-        }
-    }
-
 }

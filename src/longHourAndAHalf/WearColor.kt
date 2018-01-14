@@ -13,7 +13,7 @@ enum class WearColor {
     },
 
     /**
-     * Special color. Replaced by `Wear.replaceRandomColor` declared in [Launcher].
+     * Special color. Replaced by [setupWear].
      */
     RANDOM,
     BLACK,

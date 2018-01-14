@@ -20,23 +20,11 @@ class Launcher(private val setupFrame: setupFramePre) {
      */
     fun runGame() {
         val name = retrieveCharacterNameFromSetupUI()
-
         val gender = retrieveGenderFromSetupUI()
-
         val bladderFullnessAtStart = retrieveBladderFullnessFromSetupUI()
-
         val hardcore = retrieveIsHardcoreFromSetupUI()
-
-        var underwearToAssign = getWearFromSelectedTreeNode(
-                WearType.UNDERWEAR
-        ) ?: return
-
-        var outerwearToAssign = getWearFromSelectedTreeNode(
-                WearType.OUTERWEAR
-        ) ?: return
-
-        assertIncorrectWear(underwearToAssign, outerwearToAssign)
-
+        val underwearToAssign = getWearFromSelectedTreeNode(WearType.UNDERWEAR) ?: return
+        val outerwearToAssign = getWearFromSelectedTreeNode(WearType.OUTERWEAR) ?: return
         val incontinence = getSelectedIncontinence()
 
         val parameters = GameParameters(
@@ -56,16 +44,16 @@ class Launcher(private val setupFrame: setupFramePre) {
         setupFrame.dispose()
     }
 
-    private fun retrieveIsHardcoreFromSetupUI() = setupFrame.hardDiffRadio!!.isSelected
+    private fun retrieveIsHardcoreFromSetupUI() = setupFrame.hardDiffRadio.isSelected
 
-    private fun retrieveCharacterNameFromSetupUI() = setupFrame.nameField!!.text!!
+    private fun retrieveCharacterNameFromSetupUI() = setupFrame.nameField.text!!
 
     /**
      * Retrieves a bladder fullness level from [setupFrame].
      */
     private fun retrieveBladderFullnessFromSetupUI(): Int {
-        val userSelectedBladderFullnessRadioButton = setupFrame.basSliderRadio!!
-        val userSelectedBladderFullnessSlider = setupFrame.basSlider!!
+        val userSelectedBladderFullnessRadioButton = setupFrame.basSliderRadio
+        val userSelectedBladderFullnessSlider = setupFrame.basSlider
 
         val userSelectsFullness = userSelectedBladderFullnessRadioButton.isSelected
 
@@ -82,7 +70,7 @@ class Launcher(private val setupFrame: setupFramePre) {
      * Retrieves the selected gender from [setupFrame].
      */
     private fun retrieveGenderFromSetupUI(): Gender {
-        val femaleRadio = setupFrame.femaleRadio!!
+        val femaleRadio = setupFrame.femaleRadio
 
         return if (femaleRadio.isSelected)
             Gender.FEMALE
@@ -90,30 +78,26 @@ class Launcher(private val setupFrame: setupFramePre) {
             Gender.MALE
     }
 
-    private fun getWearFromSelectedTreeNode(type: WearType): AbstractWear? {
+    private fun getWearFromSelectedTreeNode(type: WearType): AbstractWearModel? {
         val tree = when (type) {
-            WearType.UNDERWEAR -> setupFrame.underwearTree!!
-            WearType.OUTERWEAR -> setupFrame.outerwearTree!!
-            WearType.BOTH_SUITABLE -> throw IllegalArgumentException("BOTH_SUITABLE isn't supported")
+            WearType.UNDERWEAR -> setupFrame.underwearTree
+            WearType.OUTERWEAR -> setupFrame.outerwearTree
         }
 
         val node = tree.lastSelectedPathComponent
 
         return if (node == null)
-            Wear.getRandom(type)
+            when (type) {
+                WearType.UNDERWEAR -> UnderwearModel.getRandom()
+                WearType.OUTERWEAR -> OuterwearModel.getRandom()
+            }
         else
-            (node as DefaultMutableTreeNode).userObject as? AbstractWear
+            (node as DefaultMutableTreeNode).userObject as AbstractWearModel
     }
 
     private fun getSelectedIncontinence(): Double {
-        var incontinence = (setupFrame.incontSlider!!.value / 10).toDouble()
-        if (incontinence < 1)
-            incontinence += 0.5
+        var incontinence = (setupFrame.incontSlider.value / 10).toDouble()
+        if (incontinence < 1) incontinence += 0.5
         return incontinence
-    }
-
-    private fun assertIncorrectWear(underwearToAssign: AbstractWear, outerwearToAssign: AbstractWear) {
-        assert(underwearToAssign is Wear)
-        assert(outerwearToAssign is Wear)
     }
 }
