@@ -5,7 +5,8 @@ package longHourAndAHalf
 
 import java.util.*
 
-private val random = Random()
+/** Random number generator. */
+val random = Random()
 
 /**
  * @return random item from this array.

@@ -7,7 +7,6 @@ import java.awt.Font
 import java.awt.Rectangle
 import javax.swing.*
 import javax.swing.border.EmptyBorder
-import kotlin.math.round
 import kotlin.system.exitProcess
 
 /**
@@ -115,10 +114,10 @@ class StandardGameUI : JFrame("A Long Hour and a Half"), UI {
     private fun setLabelTexts() {
         lblName.text = core.character.name
         lblBladder.text = "Bladder: ${core.character.bladder.fullness}%"
-        lblBelly.text = "Belly: ${core.character.belly}%"
+        lblBelly.text = "Water in tummy: ${core.character.bladder.waterInTummy}%"
         lblEmbarrassment.text = "Embarrassment: " + core.character.embarrassment
-        lblIncontinence.text = "Incontinence: ${core.character.bladder.incontinence}x"
-        lblSphPower.text = "Pee holding ability: ${core.character.bladder.sphincterPower}%"
+        lblIncontinence.text = "Incontinence: ${core.character.bladder.sphincter.incontinence}x"
+        lblSphPower.text = "Pee holding ability: ${core.character.bladder.sphincter.power}%"
         lblMinutes.text = "Minutes: ${(core.world.time - Lesson.classBeginningTime).rawMinutes} of 90"
         lblThirst.text = "Thirst: ${core.character.thirst}%"
         lblDryness.text = "Clothes dryness: " + round(core.character.dryness)
@@ -141,7 +140,7 @@ class StandardGameUI : JFrame("A Long Hour and a Half"), UI {
         lblEmbarrassment.text = "Embarrassment: $embarrassment"
     }
 
-    override fun bellyWaterLevelChanged(bellyWaterLevel: Double) {
+    override fun bellyWaterLevelChanged(bellyWaterLevel: Int) {
         lblBelly.text = "Belly: ${round(bellyWaterLevel)}%"
     }
 
@@ -186,8 +185,12 @@ class StandardGameUI : JFrame("A Long Hour and a Half"), UI {
     }
 
     override fun bladderFullnessChanged(fullness: Double) {
-        lblBladder.text = "Bladder: $fullness%"
+        lblBladder.text = "Bladder: $fullness ml"
         bladderBar.value = fullness.toInt()
+        lblBladder.foreground = if (fullness > core.character.bladder.leakingFullnessLevel)
+            java.awt.Color.RED
+        else
+            java.awt.Color.BLACK
     }
 
     override fun forcedTextChange(text: Text) {

@@ -3,7 +3,6 @@ package longHourAndAHalf
 import longHourAndAHalf.Gender.FEMALE
 import longHourAndAHalf.Gender.MALE
 import longHourAndAHalf.WearCombinationType.*
-import java.util.*
 import javax.swing.JOptionPane
 
 /**
@@ -133,7 +132,7 @@ class PlotMap {
                         ),
                         {
                             core.character.embarrassment += 3
-                            core.character.belly += 10.0
+                            core.character.bladder.waterInTummy += 10.0
                         },
                         PlotStageID.GO_TO_CLASS,
                         duration = 1
@@ -485,7 +484,7 @@ class PlotMap {
                 PlotStage(
                         Text("Lesson is finally over, and you're running to the restroom as fast as you can."),
                         {
-                            core.flags.line = Random().nextBoolean()
+                            core.flags.line = random.nextBoolean()
                             if (core.flags.line) core.plot.nextStageID = PlotStageID.PEE_AFTER_LESSON_LINE
                         },
                         run
@@ -933,7 +932,7 @@ class PlotMap {
                 PlotStage(
                         Text("You take your bottle with water,", "open it and take a small sip."),
                         {
-                            core.character.belly += core.character.thirst.toDouble()
+                            core.character.bladder.waterInTummy += core.character.thirst
                             core.character.thirst = 0
                         }, PlotStageID.ASK_ACTION
                 )

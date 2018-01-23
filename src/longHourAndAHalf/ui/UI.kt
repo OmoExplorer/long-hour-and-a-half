@@ -16,13 +16,13 @@ interface UI {
 
     //Listener functions. Being run by the game.
     /** Called by the engine when the bladder fullness has been changed. */
-    fun bladderFullnessChanged(fullness: Double)
+    fun bladderFullnessChanged(fullness: Int)
 
     /** Called by the engine when the character embarrassment has been changed. */
     fun embarrassmentChanged(embarrassment: Int)
 
     /** Called by the engine when the belly water level has been changed. */
-    fun bellyWaterLevelChanged(bellyWaterLevel: Double)
+    fun bellyWaterLevelChanged(bellyWaterLevel: Int)
 
     /** Called by the engine when the incontinence has been changed. */
     fun incontinenceMultiplierChanged(incontinenceMultiplier: Double)

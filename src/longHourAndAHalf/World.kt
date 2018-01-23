@@ -9,8 +9,7 @@ import java.io.Serializable
  */
 class World : Serializable {
     /**
-     * World's current time. When being changed, checks if the lesson should finish; if so, finishes it.
-     * Also, runs [timeEffect].
+     * World's current time. [timeEffect] is ran on change.
      */
     var time: Time = SchoolDay.gameBeginningTime
         set(value) {

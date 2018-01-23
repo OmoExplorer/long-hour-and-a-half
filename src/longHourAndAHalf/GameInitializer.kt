@@ -1,7 +1,5 @@
 package longHourAndAHalf
 
-import java.util.*
-
 /** Creates and sets up the game. */
 object GameInitializer {
 
@@ -31,5 +29,5 @@ object GameInitializer {
     }
 
     /** Returns the random bladder fullness. */
-    fun generateRandomBladderFullness() = Random().nextInt(Bladder.RANDOM_FULLNESS_CAP)
+    fun generateRandomBladderFullness() = random.nextInt(Bladder.RANDOM_FULLNESS_CAP)
 }

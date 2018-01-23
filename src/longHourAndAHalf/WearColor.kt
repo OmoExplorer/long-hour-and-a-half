@@ -35,8 +35,7 @@ enum class WearColor {
         fun random(): WearColor {
             var randomColor: WearColor
 
-            do
-                randomColor = values().randomItem()
+            do randomColor = values().randomItem()
             while (randomColor == NONE || randomColor == RANDOM)
 
             return randomColor

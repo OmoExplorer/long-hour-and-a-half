@@ -3,7 +3,7 @@ package longHourAndAHalf
 import longHourAndAHalf.WearCombinationType.*
 import java.io.Serializable
 
-@Suppress("IfThenToSafeAccess", "KDocMissingDocumentation")
+@Suppress("KDocMissingDocumentation")
 /**
  * Game character.
  *
@@ -49,13 +49,6 @@ class Character(
     /** Type of character's wear combination. */
     var wearCombinationType = updateWearCombination()
 
-    /** Amount of water in character's belly. */
-    var belly = 0.0
-        set(value) {
-            field = value.coerceAtLeast(0.0)
-            ui.bellyWaterLevelChanged(belly)
-        }
-
     private fun updateDryness() {
         maximalDryness = calculateMaximalDryness()
         dryness = maximalDryness
@@ -84,7 +77,10 @@ class Character(
 
     private fun calculateMaximalDryness() = lower.absorption + undies.absorption
 
-    /** Maximal dryness of both clothes. */
+    /**
+     * Maximal dryness of both clothes.
+     * @see dryness
+     */
     var maximalDryness = calculateMaximalDryness()
 
     /** Summary amount of pee that clothes can store. */
@@ -92,7 +88,42 @@ class Character(
         set(value) {
             field = value.coerceAtMost(maximalDryness)
             ui.wearDrynessChanged(dryness)
+            checkForLeakingGameOver()
         }
+
+    private fun checkForLeakingGameOver() {
+        if (dryness < 0) runLeakingGameOver()
+    }
+
+    private fun runLeakingGameOver() {
+        game.ui.hideActionUI()
+        setLeakingGameOverText()
+        core.plot.nextStageID = PlotStageID.ACCIDENT
+//        core.plot.advanceToNextStage()
+    }
+
+    private fun setLeakingGameOverText() {
+        when (core.character.wearCombinationType) {
+            NAKED -> if (core.character.cornered)
+                ui.forcedTextChange(Text("You see a puddle forming on the floor beneath you, " +
+                        "you're peeing!", "It's too much..."))
+            else
+                ui.forcedTextChange(Text("Feeling the pee hit the chair and soon fall over the sides,",
+                        "you see a puddle forming under your chair, you're peeing!", "It's too much..."))
+
+            OUTERWEAR_ONLY, FULLY_CLOTHED ->
+                ui.forcedTextChange(
+                        Text("You see the wet spot expanding on your ${core.character.lower.insertName}!",
+                                "It's too much...")
+                )
+
+            UNDERWEAR_ONLY ->
+                ui.forcedTextChange(
+                        Text("You see the wet spot expanding on your ${core.character.undies.insertName}!",
+                                "It's too much...")
+                )
+        }
+    }
 
     /** Whether or not character currently stands in the corner and unable to hold crotch. */
     var cornered = false
@@ -106,6 +137,19 @@ class Character(
         core.plot.nextStageID = PlotStageID.DRINK
     }
 
+    /** Makes the character to leak. */
+    fun leak() {
+        val volume = calculateLeakVolume()
+        bladder.fullness -= volume
+        dryness -= volume
+    }
+
+    private fun calculateLeakVolume(): Int {
+        val leakVolumeMultiplier = random.nextGaussian() + 0.75
+        val leakBaseValue = (bladder.sphincter.maximalPower - bladder.sphincter.power) * bladder.sphincter.incontinence
+        return (leakBaseValue * leakVolumeMultiplier).toInt()
+    }
+
     companion object {
         /**
          * Maximal thirst level limit.
@@ -113,10 +157,7 @@ class Character(
          */
         const val MAXIMAL_THIRST = 30
 
-        /**
-         * The dryness minimal threshold.
-         * Game ends if [dryness] goes below this value.
-         */
+        /** The dryness minimal threshold. Game ends if [dryness] goes below this value. */
         const val MINIMAL_DRYNESS = 0
     }
 }

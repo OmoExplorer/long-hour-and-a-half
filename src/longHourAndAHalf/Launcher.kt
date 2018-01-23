@@ -1,7 +1,6 @@
 package longHourAndAHalf
 
 import longHourAndAHalf.ui.setupFramePre
-import java.util.*
 import javax.swing.tree.DefaultMutableTreeNode
 
 /**
@@ -10,10 +9,6 @@ import javax.swing.tree.DefaultMutableTreeNode
  * @property setupFrame Frame to get the game settings from.
  */
 class Launcher(private val setupFrame: setupFramePre) {
-    /**
-     * Random number generator.
-     */
-    private val random = Random()
 
     /**
      * Runs the game with selected parameters.
