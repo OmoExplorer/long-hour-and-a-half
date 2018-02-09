@@ -19,9 +19,11 @@ def _save():
                                     filetypes=((GAME_NAME + ' wear file', '.lhhw'),))
 
     if _type_var.get() == 'Underwear':
-        wear = Underwear(_name.get(), _game_name.get(), _pressure.get(), _absorption.get(), _drying.get())
+        wear = Underwear(_name.get(), _game_name.get(),
+                         float(_pressure.get()), float(_absorption.get()), float(_drying.get()))
     else:
-        wear = Outerwear(_name.get(), _game_name.get(), _pressure.get(), _absorption.get(), _drying.get())
+        wear = Outerwear(_name.get(), _game_name.get(),
+                         float(_pressure.get()), float(_absorption.get()), float(_drying.get()))
 
     pickle.dump(wear, file)
 
