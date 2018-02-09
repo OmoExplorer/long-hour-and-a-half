@@ -1,4 +1,4 @@
-class _Wear:
+class _WearModel:
     def __init__(self, name, in_game_name, pressure, absorption, drying):
         self.name = name
         self.in_game_name = in_game_name
@@ -7,11 +7,23 @@ class _Wear:
         self.drying = drying
 
 
+class UnderwearModel(_WearModel):
+    pass
+
+
+class OuterwearModel(_WearModel):
+    pass
+
+
+class _Wear:
+    def __init__(self, model, color):
+        self.model = model
+        self.color = color
+
+
 class Underwear(_Wear):
-    def __init__(self, name, in_game_name, pressure, absorption, drying):
-        super().__init__(name, in_game_name, pressure, absorption, drying)
+    pass
 
 
 class Outerwear(_Wear):
-    def __init__(self, name, in_game_name, pressure, absorption, drying):
-        super().__init__(name, in_game_name, pressure, absorption, drying)
+    pass
