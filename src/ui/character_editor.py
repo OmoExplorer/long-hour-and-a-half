@@ -7,9 +7,9 @@ from game_metadata import GAME_NAME
 from gender import Gender
 
 _root = None
-_name_var = StringVar(_root, 'Mrs. X')
-_gender_var = StringVar(_root)
-_incontinence_var = DoubleVar(_root)
+_name_var = None
+_gender_var = None
+_incontinence_var = None
 
 
 def _save():
@@ -44,11 +44,15 @@ def run():
     _root = Toplevel()
     _root.title('Character editor')
 
+    _name_var = StringVar(_root, 'Mrs. X')
+    _gender_var = StringVar(_root)
+    _incontinence_var = DoubleVar(_root)
+
     Label(_root, text='Name').grid(row=1, column=1)
     Label(_root, text='Gender').grid(row=2, column=1)
     Label(_root, text='Incontinence').grid(row=3, column=1)
 
-    Entry(_root).grid(row=1, column=2, variable=_name_var).grid(row=4, column=1)
+    Entry(_root, variable=_name_var).grid(row=4, column=1)
     OptionMenu(_root, _gender_var, 'Female', 'Male').grid(row=5, column=1)
     Scale(_root, digits=_incontinence_var, from_=0.1, to=10, orient=HORIZONTAL).grid(row=6, column=1)
 

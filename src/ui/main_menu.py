@@ -1,10 +1,9 @@
 from tkinter import *
 from tkinter.font import Font
 
-import character_editor
 import game_manager
-import wear_editor
 from game_metadata import GAME_NAME, GAME_DESCRIPTION
+from ui import wear_editor, character_editor
 
 
 def new_game():

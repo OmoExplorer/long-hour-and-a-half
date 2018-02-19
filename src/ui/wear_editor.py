@@ -47,7 +47,7 @@ def run():
     global _drying
     global _type_var
 
-    _root = Toplevel()
+    _root = Tk()
     _root.title('Wear editor')
 
     Label(_root, text='Name').grid(row=1, column=1)
