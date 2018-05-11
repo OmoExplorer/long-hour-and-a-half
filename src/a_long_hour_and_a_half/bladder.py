@@ -1,16 +1,16 @@
 from random import randint
 
-from .enums import DayState, Difficulty
+from .enums import DayState, EASY, MEDIUM, HARD, FEMALE
 from .util import clamp, chance, difficulty_dependent
 
 
 class Bladder:
     """Character's urinary bladder."""
 
-    @property
-    def maximal_urine(self):
-        """Maximal urine volume in milliliters that this bladder can store."""
-        return self._maximal_urine
+    # @property
+    # def maximal_urine(self):
+    #     """Maximal urine volume in milliliters that this bladder can store."""
+    #     return self._maximal_urine
 
     @property
     def urine(self):
@@ -48,16 +48,15 @@ class Bladder:
 
     def __init__(self, day, character):
         values = {
-            Difficulty.EASY: (1750, 5, 8),
-            Difficulty.MEDIUM: (1500, 7, 10),
-            Difficulty.HARD: (1200, 9, 12),
+            EASY: (1750, 5, 8),
+            MEDIUM: (1500, 7, 10),
+            HARD: (1200, 9, 12),
         }
 
-        self._maximal_urine = values[day.difficulty][0]
-        if character.gender == 'Female':
-            self._maximal_urine *= 0.9
+        self.maximal_urine, *self._urine_income_bounds = values[day.difficulty]
+        if character.gender == FEMALE:
+            self.maximal_urine *= 0.9
         self._urine = randint(0, self.maximal_urine / 2)
-        self._urine_income = values[day.difficulty][1:]
         self._tummy_water = 0
         self.sphincter = Sphincter(day, self)
 
@@ -67,7 +66,7 @@ class Bladder:
         """Game element tick function."""
         self._think_about_fullness()
 
-        self.add_urine()
+        self._add_urine()
         self.sphincter.tick()
 
     def _think_about_fullness(self):
@@ -141,11 +140,9 @@ class Bladder:
                 "Uhh! I've gotta go very badly! I don't know whether I'm able to hold it!!",
             )
 
-    def add_urine(self):
+    def _add_urine(self):
         """Adds some urine."""
-        min_urine_income = self._urine_income[0]
-        max_urine_income = self._urine_income[1]
-        self.urine += randint(min_urine_income, max_urine_income)
+        self.urine += randint(*self._urine_income_bounds)
 
         if self.tummy_water > 0:
             self.tummy_water -= 3
@@ -170,13 +167,13 @@ class Sphincter:
 
     def __init__(self, day, bladder):
         values = {
-            Difficulty.EASY: (10, 2, 6),
-            Difficulty.MEDIUM: (15, 6, 12),  # TODO
-            Difficulty.HARD: (20, 10, 16),
+            EASY: (10, 2, 6),
+            MEDIUM: (15, 6, 12),  # TODO
+            HARD: (20, 10, 16),
         }
 
         self._power = 100
-        self._leaking_level, self._leak_volume_bounds = values[day.difficulty][0], values[day.difficulty][1:]
+        self._leaking_level, *self._leak_volume_bounds = values[day.difficulty]
         self.incontinence = 1
         self._day = day
         self._bladder = bladder
@@ -191,10 +188,10 @@ class Sphincter:
         if self._bladder.urine_decimal_ratio < 0.2:
             self.power += difficulty_dependent(self._day, 8, 6, 4)
         elif self._bladder.urine_decimal_ratio > 0.5:
-            self.power -= 1.8 * \
-                          self.incontinence * \
-                          self._day.character.embarrassment * \
-                          (self._bladder.urine / self._bladder.maximal_urine)
+            self.power -= 1.8 \
+                          * self.incontinence \
+                          * self._day.character.embarrassment \
+                          * (self._bladder.urine / self._bladder.maximal_urine)
 
     def _check_leak(self):
         if self.power < self._leaking_level:
@@ -224,6 +221,3 @@ class Sphincter:
                 "Pee is coming!",
                 "Ouch! I can't hold it!",
             )
-
-# if __name__ == '__main__':
-#     Bladder()

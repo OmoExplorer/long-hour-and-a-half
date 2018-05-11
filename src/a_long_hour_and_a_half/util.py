@@ -1,9 +1,9 @@
 from random import random
 
-from .enums import Difficulty
+from .enums import EASY, MEDIUM, HARD
 
 
-def chance(percent: float):
+def chance(percent):
     return random() < percent / 100
 
 

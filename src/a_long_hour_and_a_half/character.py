@@ -1,7 +1,7 @@
 from random import choice
 
 from .bladder import Bladder
-from .enums import Difficulty
+from .enums import Difficulty, FEMALE
 from .game_results import game_over
 from .util import clamp
 from .wear import Wear
@@ -36,7 +36,7 @@ class Character:
         self._day = day
 
         self.name = 'Jane'
-        self.gender = 'Female'
+        self.gender = FEMALE
         self.bladder = Bladder(day, self)
         self.stay_after_lessons = False
         self.stay_on_break = False

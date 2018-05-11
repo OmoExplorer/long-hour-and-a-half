@@ -14,6 +14,12 @@ class Difficulty(Enum):
     HARD = auto()
 
 
+EASY, MEDIUM, HARD = Difficulty.EASY, Difficulty.MEDIUM, Difficulty.HARD
+
+
 class Gender(Enum):
     FEMALE = 'Female'
     MALE = 'Male'
+
+
+FEMALE, MALE = Gender.FEMALE, Gender.MALE
