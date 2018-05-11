@@ -12,9 +12,11 @@ def clamp(n, smallest, largest):
 
 
 def difficulty_dependent(day, easy, medium, hard):
-    if day.difficulty == Difficulty.EASY:
-        return easy
-    if day.difficulty == Difficulty.MEDIUM:
-        return medium
-    if day.difficulty == Difficulty.HARD:
-        return hard
+    return {EASY: easy, MEDIUM: medium, HARD: hard}[day.difficulty]
+    #
+    # if day.difficulty == EASY:
+    #     return easy
+    # if day.difficulty == MEDIUM:
+    #     return medium
+    # if day.difficulty == HARD:
+    #     return hard

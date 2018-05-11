@@ -14,7 +14,7 @@ def wait_few(day: Day):
 
 def print_data(day: Day):
     print(day.character.name)
-    print(day.character.gender)
+    print(day.character.gender.value)
     print(f"{day.character.name}'s thoughts\n", day.character.thoughts, '\n', sep='')
     print('Urine\t\t\t\t', day.character.bladder.urine, '/', day.character.bladder.maximal_urine, ' ml (',
           round(day.character.bladder.urine_decimal_ratio * 100), '%)', sep='')
