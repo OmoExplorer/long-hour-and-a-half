@@ -51,8 +51,8 @@ class Day:
         self.time += Time(0, 2)
         if self.current_lesson() != self._previous_lesson:
             self._previous_lesson = self.current_lesson()
+            self.teacher = Teacher(self)
             if 'Break' in self.current_lesson():
-                self.teacher = Teacher(self)
                 if self.character.stay_on_break:
                     self.state = DayState.BREAK_PUNISHMENT
                 else:
