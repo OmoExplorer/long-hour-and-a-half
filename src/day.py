@@ -43,15 +43,15 @@ class Day:
         self.teacher = Teacher(self)
         self.classmates = Classmates(self)
         self.toilet = Toilet(self)
-        self.__previous_lesson = self.current_lesson()
+        self._previous_lesson = self.current_lesson()
 
     def tick(self):
         self.character.tick()
         # self.teacher.tick()
 
         self.time += Time(0, 2)
-        if self.current_lesson() != self.__previous_lesson:
-            self.__previous_lesson = self.current_lesson()
+        if self.current_lesson() != self._previous_lesson:
+            self._previous_lesson = self.current_lesson()
             if 'Break' in self.current_lesson():
                 self.teacher = Teacher(self)
                 if self.character.stay_on_break:

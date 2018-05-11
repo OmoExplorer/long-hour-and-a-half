@@ -4,11 +4,11 @@ from util import clamp
 class Wear:
     @property
     def dryness(self):
-        return self.__dryness
+        return self._dryness
 
     @dryness.setter
     def dryness(self, value):
-        self.__dryness = clamp(value, 0, self.maximal_dryness)
+        self._dryness = clamp(value, 0, self.maximal_dryness)
 
     def __init__(self, name, pressure, absorption, drying):
         self.name = name
@@ -16,12 +16,12 @@ class Wear:
         self.absorption = absorption
         self.drying = drying
 
-        self.maximal_dryness = self.__dryness = absorption * 12.5
+        self.maximal_dryness = self._dryness = absorption * 12.5
 
     def tick(self):
-        self.__dry()
+        self._dry()
 
-    def __dry(self):
+    def _dry(self):
         self.dryness += self.drying
 
     def __str__(self):

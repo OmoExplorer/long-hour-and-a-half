@@ -6,20 +6,20 @@ from functools import total_ordering
 class Time:
     @property
     def hours(self):
-        return self.__hours
+        return self._hours
 
     @hours.setter
     def hours(self, hours):
-        self.__hours = hours
+        self._hours = hours
 
     @property
     def minutes(self):
-        return self.__minutes
+        return self._minutes
 
     @minutes.setter
     def minutes(self, minutes):
-        self.__minutes = minutes
-        self.__warp_minutes()
+        self._minutes = minutes
+        self._warp_minutes()
 
     @property
     def raw_minutes(self):
@@ -28,9 +28,9 @@ class Time:
     def __init__(self, hours: int, minutes: int):
         self.hours = hours
         self.minutes = minutes
-        # self.__warp_minutes()
+        # self._warp_minutes()
 
-    def __warp_minutes(self):
+    def _warp_minutes(self):
         if self.minutes > 59:
             self.hours += 1
             self.minutes -= 60
