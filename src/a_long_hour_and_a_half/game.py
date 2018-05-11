@@ -87,12 +87,10 @@ def pee_in_wear(day: Day):
 
     if chance(result_chances["can't stop"][day.difficulty] * day.character.bladder.urine_decimal_ratio):
         day.character.pee_into_wear(day.character.bladder.urine)
-        day.character.require_thought(
-            "Aaaaaah!!! I can't stop!",
-            "Aaaaaah!!! I can't stop peeing!",
-            "Aaaaaah!!! I can't stop the flow!",
-            "Aaaaaah!!! I can't stop it!",
-        )
+        day.character.require_thought("Aaaaaah!!! I can't stop!",
+                                      "Aaaaaah!!! I can't stop peeing!",
+                                      "Aaaaaah!!! I can't stop the flow!",
+                                      "Aaaaaah!!! I can't stop it!")
     elif chance(result_chances['peeing more'][day.difficulty] * day.character.bladder.urine_decimal_ratio):
         multiplier = {
             Difficulty.EASY: 1.2,
@@ -100,18 +98,14 @@ def pee_in_wear(day: Day):
             Difficulty.HARD: 1.7,
         }
         day.character.pee_into_wear(how_much * multiplier[day.difficulty])
-        day.character.require_thought(
-            "Damn! I peed a bit much than I was going to.",
-            "Uhhh! I hardly stopped peeing!",
-            "Uhhh! I hardly stopped the flow!",
-            "Ohhh... It was hard to stop.",
-        )
+        day.character.require_thought("Damn! I peed a bit much than I was going to.",
+                                      "Uhhh! I hardly stopped peeing!",
+                                      "Uhhh! I hardly stopped the flow!",
+                                      "Ohhh... It was hard to stop.", )
     elif chance(result_chances["can't pee"][day.difficulty]):
-        day.character.require_thought(
-            "I can't start peeing.",
-            "I'm trying to pee, but I can't.",
-            "I can't force myself to pee right here and now.",
-        )
+        day.character.require_thought("I can't start peeing.",
+                                      "I'm trying to pee, but I can't.",
+                                      "I can't force myself to pee right here and now.", )
     else:
         day.character.pee_into_wear(how_much)
 
@@ -127,27 +121,29 @@ def drink(day: Day):
 def prepare_actions(day: Day):
     if day.state == DayState.LESSON:
         if day.current_lesson() == 'PE' or day.character.holding_blocked:
-            return tuple(filter(lambda it: it is not None, (
-                ('Wait 2 minutes', wait),
-                ('Wait some time...', wait_few),
-                ('Ask to go out for toilet', ask_to_go_out)
-                if not day.teacher.upset and not day.character.holding_blocked else None,
-                (f'Pee in the {day.character.underwear.name.lower()}', pee_in_wear)
-                if not day.character.holding_blocked else None,
-                ('Drink', drink) if not day.character.holding_blocked else None
-            )))
+            return tuple(filter(lambda it: it is not None, (('Wait 2 minutes', wait),
+                                                            ('Wait some time...', wait_few),
+                                                            ('Ask to go out for toilet', ask_to_go_out)
+                                                            if not day.teacher.upset
+                                                               and not day.character.holding_blocked else None,
+                                                            (f'Pee in the {day.character.underwear.name.lower()}',
+                                                             pee_in_wear)
+                                                            if not day.character.holding_blocked else None,
+                                                            ('Drink',
+                                                             drink) if not day.character.holding_blocked else None)))
         else:
-            return tuple(filter(lambda it: it is not None, (
-                ('Wait 2 minutes', wait),
-                ('Wait some time...', wait_few),
-                ('Ask to go out for toilet', ask_to_go_out) if not day.teacher.upset else None,
-                ('Press on the crotch', press_on_crotch),
-                ('Rub thighs', rub_thighs),
-                ('Fidget', fidget),
-                ('Lean forward', lean_forward),
-                ('Cross the legs', cross_legs),
-                (f'Pee in the {day.character.underwear.name.lower()}', pee_in_wear),
-                ('Drink', drink))))
+            return tuple(filter(lambda it: it is not None, (('Wait 2 minutes', wait),
+                                                            ('Wait some time...', wait_few),
+                                                            ('Ask to go out for toilet',
+                                                             ask_to_go_out) if not day.teacher.upset else None,
+                                                            ('Press on the crotch', press_on_crotch),
+                                                            ('Rub thighs', rub_thighs),
+                                                            ('Fidget', fidget),
+                                                            ('Lean forward', lean_forward),
+                                                            ('Cross the legs', cross_legs),
+                                                            (f'Pee in the {day.character.underwear.name.lower()}',
+                                                             pee_in_wear),
+                                                            ('Drink', drink))))
     elif day.state == DayState.BREAK:
         return ('Go to toilet', go_to_toilet), \
                ('Wait 2 minutes', wait), \

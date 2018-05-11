@@ -11,22 +11,20 @@ from .util import chance
 
 
 def _generate_schedule():
-    subjects = ('Math', 'PE', 'English', 'Spanish', 'Chemistry', 'Physics', 'Photography')
+    subjects = ['Math', 'PE', 'English', 'Spanish', 'Chemistry', 'Physics', 'Photography']
 
     picked_subjects = sample(subjects, 5)
     picked_subjects.insert(2, 'Break')
     picked_subjects.insert(5, 'Break ')
-    times = (
-        (Time(7, 38), Time(8, 45)),
-        (Time(8, 45), Time(9, 35)),
-        (Time(9, 35), Time(10, 50)),
-        (Time(10, 50), Time(11, 40)),
-        (Time(11, 40), Time(12, 5)),
-        (Time(12, 5), Time(12, 55)),
-        (Time(12, 55), Time(13, 45))
-    )
+    times = [(Time(7, 38), Time(8, 45)),
+             (Time(8, 45), Time(9, 35)),
+             (Time(9, 35), Time(10, 50)),
+             (Time(10, 50), Time(11, 40)),
+             (Time(11, 40), Time(12, 5)),
+             (Time(12, 5), Time(12, 55)),
+             (Time(12, 55), Time(13, 45))]
 
-    return [(x[0], x[1]) for x in zip(picked_subjects, times)]
+    return [x for x in zip(picked_subjects, times)]
 
 
 class Day:
@@ -63,13 +61,17 @@ class Day:
                 self.state = DayState.LESSON
                 self.character.stay_on_break = False
 
-        if self.state == DayState.LESSON and chance(5) and not self.teacher.testing and self.current_lesson() != 'PE':
+        def event_chance():
+            return self.state == DayState.LESSON \
+                   and chance(5) \
+                   and not self.teacher.testing \
+                   and self.current_lesson() != 'PE'
+
+        if event_chance():
             self.teacher.ask_character()
-        if self.state == DayState.LESSON and chance(5) and not self.teacher.testing and self.current_lesson() != 'PE':
-            self.character.require_thought(
-                'What? Teacher is giving us some test!',
-                'Oops... Looks like we will write a test now.'
-            )
+        if event_chance():
+            self.character.require_thought('What? Teacher is giving us some test!',
+                                           'Oops... Looks like we will write a test now.')
             self.teacher.testing = True
 
     def current_lesson(self):  # FIXME: Buggy

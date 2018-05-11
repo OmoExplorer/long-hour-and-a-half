@@ -97,17 +97,13 @@ class Character:
 
     def _think_about_embarrassment(self):
         if self.embarrassment > 5:
-            self.require_thought(
-                "Oh... I'm so embarrassed...",
-                'I feel embarrassed...',
-                "Classmates know that I have to pee. That's very bad."
-            )
+            self.require_thought("Oh... I'm so embarrassed...",
+                                 'I feel embarrassed...',
+                                 "Classmates know that I have to pee. That's very bad.")
 
     def _think_about_thirst(self):
         if self.thirst > 75:
-            self.require_thought(
-                "I'm thirsty.",
-                "I'm so thirsty...",
-                "I want to drink.",
-                "I need to drink."
-            )
+            self.require_thought("I'm thirsty.",
+                                 "I'm so thirsty...",
+                                 "I want to drink.",
+                                 "I need to drink.")
