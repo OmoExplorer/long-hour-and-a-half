@@ -1,7 +1,6 @@
 from random import randint
 
-from .day_state import DayState
-from .difficulty import Difficulty
+from .enums import DayState, Difficulty
 from .util import clamp, chance, difficulty_dependent
 
 

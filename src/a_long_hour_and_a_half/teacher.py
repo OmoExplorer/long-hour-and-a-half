@@ -1,4 +1,4 @@
-from .difficulty import Difficulty
+from .enums import Difficulty
 from .util import chance
 
 

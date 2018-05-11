@@ -1,6 +1,6 @@
 from random import choice
 
-from .day_state import DayState
+from .enums import DayState
 
 
 def game_over(day):

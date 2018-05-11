@@ -2,8 +2,7 @@ from random import sample
 
 from .character import Character
 from .classmates import Classmates
-from .day_state import DayState
-from .difficulty import Difficulty
+from .enums import DayState, Difficulty
 from .game_results import win
 from .teacher import Teacher
 from .time import Time

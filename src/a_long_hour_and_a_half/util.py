@@ -1,6 +1,6 @@
 from random import random
 
-from .difficulty import Difficulty
+from .enums import Difficulty
 
 
 def chance(percent: float):

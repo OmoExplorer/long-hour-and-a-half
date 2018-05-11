@@ -1,6 +1,5 @@
 from .day import Day
-from .day_state import DayState
-from .difficulty import Difficulty
+from .enums import DayState, Difficulty
 from .util import chance
 
 
