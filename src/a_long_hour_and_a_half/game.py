@@ -1,7 +1,7 @@
-from day import Day
-from day_state import DayState
-from difficulty import Difficulty
-from util import chance
+from .day import Day
+from .day_state import DayState
+from .difficulty import Difficulty
+from .util import chance
 
 
 def wait(_):

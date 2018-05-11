@@ -1,8 +1,8 @@
 from random import randint
 
-from day_state import DayState
-from difficulty import Difficulty
-from util import clamp, chance, difficulty_dependent
+from .day_state import DayState
+from .difficulty import Difficulty
+from .util import clamp, chance, difficulty_dependent
 
 
 class Bladder:

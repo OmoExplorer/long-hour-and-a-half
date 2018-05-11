@@ -1,6 +1,6 @@
 from random import random
 
-from difficulty import Difficulty
+from .difficulty import Difficulty
 
 
 def chance(percent: float):

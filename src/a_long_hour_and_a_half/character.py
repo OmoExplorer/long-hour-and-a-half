@@ -1,10 +1,10 @@
 from random import choice
 
-from bladder import Bladder
-from difficulty import Difficulty
-from game_results import game_over
-from util import clamp
-from wear import Wear
+from .bladder import Bladder
+from .difficulty import Difficulty
+from .game_results import game_over
+from .util import clamp
+from .wear import Wear
 
 
 class Character:

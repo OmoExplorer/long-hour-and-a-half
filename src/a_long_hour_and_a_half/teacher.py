@@ -1,5 +1,5 @@
-from difficulty import Difficulty
-from util import chance
+from .difficulty import Difficulty
+from .util import chance
 
 
 class Teacher:

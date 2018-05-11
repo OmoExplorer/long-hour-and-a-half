@@ -1,4 +1,4 @@
-from util import clamp
+from .util import clamp
 
 
 class Wear:

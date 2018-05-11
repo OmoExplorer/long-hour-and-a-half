@@ -1,14 +1,14 @@
 from random import sample
 
-from character import Character
-from classmates import Classmates
-from day_state import DayState
-from difficulty import Difficulty
-from game_results import win
-from teacher import Teacher
-from time_ import Time
-from toilet import Toilet
-from util import chance
+from .character import Character
+from .classmates import Classmates
+from .day_state import DayState
+from .difficulty import Difficulty
+from .game_results import win
+from .teacher import Teacher
+from .time import Time
+from .toilet import Toilet
+from .util import chance
 
 
 def _generate_schedule():

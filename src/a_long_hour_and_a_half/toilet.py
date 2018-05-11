@@ -1,6 +1,6 @@
 from random import randint
 
-from util import difficulty_dependent, chance
+from .util import difficulty_dependent, chance
 
 
 class Toilet:
