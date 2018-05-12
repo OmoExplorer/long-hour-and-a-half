@@ -7,11 +7,6 @@ from .util import clamp, chance, difficulty_dependent
 class Bladder:
     """Character's urinary bladder."""
 
-    # @property
-    # def maximal_urine(self):
-    #     """Maximal urine volume in milliliters that this bladder can store."""
-    #     return self._maximal_urine
-
     @property
     def urine(self):
         """Current urine volume in milliliters."""
@@ -46,9 +41,9 @@ class Bladder:
 
     def __init__(self, day, character):
         values = {
-            EASY: (1750, 5, 8),
-            MEDIUM: (1500, 7, 10),
-            HARD: (1200, 9, 12),
+            EASY: (1400, 5, 8),
+            MEDIUM: (1200, 7, 10),
+            HARD: (1000, 9, 12),
         }
 
         self.maximal_urine, *self._urine_income_bounds = values[day.difficulty]
@@ -103,23 +98,24 @@ class Bladder:
                 self._day.character.require_thought('I need to pee slightly.',
                                                     'I need to pee. Maybe use a restroom?',
                                                     "I've got to pee a bit, but... Not really much.",
-                                                    "I've got to pee.", )
+                                                    "I've got to pee.")
         elif 0.5 < urine_ratio < 0.65:
             self._day.character.require_thought('Ugh... I need to pee quite badly.',
                                                 "I've got to pee! I'm somehow able to deal with it... "
                                                 "at least for now...",
-                                                "Damn, I've got to pee. That's annoying!", )
+                                                "Damn, I've got to pee. That's annoying!")
         elif 0.65 < urine_ratio < 0.8:
             self._day.character.require_thought('Argh! I need to pee badly!',
                                                 'I need to pee pretty badly.',
                                                 "I've got to pee! And this is a problem now!",
-                                                "Damn, I've got to pee really badly!", )
+                                                "Damn, I've got to pee really badly!")
         elif 0.8 < urine_ratio < 1:
             self._day.character.require_thought("Damn! I've got to pee REALLY badly!!!",
                                                 "I need to pee NOW!",
                                                 "I need to pee right NOW!",
                                                 "Need to pee, need to pee, need to pee...",
-                                                "Uhh! I've gotta go very badly! I don't know whether I'm able to hold it!!", )
+                                                "Uhh! I've gotta go very badly! "
+                                                "I don't know whether I'm able to hold it!!")
 
     def _add_urine(self):
         """Adds some urine."""
