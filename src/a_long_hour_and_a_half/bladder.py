@@ -51,72 +51,13 @@ class Bladder:
     def empty(self):
         """Empties this bladder and requires a corresponding character thought."""
         self.urine = 0
-        self._day.character.require_thought('Ahhhh... Sweet relief...',
-                                            'Oh yeah... I finally peed!',
-                                            'Yeahhhh... I was waiting for this for long.',
-                                            'Ahhhh... Finally...',
-                                            color='green')
+        self._day.character.thinker.think_about_peeing()
 
     def tick(self):
         """Game element tick function."""
-        self._think_about_fullness()
+        self._day.character.thinker.think_about_fullness()
 
         self._add_urine()
-
-    def _think_about_fullness(self):
-        urine_ratio = self.urine_decimal_ratio
-        if urine_ratio < 0.2 and self._day.state == DayState.LESSON:
-            if not self._day.teacher.testing:
-                self._day.character.require_thought(self._day.current_lesson() + ' is so boring!',
-                                                    "How much time is it? I can't wait for the lesson to finish!",
-                                                    'Bla-bla-bla... the teacher is so boring!')
-            else:
-                self._day.character.require_thought("What the hell is this test?",
-                                                    'This test is ridiculous.',
-                                                    'Hmm... Maybe A)... no, D)... I dunno.')
-        elif 0.2 < urine_ratio < 0.35 and self._day.state == DayState.LESSON:
-            if not self._day.teacher.testing:
-                self._day.character.require_thought(self._day.current_lesson() + ' is so boring!',
-                                                    "I've got to pee a bit, but... Not really much.",
-                                                    "How much time is it? I can't wait for the lesson to finish!", )
-            else:
-                self._day.character.require_thought("What the hell is this test?",
-                                                    'This test is ridiculous.',
-                                                    'Hmm... Maybe A)... no, D)... I dunno.')
-        elif 0.35 < urine_ratio < 0.5:
-            if self._day.state == DayState.LESSON:
-                if not self._day.teacher.testing:
-                    self._day.character.require_thought(
-                        self._day.current_lesson() + ' is so boring! Also I need to pee.',
-                        "I've got to pee a bit, but... Not really much.",
-                        "When this lesson will be over? I've got to pee.")
-                else:
-                    self._day.character.require_thought(
-                        "What the hell is this test? That slight peeing urges ain't helping.",
-                        'This test is ridiculous. And I have to pee a bit.',
-                        'Hmm... Maybe A)... no, D)... I dunno.')
-            else:
-                self._day.character.require_thought('I need to pee slightly.',
-                                                    'I need to pee. Maybe use a restroom?',
-                                                    "I've got to pee a bit, but... Not really much.",
-                                                    "I've got to pee.")
-        elif 0.5 < urine_ratio < 0.65:
-            self._day.character.require_thought('Ugh... I need to pee quite badly.',
-                                                "I've got to pee! I'm somehow able to deal with it... "
-                                                "at least for now...",
-                                                "Damn, I've got to pee. That's annoying!")
-        elif 0.65 < urine_ratio < 0.8:
-            self._day.character.require_thought('Argh! I need to pee badly!',
-                                                'I need to pee pretty badly.',
-                                                "I've got to pee! And this is a problem now!",
-                                                "Damn, I've got to pee really badly!")
-        elif 0.8 < urine_ratio < 1:
-            self._day.character.require_thought("Damn! I've got to pee REALLY badly!!!",
-                                                "I need to pee NOW!",
-                                                "I need to pee right NOW!",
-                                                "Need to pee, need to pee, need to pee...",
-                                                "Uhh! I've gotta go very badly! "
-                                                "I don't know whether I'm able to hold it!!")
 
     def _add_urine(self):
         """Adds some urine."""
@@ -160,7 +101,7 @@ class Sphincter:
         self._decrease_power()
         self._check_leak()
 
-        self._think_about_low_sphincter_power()
+        self._day.character.thinker.think_about_low_sphincter_power()
 
     def _decrease_power(self):
         if self._bladder.urine_decimal_ratio < 0.2:
@@ -181,17 +122,5 @@ class Sphincter:
         volume = randint(*self._leak_volume_bounds)
         self._day.character.pee_into_wear(volume)
 
-        self._day.character.require_thought("Oops! I'm peeing!",
-                                            "No, no, NO! I'm peeing!!!",
-                                            "Uh-oh... I have leaked...",
-                                            "Oops! I have leaked!",
-                                            "Damn, I can't help it, I'm leaking!!",
-                                            "Oh no, I have leaked! I won't last much time!",
-                                            "I barely can hold it... Ooooh, I feel wet...", )
+        self._day.character.thinker.think_about_leaking()
 
-    def _think_about_low_sphincter_power(self):
-        if self.power < 10:
-            self._day.character.require_thought("Oops... It's coming!",
-                                                "It's gotta come out!!!",
-                                                "Pee is coming!",
-                                                "Ouch! I can't hold it!", )

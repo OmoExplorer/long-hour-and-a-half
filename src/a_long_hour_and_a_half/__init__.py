@@ -156,11 +156,7 @@ def pee_in_wear(day):
     }
 
     if chance(result_chances["can't stop"][day.difficulty] * day.character.bladder.urine_decimal_ratio):
-        day.character.require_thought("Aaaaaah!!! I can't stop!",
-                                      "Aaaaaah!!! I can't stop peeing!",
-                                      "Aaaaaah!!! I can't stop the flow!",
-                                      "Aaaaaah!!! I can't stop it!",
-                                      color='red')
+        day.character.thinker.think_about_inability_to_stop_peeing()
         day.character.pee_into_wear(day.character.bladder.urine)
     elif chance(result_chances['peeing more'][day.difficulty] * day.character.bladder.urine_decimal_ratio):
         multiplier = {
@@ -169,16 +165,9 @@ def pee_in_wear(day):
             HARD: 1.7,
         }
         day.character.pee_into_wear(how_much * multiplier[day.difficulty])
-        day.character.require_thought("Damn! I peed a bit much than I was going to.",
-                                      "Uhhh! I hardly stopped peeing!",
-                                      "Uhhh! I hardly stopped the flow!",
-                                      "Ohhh... It was hard to stop.",
-                                      color='yellow')
+        day.character.thinker.think_about_peeing_more_than_intended()
     elif chance(result_chances["can't pee"][day.difficulty]):
-        day.character.require_thought("I can't start peeing.",
-                                      "I'm trying to pee, but I can't.",
-                                      "I can't force myself to pee right here and now.",
-                                      color='yellow')
+        day.character.thinker.think_about_inability_to_start_peeing()
     else:
         day.character.pee_into_wear(how_much)
 

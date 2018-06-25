@@ -1,8 +1,7 @@
-from random import choice
-
-from .bladder import Bladder
-from .enums import Difficulty, FEMALE
-from .game_results import game_over
+from .bladder import Bladder, Sphincter
+from .enums import FEMALE, EASY, MEDIUM, HARD
+from .game_end import game_over
+from .thinker import Thinker
 from .util import clamp
 from .wear import Wear
 
@@ -17,6 +16,7 @@ class Character:
         self.gender = FEMALE
         self.bladder = Bladder(day, self)
         self.sphincter = Sphincter(day, self.bladder)
+        self.thinker = Thinker(day)
 
         self.stay_after_lessons = False
         self.stay_on_break = False
@@ -73,8 +73,10 @@ class Character:
 
         self._holding_block_duration = max(0, self._holding_block_duration - 1)
 
-        self._think_about_embarrassment()
-        self._think_about_thirst()
+        if self.embarrassment > 5:
+            self.thinker.think_about_embarrassment()
+        if self.thirst > 75:
+            self.thinker.think_about_thirst()
 
     def pee_into_wear(self, how_much: int):
         self.bladder.urine -= how_much
@@ -94,22 +96,6 @@ class Character:
 
     def block_holding(self, turns):
         self._holding_block_duration += turns
-
-    def require_thought(self, *thoughts):
-        self.thoughts += '\n' + choice(thoughts)
-
-    def _think_about_embarrassment(self):
-        if self.embarrassment > 5:
-            self.require_thought("Oh... I'm so embarrassed...",
-                                 'I feel embarrassed...',
-                                 "Classmates know that I have to pee. That's very bad.")
-
-    def _think_about_thirst(self):
-        if self.thirst > 75:
-            self.require_thought("I'm thirsty.",
-                                 "I'm so thirsty...",
-                                 "I want to drink.",
-                                 "I need to drink.")
 
     @property
     def something_is_critical(self):

@@ -74,8 +74,7 @@ class Day:
         if event_chance(5):
             self.teacher.ask_character()
         if event_chance(2):
-            self.character.require_thought('What? Teacher is giving us some test!',
-                                           'Oops... Looks like we will write a test now.')
+            self.character.thinker.think_about_test()
             self.teacher.testing = True
 
     def current_lesson(self):
