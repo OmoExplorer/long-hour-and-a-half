@@ -10,28 +10,6 @@ from .wear import Wear
 class Character:
     _THINK_DELAY = 5
 
-    @property
-    def embarrassment(self):
-        return self._embarrassment
-
-    @embarrassment.setter
-    def embarrassment(self, value):
-        self._embarrassment = clamp(value, 1, 100)
-
-    @property
-    def thirst(self):
-        return self._thirst
-
-    @thirst.setter
-    def thirst(self, value):
-        self._thirst = clamp(value, 0, 100)
-        if self.thirst == 100:
-            self.drink(100)
-
-    @property
-    def holding_blocked(self):
-        return self._holding_block_duration != 0
-
     def __init__(self, day):
         self._day = day
 
@@ -59,6 +37,28 @@ class Character:
         self.outerwear = Wear('Jeans', 7, 12, 1.2)
         self._thirst = 0
         self._holding_block_duration = 0
+
+    @property
+    def embarrassment(self):
+        return self._embarrassment
+
+    @embarrassment.setter
+    def embarrassment(self, value):
+        self._embarrassment = clamp(value, 1, 100)
+
+    @property
+    def thirst(self):
+        return self._thirst
+
+    @thirst.setter
+    def thirst(self, value):
+        self._thirst = clamp(value, 0, 100)
+        if self.thirst == 100:
+            self.drink(100)
+
+    @property
+    def holding_blocked(self):
+        return self._holding_block_duration != 0
 
     def tick(self):
         self.thoughts = ''

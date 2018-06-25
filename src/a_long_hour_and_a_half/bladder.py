@@ -7,6 +7,23 @@ from .util import clamp, chance, difficulty_dependent
 class Bladder:
     """Character's urinary bladder."""
 
+    def __init__(self, day, character):
+        values = {
+            EASY: (1400, 2, 4),
+            MEDIUM: (1200, 4, 6),
+            HARD: (1000, 5, 7),
+        }
+
+        self.maximal_urine, *self._urine_income_bounds = values[day.difficulty]
+
+        if character.gender == FEMALE:
+            self.maximal_urine *= 0.9
+
+        self._urine = randint(0, self.maximal_urine / 2)
+        self._tummy_water = 0
+
+        self._day = day
+
     @property
     def urine(self):
         """Current urine volume in milliliters."""
@@ -37,23 +54,8 @@ class Bladder:
         self._day.character.require_thought('Ahhhh... Sweet relief...',
                                             'Oh yeah... I finally peed!',
                                             'Yeahhhh... I was waiting for this for long.',
-                                            'Ahhhh... Finally...')
-
-    def __init__(self, day, character):
-        values = {
-            EASY: (1400, 5, 8),
-            MEDIUM: (1200, 7, 10),
-            HARD: (1000, 9, 12),
-        }
-
-        self.maximal_urine, *self._urine_income_bounds = values[day.difficulty]
-        if character.gender == FEMALE:
-            self.maximal_urine *= 0.9
-        self._urine = randint(0, self.maximal_urine / 2)
-        self._tummy_water = 0
-        self.sphincter = Sphincter(day, self)
-
-        self._day = day
+                                            'Ahhhh... Finally...',
+                                            color='green')
 
     def tick(self):
         """Game element tick function."""
@@ -132,15 +134,6 @@ class Bladder:
 class Sphincter:
     """Bladder's sphincter."""
 
-    @property
-    def power(self):
-        """Power of this sphincter."""
-        return self._power
-
-    @power.setter
-    def power(self, value):
-        self._power = clamp(value, 0, 100)
-
     def __init__(self, day, bladder):
         values = {
             EASY: (10, 2, 6),
@@ -153,6 +146,15 @@ class Sphincter:
         self.incontinence = 1
         self._day = day
         self._bladder = bladder
+
+    @property
+    def power(self):
+        """Power of this sphincter."""
+        return self._power
+
+    @power.setter
+    def power(self, value):
+        self._power = clamp(value, 0, 100)
 
     def tick(self):
         self._decrease_power()

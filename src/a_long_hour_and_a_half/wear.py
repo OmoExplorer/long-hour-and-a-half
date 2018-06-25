@@ -2,14 +2,6 @@ from .util import clamp
 
 
 class Wear:
-    @property
-    def dryness(self):
-        return self._dryness
-
-    @dryness.setter
-    def dryness(self, value):
-        self._dryness = clamp(value, 0, self.maximal_dryness)
-
     def __init__(self, name, pressure, absorption, drying):
         self.name = name
         self.pressure = pressure
@@ -23,6 +15,14 @@ class Wear:
 
     def _dry(self):
         self.dryness += self.drying
+
+    @property
+    def dryness(self):
+        return self._dryness
+
+    @dryness.setter
+    def dryness(self, value):
+        self._dryness = clamp(value, 0, self.maximal_dryness)
 
     def __str__(self):
         return self.name

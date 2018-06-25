@@ -4,6 +4,11 @@ from functools import total_ordering
 # noinspection PyAttributeOutsideInit
 @total_ordering
 class Time:
+    def __init__(self, hours: int, minutes: int):
+        self._hours = hours
+        self._minutes = minutes
+        self._warp_minutes()
+
     @property
     def hours(self):
         return self._hours
@@ -24,11 +29,6 @@ class Time:
     @property
     def raw_minutes(self):
         return self.hours * 60 + self.minutes
-
-    def __init__(self, hours: int, minutes: int):
-        self.hours = hours
-        self.minutes = minutes
-        # self._warp_minutes()
 
     def _warp_minutes(self):
         if self.minutes > 59:
