@@ -6,19 +6,11 @@ from termcolor import colored
 
 from .day import Day
 from .enums import DayState, EASY, MEDIUM, HARD
-from .util import chance
+from .util import chance, cls, pass_
 
 
 # TODO: Refactor the whole file
 
-def cls():
-    """Clears console."""
-    os.system('cls' if os.name == 'nt' else 'clear')
-
-
-def pass_(_):
-    """Does nothing. Used for waiting action."""
-    pass
 
 
 def wait_few_minutes(day):
