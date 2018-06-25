@@ -136,17 +136,17 @@ class Thinker:
 
     def think_about_peeing(self):
         self.require_thought('Ahhhh... Sweet relief...',
-                                            'Oh yeah... I finally peed!',
-                                            'Yeahhhh... I was waiting for this for long.',
-                                            'Ahhhh... Finally...',
-                                            color='green')
+                             'Oh yeah... I finally peed!',
+                             'Yeahhhh... I was waiting for this for long.',
+                             'Ahhhh... Finally...',
+                             color='green')
 
     def think_about_inability_to_stop_peeing(self):
         self.require_thought("Aaaaaah!!! I can't stop!",
-                                      "Aaaaaah!!! I can't stop peeing!",
-                                      "Aaaaaah!!! I can't stop the flow!",
-                                      "Aaaaaah!!! I can't stop it!",
-                                      color='red')
+                             "Aaaaaah!!! I can't stop peeing!",
+                             "Aaaaaah!!! I can't stop the flow!",
+                             "Aaaaaah!!! I can't stop it!",
+                             color='red')
 
     def think_about_peeing_more_than_intended(self):
         self.require_thought("Damn! I peed a bit much than I was going to.",
@@ -183,4 +183,4 @@ class Thinker:
 
     def think_about_teacher_question(self):
         self.require_thought("Oh! Teacher asked me to answer a question. I don't know what to answer.",
-                        color='yellow')
+                             color='yellow')
