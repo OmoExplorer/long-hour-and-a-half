@@ -7,7 +7,7 @@ from .util import clamp, chance, difficulty_dependent
 class Bladder:
     """Character's urinary bladder."""
 
-    def __init__(self, day, character):
+    def __init__(self, day, gender):
         values = {
             EASY: (1400, 2, 4),
             MEDIUM: (1200, 4, 6),
@@ -16,7 +16,7 @@ class Bladder:
 
         self.maximal_urine, *self._urine_income_bounds = values[day.difficulty]
 
-        if character.gender == FEMALE:
+        if gender == FEMALE:
             self.maximal_urine *= 0.9
 
         self._urine = randint(0, self.maximal_urine / 2)
@@ -32,7 +32,7 @@ class Bladder:
     @urine.setter
     def urine(self, value):
         self._urine = clamp(value, 0, self.maximal_urine)
-        self._check_maximal_urine()
+        self._day.character.sphincter.die_if_bladder_is_too_full()
 
     @property
     def urine_decimal_ratio(self):
@@ -67,10 +67,6 @@ class Bladder:
             self.tummy_water -= 3
             self.urine += 3
 
-    def _check_maximal_urine(self):
-        if self.urine == self.maximal_urine:
-            self._day.character.sphincter.power = 0
-
     @property
     def is_fullness_critical(self):
         return self.urine_decimal_ratio > 0.8
@@ -79,7 +75,7 @@ class Bladder:
 class Sphincter:
     """Bladder's sphincter."""
 
-    def __init__(self, day, bladder):
+    def __init__(self, day):
         values = {
             EASY: (10, 2, 6),
             MEDIUM: (15, 6, 12),  # TODO
@@ -90,7 +86,6 @@ class Sphincter:
         self._leaking_level, *self._leak_volume_bounds = values[day.difficulty]
         self.incontinence = 1
         self._day = day
-        self._bladder = bladder
 
     @property
     def power(self):
@@ -108,13 +103,14 @@ class Sphincter:
         self._day.character.thinker.think_about_low_sphincter_power()
 
     def _decrease_power(self):
-        if self._bladder.urine_decimal_ratio < 0.2:
+        bladder = self._day.character.bladder
+        if bladder.urine_decimal_ratio < 0.2:
             self.power += difficulty_dependent(self._day, 8, 6, 4)
-        elif self._bladder.urine_decimal_ratio > 0.5:
+        elif bladder.urine_decimal_ratio > 0.5:
             self.power -= 1.8 \
                           * self.incontinence \
                           * self._day.character.embarrassment \
-                          * (self._bladder.urine / self._bladder.maximal_urine)
+                          * (bladder.urine / bladder.maximal_urine)
 
     def _check_leak(self):
         if self.power < self._leaking_level:
@@ -127,6 +123,11 @@ class Sphincter:
         self._day.character.pee_into_wear(volume)
 
         self._day.character.thinker.think_about_leaking()
+
+    def die_if_bladder_is_too_full(self):
+        bladder = self._day.character.bladder
+        if bladder.urine >= bladder.maximal_urine:
+            self._day.character.sphincter.power = 0
 
     @property
     def is_power_critical(self):

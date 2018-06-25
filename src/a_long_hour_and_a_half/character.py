@@ -14,8 +14,8 @@ class Character:
 
         self.name = 'Jane'
         self.gender = FEMALE
-        self.bladder = Bladder(day, self)
-        self.sphincter = Sphincter(day, self.bladder)
+        self.bladder = Bladder(day, self.gender)
+        self.sphincter = Sphincter(day)
         self.thinker = Thinker(day)
 
         self.stay_after_lessons = False
