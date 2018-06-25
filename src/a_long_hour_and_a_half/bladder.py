@@ -55,7 +55,7 @@ class Bladder:
 
     def tick(self):
         """Game element tick function."""
-        self._day.character.thinker.think_about_fullness()
+        self._day.character.thinker.think_about_bladder_fullness()
 
         self._add_urine()
 

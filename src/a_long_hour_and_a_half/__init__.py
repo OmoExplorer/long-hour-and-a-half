@@ -75,8 +75,9 @@ def create_bar(n, min_, max_, warning=False, critical=False):
 def print_data(day):
     character = day.character
     bladder = character.bladder
+    sphincter = character.sphincter
 
-    print(character.name, ', ', character.gender.value, sep='')
+    print(character.name, ', ', character.gender, sep='')
 
     print(f"{day.character.name}'s thoughts\n", character.thoughts, '\n', sep='')
 
@@ -87,9 +88,9 @@ def print_data(day):
 
     print('Tummy water\t\t\t', bladder.tummy_water, ' ml', sep='')
 
-    print('Sphincter power\t\t\t', round(bladder.sphincter.power), '%\t\t\t',
-          create_bar(bladder.sphincter.power, 0, 100,
-                     20 <= bladder.sphincter.power < 40, bladder.sphincter.is_power_critical), sep='')
+    print('Sphincter power\t\t\t', round(sphincter.power), '%\t\t\t',
+          create_bar(sphincter.power, 0, 100,
+                     20 <= sphincter.power < 40, sphincter.is_power_critical), sep='')
 
     print('Embarrassment\t\t\t', character.embarrassment, '%\t\t\t',
           create_bar(character.embarrassment, 0, 100), sep='')

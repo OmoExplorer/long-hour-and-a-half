@@ -81,7 +81,7 @@ class Thinker:
                                  color='yellow')
 
     def think_about_low_sphincter_power(self):
-        if self._day.character.bladder.sphincter.power < 10:
+        if self._day.character.sphincter.power < 10:
             self.require_thought("Oops... It's coming!",
                                  "It's gotta come out!!!",
                                  "Pee is coming!",
