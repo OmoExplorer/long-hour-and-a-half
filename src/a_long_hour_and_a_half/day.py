@@ -38,8 +38,6 @@ class Day:
         self.character = Character(self)
         self.state = DayState.LESSON
         self.hot_day = chance(50)
-        if self.hot_day:
-            print('Day is hot!')
         self.teacher = Teacher(self)
         self.classmates = Classmates(self)
         self.toilet = Toilet(self)

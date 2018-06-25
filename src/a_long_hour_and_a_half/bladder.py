@@ -41,7 +41,7 @@ class Bladder:
 
     @property
     def tummy_water(self):
-        """Current volume of water in tummy."""
+        """Current volume of water in tummy in milliliters."""
         return self._tummy_water
 
     @tummy_water.setter
@@ -70,6 +70,10 @@ class Bladder:
     def _check_maximal_urine(self):
         if self.urine == self.maximal_urine:
             self._day.character.sphincter.power = 0
+
+    @property
+    def is_fullness_critical(self):
+        return self.urine_decimal_ratio > 0.8
 
 
 class Sphincter:
@@ -124,3 +128,6 @@ class Sphincter:
 
         self._day.character.thinker.think_about_leaking()
 
+    @property
+    def is_power_critical(self):
+        return self.power < 20

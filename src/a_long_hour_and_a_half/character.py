@@ -90,7 +90,7 @@ class Character:
         if self.outerwear.dryness == 0:
             game_over(self._day)
 
-    def drink(self, how_much_percent: int):
+    def drink(self, how_much_percent):
         self.thirst -= how_much_percent
         self.bladder.tummy_water += how_much_percent * 3
 

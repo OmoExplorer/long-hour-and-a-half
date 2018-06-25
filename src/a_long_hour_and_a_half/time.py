@@ -1,7 +1,6 @@
 from functools import total_ordering
 
 
-# noinspection PyAttributeOutsideInit
 @total_ordering
 class Time:
     def __init__(self, hours: int, minutes: int):

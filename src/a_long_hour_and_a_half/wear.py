@@ -26,3 +26,7 @@ class Wear:
 
     def __str__(self):
         return self.name
+
+    @property
+    def is_dryness_critical(self):
+        return self.dryness / self.maximal_dryness < 0.3
