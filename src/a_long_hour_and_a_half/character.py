@@ -43,13 +43,13 @@ class Character:
         self._embarrassment = 1
         self.thoughts = ''
 
-        if day.difficulty == Difficulty.EASY:
+        if day.difficulty == EASY:
             self._embarrassment_decay = 3
             self._thirst_increase = 1
-        elif day.difficulty == Difficulty.MEDIUM:
+        elif day.difficulty == MEDIUM:
             self._embarrassment_decay = 3
             self._thirst_increase = 1.5
-        elif day.difficulty == Difficulty.HARD:
+        elif day.difficulty == HARD:
             self._embarrassment_decay = 3
             self._thirst_increase = 2
 

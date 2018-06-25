@@ -1,13 +1,13 @@
-from .enums import Difficulty
+from .enums import EASY, MEDIUM, HARD
 from .util import chance
 
 
 class Teacher:
     def __init__(self, day):
         values = {
-            Difficulty.EASY: (4, 35),
-            Difficulty.MEDIUM: (3, 15),
-            Difficulty.HARD: (2, 5)
+            EASY: (4, 35),
+            MEDIUM: (3, 15),
+            HARD: (2, 5)
         }
 
         self._ask_toilet_attempts, self._toilet_allow_chance = values[day.difficulty]

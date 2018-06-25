@@ -1,6 +1,6 @@
 from random import randint
 
-from .enums import DayState, EASY, MEDIUM, HARD, FEMALE
+from .enums import EASY, MEDIUM, HARD, FEMALE
 from .util import clamp, chance, difficulty_dependent
 
 

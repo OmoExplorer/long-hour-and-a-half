@@ -3,8 +3,8 @@ from random import sample
 
 from .character import Character
 from .classmates import Classmates
-from .enums import DayState, Difficulty
-from .game_results import win
+from .enums import DayState, MEDIUM
+from .game_end import win
 from .teacher import Teacher
 from .time import Time
 from .toilet import Toilet
@@ -32,7 +32,7 @@ def _generate_schedule():
 
 class Day:
     def __init__(self):
-        self.difficulty = Difficulty.MEDIUM
+        self.difficulty = MEDIUM
         self.schedule = _generate_schedule()
         self.time = Time(7, 40)
         self.character = Character(self)
