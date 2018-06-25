@@ -1,4 +1,5 @@
-from .bladder import Bladder, Sphincter
+from .bladder import Bladder
+from .sphincter import Sphincter
 from .enums import FEMALE, EASY, MEDIUM, HARD
 from .game_end import game_over
 from .thinker import Thinker
