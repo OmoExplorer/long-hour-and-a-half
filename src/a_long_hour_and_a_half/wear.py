@@ -1,3 +1,4 @@
+from .console_ui import BarStyle
 from .util import clamp
 
 
@@ -30,3 +31,11 @@ class Wear:
     @property
     def is_dryness_critical(self):
         return self.dryness / self.maximal_dryness < 0.3
+
+    @property
+    def dryness_status(self):
+        if self.dryness / self.maximal_dryness < 0.5:
+            return BarStyle.WARNING
+        if self.is_dryness_critical:
+            return BarStyle.CRITICAL
+        return BarStyle.NORMAL

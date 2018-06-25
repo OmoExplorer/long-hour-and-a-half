@@ -4,6 +4,8 @@ import os
 import colorama
 from termcolor import colored
 
+from .console_ui import create_bar
+
 from .actions import wait_few_minutes, ask_to_go_out, hold, pee_in_wear, go_to_toilet, drink
 from .day import Day
 from .enums import DayState, EASY, MEDIUM, HARD
@@ -68,15 +70,6 @@ def print_actions(actions):
     print()
 
 
-def main_menu(day):
-    print('n: New game')
-    print('s: Save')
-    print('l: Load')
-    print('r: Reset')
-    print('q: Quit')
-    ask_action(day)
-
-
 def ask_action(day):
     actions = tuple(prepare_actions(day))
     print_actions(actions)
@@ -135,9 +128,6 @@ def main():
     #     load_game()
     # elif choice == 'c':
     #     character_editor()
-    colorama.init()
-    os.system('mode con: cols=110 lines=40')
-    atexit.register(lambda: os.system('pause'))
 
     day = Day()
     day.tick()

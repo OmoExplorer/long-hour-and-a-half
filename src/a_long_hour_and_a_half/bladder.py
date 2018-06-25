@@ -1,5 +1,6 @@
 from random import randint
 
+from .console_ui import BarStyle
 from .enums import EASY, MEDIUM, HARD, FEMALE
 from .util import clamp, chance, difficulty_dependent
 
@@ -71,6 +72,14 @@ class Bladder:
     def is_fullness_critical(self):
         return self.urine_decimal_ratio > 0.8
 
+    @property
+    def fullness_status(self):
+        if 0.6 <= self.urine_decimal_ratio < 0.8:
+            return BarStyle.WARNING
+        if self.is_fullness_critical:
+            return BarStyle.CRITICAL
+        return BarStyle.NORMAL
+
 
 class Sphincter:
     """Bladder's sphincter."""
@@ -132,3 +141,11 @@ class Sphincter:
     @property
     def is_power_critical(self):
         return self.power < 20
+
+    @property
+    def power_status(self):
+        if 20 <= self.power < 40:
+            return BarStyle.WARNING
+        if self.is_power_critical:
+            return BarStyle.CRITICAL
+        return BarStyle.NORMAL
