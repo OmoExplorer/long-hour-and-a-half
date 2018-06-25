@@ -23,15 +23,15 @@ def pass_(_):
 
 def wait_few_minutes(day):
     while True:
-        mins = input('How much minutes?\n'
-                     '(Type "e" to wait until the lesson finish\n'
-                     '"c" - wait until something goes bad\n'
-                     '"b" wait until a break) ').strip().lower()
+        inp = input('How much minutes?\n'
+                    '(Type "e" to wait until the lesson finish\n'
+                    '"c" - until something goes bad\n'
+                    '"b" - until a break) ').strip().lower()
 
-        if not ((len(mins) == 1 and mins in 'ecb') or mins.isdigit()):
+        if not ((len(inp) == 1 and inp in 'ecb') or inp.isdigit()):
             continue
 
-        if mins == 'e':
+        if inp == 'e':
             to_wait = day.time_until_lesson_finish.raw_minutes + 1
 
             for _ in range(to_wait // 2 - 1):
@@ -39,21 +39,23 @@ def wait_few_minutes(day):
                 if day.character.something_is_critical:
                     return
 
-        if mins == 'c':
+        if inp == 'c':
             while not day.character.something_is_critical:
                 day.tick()
 
-        if mins == 'b':
+        if inp == 'b':
             while day.current_lesson().strip() != 'Break' and not day.character.something_is_critical:
                 day.tick()
 
-        if mins.isdigit():
-            to_wait = int(mins)
+        if inp.isdigit():
+            to_wait = int(inp)
 
             for _ in range(to_wait // 2 - 1):
                 day.tick()
                 if day.character.something_is_critical:
                     return
+
+        return  # because we're in a endless loop
 
 
 def create_bar(n, min_, max_, warning=False, critical=False):
@@ -96,7 +98,7 @@ def print_data(day):
           create_bar(character.embarrassment, 0, 100), sep='')
 
     print('Thirst\t\t\t\t', round(character.thirst), '%\t\t\t', create_bar(character.thirst, 0, 100),
-          colored('\tHot day', 'yellow') if day.hot_day else '', sep='')
+          colored('\tHot day: must drink more', 'yellow') if day.hot_day else '', sep='')
 
     print('Underwear\t\t\t', character.underwear, ', ', round(character.underwear.dryness), '/',
           round(character.underwear.maximal_dryness), ' ml\t',
@@ -303,6 +305,9 @@ def main():
     #     load_game()
     # elif choice == 'c':
     #     character_editor()
+    colorama.init()
+    os.system('mode con: cols=110 lines=40')
+    atexit.register(lambda: os.system('pause'))
 
     day = Day()
     day.tick()
@@ -313,9 +318,3 @@ def main():
         day.tick()
         ask_action(day)
 
-
-colorama.init()
-os.system('mode con: cols=100 lines=40')
-atexit.register(lambda: os.system('pause'))
-
-main()
