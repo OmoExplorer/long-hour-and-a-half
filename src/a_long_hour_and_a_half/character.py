@@ -38,6 +38,8 @@ class Character:
         self.name = 'Jane'
         self.gender = FEMALE
         self.bladder = Bladder(day, self)
+        self.sphincter = Sphincter(day, self.bladder)
+
         self.stay_after_lessons = False
         self.stay_on_break = False
         self._embarrassment = 1
@@ -62,6 +64,7 @@ class Character:
         self.thoughts = ''
 
         self.bladder.tick()
+        self.sphincter.tick()
         self.underwear.tick()
         self.outerwear.tick()
 
@@ -107,3 +110,10 @@ class Character:
                                  "I'm so thirsty...",
                                  "I want to drink.",
                                  "I need to drink.")
+
+    @property
+    def something_is_critical(self):
+        return self.bladder.is_fullness_critical \
+               or self.sphincter.is_power_critical \
+               or self.underwear.is_dryness_critical \
+               or self.outerwear.is_dryness_critical

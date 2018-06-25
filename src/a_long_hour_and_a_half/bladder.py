@@ -60,7 +60,6 @@ class Bladder:
         self._think_about_fullness()
 
         self._add_urine()
-        self.sphincter.tick()
 
     def _think_about_fullness(self):
         urine_ratio = self.urine_decimal_ratio
@@ -127,7 +126,7 @@ class Bladder:
 
     def _check_maximal_urine(self):
         if self.urine == self.maximal_urine:
-            self.sphincter.power = 0
+            self._day.character.sphincter.power = 0
 
 
 class Sphincter:
