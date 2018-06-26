@@ -34,7 +34,6 @@ def _generate_schedule():
 class GameState:
     def __init__(self, game):
         self.game = game
-        self.actions = []
         self.difficulty = MEDIUM
         self.schedule = _generate_schedule()
         self.time = Time(7, 40)
@@ -45,6 +44,8 @@ class GameState:
         self.classmates = Classmates(self)
         self.toilet = Toilet(self)
         self._previous_lesson = self.current_lesson()
+
+        self.actions = self.update_actions()
 
     def tick(self):
         self.character.tick()

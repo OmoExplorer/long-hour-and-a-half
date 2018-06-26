@@ -20,7 +20,7 @@ class Thinker:
     def think_about_bladder_fullness(self):
         urine_ratio = self._day.character.bladder.urine_decimal_ratio
 
-        if urine_ratio < 0.2 and self._day.state == StateMode.LESSON:
+        if urine_ratio < 0.2 and self._day.mode == StateMode.LESSON:
             if self._day.teacher.testing:
                 self.require_thought("What the hell is this test?",
                                      'This test is ridiculous.',
@@ -30,7 +30,7 @@ class Thinker:
                                      "How much time is it? I can't wait for the lesson to finish!",
                                      'Bla-bla-bla... the teacher is so boring!')
 
-        elif 0.2 < urine_ratio < 0.35 and self._day.state == StateMode.LESSON:
+        elif 0.2 < urine_ratio < 0.35 and self._day.mode == StateMode.LESSON:
             if self._day.teacher.testing:
                 self.require_thought("What the hell is this test?",
                                      'This test is ridiculous.',
@@ -41,7 +41,7 @@ class Thinker:
                                      "How much time is it? I can't wait for the lesson to finish!")
 
         elif 0.35 < urine_ratio < 0.5:
-            if self._day.state == StateMode.LESSON:
+            if self._day.mode == StateMode.LESSON:
                 if self._day.teacher.testing:
                     self.require_thought(
                         "What the hell is this test? That slight peeing urges ain't helping.",
