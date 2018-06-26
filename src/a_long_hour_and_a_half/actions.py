@@ -1,55 +1,70 @@
-from a_long_hour_and_a_half import chance, EASY, MEDIUM, HARD
+from collections import namedtuple
+
+from .enums import EASY, MEDIUM, HARD
+from .util import chance
+
+Action = namedtuple('Action', 'desc do')
 
 
-def wait_few_minutes(day):
+def do_wait_few_minutes(state):
+    ui = state.game.ui
     while True:
-        inp = input('How much minutes?\n'
-                    '(Type "e" to wait until the lesson finish\n'
-                    '"c" - until something goes bad\n'
-                    '"b" - until a break) ').strip().lower()
+        inp = ui.input('How much minutes?\n'
+                       '(Type "e" to wait until the lesson finish\n'
+                       '"c" - until something goes bad\n'
+                       '"b" - until a break) ').strip().lower()
 
         if not ((len(inp) == 1 and inp in 'ecb') or inp.isdigit()):
             continue
 
         if inp == 'e':
-            to_wait = day.time_until_lesson_finish.raw_minutes + 1
+            to_wait = state.time_until_lesson_finish.raw_minutes + 1
 
             for _ in range(to_wait // 2 - 1):
-                day.tick()
-                if day.character.something_is_critical:
+                state.tick()
+                if state.character.something_is_critical:
                     return
 
         if inp == 'c':
-            while not day.character.something_is_critical:
-                day.tick()
+            while not state.character.something_is_critical:
+                state.tick()
 
         if inp == 'b':
-            while day.current_lesson().strip() != 'Break' and not day.character.something_is_critical:
-                day.tick()
+            while state.current_lesson().strip() != 'Break' and not state.character.something_is_critical:
+                state.tick()
 
         if inp.isdigit():
             to_wait = int(inp)
 
             for _ in range(to_wait // 2 - 1):
-                day.tick()
-                if day.character.something_is_critical:
+                state.tick()
+                if state.character.something_is_critical:
                     return
 
         return  # because we're in a endless loop
 
 
-def ask_to_go_out(day):
-    if day.teacher.ask_toilet():
-        day.character.bladder.empty()
+wait_few_minutes = Action('Wait few minutes', do_wait_few_minutes)
 
 
-def hold(day):
-    day.character.bladder.sphincter.power += 10
+def do_ask_to_go_out(state):
+    if state.teacher.ask_toilet():
+        state.character.bladder.empty()
+
+
+ask_to_go_out = Action('Ask to go out', do_ask_to_go_out)
+
+
+def do_hold(state):
+    state.character.bladder.sphincter.power += 10
     if chance(12):
-        day.classmates.notice_holding()
+        state.classmates.notice_holding()
 
 
-def pee_in_wear(day):
+hold = Action('Hold it', do_hold)
+
+
+def do_pee_in_wear(state):
     how_much = int(input('How much ml to pee? '))
 
     result_chances = {
@@ -70,26 +85,25 @@ def pee_in_wear(day):
         },
     }
 
-    if chance(result_chances["can't stop"][day.difficulty] * day.character.bladder.urine_decimal_ratio):
-        day.character.thinker.think_about_inability_to_stop_peeing()
-        day.character.pee_into_wear(day.character.bladder.urine)
-    elif chance(result_chances['peeing more'][day.difficulty] * day.character.bladder.urine_decimal_ratio):
+    if chance(result_chances["can't stop"][state.difficulty] * state.character.bladder.urine_decimal_ratio):
+        state.character.thinker.think_about_inability_to_stop_peeing()
+        state.character.pee_into_wear(state.character.bladder.urine)
+    elif chance(result_chances['peeing more'][state.difficulty] * state.character.bladder.urine_decimal_ratio):
         multiplier = {
             EASY: 1.2,
             MEDIUM: 1.4,
             HARD: 1.7,
         }
-        day.character.pee_into_wear(how_much * multiplier[day.difficulty])
-        day.character.thinker.think_about_peeing_more_than_intended()
-    elif chance(result_chances["can't pee"][day.difficulty]):
-        day.character.thinker.think_about_inability_to_start_peeing()
+        state.character.pee_into_wear(how_much * multiplier[state.difficulty])
+        state.character.thinker.think_about_peeing_more_than_intended()
+    elif chance(result_chances["can't pee"][state.difficulty]):
+        state.character.thinker.think_about_inability_to_start_peeing()
     else:
-        day.character.pee_into_wear(how_much)
+        state.character.pee_into_wear(how_much)
 
 
-def go_to_toilet(day):
-    day.toilet.use()
+pee_in_wear = Action('Pee right where you are', do_pee_in_wear)
 
+go_to_toilet = Action('Use toilet', lambda state: state.toilet.use())
 
-def drink(day):
-    day.character.drink(day.character.thirst)
+drink = Action('Drink', lambda state: state.character.drink(state.character.thirst))
