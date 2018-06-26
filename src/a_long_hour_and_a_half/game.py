@@ -12,5 +12,5 @@ class Game:
 
     def mainloop(self):
         while self.state.mode != StateMode.END:
-            self.ui.turn().do()
+            self.ui.turn().do(self.state)
             self.state.tick()
