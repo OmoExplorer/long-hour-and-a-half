@@ -30,8 +30,10 @@ def _generate_schedule():
     return [_Lesson(*x) for x in zip(picked_subjects, times)]
 
 
-    def __init__(self):
 class GameState:
+    def __init__(self, game):
+        self.game = game
+        self.actions = []
         self.difficulty = MEDIUM
         self.schedule = _generate_schedule()
         self.time = Time(7, 40)
