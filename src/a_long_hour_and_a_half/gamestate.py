@@ -1,6 +1,6 @@
-from collections import namedtuple
 from random import sample
 
+from .actions import *
 from .character import Character
 from .classmates import Classmates
 from .enums import StateMode, MEDIUM
@@ -77,23 +77,48 @@ class GameState:
             self.character.thinker.think_about_test()
             self.teacher.testing = True
 
+        self.actions = self.update_actions()
+
+    def update_actions(self):
+        if self.mode == StateMode.LESSON:
+            holding_blocked = self.character.holding_blocked
+
+            if self.current_lesson() == 'PE' or holding_blocked:
+                actions = [
+                    wait_2_minutes, wait_few_minutes,
+                    ask_to_go_out if not self.teacher.upset and not holding_blocked else None,
+                    pee_in_wear if not holding_blocked else None,
+                    drink if not holding_blocked else None
+                ]
+                return list(filter(lambda it: it is not None, actions))
+
+            else:
+                actions = [
+                    wait_2_minutes, wait_few_minutes,
+                    ask_to_go_out if not self.teacher.upset else None,
+                    hold, pee_in_wear, drink
+                ]
+                return list(filter(lambda it: it is not None, actions))
+
+        elif self.mode == StateMode.BREAK:
+            return [wait_2_minutes, wait_few_minutes, go_to_toilet, hold, pee_in_wear, drink]
+
+        elif self.mode == StateMode.BREAK_PUNISHMENT:
+            return [wait_2_minutes, wait_few_minutes, hold, pee_in_wear, drink]
+
+        else:
+            return []
+
+
     def current_lesson(self):
         for i in range(len(self.schedule)):
             beginning_time, end_time = self.schedule[i][1]
             if beginning_time <= self.time <= end_time:
-                return self.schedule[i].name
+                return self.schedule[i][0]
 
         return 'Day is over'
 
+
     @property
     def time_until_lesson_finish(self):
-        return next(filter(lambda l: l[0] == self.current_lesson(), self.schedule)).timebounds[1] - self.time
-
-
-if __name__ == '__main__':
-    day = GameState()
-    print(day.schedule)
-    while day.time < Time(13, 45):
-        print(day.time, day.current_lesson())
-        assert day.current_lesson() is not None
-        day.time += Time(0, 1)
+        return next(filter(lambda l: l[0] == self.current_lesson(), self.schedule))[1][1] - self.time

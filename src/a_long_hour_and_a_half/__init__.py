@@ -14,53 +14,6 @@ from .game import Game
 
 # TODO: Refactor the whole file
 
-
-def prepare_actions(day):
-    if day.state == StateMode.LESSON:
-        holding_blocked = day.character.holding_blocked
-
-        if day.current_lesson() == 'PE' or holding_blocked:
-            actions = [
-                ('Wait 2 minutes', pass_),
-                ('Wait some time...', wait_few_minutes),
-                ('Ask to go out for toilet', ask_to_go_out)
-                if not day.teacher.upset and not holding_blocked else None,
-                (f'Pee in the {day.character.underwear.name.lower()}', pee_in_wear) if not holding_blocked else None,
-                ('Drink', drink) if not holding_blocked else None
-            ]
-            return filter(lambda it: it is not None, actions)
-
-        else:
-            actions = [
-                ('Wait 2 minutes', pass_),
-                ('Wait some time...', wait_few_minutes),
-                ('Ask to go out for toilet', ask_to_go_out) if not day.teacher.upset else None,
-                ('Hold pee', hold),
-                (f'Pee in the {day.character.underwear.name.lower()}',
-                 pee_in_wear),
-                ('Drink', drink)
-            ]
-            return filter(lambda it: it is not None, actions)
-
-    elif day.state == StateMode.BREAK:
-        return ('Wait 2 minutes', pass_), \
-               ('Wait some time...', wait_few_minutes), \
-               ('Go to toilet', go_to_toilet), \
-               ('Hold pee', hold), \
-               (f'Pee in the {day.character.underwear.name.lower()}', pee_in_wear), \
-               ('Drink', drink)
-
-    elif day.state == StateMode.BREAK_PUNISHMENT:
-        return ('Wait 2 minutes', pass_), \
-               ('Wait some time...', wait_few_minutes), \
-               ('Hold pee', hold), \
-               (f'Pee in the {day.character.underwear.name.lower()}', pee_in_wear), \
-               ('Drink', drink)
-
-    else:
-        return ()
-
-
 def new_game():
     ...
 
