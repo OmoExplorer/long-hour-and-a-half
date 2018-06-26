@@ -1,6 +1,6 @@
 class UI:
-    def __init__(self, game_state):
-        self._game_state = game_state
+    def __init__(self, game):
+        self._game = game
 
     def update_character_stats(self):
         pass
@@ -12,4 +12,7 @@ class UI:
         pass
 
     def get_action(self):
+        pass
+
+    def input(self, prompt):
         pass
