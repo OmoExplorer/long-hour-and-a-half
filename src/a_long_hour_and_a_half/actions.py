@@ -18,10 +18,10 @@ wait_2_minutes = Action('Wait 2 minutes', do_wait_2_mins)
 def do_wait_few_minutes(state):
     ui = state.game.ui
     while True:
-        inp = ui.input('How much minutes?\n'
-                       '(Type "e" to wait until the lesson finish\n'
-                       '"c" - until something goes bad\n'
-                       '"b" - until a break) ').strip().lower()
+        inp = ui.input("How much minutes?\n"
+                       "(Type \"e\" to wait until this class's finish\n"
+                       "\"c\" - until something goes bad\n"
+                       "\"b\" - until a break) > ").strip().lower()
 
         if not ((len(inp) == 1 and inp in 'ecb') or inp.isdigit()):
             continue
