@@ -30,8 +30,8 @@ def _generate_schedule():
     return [_Lesson(*x) for x in zip(picked_subjects, times)]
 
 
-class Day:
     def __init__(self):
+class GameState:
         self.difficulty = MEDIUM
         self.schedule = _generate_schedule()
         self.time = Time(7, 40)
@@ -89,7 +89,7 @@ class Day:
 
 
 if __name__ == '__main__':
-    day = Day()
+    day = GameState()
     print(day.schedule)
     while day.time < Time(13, 45):
         print(day.time, day.current_lesson())

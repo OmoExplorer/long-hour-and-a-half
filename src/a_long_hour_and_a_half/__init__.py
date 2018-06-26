@@ -7,7 +7,7 @@ from termcolor import colored
 from .console_ui import create_bar
 
 from .actions import wait_few_minutes, ask_to_go_out, hold, pee_in_wear, go_to_toilet, drink
-from .day import Day
+from .gamestate import GameState
 from .enums import DayState, EASY, MEDIUM, HARD
 from .util import chance, cls, pass_
 
@@ -129,7 +129,7 @@ def main():
     # elif choice == 'c':
     #     character_editor()
 
-    day = Day()
+    day = GameState()
     day.tick()
 
     while day.state != DayState.END:
