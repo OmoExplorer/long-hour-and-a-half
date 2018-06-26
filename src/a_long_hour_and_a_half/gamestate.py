@@ -1,3 +1,4 @@
+from collections import namedtuple
 from random import sample
 
 from .actions import *
@@ -109,7 +110,6 @@ class GameState:
         else:
             return []
 
-
     def current_lesson(self):
         for i in range(len(self.schedule)):
             beginning_time, end_time = self.schedule[i][1]
@@ -117,7 +117,6 @@ class GameState:
                 return self.schedule[i][0]
 
         return 'Day is over'
-
 
     @property
     def time_until_lesson_finish(self):
