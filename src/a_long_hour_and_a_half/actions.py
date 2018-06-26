@@ -3,7 +3,16 @@ from collections import namedtuple
 from .enums import EASY, MEDIUM, HARD
 from .util import chance
 
+__all__ = 'wait_few_minutes ask_to_go_out hold pee_in_wear go_to_toilet drink wait_2_mins'
+
 Action = namedtuple('Action', 'desc do')
+
+
+def do_wait_2_mins(_):
+    pass
+
+
+wait_2_minutes = Action('Wait 2 minutes', do_wait_2_mins)
 
 
 def do_wait_few_minutes(state):
