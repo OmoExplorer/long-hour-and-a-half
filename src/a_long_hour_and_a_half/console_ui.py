@@ -149,3 +149,5 @@ class ConsoleUI(UI):
         elif inp == 'q':
             atexit.unregister(pause)
             exit()
+
+    input = input
