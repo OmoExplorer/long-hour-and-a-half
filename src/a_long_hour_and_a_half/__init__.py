@@ -5,11 +5,11 @@ import colorama
 from termcolor import colored
 
 from .console_ui import create_bar
-
 from .actions import wait_few_minutes, ask_to_go_out, hold, pee_in_wear, go_to_toilet, drink
 from .gamestate import GameState
 from .enums import StateMode, EASY, MEDIUM, HARD
-from .util import chance, cls, pass_
+from .util import chance, pass_
+from .game import Game
 
 
 # TODO: Refactor the whole file
@@ -61,46 +61,6 @@ def prepare_actions(day):
         return ()
 
 
-def print_actions(actions):
-    print()
-    for n, action in enumerate(actions, 1):
-        print(n, ': ', action[0], sep='')
-    print()
-    print('m: Main menu')
-    print()
-
-
-def ask_action(day):
-    actions = tuple(prepare_actions(day))
-    print_actions(actions)
-
-    action = input('> ')
-    if action == 'm':
-        main_menu(day)
-    elif action == 'n':
-        new_game()
-    elif action == 's':
-        save()
-    elif action == 'l':
-        load()
-    elif action == 'r':
-        main()
-    elif action == 'q':
-        exit()
-    else:
-        try:
-            selected = int(action)
-        except ValueError:
-            selected = 0
-        while (selected - 1) not in range(len(actions)):
-            try:
-                selected = int(input('> '))
-            except ValueError:
-                selected = 0
-
-        actions[selected - 1][1](day)
-
-
 def new_game():
     ...
 
@@ -129,12 +89,13 @@ def main():
     # elif choice == 'c':
     #     character_editor()
 
-    day = GameState()
-    day.tick()
-
-    while day.mode != StateMode.END:
-        cls()
-        print_data(day)
-        day.tick()
-        ask_action(day)
+    # day = GameState()
+    # day.tick()
+    #
+    # while day.mode != StateMode.END:
+    #     cls()
+    #     print_data(day)
+    #     day.tick()
+    #     ask_action(day)
+    Game()
 

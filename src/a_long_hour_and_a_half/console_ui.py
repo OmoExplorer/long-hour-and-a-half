@@ -14,6 +14,10 @@ def pause():
     os.system('pause')
 
 
+def clear_console():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+
 BAR_LENGTH_IN_SECTIONS = 20
 
 
@@ -48,7 +52,9 @@ class ConsoleUI(UI):
         atexit.register(pause)
 
     def turn(self):
+        clear_console()
         self.update_character_stats()
+        self.print_actions()
         return self.get_action()
 
     def update_character_stats(self):
@@ -99,6 +105,14 @@ class ConsoleUI(UI):
         print()
 
         print('Lesson\t\t\t\t', stt.current_lesson(), ' [Testing]' if stt.teacher.testing else '', sep='')
+
+    def print_actions(self):
+        print()
+        for n, action in enumerate(self._game.state.actions, 1):
+            print(n, ': ', action[0], sep='')
+        print()
+        print('m: Main menu')
+        print()
 
     def get_action(self):
         actions = self._game.state.actions
