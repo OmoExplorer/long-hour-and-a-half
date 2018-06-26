@@ -47,8 +47,12 @@ class ConsoleUI(UI):
         os.system('mode con: cols=110 lines=40')
         atexit.register(pause)
 
+    def turn(self):
+        self.update_character_stats()
+        return self.get_action()
+
     def update_character_stats(self):
-        stt = self._game_state
+        stt = self._game.state
 
         character = stt.character
         bladder = character.bladder
@@ -97,29 +101,37 @@ class ConsoleUI(UI):
         print('Lesson\t\t\t\t', stt.current_lesson(), ' [Testing]' if stt.teacher.testing else '', sep='')
 
     def get_action(self):
-        ...
-
-    def show_main_menu(self):
-        print('n: New game')
-        print('s: Save')
-        print('l: Load')
-        print('r: Reset')
-        print('q: Quit')
-        print('x: Close main menu')
-
+        actions = self._game.state.actions
         while True:
-            inp = input('> ').strip().lower()
+            inp = input('> ')
+            if len(inp) == 1 and inp in 'mnslrq':
+                self.show_main_menu(inp)
+                continue
+            try:
+                inp = int(inp)
+            except:
+                continue
 
-            if inp == 'n':
-                ...
-            elif inp == 's':
-                ...
-            elif inp == 'l':
-                ...
-            elif inp == 'r':
-                ...
-            elif inp == 'q':
-                atexit.unregister(pause)
-                exit()
-            elif inp == 'x':
-                return
+            if inp not in range(1, len(actions) + 1):
+                continue
+
+            return actions[inp - 1]
+
+    def show_main_menu(self, inp):
+        if inp == 'm':
+            print('n: New game')
+            print('s: Save')
+            print('l: Load')
+            print('r: Reset')
+            print('q: Quit')
+        elif inp == 'n':
+            ...
+        elif inp == 's':
+            ...
+        elif inp == 'l':
+            ...
+        elif inp == 'r':
+            ...
+        elif inp == 'q':
+            atexit.unregister(pause)
+            exit()
