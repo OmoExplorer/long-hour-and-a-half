@@ -2,11 +2,11 @@ from random import choice
 
 from termcolor import colored
 
-from .enums import DayState
+from .enums import StateMode
 
 
 def game_over(day):
-    day.state = DayState.END
+    day.state = StateMode.END
 
     quotes = [
         'I peed too much... Now everyone will see it...',
@@ -27,5 +27,5 @@ def game_over(day):
 
 
 def win(day):
-    day.state = DayState.END
+    day.state = StateMode.END
     print(colored('You win!', 'blue', 'on_green', ['bold']))

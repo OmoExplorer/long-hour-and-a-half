@@ -1,7 +1,7 @@
 from enum import Enum, auto
 
 
-class DayState(Enum):
+class StateMode(Enum):
     LESSON = auto()
     BREAK = auto()
     BREAK_PUNISHMENT = auto()

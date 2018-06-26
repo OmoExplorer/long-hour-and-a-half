@@ -3,7 +3,7 @@ from random import sample
 
 from .character import Character
 from .classmates import Classmates
-from .enums import DayState, MEDIUM
+from .enums import StateMode, MEDIUM
 from .game_end import win
 from .teacher import Teacher
 from .time import Time
@@ -18,7 +18,7 @@ def _generate_schedule():
 
     picked_subjects = sample(subjects, 5)
     picked_subjects.insert(2, 'Break')
-    picked_subjects.insert(5, 'Break ')
+    picked_subjects.insert(5, 'Break ')  # With a space at the end to distinguish with the first break
     times = [(Time(7, 38), Time(8, 45)),
              (Time(8, 45), Time(9, 35)),
              (Time(9, 35), Time(10, 50)),
@@ -38,7 +38,7 @@ class GameState:
         self.schedule = _generate_schedule()
         self.time = Time(7, 40)
         self.character = Character(self)
-        self.state = DayState.LESSON
+        self.mode = StateMode.LESSON
         self.hot_day = chance(50)
         self.teacher = Teacher(self)
         self.classmates = Classmates(self)
@@ -56,17 +56,17 @@ class GameState:
             self.toilet = Toilet(self)
             if 'Break' in self.current_lesson():
                 if self.character.stay_on_break:
-                    self.state = DayState.BREAK_PUNISHMENT
+                    self.mode = StateMode.BREAK_PUNISHMENT
                 else:
-                    self.state = DayState.BREAK
+                    self.mode = StateMode.BREAK
             elif self.current_lesson() == 'Day is over':
                 win(self)
             else:
-                self.state = DayState.LESSON
+                self.mode = StateMode.LESSON
                 self.character.stay_on_break = False
 
         def event_chance(chn):
-            return self.state == DayState.LESSON \
+            return self.mode == StateMode.LESSON \
                    and chance(chn) \
                    and not self.teacher.testing \
                    and self.current_lesson() != 'PE'

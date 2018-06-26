@@ -8,7 +8,7 @@ from .console_ui import create_bar
 
 from .actions import wait_few_minutes, ask_to_go_out, hold, pee_in_wear, go_to_toilet, drink
 from .gamestate import GameState
-from .enums import DayState, EASY, MEDIUM, HARD
+from .enums import StateMode, EASY, MEDIUM, HARD
 from .util import chance, cls, pass_
 
 
@@ -16,7 +16,7 @@ from .util import chance, cls, pass_
 
 
 def prepare_actions(day):
-    if day.state == DayState.LESSON:
+    if day.state == StateMode.LESSON:
         holding_blocked = day.character.holding_blocked
 
         if day.current_lesson() == 'PE' or holding_blocked:
@@ -42,7 +42,7 @@ def prepare_actions(day):
             ]
             return filter(lambda it: it is not None, actions)
 
-    elif day.state == DayState.BREAK:
+    elif day.state == StateMode.BREAK:
         return ('Wait 2 minutes', pass_), \
                ('Wait some time...', wait_few_minutes), \
                ('Go to toilet', go_to_toilet), \
@@ -50,7 +50,7 @@ def prepare_actions(day):
                (f'Pee in the {day.character.underwear.name.lower()}', pee_in_wear), \
                ('Drink', drink)
 
-    elif day.state == DayState.BREAK_PUNISHMENT:
+    elif day.state == StateMode.BREAK_PUNISHMENT:
         return ('Wait 2 minutes', pass_), \
                ('Wait some time...', wait_few_minutes), \
                ('Hold pee', hold), \
@@ -132,7 +132,7 @@ def main():
     day = GameState()
     day.tick()
 
-    while day.state != DayState.END:
+    while day.mode != StateMode.END:
         cls()
         print_data(day)
         day.tick()
