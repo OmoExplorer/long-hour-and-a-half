@@ -32,9 +32,9 @@ def _generate_schedule():
 
 
 class GameState:
-    def __init__(self, game):
+    def __init__(self, game, difficulty):
         self.game = game
-        self.difficulty = MEDIUM
+        self.difficulty = difficulty
         self.schedule = _generate_schedule()
         self.time = Time(7, 40)
         self.character = Character(self)
