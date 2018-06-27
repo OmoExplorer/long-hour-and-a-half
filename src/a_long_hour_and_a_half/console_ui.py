@@ -123,7 +123,7 @@ class ConsoleUI(UI):
                 continue
             try:
                 inp = int(inp)
-            except:
+            except TypeError:
                 continue
 
             if inp not in range(1, len(actions) + 1):
@@ -131,6 +131,7 @@ class ConsoleUI(UI):
 
             return actions[inp - 1]
 
+    # noinspection PyMethodMayBeStatic
     def show_main_menu(self, inp):
         if inp == 'm':
             print('n: New game')

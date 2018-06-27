@@ -1,4 +1,3 @@
-import os
 from random import random
 
 from .enums import EASY, MEDIUM, HARD

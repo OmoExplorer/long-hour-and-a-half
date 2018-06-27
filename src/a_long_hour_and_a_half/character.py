@@ -61,8 +61,6 @@ class Character:
         return self._holding_block_duration != 0
 
     def tick(self):
-        self.thoughts = ''
-
         self.thinker.tick()
         self.bladder.tick()
         self.sphincter.tick()

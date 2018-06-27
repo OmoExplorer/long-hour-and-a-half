@@ -1,15 +1,9 @@
-import atexit
-import os
-
-import colorama
-from termcolor import colored
-
-from .console_ui import create_bar
 from .actions import wait_few_minutes, ask_to_go_out, hold, pee_in_wear, go_to_toilet, drink
-from .gamestate import GameState
+from .console_ui import create_bar
 from .enums import StateMode, EASY, MEDIUM, HARD
-from .util import chance, pass_
 from .game import Game
+from .gamestate import GameState
+from .util import chance, pass_
 
 
 # TODO: Refactor the whole file
@@ -51,4 +45,3 @@ def main():
     #     day.tick()
     #     ask_action(day)
     Game()
-
