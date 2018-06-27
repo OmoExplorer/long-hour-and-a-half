@@ -21,3 +21,5 @@ except Exception:
                  "\n\nI'm sorry for the inconvenience."
 
     showerror('A Long Hour and a Half: fatal error', crash_text)
+
+    exit(1)
