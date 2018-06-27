@@ -44,4 +44,4 @@ def main():
     #     print_data(day)
     #     day.tick()
     #     ask_action(day)
-    Game()
+    Game().mainloop()

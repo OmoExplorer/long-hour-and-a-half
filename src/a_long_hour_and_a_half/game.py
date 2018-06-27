@@ -8,7 +8,6 @@ class Game:
         self.state = GameState(self)
         self.ui = UI_CLASS(self)
 
-        self.mainloop()
 
     def mainloop(self):
         while self.state.mode != StateMode.END:
