@@ -22,7 +22,6 @@ class Character:
         self.stay_after_lessons = False
         self.stay_on_break = False
         self._embarrassment = 1
-        self.thoughts = ''
 
         if day.difficulty == EASY:
             self._embarrassment_decay = 3
@@ -64,6 +63,7 @@ class Character:
     def tick(self):
         self.thoughts = ''
 
+        self.thinker.tick()
         self.bladder.tick()
         self.sphincter.tick()
         self.underwear.tick()

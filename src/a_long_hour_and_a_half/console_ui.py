@@ -51,11 +51,11 @@ class ConsoleUI(UI):
         os.system('mode con: cols=110 lines=40')
         atexit.register(pause)
 
-    def turn(self):
+    # def turn(self):
+    def update_data(self):
         clear_console()
         self.update_character_stats()
         self.print_actions()
-        return self.get_action()
 
     def update_character_stats(self):
         stt = self._game.state
@@ -66,7 +66,7 @@ class ConsoleUI(UI):
 
         print(character.name, ', ', character.gender, sep='')
 
-        print(f"{character.name}'s thoughts\n", character.thoughts, '\n', sep='')
+        print(f"{character.name}'s thoughts\n", character.thinker.thoughts, '\n', sep='')
 
         print('Urine\t\t\t\t', bladder.urine, '/', bladder.maximal_urine, ' ml (',
               round(bladder.urine_decimal_ratio * 100), '%)\t',

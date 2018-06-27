@@ -10,12 +10,16 @@ class Thinker:
 
     def __init__(self, day):
         self._day = day
+        self.thoughts = ''
+
+    def tick(self):
+        self.thoughts = ''
 
     def require_thought(self, *thoughts, color=None, style=None):
         if color is None:
-            self._day.character.thoughts += '\n' + choice(thoughts)
+            self.thoughts += '\n' + choice(thoughts)
         else:
-            self._day.character.thoughts += '\n' + colored(choice(thoughts), color, attrs=style)
+            self.thoughts += '\n' + colored(choice(thoughts), color, attrs=style)
 
     def think_about_bladder_fullness(self):
         urine_ratio = self._day.character.bladder.urine_decimal_ratio
