@@ -1,7 +1,5 @@
 from random import choice
 
-from termcolor import colored
-
 from .enums import StateMode
 
 
@@ -20,12 +18,14 @@ def game_over(day):
         "I CAN'T HOLD IT ANYMORE!"
     ]
 
-    print('\n\n')
-    print('"' + colored(choice(quotes), 'red', attrs=['bold']) + '"')
-    print('\n\n')
-    print(colored('You failed!', 'yellow', 'on_red', ['bold']))
+    # print('\n\n')
+    # print('"' + colored(choice(quotes), 'red', attrs=['bold']) + '"')
+    # print('\n\n')
+    # print(colored('You failed!', 'yellow', 'on_red', ['bold']))
+    day.game.ui.show_message(choice(quotes) + '\nYou failed!')
 
 
 def win(day):
     day.state = StateMode.END
-    print(colored('You win!', 'blue', 'on_green', ['bold']))
+    # print(colored('You win!', 'blue', 'on_green', ['bold']))
+    day.game.ui.show_message('You won!')

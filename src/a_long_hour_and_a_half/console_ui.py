@@ -151,3 +151,15 @@ class ConsoleUI(UI):
             exit()
 
     input = input
+
+    def show_message(self, text):
+        if text.endswith('failed!'):
+            quote, fail = text.split('\n')
+            print('\n\n')
+            print('"' + colored(quote, 'red', attrs=['bold']) + '"')
+            print('\n\n')
+            print(colored(fail, 'yellow', 'on_red', ['bold']))
+        elif text.endswith('won!'):
+            print(colored('You won!', 'blue', 'on_green', ['bold']))
+        else:
+            print('\n\n' + text + '\n\n')

@@ -10,3 +10,6 @@ class UI:
 
     def input(self, prompt):
         pass
+
+    def show_message(self, text):
+        pass
