@@ -1,20 +1,23 @@
-from sys import exc_info
 from tkinter.messagebox import showerror
 from traceback import format_exc
 
 bar = '=' * 40
 
+# noinspection PyBroadException
 try:
     from a_long_hour_and_a_half import main
 
     main()
 except Exception:
-    class_, message, tb = exc_info()
+    with open('lhh_crash_info.txt', 'w+') as f:
+        f.write(format_exc())
 
-    class_name = class_.__name__
-    showerror('A Long Hour and a Half: fatal error', "A fatal error has occured.\n\n" + bar + '\n'
-                                                     + format_exc() + bar + '\n\n'
-                                                     "Press Ctrl + C to copy this message.\n"
-                                                     "Please send this information to OmoExplorer @ omorashi.org"
-                                                     "\nor create an issue on GitHub:\n"
-                                                     ".\n\nI'm sorry for the inconvenience.")  # TODO
+    crash_text = "A fatal error has occured.\n\n" + bar + '\n' + format_exc() + bar + '\n\n' + \
+                 "Crash info was written to 'lhh_crash_info.txt' in the same" \
+                 "folder where the game is.\n" \
+                 "Please send this information to OmoExplorer at omorashi.org" \
+                 "\nor create an issue on GitHub:\n" \
+                 "https://github.com/javabird25/long-hour-and-a-half/issues/new" \
+                 "\n\nI'm sorry for the inconvenience."
+
+    showerror('A Long Hour and a Half: fatal error', crash_text)
