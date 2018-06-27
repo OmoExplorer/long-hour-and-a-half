@@ -121,4 +121,7 @@ class GameState:
 
     @property
     def time_until_lesson_finish(self):
-        return next(filter(lambda l: l[0] == self.current_lesson(), self.schedule))[1][1] - self.time
+        try:
+            return next(filter(lambda l: l.name == self.current_lesson(), self.schedule)).timebounds[1] - self.time
+        except StopIteration:
+            return Time(0, 0)
