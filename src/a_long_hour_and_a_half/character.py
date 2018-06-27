@@ -10,26 +10,26 @@ from .wear import Wear
 class Character:
     _THINK_DELAY = 5
 
-    def __init__(self, day):
-        self._day = day
+    def __init__(self, state):
+        self._state = state
 
         self.name = 'Jane'
         self.gender = FEMALE
-        self.bladder = Bladder(day, self.gender)
-        self.sphincter = Sphincter(day)
-        self.thinker = Thinker(day)
+        self.bladder = Bladder(state, self.gender)
+        self.sphincter = Sphincter(state)
+        self.thinker = Thinker(state)
 
         self.stay_after_lessons = False
         self.stay_on_break = False
         self._embarrassment = 1
 
-        if day.difficulty == EASY:
+        if state.difficulty == EASY:
             self._embarrassment_decay = 3
             self._thirst_increase = 1
-        elif day.difficulty == MEDIUM:
+        elif state.difficulty == MEDIUM:
             self._embarrassment_decay = 3
             self._thirst_increase = 1.5
-        elif day.difficulty == HARD:
+        elif state.difficulty == HARD:
             self._embarrassment_decay = 3
             self._thirst_increase = 2
 
@@ -87,7 +87,7 @@ class Character:
             self.outerwear.dryness -= how_much
 
         if self.outerwear.dryness == 0:
-            game_over(self._day)
+            game_over(self._state)
 
     def drink(self, how_much_percent):
         self.thirst -= how_much_percent

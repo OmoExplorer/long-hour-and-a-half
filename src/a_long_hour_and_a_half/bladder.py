@@ -8,14 +8,14 @@ from .util import clamp
 class Bladder:
     """Character's urinary bladder."""
 
-    def __init__(self, day, gender):
+    def __init__(self, state, gender):
         values = {
             EASY: (1400, 2, 4),
             MEDIUM: (1200, 4, 6),
             HARD: (1000, 5, 7),
         }
 
-        self.maximal_urine, *self._urine_income_bounds = values[day.difficulty]
+        self.maximal_urine, *self._urine_income_bounds = values[state.difficulty]
 
         if gender == FEMALE:
             self.maximal_urine *= 0.9
@@ -23,7 +23,7 @@ class Bladder:
         self._urine = randint(0, self.maximal_urine / 2)
         self._tummy_water = 0
 
-        self._day = day
+        self._state = state
 
     @property
     def urine(self):
@@ -33,7 +33,7 @@ class Bladder:
     @urine.setter
     def urine(self, value):
         self._urine = clamp(value, 0, self.maximal_urine)
-        self._day.character.sphincter.die_if_bladder_is_too_full()
+        self._state.character.sphincter.die_if_bladder_is_too_full()
 
     @property
     def urine_decimal_ratio(self):
@@ -52,11 +52,11 @@ class Bladder:
     def empty(self):
         """Empties this bladder and requires a corresponding character thought."""
         self.urine = 0
-        self._day.character.thinker.think_about_peeing()
+        self._state.character.thinker.think_about_peeing()
 
     def tick(self):
         """Game element tick function."""
-        self._day.character.thinker.think_about_bladder_fullness()
+        self._state.character.thinker.think_about_bladder_fullness()
 
         self._add_urine()
 

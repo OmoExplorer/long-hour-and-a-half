@@ -1,6 +1,6 @@
 class Classmates:
-    def __init__(self, day):
-        self._day = day
+    def __init__(self, state):
+        self._state = state
 
     def notice_holding(self):
-        self._day.character.embarrassment += 10
+        self._state.character.embarrassment += 10

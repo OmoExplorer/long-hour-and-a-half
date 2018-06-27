@@ -9,7 +9,7 @@ from .util import clamp, difficulty_dependent
 class Sphincter:
     """Bladder's sphincter."""
 
-    def __init__(self, day):
+    def __init__(self, state):
         values = {
             EASY: (10, 2, 6),
             MEDIUM: (15, 6, 12),  # TODO
@@ -17,9 +17,9 @@ class Sphincter:
         }
 
         self._power = 100
-        self._leaking_level, *self._leak_volume_bounds = values[day.difficulty]
+        self._leaking_level, *self._leak_volume_bounds = values[state.difficulty]
         self.incontinence = 1
-        self._day = day
+        self._state = state
 
     @property
     def power(self):
@@ -34,16 +34,16 @@ class Sphincter:
         self._decrease_power()
         self._check_leak()
 
-        self._day.character.thinker.think_about_low_sphincter_power()
+        self._state.character.thinker.think_about_low_sphincter_power()
 
     def _decrease_power(self):
-        bladder = self._day.character.bladder
+        bladder = self._state.character.bladder
         if bladder.urine_decimal_ratio < 0.2:
-            self.power += difficulty_dependent(self._day, 8, 6, 4)
+            self.power += difficulty_dependent(self._state, 8, 6, 4)
         elif bladder.urine_decimal_ratio > 0.5:
             self.power -= 1.8 \
                           * self.incontinence \
-                          * self._day.character.embarrassment \
+                          * self._state.character.embarrassment \
                           * (bladder.urine / bladder.maximal_urine)
 
     def _check_leak(self):
@@ -54,14 +54,14 @@ class Sphincter:
 
     def _leak(self):
         volume = randint(*self._leak_volume_bounds)
-        self._day.character.pee_into_wear(volume)
+        self._state.character.pee_into_wear(volume)
 
-        self._day.character.thinker.think_about_leaking()
+        self._state.character.thinker.think_about_leaking()
 
     def die_if_bladder_is_too_full(self):
-        bladder = self._day.character.bladder
+        bladder = self._state.character.bladder
         if bladder.urine >= bladder.maximal_urine:
-            self._day.character.sphincter.power = 0
+            self._state.character.sphincter.power = 0
 
     @property
     def is_power_critical(self):

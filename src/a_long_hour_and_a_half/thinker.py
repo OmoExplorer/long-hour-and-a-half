@@ -8,8 +8,8 @@ from .enums import StateMode
 class Thinker:
     """Components for showing thoughts: a convenient way to show the current character state."""
 
-    def __init__(self, day):
-        self._day = day
+    def __init__(self, state):
+        self._state = state
         self.thoughts = ''
 
     def tick(self):
@@ -22,38 +22,38 @@ class Thinker:
             self.thoughts += '\n' + colored(choice(thoughts), color, attrs=style)
 
     def think_about_bladder_fullness(self):
-        urine_ratio = self._day.character.bladder.urine_decimal_ratio
+        urine_ratio = self._state.character.bladder.urine_decimal_ratio
 
-        if urine_ratio < 0.2 and self._day.mode == StateMode.LESSON:
-            if self._day.teacher.testing:
+        if urine_ratio < 0.2 and self._state.mode == StateMode.LESSON:
+            if self._state.teacher.testing:
                 self.require_thought("What the hell is this test?",
                                      'This test is ridiculous.',
                                      'Hmm... Maybe A)... no, D)... I dunno.')
             else:
-                self.require_thought(self._day.current_lesson() + ' is so boring!',
+                self.require_thought(self._state.current_lesson() + ' is so boring!',
                                      "How much time is it? I can't wait for the lesson to finish!",
                                      'Bla-bla-bla... the teacher is so boring!')
 
-        elif 0.2 < urine_ratio < 0.35 and self._day.mode == StateMode.LESSON:
-            if self._day.teacher.testing:
+        elif 0.2 < urine_ratio < 0.35 and self._state.mode == StateMode.LESSON:
+            if self._state.teacher.testing:
                 self.require_thought("What the hell is this test?",
                                      'This test is ridiculous.',
                                      'Hmm... Maybe A)... no, D)... I dunno.')
             else:
-                self.require_thought(self._day.current_lesson() + ' is so boring!',
+                self.require_thought(self._state.current_lesson() + ' is so boring!',
                                      "I've got to pee a bit, but... Not really much.",
                                      "How much time is it? I can't wait for the lesson to finish!")
 
         elif 0.35 < urine_ratio < 0.5:
-            if self._day.mode == StateMode.LESSON:
-                if self._day.teacher.testing:
+            if self._state.mode == StateMode.LESSON:
+                if self._state.teacher.testing:
                     self.require_thought(
                         "What the hell is this test? That slight peeing urges ain't helping.",
                         'This test is ridiculous. And I have to pee a bit.',
                         'Hmm... Maybe A)... no, D)... I dunno.')
                 else:
                     self.require_thought(
-                        self._day.current_lesson() + ' is so boring! Also I need to pee.',
+                        self._state.current_lesson() + ' is so boring! Also I need to pee.',
                         "I've got to pee a bit, but... Not really much.",
                         "When this lesson will be over? I've got to pee.")
             else:
@@ -85,7 +85,7 @@ class Thinker:
                                  color='yellow')
 
     def think_about_low_sphincter_power(self):
-        if self._day.character.sphincter.power < 10:
+        if self._state.character.sphincter.power < 10:
             self.require_thought("Oops... It's coming!",
                                  "It's gotta come out!!!",
                                  "Pee is coming!",

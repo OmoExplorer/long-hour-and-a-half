@@ -4,13 +4,13 @@ from .util import difficulty_dependent, chance
 
 
 class Toilet:
-    def __init__(self, day):
-        self._day = day
+    def __init__(self, state):
+        self._state = state
 
-        self._queue_chance = difficulty_dependent(day, 20, 40, 75)
-        self._queue_duration_bounds = difficulty_dependent(day, (1, 5), (3, 10), (6, 30))
+        self._queue_chance = difficulty_dependent(state, 20, 40, 75)
+        self._queue_duration_bounds = difficulty_dependent(state, (1, 5), (3, 10), (6, 30))
 
-        self._lock_chance = difficulty_dependent(day, 0, 1.5, 5)
+        self._lock_chance = difficulty_dependent(state, 0, 1.5, 5)
 
         self.locked = False
         self._queue_duration = 0
@@ -18,9 +18,9 @@ class Toilet:
 
     def use(self):
         if self._queue_duration != 0:
-            self._day.character.thinker.think_about_toilet_queue()
+            self._state.character.thinker.think_about_toilet_queue()
         elif self.locked:
-            self._day.character.thinker.think_about_closed_toiled()
+            self._state.character.thinker.think_about_closed_toiled()
 
         # elif chance(self._lock_chance):
         #     self._locked = True
@@ -32,7 +32,7 @@ class Toilet:
             self.use()
 
         else:
-            self._day.character.bladder.empty()
+            self._state.character.bladder.empty()
 
     def tick(self):
         self._queue_duration = max(0, self._queue_duration - 2)
