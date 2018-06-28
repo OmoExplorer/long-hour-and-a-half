@@ -19,14 +19,16 @@ class Teacher:
         return self._ask_toilet_attempts < 1
 
     def ask_toilet(self):
+        if self.testing:
+            self._state.character.thinker.think_about_toilet_denial_during_test()
+            return False
+
         allow = chance(self._toilet_allow_chance)
 
-        if not allow:
-            self._state.character.thinker.think_about_toilet_denial()
-        elif self.testing:
-            self._state.character.thinker.think_about_toilet_denial_during_test()
-        else:
+        if allow:
             self._state.character.thinker.think_about_toilet_approval()
+        else:
+            self._state.character.thinker.think_about_toilet_denial()
 
         if not allow or self.testing:
             self._ask_toilet_attempts -= 1
