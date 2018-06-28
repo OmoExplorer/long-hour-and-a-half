@@ -49,6 +49,7 @@ class GameState:
 
     def tick(self):
         self.character.tick()
+        self.toilet.tick()
         # self.teacher.tick()
 
         self.time += Time(0, 2)
