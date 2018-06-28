@@ -9,7 +9,7 @@ class Game:
         self.ui = UI_CLASS(self)
 
     def mainloop(self):
-        while self.state.mode != StateMode.END:
+        while True:
             self.ui.update_data()
             self.state.tick()
             self.ui.get_action().do(self.state)

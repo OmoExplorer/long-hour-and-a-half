@@ -4,8 +4,6 @@ from .enums import StateMode
 
 
 def game_over(day):
-    day.state = StateMode.END
-
     quotes = [
         'I peed too much... Now everyone will see it...',
         'I... I can see a puddle beneath me...',
@@ -23,9 +21,10 @@ def game_over(day):
     # print('\n\n')
     # print(colored('You failed!', 'yellow', 'on_red', ['bold']))
     day.game.ui.show_message(choice(quotes) + '\nYou failed!')
+    exit()
 
 
 def win(day):
-    day.state = StateMode.END
     # print(colored('You win!', 'blue', 'on_green', ['bold']))
     day.game.ui.show_message('You won!')
+    exit()
