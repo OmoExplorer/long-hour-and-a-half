@@ -61,11 +61,12 @@ class GameState:
                     self.mode = StateMode.BREAK_PUNISHMENT
                 else:
                     self.mode = StateMode.BREAK
-            elif self.current_lesson() == 'Day is over':
-                win(self)
             else:
                 self.mode = StateMode.LESSON
                 self.character.stay_on_break = False
+
+        if self.current_lesson() == 'Day is over':
+            win(self)
 
         def event_chance(chn):
             return self.mode == StateMode.LESSON \
