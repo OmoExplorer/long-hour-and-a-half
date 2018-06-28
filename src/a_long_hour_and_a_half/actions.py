@@ -65,7 +65,7 @@ ask_to_go_out = Action('Ask to go out', do_ask_to_go_out)
 
 
 def do_hold(state):
-    state.character.bladder.sphincter.power += 10
+    state.character.sphincter.power += 10
     if chance(12):
         state.classmates.notice_holding()
 
