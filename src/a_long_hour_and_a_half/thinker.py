@@ -89,7 +89,8 @@ class Thinker:
             self.require_thought("Oops... It's coming!",
                                  "It's gotta come out!!!",
                                  "Pee is coming!",
-                                 "Ouch! I can't hold it!")
+                                 "Ouch! I can't hold it!",
+                                 color='red')
 
     def think_about_toilet_queue(self):
         self.require_thought('There is a big queue for toilets.',

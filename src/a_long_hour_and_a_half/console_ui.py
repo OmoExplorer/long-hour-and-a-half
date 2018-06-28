@@ -123,6 +123,8 @@ class ConsoleUI(UI):
                 continue
             try:
                 inp = int(inp)
+            except ValueError:
+                continue
             except TypeError:
                 continue
 
