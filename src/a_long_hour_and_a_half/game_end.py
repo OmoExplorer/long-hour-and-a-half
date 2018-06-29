@@ -1,6 +1,6 @@
 from random import choice
 
-from .enums import StateMode
+from .enums import FEMALE
 
 
 def game_over(day):
@@ -8,11 +8,11 @@ def game_over(day):
         'I peed too much... Now everyone will see it...',
         'I... I can see a puddle beneath me...',
         f'Wh-what?... Classmates yell "Look! {day.character.name} is peeing '
-        f'right in {"her" if day.character.gender == "Female" else "his"} '
+        f'right in {"her" if day.character.gender == FEMALE else "his"} '
         f'{day.character.outerwear.name.lower()}!"...',
         "No... Nooo... I can't believe... Did I really wet myself completely just now?",
         f'Everyone is looking at me! They are whispering between each other... '
-        f'"Look! {"she" if day.character.gender == "Female" else "he"} is wetting himself"...',
+        f'"Look! {"She" if day.character.gender == FEMALE else "He"} is wetting himself"...',
         "I CAN'T HOLD IT ANYMORE!"
     ]
 
