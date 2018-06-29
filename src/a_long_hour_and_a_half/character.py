@@ -1,3 +1,4 @@
+from a_long_hour_and_a_half.leaker import Leaker
 from .bladder import Bladder
 from .sphincter import Sphincter
 from .enums import FEMALE, EASY, MEDIUM, HARD
@@ -18,6 +19,7 @@ class Character:
         self.bladder = Bladder(state, self.gender)
         self.sphincter = Sphincter(state)
         self.thinker = Thinker(state)
+        self.leaker = Leaker(state)
 
         self.stay_after_lessons = False
         self.stay_on_break = False
@@ -66,6 +68,7 @@ class Character:
         self.sphincter.tick()
         self.underwear.tick()
         self.outerwear.tick()
+        self.leaker.tick()
 
         self.embarrassment -= self._embarrassment_decay
         self.thirst += self._thirst_increase
