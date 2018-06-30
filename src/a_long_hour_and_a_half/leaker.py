@@ -12,10 +12,13 @@ class Leaker:
         self._state = state
 
     @property
+    def _fullness_threshold(self):
+        return self._state.character.bladder.urine * 0.7
+
+    @property
     def leak_chance(self):
         bladder = self._state.character.bladder
-        fullness_threshold = bladder.maximal_urine * 0.7
-        chn = (self._state.character.bladder.urine - fullness_threshold) / 2
+        chn = (bladder.urine - self._fullness_threshold) / 2
         _logger.debug('chance: %f', chn)
         return chn
 
