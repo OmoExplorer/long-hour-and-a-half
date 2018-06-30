@@ -31,7 +31,7 @@ class Leaker:
         return max(0, self._state.character.bladder.urine ** 2 // 20000 - 32)
 
     def get_leak_volume(self):
-        return randint(self.minimal_leak_volume, self.maximal_leak_volume)
+        return randint(self.minimal_leak_volume, self.maximal_leak_volume + 1)
 
     def tick(self):
         if chance(self.leak_chance):

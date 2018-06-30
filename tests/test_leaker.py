@@ -26,3 +26,10 @@ class TestLeaker(unittest.TestCase):
             self.bladder.urine = i
             self.assertEqual(self.leaker.maximal_leak_volume,
                              max(0, self.bladder.urine ** 2 // 20000 - 32))
+
+    def test_leak_volume(self):
+        for i in range(int(self.bladder.maximal_urine)):
+            # with self.subTest():
+                self.bladder.urine = i
+                self.assertIn(self.leaker.get_leak_volume(),
+                              range(self.leaker.minimal_leak_volume, self.leaker.maximal_leak_volume + 2))
