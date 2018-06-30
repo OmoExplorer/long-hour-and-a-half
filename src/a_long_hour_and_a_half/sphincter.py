@@ -41,7 +41,7 @@ class Sphincter:
         if bladder.urine_decimal_ratio < 0.2:
             self.power += difficulty_dependent(self._state, 8, 6, 4)
         elif bladder.urine_decimal_ratio > 0.5:
-            self.power -= 1.8 \
+            self.power -= 4 \
                           * self.incontinence \
                           * self._state.character.embarrassment \
                           * (bladder.urine / bladder.maximal_urine)

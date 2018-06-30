@@ -9,7 +9,7 @@ class Wear:
         self.absorption = absorption
         self.drying = drying
 
-        self.maximal_dryness = self._dryness = absorption * 12.5
+        self.maximal_dryness = self._dryness = absorption * 3.5
 
     def tick(self):
         self._dry()

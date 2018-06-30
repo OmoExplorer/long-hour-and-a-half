@@ -33,7 +33,7 @@ class Bladder:
     @urine.setter
     def urine(self, value):
         self._urine = clamp(value, 0, self.maximal_urine)
-        self._state.character.sphincter.die_if_bladder_is_too_full()
+        # self._state.character.sphincter.die_if_bladder_is_too_full()
 
     @property
     def urine_decimal_ratio(self):
