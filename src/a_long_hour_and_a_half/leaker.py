@@ -24,11 +24,11 @@ class Leaker:
 
     @property
     def minimal_leak_volume(self):
-        return int(max(1, self._state.character.bladder.urine ** 2 / 35000 - 23))
+        return max(1, self._state.character.bladder.urine ** 2 // 35000 - 23)
 
     @property
     def maximal_leak_volume(self):
-        return int(max(0, self._state.character.bladder.urine ** 2 / 20000 - 32))
+        return max(0, self._state.character.bladder.urine ** 2 // 20000 - 32)
 
     def get_leak_volume(self):
         return randint(self.minimal_leak_volume, self.maximal_leak_volume)
