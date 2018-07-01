@@ -11,7 +11,7 @@ except Exception:
         f.write(format_exc())
 
     crash_text = "A fatal error has occured.\n" \
-                 "Crash info was written to 'lhh_crash_info.txt' in the same" \
+                 "Crash info was written to 'lhh_crash_info.txt' in the same " \
                  "folder where the game is.\n" \
                  "Please send this information to OmoExplorer at omorashi.org" \
                  "\nor create an issue on GitHub:\n" \
